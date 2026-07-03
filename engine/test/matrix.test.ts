@@ -67,3 +67,43 @@ describe("buildMatrix — golden-master vs live labMatrix core", () => {
     expect(r.refText).toBe("18–54");
   });
 });
+
+describe("buildMatrix — cell falls back to row reference range when a draw omits its own", () => {
+  // Mirrors the real "Ygia" CBC-differential case: one lab prints the range,
+  // another lab reports the same analyte with NO range. Without a fallback the
+  // range-less cell renders uncolored; it should instead be flagged against the
+  // row's representative range (no clinical band exists for NEUT#, so the
+  // heuristic ±25% path applies).
+  const drawsNoBand: Draw[] = [
+    { date: "2024-01-01", labName: "LabWithRange", items: [
+      { symbol: "NEUT#", analysis: "Neutrophils (absolute)", original: uv(3.0, "10^9/L", 1.78, 5.38), us: uv(3.0, "10^9/L", 1.78, 5.38), si: uv(3.0, "10^9/L", 1.78, 5.38) },
+    ] },
+    { date: "2024-06-01", labName: "Ygia", items: [
+      // In-range value, but Ygia printed no reference range on this line.
+      { symbol: "NEUT#", analysis: "Neutrophils (absolute)", original: uv(4.0, "10^9/L"), us: uv(4.0, "10^9/L"), si: uv(4.0, "10^9/L") },
+    ] },
+    { date: "2024-09-01", labName: "Ygia", items: [
+      // Above the row range, still no printed range on the line → should warn.
+      { symbol: "NEUT#", analysis: "Neutrophils (absolute)", original: uv(6.0, "10^9/L"), us: uv(6.0, "10^9/L"), si: uv(6.0, "10^9/L") },
+    ] },
+  ];
+
+  const m = buildMatrix(drawsNoBand, {});
+  const r = m.rows.find((x) => x.key === "NEUT#")!;
+
+  it("row carries the representative range from the lab that printed one", () => {
+    expect(r.refMin).toBe(1.78); expect(r.refMax).toBe(5.38);
+  });
+
+  it("range-less in-range cell gets a non-empty in-range flag (was uncolored)", () => {
+    // 4.0 is inside 1.78–5.38 → z-ok, not "".
+    expect(r.cells[1]!.value).toBe(4.0);
+    expect(r.cells[1]!.flag).toBe("z-ok");
+  });
+
+  it("range-less above-range cell warns against the row range", () => {
+    // 6.0 > 5.38 (ratio 1.12 < 1.25) → z-warn.
+    expect(r.cells[2]!.value).toBe(6.0);
+    expect(r.cells[2]!.flag).toBe("z-warn");
+  });
+});

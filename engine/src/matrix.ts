@@ -181,7 +181,11 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
     const cells = cols.map((c) => {
       const cell = m.byId[c.id];
       if (!cell) return null;
-      const rMin = ov ? ov.refMin : cell.refMin, rMax = ov ? ov.refMax : cell.refMax;
+      // Fallback: a cell whose draw omitted its own printed range still gets
+      // colored against the row's representative range (the accumulated/overridden
+      // refMin/refMax shown in the marker column), so labs that printed no range
+      // don't leave uncolored cells. An override still wins for every cell.
+      const rMin = ov ? ov.refMin : (cell.refMin ?? refMin), rMax = ov ? ov.refMax : (cell.refMax ?? refMax);
       return { raw: cell.raw, value: cell.value, flag: isUnreliable ? "" as const : flagOf(cell.value, rMin, rMax, m.symbol, m.analysis), title: cell.tip };
     });
     const series = cells.map((cell, i) => cell ? { date: cols[i]!.date, value: cell.value } : null).filter((x): x is { date: string; value: number } => x != null);
