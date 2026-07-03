@@ -34,6 +34,29 @@ groups all of an analyte's codes under one entry and gives the
 conversion its bridge — and lets a value from *any* lab's code
 resolve back to one analyte.
 
+## Mass↔molar LOINC pairs (US↔SI)
+
+When an analyte is reported in a US-conventional **mass** unit (mg/dL, MCnc)
+while Europe / the ex-USSR use the **molar** SI unit (mmol/L, SCnc), the two
+units are *different LOINC codes* on the Property axis (see above). So the
+engine's US↔SI toggle also swaps the displayed LOINC. The mass→molar pairs
+currently wired — engine `src/units.ts` → `SI_LOINC_BY_LOINC` is the single
+source of truth — are:
+
+| Analyte | Mass (MCnc, mg/dL) | Molar (SCnc, mmol/L) |
+| --- | --- | --- |
+| Glucose | 2339-0 | 14749-6 |
+| Total cholesterol | 2093-3 | 14647-2 |
+| HDL cholesterol | 2085-9 | 14646-4 |
+| LDL cholesterol | 13457-7 | 22748-8 |
+| Triglyceride | 2571-8 | 14927-8 |
+
+**Count: 5 analytes** carry a wired mass↔molar pair (as of 2026-07), all
+verified against loinc.org. Others that could join once their data lands —
+creatinine, urea/BUN, uric acid, bilirubin, calcium, phosphate — are held in
+mass units here but have molar SI counterparts. Keep this table in step with
+`SI_LOINC_BY_LOINC` when a pair is added.
+
 ## Shape
 
 ```text
