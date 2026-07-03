@@ -73,12 +73,17 @@ function tipOf(d: Draw, it: LabItem): string {
   const differ =
     fmtNum(it.us.value) !== fmtNum(it.si.value) ||
     (it.us.unit || "") !== (it.si.unit || "");
+  const valueMatchesReport =
+    fmtNum(it.us.value) === fmtNum(it.original.value) &&
+    (it.us.unit || "") === (it.original.unit || "");
   const valueLines = differ
     ? [
         `US: ${fmtNum(it.us.value)} ${it.us.unit || ""}${rng(it.us)}`.trimEnd(),
         `SI: ${fmtNum(it.si.value)} ${it.si.unit || ""}${rng(it.si)}`.trimEnd(),
       ]
-    : [`Value: ${fmtNum(it.us.value)} ${it.us.unit || ""}`.trimEnd()];
+    : valueMatchesReport
+      ? []
+      : [`Value: ${fmtNum(it.us.value)} ${it.us.unit || ""}`.trimEnd()];
   const reportLine = `Report: ${report} ${it.original.unit || ""}`.trimEnd() +
     (it.original.refText ? ` (${it.original.refText})` : "") +
     (it.method ? ` · ${it.method}` : "");
