@@ -1,0 +1,69 @@
+import { describe, it, expect } from "vitest";
+import { buildMatrix, type MatrixConfig } from "../src/matrix.js";
+import type { Draw, UnitValue } from "../src/types.js";
+
+const uv = (value: number, unit: string, refMin?: number, refMax?: number): UnitValue => ({ value, unit, refMin, refMax, rawValue: String(value) });
+
+const draws: Draw[] = [
+  { date: "2024-01-01", labName: "LabA", items: [
+    { symbol: "GLU", analysis: "Glucose", loinc: "2345-7", original: uv(90, "mg/dL", 70, 110), us: uv(90, "mg/dL", 70, 110), si: uv(5, "mmol/L") },
+    { symbol: "DHEA-S", analysis: "DHEA Sulfate", loinc: "2191-5", original: uv(200, "ug/dL", 25, 220), us: uv(200, "ug/dL", 25, 220), si: uv(200, "ug/dL") },
+    { symbol: "FT", analysis: "Free Testosterone", original: uv(15, "pg/mL", 8, 25), us: uv(15, "pg/mL", 8, 25), si: uv(15, "pg/mL") },
+  ] },
+  { date: "2025-06-01", labName: "LabB", items: [
+    { symbol: "GLU", analysis: "Glucose", loinc: "2345-7", original: uv(130, "mg/dL", 70, 110), us: uv(130, "mg/dL", 70, 110), si: uv(7.2, "mmol/L") },
+    { symbol: "SHBG", analysis: "SHBG", loinc: "13967-5", original: uv(40, "nmol/L", 18, 54), us: uv(40, "nmol/L", 18, 54), si: uv(40, "nmol/L") },
+  ] },
+];
+
+const config: MatrixConfig = {
+  refOverride: { "DHEA-S": { refMin: 95, refMax: 530, note: "male range" } },
+  unreliable: new Set(["FT", "Free Testosterone"]),
+  excludeMarkers: new Set(["Insulin Resistance (Glu/Ins ratio)"]),
+  nameOverride: { GLU: "Glucose", "DHEA-S": "Dehydroepiandrosterone sulfate" },
+  symbolOverride: { "Folic Acid": "B9" },
+};
+
+describe("buildMatrix — golden-master vs live labMatrix core", () => {
+  const m = buildMatrix(draws, config);
+  const row = (k: string) => m.rows.find((r) => r.key === k)!;
+
+  it("columns are date-sorted draw ids", () => {
+    expect(m.cols.map((c) => c.id)).toEqual(["2024-01-01|LabA", "2025-06-01|LabB"]);
+  });
+
+  it("rows sorted by analysis name", () => {
+    expect(m.rows.map((r) => r.key)).toEqual(["DHEA-S", "FT", "GLU", "SHBG"]);
+  });
+
+  it("ref override applied (DHEA-S 95–530, was 25–220)", () => {
+    const r = row("DHEA-S");
+    expect(r.refMin).toBe(95); expect(r.refMax).toBe(530);
+    expect(r.refText).toBe("95–530");
+    expect(r.displayName).toBe("Dehydroepiandrosterone sulfate");
+    expect(r.cells[0]!.value).toBe(200);
+    expect(r.cells[0]!.flag).toBe("z-ok"); // 200 within 95–530
+    expect(r.cells[1]).toBeNull();
+  });
+
+  it("unreliable marker → no flag", () => {
+    const r = row("FT");
+    expect(r.unreliable).toBe(true);
+    expect(r.cells[0]!.flag).toBe("");
+  });
+
+  it("clinical flagging over two draws (GLU 90 ok, 130 bad)", () => {
+    const r = row("GLU");
+    expect(r.cells[0]!.flag).toBe("z-ok");
+    expect(r.cells[1]!.flag).toBe("z-bad");
+    expect(r.series).toHaveLength(2);
+    expect(r.loincs).toEqual(["2345-7"]);
+  });
+
+  it("marker only in second draw → null cell first", () => {
+    const r = row("SHBG");
+    expect(r.cells[0]).toBeNull();
+    expect(r.cells[1]!.value).toBe(40);
+    expect(r.refText).toBe("18–54");
+  });
+});
