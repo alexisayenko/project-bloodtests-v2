@@ -1,5 +1,5 @@
 /**
- * Lab matrix builder — pivots draws × markers into a time matrix with cells,
+ * Lab matrix builder — pivots draws × analytes into a time matrix with cells,
  * flags, reference text and sparkline series. Extracted verbatim from
  * homepage/.eleventy.js (`labMatrix`), with the personal/catalog inputs
  * (reference overrides, name/symbol overrides, unreliable & excluded sets)
@@ -23,7 +23,7 @@ export interface MatrixConfig {
   system?: UnitSystem;
   refOverride?: Record<string, RefOverride>;
   unreliable?: Set<string>;
-  excludeMarkers?: Set<string>;
+  excludeMarkers?: Set<string>; // public field (homepage-consumed); LOINC term for the measured quantity is "analyte"
   nameOverride?: Record<string, string>;
   symbolOverride?: Record<string, string>;
 }
@@ -108,15 +108,15 @@ interface Acc {
   loincs: Set<string>;
 }
 
-/** Fold draws (ascending) into per-marker accumulators, preserving first-seen order. */
-function accumulate(asc: Draw[], system: UnitSystem, excludeMarkers: Set<string>): { byKey: Map<string, Acc>; order: string[] } {
+/** Fold draws (ascending) into per-analyte accumulators, preserving first-seen order. */
+function accumulate(asc: Draw[], system: UnitSystem, excludeAnalytes: Set<string>): { byKey: Map<string, Acc>; order: string[] } {
   const byKey = new Map<string, Acc>();
   const order: string[] = [];
   for (const d of asc) {
     for (const it of d.items) {
       const v: UnitValue = (it[system] as UnitValue) || it.original;
       if (v.value == null) continue;
-      if ((it.symbol && excludeMarkers.has(it.symbol)) || (it.analysis && excludeMarkers.has(it.analysis))) continue;
+      if ((it.symbol && excludeAnalytes.has(it.symbol)) || (it.analysis && excludeAnalytes.has(it.analysis))) continue;
       const key = it.symbol || it.loinc || it.analysis!;
       if (!byKey.has(key)) {
         byKey.set(key, { key, symbol: it.symbol ?? undefined, analysis: it.analysis ?? undefined, loinc: it.loinc, unit: v.unit ?? undefined, refMin: v.refMin, refMax: v.refMax, byId: {}, loincs: new Set() });
@@ -140,7 +140,7 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
   const system = config.system ?? "us";
   const refOverride = config.refOverride ?? {};
   const unreliable = config.unreliable ?? new Set<string>();
-  const excludeMarkers = config.excludeMarkers ?? new Set<string>();
+  const excludeAnalytes = config.excludeMarkers ?? new Set<string>();
   const nameOverride = config.nameOverride ?? {};
   const symbolOverride = config.symbolOverride ?? {};
 
@@ -149,7 +149,7 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
     .map((d) => ({ id: idOf(d), date: d.date, labName: d.labName }));
 
   const asc = [...draws].sort((a, b) => a.date.localeCompare(b.date));
-  const { byKey, order } = accumulate(asc, system, excludeMarkers);
+  const { byKey, order } = accumulate(asc, system, excludeAnalytes);
 
   const rows: MatrixRow[] = order.map((k) => {
     const m = byKey.get(k)!;

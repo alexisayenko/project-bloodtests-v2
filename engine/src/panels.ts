@@ -1,5 +1,5 @@
 /**
- * Panel grouping — markers organized into named panels for display. Extracted
+ * Panel grouping — analytes organized into named panels for display. Extracted
  * verbatim from homepage/.eleventy.js (`PANELS` + `groupByPanel`). Panels are
  * shared catalog data (not personal). Display names are English here; localized
  * panel names are a catalog/i18n concern (ADR-0004).

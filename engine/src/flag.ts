@@ -26,7 +26,7 @@ export function zone(value: number, good: number, warn: number, hi = false): Zon
 
 /**
  * Clinical (optimal) thresholds — stricter than population lab ranges. Keyed by
- * marker; `hi: true` = higher-is-better. Each band carries an `RS:` (Reliable
+ * analyte; `hi: true` = higher-is-better. Each band carries an `RS:` (Reliable
  * Source) tag per ADR-0007 (verified against ADA/AUA/CDC-AHA where applicable).
  */
 export interface ClinBand { g: number; y: number; hi?: boolean }
@@ -52,7 +52,7 @@ function heuristicFlag(value: number, refMin?: number | null, refMax?: number | 
 
 /**
  * 3-zone traffic light: clinical thresholds where defined, else heuristic +/-25%
- * vs reference range. `key`/`analysis` select the clinical band; some markers
+ * vs reference range. `key`/`analysis` select the clinical band; some analytes
  * carry no symbol.
  */
 export function flagOf(

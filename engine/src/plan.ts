@@ -1,7 +1,7 @@
 /**
  * Plan overlay — decorates a built matrix with the personal forward-looking
  * plan (lab-plan.json): next-assay flags + reasons, phantom rows for
- * never-measured planned markers, scheduled-draw membership, per-marker price,
+ * never-measured planned analytes, scheduled-draw membership, per-analyte price,
  * and per-draw prescriber (Rx) badges. Extracted verbatim from
  * homepage/.eleventy.js (the plan-injection tail of `labMatrix`).
  *
@@ -24,7 +24,7 @@ export interface NextAssayItem {
   when?: string;
 }
 
-/** A prescriber-code → covered markers map (or "all" for the whole draw). */
+/** A prescriber-code → covered analytes map (or "all" for the whole draw). */
 export type RxMap = Record<string, string[] | "all">;
 
 export interface ScheduleDraw {
@@ -66,7 +66,7 @@ export interface PlanOverlayConfig {
 const covers = (list: string[] | "all", sym?: string, an?: string): boolean =>
   list === "all" || (sym != null && list.includes(sym)) || (an != null && list.includes(an));
 
-/** Whether a row's marker (symbol or analysis) is part of a scheduled draw. */
+/** Whether a row's analyte (symbol or analysis) is part of a scheduled draw. */
 const inDraw = (s: ScheduleDraw, r: PlanRow): boolean =>
   (r.symbol != null && s.keys.includes(r.symbol)) || (r.analysis != null && s.keys.includes(r.analysis));
 
@@ -80,7 +80,7 @@ function flagNextAssay(rows: PlanRow[], nextAssay: NextAssayItem[], defaultWhen:
   }
 }
 
-// 2. inject phantom rows for never-measured *planned* markers
+// 2. inject phantom rows for never-measured *planned* analytes
 function injectPhantomRows(rows: PlanRow[], nextAssay: NextAssayItem[], cols: MatrixCol[], defaultWhen: string): void {
   const have = new Set<string | undefined>(rows.flatMap((r) => [r.symbol, r.analysis]));
   for (const n of nextAssay) {

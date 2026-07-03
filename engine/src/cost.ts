@@ -1,5 +1,5 @@
 /**
- * Cost estimation over a marker set, against a per-lab price catalog
+ * Cost estimation over an analyte set, against a per-lab price catalog
  * (see ADR-0008). Extracted verbatim from homepage/.eleventy.js
  * (`priceOf` / `estimateCost`), with the FBC "billed as one panel" rule
  * generalized to any panel-billed group.
@@ -7,9 +7,9 @@
 
 import { bySymbolOrAnalysis } from "./lookup.js";
 
-/** A group billed as one panel (e.g. FBC) rather than per sub-marker. */
+/** A group billed as one panel (e.g. FBC) rather than per sub-analyte. */
 export interface PanelBilling {
-  /** Markers that belong to the panel. */
+  /** Analytes that belong to the panel. */
   members: string[];
   /** The whole-panel price. */
   price: number;
@@ -18,7 +18,7 @@ export interface PanelBilling {
 }
 
 export interface PriceCatalog {
-  /** Per-marker price (marker key → currency units). */
+  /** Per-analyte price (analyte key → currency units). */
   prices: Record<string, number>;
   /** Groups billed as a single panel. */
   panelBilling?: PanelBilling[];
@@ -30,9 +30,9 @@ function panelOf(key: string | undefined, catalog: PriceCatalog): PanelBilling |
 }
 
 /**
- * Price for one marker row. A panel-billed marker returns the panel price on
+ * Price for one analyte row. A panel-billed analyte returns the panel price on
  * its anchor row and `null` on the others (so a naive row-sum stays correct).
- * Unknown markers return `null` (excluded from totals).
+ * Unknown analytes return `null` (excluded from totals).
  */
 export function priceOf(symbol: string | undefined, analysis: string | undefined, catalog: PriceCatalog): number | null {
   const panel = bySymbolOrAnalysis((k) => panelOf(k, catalog), symbol, analysis);
@@ -41,7 +41,7 @@ export function priceOf(symbol: string | undefined, analysis: string | undefined
 }
 
 /**
- * Total cost of a set of marker keys. Duplicates are deduped; each panel-billed
+ * Total cost of a set of analyte keys. Duplicates are deduped; each panel-billed
  * group is charged once (any member present triggers the panel price).
  */
 export function estimateCost(keys: Iterable<string>, catalog: PriceCatalog): number {

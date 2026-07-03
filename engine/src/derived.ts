@@ -1,5 +1,5 @@
 /**
- * Derived markers — values labs print but source rows may omit, computed from
+ * Derived analytes — values labs print but source rows may omit, computed from
  * exact algebraic definitions (so deriving stays correct vs hand-entering):
  *   Indirect bilirubin = Total − Direct
  *   Globulin          = Total protein − Albumin
@@ -34,7 +34,7 @@ function computedItem(
   };
 }
 
-/** Append derived markers (indirect bilirubin, globulin) to each draw where inputs exist. */
+/** Append derived analytes (indirect bilirubin, globulin) to each draw where inputs exist. */
 export function withDerived(draws: Draw[]): Draw[] {
   return (draws || []).map((dr) => {
     const items = [...(dr.items || [])];
