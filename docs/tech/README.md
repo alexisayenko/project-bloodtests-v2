@@ -41,6 +41,35 @@ invented. These are the references the catalog and schema draw on.
   Society, ADA, AACE, etc.), stored as `Reference` records with a
   `quote`. See the clinical-provenance ADR.
 
+## `RS:` convention — sourcing constants & formulas in code
+
+Provenance (ADR-0007) has two surfaces:
+
+- **Catalog data** (indices, ranges, thresholds) → the structured
+  `references[]` field with organization / document / year /
+  url·doi / quote.
+- **Code constants & formulas** (molar masses, association
+  constants, unit factors, equations hardcoded in `engine/`) → an
+  inline **`RS:`** tag in the doc-comment (RS = Reliable Source).
+
+Rules:
+
+- Every clinical/physical constant or formula carries an `RS:`
+  note naming the source (paper, guideline, PubChem/UniProt for
+  molar masses, etc.).
+- A value used but **not yet verified against a primary source** is
+  tagged **`RS: TODO`** with what still needs checking. It is *not*
+  to be trusted until resolved — the same rule as
+  `evidenceLevel: "disputed"` for catalog data.
+- **Audit anytime:** `grep -rn "RS: TODO" engine/` lists every
+  unverified number. That list should trend to zero, never grow
+  silently.
+
+Molar-mass sources of record: **PubChem** (by CID) for compounds,
+**UniProt** for proteins (e.g. albumin P02768). Formula sources:
+the primary paper (e.g. Vermeulen 1999 for calculated free T,
+CKD-EPI 2021 for eGFR).
+
 ## Decisions
 
 Architecture decision records live in

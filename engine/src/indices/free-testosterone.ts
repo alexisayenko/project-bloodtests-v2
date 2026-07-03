@@ -16,15 +16,43 @@
  * Extracted verbatim from homepage/.eleventy.js (`freeTpg`).
  */
 
-/** Molecular weight of albumin (g/mol). */
+// ── Constants ────────────────────────────────────────────────────────────────
+// Per ADR-0007, every clinical constant carries a reference. Figures tagged
+// `RS: TODO` are used by the current live site but NOT yet verified against a
+// primary source — DO NOT treat them as confirmed until the tag is resolved.
+// (RS = Reliable Source.)
+
+/**
+ * Molecular weight of human serum albumin (g/mol).
+ * RS: TODO — verify. Human albumin MW is commonly cited as ~66.5 kDa
+ * (UniProt P02768, ~66,472 Da). The Vermeulen 1999 paper uses this constant in
+ * the free-T derivation; confirm the exact value it specifies before trusting.
+ */
 const ALBUMIN_MW = 66430;
-/** Albumin association constant (L/mol). */
+/**
+ * Testosterone–albumin association constant Ka (L/mol).
+ * RS: TODO — verify against Vermeulen A, Verdonck L, Kaufman JM,
+ * "A critical evaluation of simple methods for the estimation of free
+ * testosterone in serum", J Clin Endocrinol Metab. 1999;84(10):3666–3672.
+ */
 const KA_ALBUMIN = 3.6e4;
-/** SHBG association constant (L/mol). */
+/**
+ * Testosterone–SHBG association constant Ks (L/mol).
+ * RS: TODO — verify against Vermeulen 1999 (same citation as Ka above).
+ */
 const KS_SHBG = 1e9;
-/** ng/dL ↔ nmol/L factor for testosterone (MW 288.4). */
+/**
+ * Testosterone unit factor: ng/dL → nmol/L uses MW 288.42 g/mol → 1 ng/dL =
+ * 0.03467 nmol/L. RS: molar mass of testosterone (C19H28O2) 288.42 g/mol —
+ * verify against PubChem CID 6013. Conversion factor 0.0347 is standard in
+ * endocrine references (RS: TODO — pin a specific one, e.g. a lab-medicine text).
+ */
 const T_NGDL_TO_NMOLL = 0.03467;
-/** Default serum albumin when not measured (g/dL). */
+/**
+ * Default serum albumin when not measured (g/dL). The value used by the
+ * Vermeulen calculator / live site. RS: TODO — Vermeulen 1999 uses 4.3 g/dL
+ * as the assumed albumin; confirm.
+ */
 export const DEFAULT_ALBUMIN_GDL = 4.3;
 
 export interface FreeTInputs {
