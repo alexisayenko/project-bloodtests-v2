@@ -8,6 +8,7 @@ export { parseDraws, safeParseDraws, DrawSchema, DrawsSchema, LabItemSchema, Uni
 export { zone, flagOf, CLIN_ZONE, type Zone, type ClinBand } from "./flag.js";
 export { fmtNum } from "./format.js";
 export { cholMgdlToMmoll, tgMgdlToMmoll, glucoseMgdlToMmoll } from "./convert.js";
+export { deriveSIUnits, SI_RULES_BY_LOINC, SI_RULES_BY_SYMBOL } from "./units.js";
 
 // Catalog / grouping
 export { PANELS, groupByPanel, type Panel, type PanelGroup, type PanelRow } from "./panels.js";
