@@ -115,7 +115,7 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
 
   const rows: MatrixRow[] = order.map((k) => {
     const m = byKey.get(k)!;
-    const loincs = Array.from(m.loincs).sort();
+    const loincs = Array.from(m.loincs).sort((a, b) => a.localeCompare(b));
     const isUnreliable = (m.symbol != null && unreliable.has(m.symbol)) || (m.analysis != null && unreliable.has(m.analysis));
     const ov = (m.symbol != null ? refOverride[m.symbol] : undefined) ?? (m.analysis != null ? refOverride[m.analysis] : undefined) ?? null;
     let refMin = m.refMin, refMax = m.refMax, refNote: string | undefined;
