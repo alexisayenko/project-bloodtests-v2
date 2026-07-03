@@ -1,5 +1,6 @@
 export { zone, flagOf, CLIN_ZONE, type Zone, type ClinBand } from "./flag.js";
 export { fmtNum } from "./format.js";
+export { priceOf, estimateCost, type PriceCatalog, type PanelBilling } from "./cost.js";
 export { PANELS, groupByPanel, type Panel, type PanelGroup, type PanelRow } from "./panels.js";
 export {
   cholMgdlToMmoll,
