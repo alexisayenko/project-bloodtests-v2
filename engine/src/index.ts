@@ -24,3 +24,5 @@ export { buildIndices, type IndexMatrix, type IndexItem, type IndexCol, type Ind
 export { parseDraws, safeParseDraws, DrawSchema, DrawsSchema, LabItemSchema, UnitValueSchema, LoincSchema } from "./schema.js";
 
 export { buildLabView, type LabView, type LabViewConfig } from "./view.js";
+
+export { applyPlan, type LabPlan, type NextAssayItem, type ScheduleDraw, type PlanRow, type PlanMatrix, type RxBadge, type RxMap, type PlanOverlayConfig } from "./plan.js";
