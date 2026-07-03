@@ -19,7 +19,7 @@ accumulate enough to warrant their own pages — see
   (per-lab `PriceCatalog`, ADR-0008). **78 tests, 100% line
   coverage, strict typecheck.** CI green (GitHub Actions →
   vitest coverage → SonarCloud). Renovate configured. Clinical
-  constants carry `RS:` source tags (6 `RS: TODO` pending
+  constants carry `RS:` source tags (6 `RS: PENDING` pending
   primary-source verification). Not yet: Zod schema, plan overlay
   (next-assay/schedule), homepage rewiring.
 - **2026-07-03 — Project designed and scaffolded.** Architecture

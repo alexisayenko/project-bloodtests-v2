@@ -8,19 +8,27 @@ import { zone } from "../src/flag.js";
  * site's output, these fail. (Regenerate deliberately, never to "make it pass".)
  */
 describe("calculatedFreeTestosterone (Vermeulen)", () => {
-  it("matches the live site — code's own sanity example (total 888 ng/dL)", () => {
+  // Values use the ISSAM/Vermeulen convention (albumin MW 69000), cross-checked
+  // against the ISSAM online calculator (T 446/SHBG 24.9/ALB 4.3 → 2.41%).
+  it("sanity example (total 888 ng/dL)", () => {
     const ft = calculatedFreeTestosterone({ totalT_ngdl: 888, shbg_nmoll: 30, albumin_gdl: 4.3 });
-    expect(ft).toBeCloseTo(213.814778, 5);
+    expect(ft).toBeCloseTo(219.401130, 5);
   });
 
-  it("matches the live site — mid case", () => {
+  it("mid case", () => {
     const ft = calculatedFreeTestosterone({ totalT_ngdl: 500, shbg_nmoll: 40, albumin_gdl: 4.5 });
-    expect(ft).toBeCloseTo(89.411599, 5);
+    expect(ft).toBeCloseTo(91.114808, 5);
   });
 
-  it("matches the live site — albumin defaults to 4.3 when omitted", () => {
+  it("albumin defaults to 4.3 when omitted", () => {
     const ft = calculatedFreeTestosterone({ totalT_ngdl: 300, shbg_nmoll: 60 });
-    expect(ft).toBeCloseTo(38.871705, 5);
+    expect(ft).toBeCloseTo(39.353951, 5);
+  });
+
+  it("matches the ISSAM reference calculator (T 446, SHBG 24.9, ALB 4.3 → ~2.41%)", () => {
+    const ft = calculatedFreeTestosterone({ totalT_ngdl: 446, shbg_nmoll: 24.9, albumin_gdl: 4.3 })!;
+    const pct = (ft / 10 / 446) * 100;
+    expect(pct).toBeCloseTo(2.41, 1);
   });
 
   it("is physiologically sane — free T is ~1–3% of total", () => {

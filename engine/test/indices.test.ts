@@ -17,7 +17,7 @@ const CTX: IndexCtx = { ageYears: 43 };
 const GOLD: Record<string, number> = {
   ka: 3, tchdl: 4, ldlhdl: 2.4, aip: 0.117209, nonhdl: 150, remnant: 30,
   vldl: 30, apobapoa: 0.692308, tyg: 8.871365, gi: 11.875, homair: 1.874669,
-  cft: 91.452358, tlh: 100, te2: 16.666667, dhtt: 8, cortdhea: 60.994842,
+  cft: 93.163378, tlh: 100, te2: 16.666667, dhtt: 8, cortdhea: 60.994842,
   ft3ft4: 0.284597, deritis: 1.25, fib4: 0.961509, tsat: 28.571429,
   egfr: 95.771443, egfrcys: 95.735419, egfrcrcys: 98.326698,
 };

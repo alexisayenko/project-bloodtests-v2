@@ -58,10 +58,10 @@ Rules:
   note naming the source (paper, guideline, PubChem/UniProt for
   molar masses, etc.).
 - A value used but **not yet verified against a primary source** is
-  tagged **`RS: TODO`** with what still needs checking. It is *not*
+  tagged **`RS: PENDING`** with what still needs checking. It is *not*
   to be trusted until resolved — the same rule as
   `evidenceLevel: "disputed"` for catalog data.
-- **Audit anytime:** `grep -rn "RS: TODO" engine/` lists every
+- **Audit anytime:** `grep -rn "RS: PENDING" engine/` lists every
   unverified number. That list should trend to zero, never grow
   silently.
 

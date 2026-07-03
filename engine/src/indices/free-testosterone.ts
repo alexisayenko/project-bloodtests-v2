@@ -25,12 +25,15 @@
 // (mdapp.co/free-and-bioavailable-testosterone-calculator-544).
 
 /**
- * Molecular weight of human serum albumin (g/mol).
- * RS [verified]: UniProt P02768 ≈ 66,472 Da; 66430 is the accurate value.
- * NOTE: some published calculators round to 69000 — the tiny difference shifts
- * bioavailable-fraction results negligibly; we keep the physically-accurate MW.
+ * Molecular weight of albumin used in the Vermeulen equation (g/mol).
+ * RS [verified 2026-07-03]: 69000 — the ISSAM/Vermeulen calculator convention.
+ * IMPORTANT: this is NOT albumin's true MW (~66,472, UniProt P02768). The
+ * Vermeulen binding constants (Ka 3.6e4) were calibrated against MW 69000, so
+ * 69000 must be used for self-consistency and to match the reference calculator.
+ * (Cross-checked: T 446, SHBG 24.9, ALB 4.3 → 2.40% ≈ ISSAM's 2.41%.)
+ * The old homepage code used 66430, giving ~3% low free-T — this corrects it.
  */
-const ALBUMIN_MW = 66430;
+const ALBUMIN_MW = 69000;
 /**
  * Testosterone–albumin association constant Ka (L/mol).
  * RS [verified]: 3.6×10⁴ L/mol — Vermeulen 1999 / ISSAM calculator.
