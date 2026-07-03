@@ -1,0 +1,371 @@
+[
+  {
+    "key": "AST",
+    "symbol": "AST",
+    "displayName": "Aspartate aminotransferase",
+    "loincComponent": "Aspartate aminotransferase",
+    "loincs": [
+      {
+        "code": "1920-8",
+        "longName": "Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 8,
+      "max": 48,
+      "unit": "U/L",
+      "operator": "range",
+      "sex": "M",
+      "ageNote": "Adult male, ≥14 years",
+      "note": "Mayo Clinic Laboratories adult-male interval (males ≥14 y: 8-48 U/L; females ≥14 y: 8-43 U/L). Note: AASLD/ACG cite a lower 'healthy/true-normal' upper limit of ~29-33 U/L for men for detecting NAFLD/chronic liver disease; conventional lab ULNs (e.g. the printed <40) run higher."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Aspartate Aminotransferase (AST) (GOT), Serum (test AST / unit code 8360) - Reference Values",
+        "year": 2025,
+        "url": "https://mml.testcatalog.org/show/AST",
+        "quote": "Males ≥14 years: 8-48 U/L; Females ≥14 years: 8-43 U/L. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "<40 U/L",
+    "why": "Hepatocellular injury marker; released from damaged liver cells (also cardiac/skeletal muscle). Interpreted with ALT (AST:ALT ratio) to distinguish alcoholic vs other liver disease.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  {
+    "key": "ALT",
+    "symbol": "ALT",
+    "displayName": "Alanine aminotransferase",
+    "loincComponent": "Alanine aminotransferase",
+    "loincs": [
+      {
+        "code": "1742-6",
+        "longName": "Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 7,
+      "max": 55,
+      "unit": "U/L",
+      "operator": "range",
+      "sex": "M",
+      "ageNote": "Adult male, ≥6 years",
+      "note": "Mayo Clinic Laboratories interval (males ≥6 y: 7-55 U/L; females ≥6 y: 7-45 U/L). Note: AASLD/ACG recommend a lower 'healthy' upper limit of normal of ~29-33 U/L for men when screening for chronic liver disease; the conventional printed lab ULN (<41) is higher."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Alanine Aminotransferase (ALT) (GPT), Serum (test ALT / unit code 8362) - Reference Values",
+        "year": 2025,
+        "url": "https://gi.testcatalog.org/show/ALT",
+        "quote": "Males ≥6 years: 7-55 U/L; Females ≥6 years: 7-45 U/L. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "<41 U/L",
+    "why": "Most liver-specific aminotransferase; sensitive marker of hepatocellular injury (viral/steatotic/drug-induced hepatitis). Elevations often precede clinical signs.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  {
+    "key": "GGT",
+    "symbol": "GGT",
+    "displayName": "Gamma glutamyl transferase",
+    "loincComponent": "Gamma glutamyl transferase",
+    "loincs": [
+      {
+        "code": "2324-2",
+        "longName": "Gamma glutamyl transferase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 8,
+      "max": 61,
+      "unit": "U/L",
+      "operator": "range",
+      "sex": "M",
+      "ageNote": "Adult male, ≥16 years",
+      "note": "Mayo Clinic Laboratories interval (males ≥16 y: 8-61 U/L; females ≥16 y: 5-36 U/L). Matches the patient's printed lab range. GGT rises in cholestasis/biliary obstruction and confirms hepatic (vs bony) origin of a raised ALP; also induced by alcohol and enzyme-inducing drugs."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Gamma-Glutamyltransferase (GGT), Serum (test GGT) - Reference Values",
+        "year": 2025,
+        "url": "https://gi.testcatalog.org/show/GGT",
+        "quote": "Males ≥16 years: 8-61 U/L; Females ≥16 years: 5-36 U/L."
+      }
+    ],
+    "labPrintedRef": "8-61 U/L",
+    "why": "Sensitive marker of hepatobiliary disease and cholestasis; used to confirm the hepatic source of an elevated ALP and as a marker of alcohol use / enzyme induction.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  {
+    "key": "ALP",
+    "symbol": "ALP",
+    "displayName": "Alkaline phosphatase",
+    "loincComponent": "Alkaline phosphatase",
+    "loincs": [
+      {
+        "code": "6768-6",
+        "longName": "Alkaline phosphatase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 40,
+      "max": 129,
+      "unit": "U/L",
+      "operator": "range",
+      "sex": "M",
+      "ageNote": "Adults ≥19 years (not sex-specific)",
+      "note": "Mayo Clinic Laboratories adult interval (≥19 years: 40-129 U/L); Mayo does not sex-partition the adult range. ALP rises in cholestasis and in bone disease; correlate with GGT to localize the source."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Alkaline Phosphatase, Serum (test ALP) - Reference Values",
+        "year": 2025,
+        "url": "https://mml.testcatalog.org/show/ALP",
+        "quote": "≥19 years: 40-129 U/L. Reference values apply to adults."
+      }
+    ],
+    "labPrintedRef": "35-130 U/L",
+    "why": "Marker of cholestasis/biliary obstruction (and bone turnover). Disproportionate ALP elevation suggests infiltrative or obstructive hepatobiliary disease; paired with GGT to separate hepatic from bony origin.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  {
+    "key": "T-BIL",
+    "symbol": "T-BIL",
+    "displayName": "Bilirubin total",
+    "loincComponent": "Bilirubin.total",
+    "loincs": [
+      {
+        "code": "1975-2",
+        "longName": "Bilirubin.total [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 584.66,
+    "molarMassRef": "PubChem CID 5280352 (Bilirubin), C33H36N4O6, molecular weight 584.7 g/mol (584.66214). Molar (SI) form reported in µmol/L; conversion mg/dL × 17.1 = µmol/L. https://pubchem.ncbi.nlm.nih.gov/compound/Bilirubin",
+    "refDefault": {
+      "min": 0.0,
+      "max": 1.2,
+      "unit": "mg/dL",
+      "operator": "range",
+      "sex": "M",
+      "ageNote": "Adult, ≥18 years (not sex-specific)",
+      "note": "Mayo Clinic Laboratories adult interval (≥18 years: 0.0-1.2 mg/dL). Equivalent SI ≈ 0-20.5 µmol/L (×17.1). Mildly raised unconjugated total bilirubin with normal enzymes is commonly Gilbert syndrome."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Bilirubin, Total, Serum (test BILIT / unit code 81785) - Reference Values",
+        "year": 2025,
+        "url": "https://mml.testcatalog.org/show/BILIT",
+        "quote": "≥18 years: 0.0-1.2 mg/dL. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "0.0-1.0 mg/dL",
+    "why": "Total heme-catabolism pigment; elevation causes jaundice. Fractionation (direct vs indirect) plus enzyme pattern distinguishes hemolytic/Gilbert (unconjugated) from hepatocellular/cholestatic (conjugated) causes.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  {
+    "key": "D-BIL",
+    "symbol": "D-BIL",
+    "displayName": "Bilirubin direct",
+    "loincComponent": "Bilirubin.direct",
+    "loincs": [
+      {
+        "code": "1968-7",
+        "longName": "Bilirubin.direct [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 584.66,
+    "molarMassRef": "PubChem CID 5280352 (Bilirubin), C33H36N4O6, molecular weight 584.7 g/mol (584.66214). Direct = conjugated bilirubin (same core molecule). Molar (SI) form in µmol/L; mg/dL × 17.1 = µmol/L. https://pubchem.ncbi.nlm.nih.gov/compound/Bilirubin",
+    "refDefault": {
+      "min": 0.0,
+      "max": 0.3,
+      "unit": "mg/dL",
+      "operator": "range",
+      "sex": "M",
+      "ageNote": "Adult, ≥12 months (not sex-specific)",
+      "note": "Mayo Clinic Laboratories interval (≥12 months: 0.0-0.3 mg/dL). Equivalent SI ≈ 0-5 µmol/L (×17.1). Conjugated (direct) bilirubin >0.3 mg/dL or a raised direct fraction indicates hepatobiliary/cholestatic disease."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Bilirubin, Direct, Serum (test BILID / unit code 81787) - Reference Values",
+        "year": 2025,
+        "url": "https://gi.testcatalog.org/show/BILID",
+        "quote": "≥12 months: 0.0-0.3 mg/dL. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "0-0.3 mg/dL",
+    "why": "Conjugated bilirubin fraction; elevation points to hepatocellular dysfunction or biliary obstruction (cholestasis) rather than hemolysis/Gilbert syndrome.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  {
+    "key": "TP",
+    "symbol": null,
+    "displayName": "Protein",
+    "loincComponent": "Protein",
+    "loincs": [
+      {
+        "code": "2885-2",
+        "longName": "Protein [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "g/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 6.3,
+      "max": 7.9,
+      "unit": "g/dL",
+      "operator": "range",
+      "sex": "M",
+      "ageNote": "Adult, ≥1 year (not sex-specific)",
+      "note": "Mayo Clinic Laboratories interval (≥1 year: 6.3-7.9 g/dL). Sum of albumin + globulins; interpret with albumin and the A/G ratio. Note the patient's printed lab range (6.20-8.50) is wider than Mayo's."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Protein, Total, Serum (test TP) - Reference Values",
+        "year": 2025,
+        "url": "https://renal.testcatalog.org/show/TP",
+        "quote": "≥1 year: 6.3-7.9 g/dL. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "6.20-8.50 g/dL",
+    "why": "Total of albumin plus globulins; screens for synthetic liver capacity, nutrition, and dysproteinemias. Low total protein with low albumin suggests impaired hepatic synthesis or loss; high globulin fraction raises paraproteinemia/chronic inflammation.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  {
+    "key": "ALB",
+    "symbol": "ALB",
+    "displayName": "Albumin",
+    "loincComponent": "Albumin",
+    "loincs": [
+      {
+        "code": "1751-7",
+        "longName": "Albumin [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "g/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 3.5,
+      "max": 5.0,
+      "unit": "g/dL",
+      "operator": "range",
+      "sex": "M",
+      "ageNote": "Adult, ≥12 months (not sex-specific)",
+      "note": "Mayo Clinic Laboratories interval (≥12 months: 3.5-5.0 g/dL). Note the patient's printed lab range (3.50-5.40) has a higher ceiling than Mayo's. Low albumin marks reduced hepatic synthesis (chronic liver disease), loss (nephrotic/enteropathy), or inflammation."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Albumin, Serum (test ALB) - Reference Values",
+        "year": 2025,
+        "url": "https://mml.testcatalog.org/show/ALB",
+        "quote": "≥12 months: 3.5-5.0 g/dL. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "3.50-5.40 g/dL",
+    "why": "Major hepatic synthetic protein and oncotic driver; a marker of chronic liver synthetic function and nutritional/inflammatory status. Falls in cirrhosis, protein loss, and systemic inflammation (negative acute-phase reactant).",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  {
+    "key": "AMY",
+    "symbol": null,
+    "displayName": "Amylase",
+    "loincComponent": "Amylase",
+    "loincs": [
+      {
+        "code": "1798-8",
+        "longName": "Amylase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 28,
+      "max": 100,
+      "unit": "U/L",
+      "operator": "range",
+      "sex": "M",
+      "ageNote": "Adult, ≥18 years (not sex-specific)",
+      "note": "Mayo Clinic Laboratories adult interval (≥18 years: 28-100 U/L; per 2022 Mayo/MLabs test update). Amylase is a pancreatic/salivary enzyme, not hepatic; not sex-partitioned. Value obtained via search-indexed Mayo catalog content — see reference URL."
+    },
+    "evidenceLevel": "moderate",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Amylase, Total, Serum (test AMS / unit code 8352) - Reference Values",
+        "year": 2022,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/8352",
+        "quote": "Adults ≥18 years: 28-100 U/L (Mayo Clinic Laboratories / MLabs test update, 2022)."
+      }
+    ],
+    "labPrintedRef": "28-120 U/L",
+    "why": "Pancreatic/salivary hydrolase; elevated in acute pancreatitis and pancreatic/salivary duct disease. Included with liver-panel enzymes to cover pancreatobiliary causes of abdominal pain (lipase is more specific).",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  }
+]

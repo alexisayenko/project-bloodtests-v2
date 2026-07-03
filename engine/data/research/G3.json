@@ -1,0 +1,364 @@
+[
+  {
+    "key": "Total Cholesterol",
+    "symbol": "TC",
+    "displayName": "Cholesterol",
+    "loincComponent": "Cholesterol",
+    "loincs": [
+      {
+        "code": "2093-3",
+        "longName": "Cholesterol [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 386.65,
+    "molarMassRef": "PubChem CID 5997 (Cholesterol), Molecular Weight 386.65 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5997",
+    "refDefault": {
+      "min": null,
+      "max": 200,
+      "unit": "mg/dL",
+      "operator": "<",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "NCEP ATP III: desirable <200; borderline-high 200-239; high >=240 mg/dL."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "NCEP (National Cholesterol Education Program) / NHLBI",
+        "document": "ATP III At-A-Glance: Quick Desk Reference",
+        "year": 2001,
+        "url": "https://www.nhlbi.nih.gov/files/docs/guidelines/atglance.pdf",
+        "quote": "Total cholesterol <200 mg/dL is desirable; 200-239 mg/dL borderline high; >=240 mg/dL high."
+      },
+      {
+        "organization": "American Heart Association (Circulation) / NCEP ATP III",
+        "document": "Third Report of the NCEP Expert Panel (ATP III), Final Report",
+        "year": 2002,
+        "url": "https://www.ahajournals.org/doi/10.1161/circ.106.25.3227",
+        "quote": "Total cholesterol categories: <200 mg/dL desirable, 200-239 borderline high, >=240 high."
+      }
+    ],
+    "labPrintedRef": "<200",
+    "why": "Global lipid burden and cardiovascular risk marker; ATP III desirable cutoff <200 mg/dL.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  {
+    "key": "Triglycerides",
+    "symbol": "TRIG",
+    "displayName": "Triglyceride",
+    "loincComponent": "Triglyceride",
+    "loincs": [
+      {
+        "code": "2571-8",
+        "longName": "Triglyceride [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 885.4,
+    "molarMassRef": "Conventional TG conversion uses triolein as reference lipid — PubChem CID 5497163 (Triolein), Molecular Weight 885.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5497163 (mg/dL / 88.57 = mmol/L)",
+    "refDefault": {
+      "min": null,
+      "max": 150,
+      "unit": "mg/dL",
+      "operator": "<",
+      "sex": "any",
+      "ageNote": "adult (fasting)",
+      "note": "NCEP ATP III: normal <150; borderline-high 150-199; high 200-499; very high >=500 mg/dL. >500 targeted first to prevent pancreatitis."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "NCEP (National Cholesterol Education Program) / NHLBI",
+        "document": "ATP III At-A-Glance: Quick Desk Reference",
+        "year": 2001,
+        "url": "https://www.nhlbi.nih.gov/files/docs/guidelines/atglance.pdf",
+        "quote": "Serum triglycerides <150 mg/dL normal; 150-199 borderline high; 200-499 high; >=500 very high."
+      },
+      {
+        "organization": "American Heart Association (Circulation) / NCEP ATP III",
+        "document": "Third Report of the NCEP Expert Panel (ATP III), Final Report",
+        "year": 2002,
+        "url": "https://www.ahajournals.org/doi/10.1161/circ.106.25.3227",
+        "quote": "Triglycerides <150 mg/dL are classified as normal."
+      }
+    ],
+    "labPrintedRef": "<150",
+    "why": "Marker of atherogenic dyslipidemia and metabolic/insulin-resistance risk; ATP III normal cutoff <150 mg/dL (fasting).",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  {
+    "key": "HDL Cholesterol",
+    "symbol": "HDL-C",
+    "displayName": "Cholesterol in HDL",
+    "loincComponent": "Cholesterol in HDL",
+    "loincs": [
+      {
+        "code": "2085-9",
+        "longName": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 386.65,
+    "molarMassRef": "PubChem CID 5997 (Cholesterol), Molecular Weight 386.65 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5997",
+    "refDefault": {
+      "min": 40,
+      "max": null,
+      "unit": "mg/dL",
+      "operator": ">",
+      "sex": "male",
+      "ageNote": "adult male",
+      "note": "NCEP ATP III: low HDL (CHD risk factor) <40 mg/dL; >=60 mg/dL is protective (counts as a negative risk factor). Higher is better (inverse marker)."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "NCEP (National Cholesterol Education Program) / NHLBI",
+        "document": "ATP III At-A-Glance: Quick Desk Reference",
+        "year": 2001,
+        "url": "https://www.nhlbi.nih.gov/files/docs/guidelines/atglance.pdf",
+        "quote": "HDL cholesterol <40 mg/dL is low (a major CHD risk factor); >=60 mg/dL is high and counts as a negative (protective) risk factor."
+      },
+      {
+        "organization": "American Heart Association (Circulation) / NCEP ATP III",
+        "document": "Third Report of the NCEP Expert Panel (ATP III), Final Report",
+        "year": 2002,
+        "url": "https://www.ahajournals.org/doi/10.1161/circ.106.25.3227",
+        "quote": "In ATP III, low HDL cholesterol was defined categorically as a level <40 mg/dL (raised from <35 mg/dL)."
+      }
+    ],
+    "labPrintedRef": ">40",
+    "why": "Anti-atherogenic (reverse cholesterol transport); inverse CHD risk marker. ATP III: <40 mg/dL low in men.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  {
+    "key": "LDL Cholesterol",
+    "symbol": "LDL-C",
+    "displayName": "Cholesterol in LDL",
+    "loincComponent": "Cholesterol in LDL",
+    "loincs": [
+      {
+        "code": "13457-7",
+        "longName": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 386.65,
+    "molarMassRef": "PubChem CID 5997 (Cholesterol), Molecular Weight 386.65 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5997",
+    "refDefault": {
+      "min": null,
+      "max": 100,
+      "unit": "mg/dL",
+      "operator": "<",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "NCEP ATP III: optimal <100; near/above optimal 100-129; borderline-high 130-159; high 160-189; very high >=190 mg/dL. ACC/AHA 2018 treats lower as better in ASCVD risk. Lab prints <130."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "NCEP (National Cholesterol Education Program) / NHLBI",
+        "document": "ATP III At-A-Glance: Quick Desk Reference",
+        "year": 2001,
+        "url": "https://www.nhlbi.nih.gov/files/docs/guidelines/atglance.pdf",
+        "quote": "LDL cholesterol <100 mg/dL optimal; 100-129 near/above optimal; 130-159 borderline high; 160-189 high; >=190 very high."
+      },
+      {
+        "organization": "American Heart Association (Circulation) / NCEP ATP III",
+        "document": "Third Report of the NCEP Expert Panel (ATP III), Final Report",
+        "year": 2002,
+        "url": "https://www.ahajournals.org/doi/10.1161/circ.106.25.3227",
+        "quote": "LDL cholesterol <100 mg/dL is identified as optimal."
+      }
+    ],
+    "labPrintedRef": "<130",
+    "why": "Primary atherogenic lipoprotein and main target of lipid-lowering therapy. ATP III optimal <100 mg/dL; usually calculated (Friedewald).",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  {
+    "key": "Glucose (fasting, serum)",
+    "symbol": "GLU",
+    "displayName": "Glucose",
+    "loincComponent": "Glucose",
+    "loincs": [
+      {
+        "code": "2339-0",
+        "longName": "Glucose [Mass/volume] in Blood",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": 180.16,
+    "molarMassRef": "PubChem CID 5793 (D-Glucose), Molecular Weight 180.16 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5793 (mg/dL / 18.0 = mmol/L)",
+    "refDefault": {
+      "min": null,
+      "max": 100,
+      "unit": "mg/dL",
+      "operator": "<",
+      "sex": "any",
+      "ageNote": "adult, fasting >=8h",
+      "note": "ADA: normal fasting plasma glucose <100 mg/dL; impaired fasting glucose (prediabetes) 100-125 mg/dL; diabetes >=126 mg/dL (confirmed). Lab prints 74-110."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "American Diabetes Association (ADA)",
+        "document": "Diabetes Diagnosis & Tests (about-diabetes/diagnosis)",
+        "year": 2025,
+        "url": "https://diabetes.org/about-diabetes/diagnosis",
+        "quote": "Fasting blood glucose: <100 mg/dL normal; 100-125 mg/dL prediabetes; >=126 mg/dL diabetes."
+      },
+      {
+        "organization": "American Diabetes Association (ADA)",
+        "document": "2. Diagnosis and Classification of Diabetes: Standards of Care in Diabetes—2026",
+        "year": 2026,
+        "url": "https://diabetesjournals.org/care/article/49/Supplement_1/S27/163926/2-Diagnosis-and-Classification-of-Diabetes",
+        "quote": "FPG >=126 mg/dL (7.0 mmol/L) after no caloric intake for >=8 h defines diabetes; IFG is FPG 100-125 mg/dL."
+      }
+    ],
+    "labPrintedRef": "74–110",
+    "why": "Core glycemic status marker; fasting normal <100 mg/dL, prediabetes 100-125, diabetes >=126 (ADA).",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  {
+    "key": "HbA1c",
+    "symbol": "HbA1c",
+    "displayName": "Hemoglobin A1c/Hemoglobin.total",
+    "loincComponent": "Hemoglobin A1c/Hemoglobin.total",
+    "loincs": [
+      {
+        "code": "17855-8",
+        "longName": "Hemoglobin A1c/Hemoglobin.total in Blood by calculation",
+        "property": "MFr",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": null,
+      "max": 5.7,
+      "unit": "%",
+      "operator": "<",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "ADA: normal <5.7%; prediabetes 5.7-6.4%; diabetes >=6.5%. Reflects ~2-3 month average glycemia. Lab prints <6."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "American Diabetes Association (ADA)",
+        "document": "Understanding A1C Test (about-diabetes/a1c)",
+        "year": 2025,
+        "url": "https://diabetes.org/about-diabetes/a1c",
+        "quote": "A1C below 5.7% is normal; 5.7% to <6.5% is prediabetes; 6.5% or higher is diabetes."
+      },
+      {
+        "organization": "American Diabetes Association (ADA)",
+        "document": "2. Diagnosis and Classification of Diabetes: Standards of Care in Diabetes—2026",
+        "year": 2026,
+        "url": "https://diabetesjournals.org/care/article/49/Supplement_1/S27/163926/2-Diagnosis-and-Classification-of-Diabetes",
+        "quote": "A1C >=6.5% (48 mmol/mol) defines diabetes; A1C 5.7-6.4% (39-47 mmol/mol) identifies increased risk (prediabetes)."
+      }
+    ],
+    "labPrintedRef": "<6",
+    "why": "Long-term (2-3 month) glycemic control marker; ADA normal <5.7%, prediabetes 5.7-6.4%, diabetes >=6.5%.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  {
+    "key": "Insulin (fasting)",
+    "symbol": "Insulin",
+    "displayName": "Insulin",
+    "loincComponent": "Insulin",
+    "loincs": [
+      {
+        "code": "20448-7",
+        "longName": "Insulin [Units/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "u[IU]/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 2.6,
+      "max": 24.9,
+      "unit": "µIU/mL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult, fasting",
+      "note": "No formal guideline diagnostic threshold. Reference-lab fasting interval (Labcorp) 2.6-24.9 µIU/mL. Many metabolic clinicians consider <5-9 µIU/mL metabolically optimal (heuristic, not guideline)."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Labcorp",
+        "document": "Insulin, test 004333",
+        "year": 2025,
+        "url": "https://www.labcorp.com/tests/004333/insulin",
+        "quote": "Fasting serum insulin reference interval approximately 2.6-24.9 µIU/mL."
+      }
+    ],
+    "labPrintedRef": "2.6–24.9",
+    "why": "Fasting insulin gauges pancreatic beta-cell output and insulin resistance. No consensus diagnostic cutoff; interpreted against a reference-lab interval (2.6-24.9 µIU/mL) and, orientationally, lower-is-better for metabolic health.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  {
+    "key": "Insulin Resistance (Glu/Ins ratio)",
+    "symbol": null,
+    "displayName": "Glucose/Insulin",
+    "loincComponent": "Glucose/Insulin",
+    "loincs": [
+      {
+        "code": "62418-9",
+        "longName": "Glucose/Insulin [Ratio] in Serum or Plasma",
+        "property": "Ratio",
+        "unit": "{ratio}",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": null,
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "LOINC (Regenstrief Institute)",
+        "document": "LOINC 62418-9 Glucose/Insulin [Ratio] in Serum or Plasma",
+        "year": 2025,
+        "url": "https://loinc.org/62418-9",
+        "quote": "Glucose/Insulin [Ratio] in Serum or Plasma — a derived index used to screen for insulin resistance (e.g., in PCOS)."
+      }
+    ],
+    "labPrintedRef": ">10",
+    "why": "Derived index (fasting glucose divided by fasting insulin), not a standard measured analyte. Lower ratios suggest insulin resistance; cutoffs (e.g., <4.5 mass-ratio, or the printed >10) are lab/assay-specific and not backed by a formal guideline, so refDefault is null and evidence is heuristic.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  }
+]

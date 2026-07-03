@@ -1,0 +1,279 @@
+[
+  {
+    "key": "tsh",
+    "symbol": "TSH",
+    "displayName": "Thyrotropin (TSH)",
+    "loincComponent": "Thyrotropin",
+    "loincs": [
+      {
+        "code": "11580-8",
+        "longName": "Thyrotropin [Units/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "mIU/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.4,
+      "max": 4.0,
+      "unit": "mIU/L",
+      "operator": "range",
+      "sex": "all",
+      "ageNote": "adult",
+      "note": "American Thyroid Association general adult reference. Upper limit varies by lab/assay (~4.0-4.5 mIU/L); TSH rises with age in older adults. TSH is the first-line screen for thyroid dysfunction."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "American Thyroid Association",
+        "document": "Clinical Thyroidology for the Public / Patient Thyroid Information",
+        "year": 2020,
+        "url": "https://www.thyroid.org/patient-thyroid-information/ct-for-patients/january-2020/vol-13-issue-1-p-5-6/",
+        "quote": "Doctors generally consider the normal TSH range to be about 0.4 to 4.0 mU/L for most adults, though ranges vary by laboratory and increase with age."
+      }
+    ],
+    "labPrintedRef": "0.400-4.000 mIU/L",
+    "why": "Pituitary thyrotropin; most sensitive first-line marker of thyroid axis status (primary hypo/hyperthyroidism) and for titrating levothyroxine.",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  {
+    "key": "ft4",
+    "symbol": "FT4",
+    "displayName": "Thyroxine (T4) Free",
+    "loincComponent": "Thyroxine free",
+    "loincs": [
+      {
+        "code": "3024-7",
+        "longName": "Thyroxine (T4) free [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 776.87,
+    "molarMassRef": {
+      "organization": "PubChem (NIH/NLM)",
+      "compound": "Thyroxine (T4)",
+      "cid": 5819,
+      "value": 776.87,
+      "unit": "g/mol",
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5819",
+      "note": "Thyroxine free acid C15H11I4NO4; used to convert ng/dL to molar pmol/L form (multiply ng/dL by 12.87 -> pmol/L)."
+    },
+    "refDefault": {
+      "min": 0.9,
+      "max": 1.7,
+      "unit": "ng/dL",
+      "operator": "range",
+      "sex": "all",
+      "ageNote": "adults >=20 years",
+      "note": "Mayo Clinic Laboratories FRT4 immunoassay adult interval. FT4 also reported in molar pmol/L form (approx 12-22 pmol/L) using thyroxine MW."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "FRT4 - T4 (Thyroxine), Free, Serum (Test ID 8725)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/Overview/8725",
+        "quote": "Reference values, adults >=20 years: 0.9-1.7 ng/dL."
+      }
+    ],
+    "labPrintedRef": "0.70-2.00 ng/dL",
+    "why": "Free (non-protein-bound) thyroxine; confirms and grades thyroid status alongside TSH, and is the key marker in central (pituitary/hypothalamic) hypothyroidism where TSH is unreliable.",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  {
+    "key": "ft3",
+    "symbol": "FT3",
+    "displayName": "Triiodothyronine (T3) Free",
+    "loincComponent": "Triiodothyronine free",
+    "loincs": [
+      {
+        "code": "3051-0",
+        "longName": "Triiodothyronine (T3) Free [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 650.97,
+    "molarMassRef": {
+      "organization": "PubChem (NIH/NLM)",
+      "compound": "Triiodothyronine (Liothyronine, T3)",
+      "cid": 5920,
+      "value": 650.97,
+      "unit": "g/mol",
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/Liothyronine",
+      "note": "Triiodothyronine free acid C15H12I3NO4; used to convert pg/mL to molar pmol/L form (multiply pg/mL by 1.536 -> pmol/L)."
+    },
+    "refDefault": {
+      "min": 2.0,
+      "max": 4.4,
+      "unit": "pg/mL",
+      "operator": "range",
+      "sex": "all",
+      "ageNote": "adults >=19 years",
+      "note": "Mayo Clinic Laboratories T3FR adult interval. FT3 also reported in molar pmol/L form (approx 3.1-6.8 pmol/L) using triiodothyronine MW."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "T3FR - T3 (Triiodothyronine), Free, Serum",
+        "year": 2025,
+        "url": "https://www.testcatalog.org/show/T3FR",
+        "quote": "Reference values, >=19 years: 2.0-4.4 pg/mL."
+      }
+    ],
+    "labPrintedRef": "2.00-4.40 pg/mL",
+    "why": "Free biologically active thyroid hormone; helps characterize hyperthyroidism (e.g., T3-toxicosis) and low-T3 states; adds detail beyond TSH/FT4.",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  {
+    "key": "cortisol",
+    "symbol": "(Cortisol)",
+    "displayName": "Cortisol",
+    "loincComponent": "Cortisol",
+    "loincs": [
+      {
+        "code": "2143-6",
+        "longName": "Cortisol [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ug/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 362.46,
+    "molarMassRef": {
+      "organization": "PubChem (NIH/NLM)",
+      "compound": "Cortisol (Hydrocortisone)",
+      "cid": 5754,
+      "value": 362.46,
+      "unit": "g/mol",
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5754",
+      "note": "Cortisol C21H30O5; used for the molar nmol/L form (multiply ug/dL by 27.59 -> nmol/L)."
+    },
+    "refDefault": {
+      "min": 6.0,
+      "max": 18.4,
+      "unit": "ug/dL",
+      "operator": "range",
+      "sex": "all",
+      "ageNote": "adult",
+      "note": "DIURNAL analyte: this is the MORNING interval (specimen collected 6 a.m.-10 a.m.) per ARUP. Cortisol peaks early morning and troughs late evening; interpret strictly by draw time. p.m. values are substantially lower. Molar form in nmol/L (approx 166-508 nmol/L)."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Cortisol, Serum (Test 0070030)",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0070030",
+        "quote": "Morning specimen (6 a.m.-10 a.m.): 6.0-18.4 ug/dL."
+      },
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "CORT - Cortisol, Serum (Test ID 8545)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/8545",
+        "quote": "Adult a.m. (6 a.m.-8 a.m. peak) reference ~5-25 mcg/dL; when glucocorticoid deficiency is suspected an 8 a.m. plasma cortisol <10 mcg/dL warrants further study."
+      }
+    ],
+    "labPrintedRef": "4.30-22.40 ug/dL (morning draw)",
+    "why": "Primary adrenal glucocorticoid under HPA/ACTH control; morning value screens for adrenal insufficiency (low) and Cushing syndrome (high). Must be interpreted against collection time due to diurnal rhythm.",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  {
+    "key": "acth",
+    "symbol": "ACTH",
+    "displayName": "Corticotropin (ACTH)",
+    "loincComponent": "Corticotropin",
+    "loincs": [
+      {
+        "code": "2141-0",
+        "longName": "Corticotropin [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 7.2,
+      "max": 63.0,
+      "unit": "pg/mL",
+      "operator": "range",
+      "sex": "all",
+      "ageNote": "adult",
+      "note": "MORNING interval: reference range established on specimens drawn 7 a.m.-10 a.m. per Mayo; no established reference values for p.m. draws. ACTH is a 39-aa peptide reported in mass units (pg/mL); no clinically used molar conversion."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "ACTH - Adrenocorticotropic Hormone, Plasma",
+        "year": 2025,
+        "url": "https://endocrinology.testcatalog.org/show/ACTH",
+        "quote": "Reference range 7.2-63 pg/mL, based on samples drawn between 7 a.m.-10 a.m.; no established reference values for p.m. draws."
+      }
+    ],
+    "labPrintedRef": "7.2-63.3 pg/mL (morning draw)",
+    "why": "Pituitary corticotropin; paired with morning cortisol it localizes HPA-axis disorders (ACTH-dependent vs independent Cushing, primary vs secondary adrenal insufficiency).",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  {
+    "key": "igf1",
+    "symbol": "IGF-1",
+    "displayName": "Somatomedin C (IGF-1)",
+    "loincComponent": "Somatomedin C",
+    "loincs": [
+      {
+        "code": "2484-4",
+        "longName": "Somatomedin C [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 84,
+      "max": 270,
+      "unit": "ng/mL",
+      "operator": "range",
+      "sex": "male",
+      "ageNote": "STRONGLY AGE-BANDED: value shown is the adult male 41-45 year band (patient is ~43 y). IGF-1 declines with age, so the correct band must be selected by age; adjacent 46-50 y male band is 81-263 ng/mL.",
+      "note": "Age- and sex-specific reference interval from Warde Medical Laboratory age table. Reflects integrated growth-hormone (GH) secretion."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Warde Medical Laboratory",
+        "document": "Insulin-Like Growth Factor I (IGF-1) - age/sex reference table",
+        "year": 2025,
+        "url": "https://wardelab.com/test/insulin-like-growth-factor-i-igf-1/",
+        "quote": "Males 41-45 years: 84-270 ng/mL; males 46-50 years: 81-263 ng/mL."
+      }
+    ],
+    "labPrintedRef": "84-283 ng/mL (age-banded)",
+    "why": "GH-dependent hepatic peptide; stable integrated index of growth-hormone status used to screen/monitor acromegaly (high) and adult GH deficiency (low). Must be read against the age/sex-matched band.",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  }
+]

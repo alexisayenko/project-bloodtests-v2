@@ -1,0 +1,495 @@
+[
+  {
+    "key": "WBC",
+    "symbol": "WBC",
+    "displayName": "White Blood Cells (Leukocytes)",
+    "loincComponent": "Leukocytes",
+    "loincs": [
+      {
+        "code": "6690-2",
+        "longName": "Leukocytes [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 3.4,
+      "max": 10.8,
+      "unit": "x10^3/µL",
+      "operator": null,
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval; Medscape leukocyte-count reference range is 4.5-11.0 x10^3/µL (comparable)."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "quote": "WBC ... 3.4-10.8 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Leukocyte Count (WBC): Reference Range (article 2054452)",
+        "year": 2023,
+        "url": "https://emedicine.medscape.com/article/2054452-overview",
+        "quote": "The white blood cell (WBC) count reference range is 4500-11,000/µL."
+      }
+    ],
+    "labPrintedRef": "4.00-11.00",
+    "why": "Total circulating leukocyte concentration; screens for infection, inflammation, marrow suppression, leukemia, and treatment/drug effects (e.g., methylphenidate has no expected effect, but is tracked for baseline).",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  {
+    "key": "NEUT_PCT",
+    "symbol": "NEUT%",
+    "displayName": "Neutrophils %",
+    "loincComponent": "Neutrophils/100 leukocytes",
+    "loincs": [
+      {
+        "code": "770-8",
+        "longName": "Neutrophils/100 leukocytes in Blood by Automated count",
+        "property": "Naric",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 55,
+      "max": 70,
+      "unit": "%",
+      "operator": null,
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "Relative (percent) differential; varies substantially by lab. Absolute neutrophil count (NEUT#) is the clinically meaningful measure. Patient's own lab prints a wider 40.0-75.0%."
+    },
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "quote": "Neutrophils: 2500-8000/mm³ (55-70%)."
+      }
+    ],
+    "labPrintedRef": "40.0-75.0",
+    "why": "Neutrophils are the dominant leukocyte and first responders to bacterial infection; percent contextualizes the differential but is derivative of the absolute count.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  {
+    "key": "NEUT_ABS",
+    "symbol": "NEUT#",
+    "displayName": "Neutrophils (absolute)",
+    "loincComponent": "Neutrophils",
+    "loincs": [
+      {
+        "code": "751-8",
+        "longName": "Neutrophils [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 1.4,
+      "max": 7.0,
+      "unit": "x10^3/µL",
+      "operator": null,
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval. Medscape gives 2500-8000/mm³ (2.5-8.0 x10^3/µL), comparable. Absolute neutrophil count is the clinically decisive value (neutropenia <1.5)."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "quote": "Neutrophils (Absolute) ... 1.4-7.0 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "quote": "Neutrophils: 2500-8000/mm³ (55-70%)."
+      }
+    ],
+    "labPrintedRef": "1.78-5.38",
+    "why": "Absolute neutrophil count drives clinical decisions on infection risk and neutropenia; the key myeloid-lineage marker in the differential.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  {
+    "key": "LYMPH_PCT",
+    "symbol": "LYMPH%",
+    "displayName": "Lymphocytes %",
+    "loincComponent": "Lymphocytes/100 leukocytes",
+    "loincs": [
+      {
+        "code": "736-9",
+        "longName": "Lymphocytes/100 leukocytes in Blood by Automated count",
+        "property": "Naric",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 20,
+      "max": 40,
+      "unit": "%",
+      "operator": null,
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "Relative (percent) differential; lab-variable. Absolute lymphocyte count (LYMPH#) is the meaningful measure. Patient's own lab prints 20.0-45.0%."
+    },
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "quote": "Lymphocytes: 1000-4000/mm³ (20-40%)."
+      }
+    ],
+    "labPrintedRef": "20.0-45.0",
+    "why": "Lymphocytes reflect adaptive (viral/immune) responses; percent frames the differential but is derivative of the absolute count.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  {
+    "key": "LYMPH_ABS",
+    "symbol": "LYMPH#",
+    "displayName": "Lymphocytes (absolute)",
+    "loincComponent": "Lymphocytes",
+    "loincs": [
+      {
+        "code": "731-0",
+        "longName": "Lymphocytes [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.7,
+      "max": 3.1,
+      "unit": "x10^3/µL",
+      "operator": null,
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval. Medscape gives 1000-4000/mm³ (1.0-4.0 x10^3/µL). Absolute lymphocyte count is the clinically decisive value."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "quote": "Lymphocytes (Absolute) ... 0.7-3.1 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "quote": "Lymphocytes: 1000-4000/mm³ (20-40%)."
+      }
+    ],
+    "labPrintedRef": "1.32-3.57",
+    "why": "Absolute lymphocyte count tracks immune competence; lymphopenia/lymphocytosis flag viral illness, immune deficiency, or lymphoproliferative disease.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  {
+    "key": "MONO_PCT",
+    "symbol": "MONO%",
+    "displayName": "Monocytes %",
+    "loincComponent": "Monocytes/100 leukocytes",
+    "loincs": [
+      {
+        "code": "5905-5",
+        "longName": "Monocytes/100 leukocytes in Blood by Automated count",
+        "property": "Naric",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 2,
+      "max": 8,
+      "unit": "%",
+      "operator": null,
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "Relative (percent) differential; lab-variable. Absolute monocyte count (MONO#) is the meaningful measure. Patient's own lab prints 2.0-12.0%."
+    },
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "quote": "Monocytes: 100-700/mm³ (2-8%)."
+      }
+    ],
+    "labPrintedRef": "2.0-12.0",
+    "why": "Monocytes mediate chronic inflammation and tissue macrophage supply; percent frames the differential but is derivative of the absolute count.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  {
+    "key": "MONO_ABS",
+    "symbol": "MONO#",
+    "displayName": "Monocytes (absolute)",
+    "loincComponent": "Monocytes",
+    "loincs": [
+      {
+        "code": "742-7",
+        "longName": "Monocytes [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.1,
+      "max": 0.9,
+      "unit": "x10^3/µL",
+      "operator": null,
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval. Medscape gives 100-700/mm³ (0.1-0.7 x10^3/µL), comparable."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "quote": "Monocytes (Absolute) ... 0.1-0.9 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "quote": "Monocytes: 100-700/mm³ (2-8%)."
+      }
+    ],
+    "labPrintedRef": "0.30-0.82",
+    "why": "Absolute monocyte count flags chronic inflammation, recovery from marrow suppression, and (when persistently high) chronic myelomonocytic leukemia.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  {
+    "key": "EO_PCT",
+    "symbol": "EO%",
+    "displayName": "Eosinophils %",
+    "loincComponent": "Eosinophils/100 leukocytes",
+    "loincs": [
+      {
+        "code": "713-8",
+        "longName": "Eosinophils/100 leukocytes in Blood by Automated count",
+        "property": "Naric",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 1,
+      "max": 4,
+      "unit": "%",
+      "operator": null,
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "Relative (percent) differential; lab-variable. Absolute eosinophil count (EO#) is the meaningful measure. Patient's own lab prints <6.0% (upper-bound only)."
+    },
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "quote": "Eosinophils: 50-500/mm³ (1-4%)."
+      }
+    ],
+    "labPrintedRef": "<6.0",
+    "why": "Eosinophils rise with allergy, atopy, drug reactions, and parasitic infection; percent frames the differential but is derivative of the absolute count.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  {
+    "key": "EO_ABS",
+    "symbol": "EO#",
+    "displayName": "Eosinophils (absolute)",
+    "loincComponent": "Eosinophils",
+    "loincs": [
+      {
+        "code": "711-2",
+        "longName": "Eosinophils [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.0,
+      "max": 0.4,
+      "unit": "x10^3/µL",
+      "operator": null,
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval. Medscape gives 50-500/mm³ (0.05-0.5 x10^3/µL). Absolute eosinophil count is the clinically decisive value."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "quote": "Eosinophils (Absolute) ... 0.0-0.4 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "quote": "Eosinophils: 50-500/mm³ (1-4%)."
+      }
+    ],
+    "labPrintedRef": "0.04-0.54",
+    "why": "Absolute eosinophil count grades eosinophilia (allergy, parasites, drug reaction, hypereosinophilic syndromes) more reliably than percent.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  {
+    "key": "BASO_PCT",
+    "symbol": "BASO%",
+    "displayName": "Basophils %",
+    "loincComponent": "Basophils/100 leukocytes",
+    "loincs": [
+      {
+        "code": "706-2",
+        "longName": "Basophils/100 leukocytes in Blood by Automated count",
+        "property": "Naric",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.5,
+      "max": 1.0,
+      "unit": "%",
+      "operator": null,
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "Relative (percent) differential; lab-variable. Absolute basophil count (BASO#) is the meaningful measure. Patient's own lab prints <1.0% (upper-bound only), consistent with the cited upper limit."
+    },
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "quote": "Basophils: 25-100/mm³ (0.5-1%)."
+      }
+    ],
+    "labPrintedRef": "<1.0",
+    "why": "Basophils are the rarest leukocyte; persistent basophilia can signal myeloproliferative disease. Percent is derivative of the absolute count.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  {
+    "key": "BASO_ABS",
+    "symbol": "BASO#",
+    "displayName": "Basophils (absolute)",
+    "loincComponent": "Basophils",
+    "loincs": [
+      {
+        "code": "704-7",
+        "longName": "Basophils [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.0,
+      "max": 0.2,
+      "unit": "x10^3/µL",
+      "operator": null,
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval. Medscape gives 25-100/mm³ (0.025-0.1 x10^3/µL); LabCorp's automated upper bound (0.2) is wider. Absolute basophil count is the clinically decisive value."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "quote": "Basophils (Absolute) ... 0.0-0.2 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "quote": "Basophils: 25-100/mm³ (0.5-1%)."
+      }
+    ],
+    "labPrintedRef": "0.01-0.08",
+    "why": "Absolute basophil count screens for basophilia associated with chronic myeloid leukemia and other myeloproliferative neoplasms.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  }
+]

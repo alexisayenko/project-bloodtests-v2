@@ -1,0 +1,2513 @@
+{
+  "ACTH": {
+    "key": "ACTH",
+    "symbol": "ACTH",
+    "displayName": "Corticotropin (ACTH)",
+    "loincComponent": "Corticotropin",
+    "loincs": [
+      {
+        "code": "2141-0",
+        "longName": "Corticotropin [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 7.2,
+      "max": 63,
+      "unit": "pg/mL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "MORNING interval: reference range established on specimens drawn 7 a.m.-10 a.m. per Mayo; no established reference values for p.m. draws. ACTH is a 39-aa peptide reported in mass units (pg/mL); no clinically used molar conversion."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "ACTH - Adrenocorticotropic Hormone, Plasma",
+        "year": 2025,
+        "url": "https://endocrinology.testcatalog.org/show/ACTH",
+        "doi": null,
+        "quote": "Reference range 7.2-63 pg/mL, based on samples drawn between 7 a.m.-10 a.m.; no established reference values for p.m. draws."
+      }
+    ],
+    "labPrintedRef": "7.2-63.3 pg/mL (morning draw)",
+    "why": "Pituitary corticotropin; paired with morning cortisol it localizes HPA-axis disorders (ACTH-dependent vs independent Cushing, primary vs secondary adrenal insufficiency).",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  "ALB": {
+    "key": "ALB",
+    "symbol": "ALB",
+    "displayName": "Albumin",
+    "loincComponent": "Albumin",
+    "loincs": [
+      {
+        "code": "1751-7",
+        "longName": "Albumin [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "g/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 3.5,
+      "max": 5,
+      "unit": "g/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "Adult, ≥12 months (not sex-specific)",
+      "note": "Mayo Clinic Laboratories interval (≥12 months: 3.5-5.0 g/dL). Note the patient's printed lab range (3.50-5.40) has a higher ceiling than Mayo's. Low albumin marks reduced hepatic synthesis (chronic liver disease), loss (nephrotic/enteropathy), or inflammation."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Albumin, Serum (test ALB) - Reference Values",
+        "year": 2025,
+        "url": "https://mml.testcatalog.org/show/ALB",
+        "doi": null,
+        "quote": "≥12 months: 3.5-5.0 g/dL. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "3.50-5.40 g/dL",
+    "why": "Major hepatic synthetic protein and oncotic driver; a marker of chronic liver synthetic function and nutritional/inflammatory status. Falls in cirrhosis, protein loss, and systemic inflammation (negative acute-phase reactant).",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  "ALP": {
+    "key": "ALP",
+    "symbol": "ALP",
+    "displayName": "Alkaline phosphatase",
+    "loincComponent": "Alkaline phosphatase",
+    "loincs": [
+      {
+        "code": "6768-6",
+        "longName": "Alkaline phosphatase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 40,
+      "max": 129,
+      "unit": "U/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "Adults ≥19 years (not sex-specific)",
+      "note": "Mayo Clinic Laboratories adult interval (≥19 years: 40-129 U/L); Mayo does not sex-partition the adult range. ALP rises in cholestasis and in bone disease; correlate with GGT to localize the source."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Alkaline Phosphatase, Serum (test ALP) - Reference Values",
+        "year": 2025,
+        "url": "https://mml.testcatalog.org/show/ALP",
+        "doi": null,
+        "quote": "≥19 years: 40-129 U/L. Reference values apply to adults."
+      }
+    ],
+    "labPrintedRef": "35-130 U/L",
+    "why": "Marker of cholestasis/biliary obstruction (and bone turnover). Disproportionate ALP elevation suggests infiltrative or obstructive hepatobiliary disease; paired with GGT to separate hepatic from bony origin.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  "ALT": {
+    "key": "ALT",
+    "symbol": "ALT",
+    "displayName": "Alanine aminotransferase",
+    "loincComponent": "Alanine aminotransferase",
+    "loincs": [
+      {
+        "code": "1742-6",
+        "longName": "Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 7,
+      "max": 55,
+      "unit": "U/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "Adult male, ≥6 years",
+      "note": "Mayo Clinic Laboratories interval (males ≥6 y: 7-55 U/L; females ≥6 y: 7-45 U/L). Note: AASLD/ACG recommend a lower 'healthy' upper limit of normal of ~29-33 U/L for men when screening for chronic liver disease; the conventional printed lab ULN (<41) is higher."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Alanine Aminotransferase (ALT) (GPT), Serum (test ALT / unit code 8362) - Reference Values",
+        "year": 2025,
+        "url": "https://gi.testcatalog.org/show/ALT",
+        "doi": null,
+        "quote": "Males ≥6 years: 7-55 U/L; Females ≥6 years: 7-45 U/L. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "<41 U/L",
+    "why": "Most liver-specific aminotransferase; sensitive marker of hepatocellular injury (viral/steatotic/drug-induced hepatitis). Elevations often precede clinical signs.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  "AMY": {
+    "key": "AMY",
+    "symbol": null,
+    "displayName": "Amylase",
+    "loincComponent": "Amylase",
+    "loincs": [
+      {
+        "code": "1798-8",
+        "longName": "Amylase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 28,
+      "max": 100,
+      "unit": "U/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "Adult, ≥18 years (not sex-specific)",
+      "note": "Mayo Clinic Laboratories adult interval (≥18 years: 28-100 U/L; per 2022 Mayo/MLabs test update). Amylase is a pancreatic/salivary enzyme, not hepatic; not sex-partitioned. Value obtained via search-indexed Mayo catalog content — see reference URL."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Amylase, Total, Serum (test AMS / unit code 8352) - Reference Values",
+        "year": 2022,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/8352",
+        "doi": null,
+        "quote": "Adults ≥18 years: 28-100 U/L (Mayo Clinic Laboratories / MLabs test update, 2022)."
+      }
+    ],
+    "labPrintedRef": "28-120 U/L",
+    "why": "Pancreatic/salivary hydrolase; elevated in acute pancreatitis and pancreatic/salivary duct disease. Included with liver-panel enzymes to cover pancreatobiliary causes of abdominal pain (lipase is more specific).",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  "AST": {
+    "key": "AST",
+    "symbol": "AST",
+    "displayName": "Aspartate aminotransferase",
+    "loincComponent": "Aspartate aminotransferase",
+    "loincs": [
+      {
+        "code": "1920-8",
+        "longName": "Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 8,
+      "max": 48,
+      "unit": "U/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "Adult male, ≥14 years",
+      "note": "Mayo Clinic Laboratories adult-male interval (males ≥14 y: 8-48 U/L; females ≥14 y: 8-43 U/L). Note: AASLD/ACG cite a lower 'healthy/true-normal' upper limit of ~29-33 U/L for men for detecting NAFLD/chronic liver disease; conventional lab ULNs (e.g. the printed <40) run higher."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Aspartate Aminotransferase (AST) (GOT), Serum (test AST / unit code 8360) - Reference Values",
+        "year": 2025,
+        "url": "https://mml.testcatalog.org/show/AST",
+        "doi": null,
+        "quote": "Males ≥14 years: 8-48 U/L; Females ≥14 years: 8-43 U/L. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "<40 U/L",
+    "why": "Hepatocellular injury marker; released from damaged liver cells (also cardiac/skeletal muscle). Interpreted with ALT (AST:ALT ratio) to distinguish alcoholic vs other liver disease.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  "BASO#": {
+    "key": "BASO#",
+    "symbol": "BASO#",
+    "displayName": "Basophils (absolute)",
+    "loincComponent": "Basophils",
+    "loincs": [
+      {
+        "code": "704-7",
+        "longName": "Basophils [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0,
+      "max": 0.2,
+      "unit": "x10^3/µL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval. Medscape gives 25-100/mm³ (0.025-0.1 x10^3/µL); LabCorp's automated upper bound (0.2) is wider. Absolute basophil count is the clinically decisive value."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "doi": null,
+        "quote": "Basophils (Absolute) ... 0.0-0.2 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "doi": null,
+        "quote": "Basophils: 25-100/mm³ (0.5-1%)."
+      }
+    ],
+    "labPrintedRef": "0.01-0.08",
+    "why": "Absolute basophil count screens for basophilia associated with chronic myeloid leukemia and other myeloproliferative neoplasms.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "BASO%": {
+    "key": "BASO%",
+    "symbol": "BASO%",
+    "displayName": "Basophils %",
+    "loincComponent": "Basophils/100 leukocytes",
+    "loincs": [
+      {
+        "code": "706-2",
+        "longName": "Basophils/100 leukocytes in Blood by Automated count",
+        "property": "Naric",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.5,
+      "max": 1,
+      "unit": "%",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "Relative (percent) differential; lab-variable. Absolute basophil count (BASO#) is the meaningful measure. Patient's own lab prints <1.0% (upper-bound only), consistent with the cited upper limit."
+    },
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "doi": null,
+        "quote": "Basophils: 25-100/mm³ (0.5-1%)."
+      }
+    ],
+    "labPrintedRef": "<1.0",
+    "why": "Basophils are the rarest leukocyte; persistent basophilia can signal myeloproliferative disease. Percent is derivative of the absolute count.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "Ca": {
+    "key": "Ca",
+    "symbol": "Ca",
+    "displayName": "Calcium",
+    "loincComponent": "Calcium",
+    "loincs": [
+      {
+        "code": "49765-1",
+        "longName": "Calcium [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "17861-6",
+        "longName": "Calcium [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 40.078,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5460341 (Calcium, element), standard atomic weight 40.078 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5460341"
+    },
+    "refDefault": {
+      "min": 8.6,
+      "max": 10.2,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (not sex-specific)",
+      "note": "Total calcium as elemental mass (mg/dL); 1 mg/dL Ca = 0.2495 mmol/L. Widely used adult reference 8.6-10.2 mg/dL; interpret with albumin (correct +0.8 mg/dL per 1 g/dL albumin below 4.0) or measure ionized calcium. Patient lab-printed 8.40-10.20 slightly wider on the low end."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (Tietz-based)",
+        "document": "Serum Calcium: Reference Range, Interpretation, Collection and Panels",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2087447-overview",
+        "doi": null,
+        "quote": "Adult total serum calcium reference range approximately 8.6-10.2 mg/dL (2.15-2.55 mmol/L)."
+      },
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "CA - Overview: Calcium, Total, Serum (unit code 601514)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/601514",
+        "doi": null,
+        "quote": "Total serum calcium adult reference values (age-banded, approximately 8.6-10.0 mg/dL for adults)."
+      }
+    ],
+    "labPrintedRef": "8.40-10.20 mg/dL",
+    "why": "Total serum calcium (protein-bound + ionized) reflects skeletal and mineral homeostasis under PTH and vitamin D; abnormalities point to parathyroid disease, malignancy, vitamin D disorders and CKD.",
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "Cl": {
+    "key": "Cl",
+    "symbol": "Cl",
+    "displayName": "Chloride",
+    "loincComponent": "Chloride",
+    "loincs": [
+      {
+        "code": "2075-0",
+        "longName": "Chloride [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 98,
+      "max": 107,
+      "unit": "mmol/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": ">=18 years (not sex-specific)",
+      "note": "Molar concentration (SCnc). Mayo adults >=18 y 98-107 mmol/L. Patient lab-printed 98-106 essentially equivalent."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "BMAMA - Overview: Basic Metabolic Panel, Serum (Chloride component, unit code 113630)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/113630",
+        "doi": null,
+        "quote": "Chloride, >=18 years: 98-107 mmol/L (1-17 years 102-112 mmol/L)."
+      }
+    ],
+    "labPrintedRef": "98-106 mmol/L",
+    "why": "Major extracellular anion tracking sodium and bicarbonate; used with the anion gap to classify metabolic acidoses and assess acid-base balance.",
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "Cortisol": {
+    "key": "Cortisol",
+    "symbol": null,
+    "displayName": "Cortisol",
+    "loincComponent": "Cortisol",
+    "loincs": [
+      {
+        "code": "2143-6",
+        "longName": "Cortisol [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ug/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 362.46,
+    "molarMassRef": {
+      "organization": "PubChem (NIH/NLM)",
+      "document": null,
+      "year": null,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5754",
+      "doi": null,
+      "quote": null
+    },
+    "refDefault": {
+      "min": 6,
+      "max": 18.4,
+      "unit": "ug/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "DIURNAL analyte: this is the MORNING interval (specimen collected 6 a.m.-10 a.m.) per ARUP. Cortisol peaks early morning and troughs late evening; interpret strictly by draw time. p.m. values are substantially lower. Molar form in nmol/L (approx 166-508 nmol/L)."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Cortisol, Serum (Test 0070030)",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0070030",
+        "doi": null,
+        "quote": "Morning specimen (6 a.m.-10 a.m.): 6.0-18.4 ug/dL."
+      },
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "CORT - Cortisol, Serum (Test ID 8545)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/8545",
+        "doi": null,
+        "quote": "Adult a.m. (6 a.m.-8 a.m. peak) reference ~5-25 mcg/dL; when glucocorticoid deficiency is suspected an 8 a.m. plasma cortisol <10 mcg/dL warrants further study."
+      }
+    ],
+    "labPrintedRef": "4.30-22.40 ug/dL (morning draw)",
+    "why": "Primary adrenal glucocorticoid under HPA/ACTH control; morning value screens for adrenal insufficiency (low) and Cushing syndrome (high). Must be interpreted against collection time due to diurnal rhythm.",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  "CREAT": {
+    "key": "CREAT",
+    "symbol": "CREAT",
+    "displayName": "Creatinine",
+    "loincComponent": "Creatinine",
+    "loincs": [
+      {
+        "code": "2160-0",
+        "longName": "Creatinine [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14682-9",
+        "longName": "Creatinine [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 113.12,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 588 (Creatinine), molecular weight 113.12 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/588"
+    },
+    "refDefault": {
+      "min": 0.74,
+      "max": 1.35,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": ">=15 years (adult male)",
+      "note": "Sex-specific; male upper limit higher than female due to greater muscle mass. Mayo males >=15 y 0.74-1.35 mg/dL. Patient lab-printed upper (1.40) marginally wider."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "RFAMA - Overview: Renal Function Panel, Serum (Creatinine component, unit code 113634)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/113634",
+        "doi": null,
+        "quote": "Creatinine, Males >=15 years: 0.74-1.35 mg/dL (sex-specific reference values)."
+      }
+    ],
+    "labPrintedRef": "0.74-1.40 mg/dL",
+    "why": "Muscle-derived waste filtered by the glomerulus and minimally reabsorbed; the primary endogenous marker of GFR and the basis of eGFR estimation.",
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "D-BIL": {
+    "key": "D-BIL",
+    "symbol": "D-BIL",
+    "displayName": "Bilirubin direct",
+    "loincComponent": "Bilirubin.direct",
+    "loincs": [
+      {
+        "code": "1968-7",
+        "longName": "Bilirubin.direct [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 584.66,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5280352 (Bilirubin), C33H36N4O6, molecular weight 584.7 g/mol (584.66214). Direct = conjugated bilirubin (same core molecule). Molar (SI) form in µmol/L; mg/dL × 17.1 = µmol/L. https://pubchem.ncbi.nlm.nih.gov/compound/Bilirubin"
+    },
+    "refDefault": {
+      "min": 0,
+      "max": 0.3,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "Adult, ≥12 months (not sex-specific)",
+      "note": "Mayo Clinic Laboratories interval (≥12 months: 0.0-0.3 mg/dL). Equivalent SI ≈ 0-5 µmol/L (×17.1). Conjugated (direct) bilirubin >0.3 mg/dL or a raised direct fraction indicates hepatobiliary/cholestatic disease."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Bilirubin, Direct, Serum (test BILID / unit code 81787) - Reference Values",
+        "year": 2025,
+        "url": "https://gi.testcatalog.org/show/BILID",
+        "doi": null,
+        "quote": "≥12 months: 0.0-0.3 mg/dL. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "0-0.3 mg/dL",
+    "why": "Conjugated bilirubin fraction; elevation points to hepatocellular dysfunction or biliary obstruction (cholestasis) rather than hemolysis/Gilbert syndrome.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  "DHEA-S": {
+    "key": "DHEA-S",
+    "symbol": "DHEA-S",
+    "displayName": "Dehydroepiandrosterone sulfate",
+    "loincComponent": "Dehydroepiandrosterone sulfate",
+    "loincs": [
+      {
+        "code": "2191-5",
+        "longName": "Dehydroepiandrosterone sulfate [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ug/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 368.49,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 12594 (Dehydroepiandrosterone sulfate / prasterone sulfate), C19H28O5S, 368.5 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/12594 . Conversion: 1 ug/dL = 0.02714 umol/L."
+    },
+    "refDefault": {
+      "min": 45,
+      "max": 345,
+      "unit": "ug/dL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "Adult male, age 40-49y band (DHEA-S is strongly age-banded and declines with age).",
+      "note": "The patient lab-printed interval (25.00-220.00 ug/dL) is too low for an adult male and appears to be a generic/miscalibrated range. Age-banded adult-male 40-49y reference is 45-345 ug/dL (= ~1.2-9.4 umol/L). Values fall progressively in later decades."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "UCSF Health (Medical Tests Encyclopedia; A.D.A.M./Fischbach-based lab reference)",
+        "document": "DHEA-sulfate test",
+        "year": 2024,
+        "url": "https://www.ucsfhealth.org/care/medical-tests/dhea-sulfate-test",
+        "doi": null,
+        "quote": "Male (age 40 to 49): 45 to 345 mcg/dL (1.2 to 9.4 umol/L)."
+      },
+      {
+        "organization": "MedlinePlus (U.S. National Library of Medicine)",
+        "document": "DHEA-sulfate test: Medical Encyclopedia",
+        "year": 2024,
+        "url": "https://medlineplus.gov/ency/article/003717.htm",
+        "doi": null,
+        "quote": "Male (age 40 to 49): 45 to 345 mcg/dL. Normal ranges are age- and sex-specific; DHEA-S declines with age."
+      }
+    ],
+    "labPrintedRef": "25.00-220.00 ug/dL (flagged: too low for an adult male; use age-banded 45-345 ug/dL for 40-49y)",
+    "why": "Adrenal androgen precursor and the most abundant circulating steroid; marker of adrenal androgen production. Screens for adrenal sources of androgen (markedly high in adrenal tumors/CAH) and gives context for overall androgen status. Strongly age-dependent, so the 40-49y band must be used for this ~43y patient.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  "DHT": {
+    "key": "DHT",
+    "symbol": "DHT",
+    "displayName": "Dihydrotestosterone",
+    "loincComponent": "Dihydrotestosterone",
+    "loincs": [
+      {
+        "code": "26454-9",
+        "longName": "Dihydrotestosterone [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 290.44,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 10635 (5-alpha-Dihydrotestosterone / Stanolone), C19H30O2, 290.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/10635 . Conversion: 1 nmol/L = 29.04 ng/dL; 1 ng/dL = 10 pg/mL."
+    },
+    "refDefault": {
+      "min": 112,
+      "max": 955,
+      "unit": "pg/mL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "Adult male (Mayo Clinic Laboratories LC-MS/MS).",
+      "note": "Mayo reports 11-95 ng/dL (0.38-3.27 nmol/L); expressed in pg/mL this is ~110-950 pg/mL (unit conversion, x10 from ng/dL). Patient lab printed 250-990 pg/mL, an assay-dependent interval. Measure by LC-MS/MS."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories / Endocrine Reviews (Swerdloff RS et al.)",
+        "document": "Dihydrotestosterone: Biochemistry, Physiology, and Clinical Implications of Elevated Blood Levels",
+        "year": 2017,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6459338/",
+        "doi": null,
+        "quote": "A normal DHT range of 11 to 95 ng/dL (0.38 to 3.27 nmol/L) has been published by a well-regarded commercial clinical laboratory (Mayo Medical Laboratories) that uses LC-MS/MS for the assay of DHT."
+      }
+    ],
+    "labPrintedRef": "250-990 pg/mL",
+    "why": "Most potent androgen, made from testosterone by 5-alpha-reductase; drives prostate and scalp/hair effects. Useful in evaluating androgenic alopecia, 5-alpha-reductase issues, or monitoring 5-ARI therapy. LC-MS/MS is required for accuracy.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  "E2": {
+    "key": "E2",
+    "symbol": "E2",
+    "displayName": "Estradiol (E2)",
+    "loincComponent": "Estradiol (E2)",
+    "loincs": [
+      {
+        "code": "2243-4",
+        "longName": "Estradiol (E2) [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 272.38,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5757 (Estradiol), C18H24O2, 272.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5757 . Conversion: 1 pg/mL = 3.671 pmol/L."
+    },
+    "refDefault": {
+      "min": 10,
+      "max": 40,
+      "unit": "pg/mL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "Adult male. Best measured by a sensitive LC-MS/MS assay in men (immunoassays are imprecise at male [low] concentrations).",
+      "note": "Matches patient lab-printed 10.00-40.00 pg/mL. Mayo LC-MS/MS (EEST) adult-male interval is reported in a similar low range (~10-40 pg/mL); use a sensitive/LC-MS/MS method for men."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Reference)",
+        "document": "Estradiol: Reference Range, Interpretation, Collection and Panels",
+        "year": 2023,
+        "url": "https://emedicine.medscape.com/article/2089003-overview",
+        "doi": null,
+        "quote": "Adult male estradiol reference range is approximately 10-40 pg/mL."
+      },
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Estradiol, Serum (EEST) — LC-MS/MS",
+        "year": 2025,
+        "url": "https://endocrinology.testcatalog.org/show/EEST",
+        "doi": null,
+        "quote": "Estradiol measured by high-sensitivity LC-MS/MS; low male-range concentrations require a sensitive method."
+      }
+    ],
+    "labPrintedRef": "10.00-40.00 pg/mL",
+    "why": "Main estrogen in men (aromatized from testosterone); important for bone, libido and gynecomastia risk. Elevated E2 with low T suggests increased aromatase activity/adiposity. Should be run by a sensitive/LC-MS/MS assay in males.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  "EO#": {
+    "key": "EO#",
+    "symbol": "EO#",
+    "displayName": "Eosinophils (absolute)",
+    "loincComponent": "Eosinophils",
+    "loincs": [
+      {
+        "code": "711-2",
+        "longName": "Eosinophils [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0,
+      "max": 0.4,
+      "unit": "x10^3/µL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval. Medscape gives 50-500/mm³ (0.05-0.5 x10^3/µL). Absolute eosinophil count is the clinically decisive value."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "doi": null,
+        "quote": "Eosinophils (Absolute) ... 0.0-0.4 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "doi": null,
+        "quote": "Eosinophils: 50-500/mm³ (1-4%)."
+      }
+    ],
+    "labPrintedRef": "0.04-0.54",
+    "why": "Absolute eosinophil count grades eosinophilia (allergy, parasites, drug reaction, hypereosinophilic syndromes) more reliably than percent.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "EO%": {
+    "key": "EO%",
+    "symbol": "EO%",
+    "displayName": "Eosinophils %",
+    "loincComponent": "Eosinophils/100 leukocytes",
+    "loincs": [
+      {
+        "code": "713-8",
+        "longName": "Eosinophils/100 leukocytes in Blood by Automated count",
+        "property": "Naric",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 1,
+      "max": 4,
+      "unit": "%",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "Relative (percent) differential; lab-variable. Absolute eosinophil count (EO#) is the meaningful measure. Patient's own lab prints <6.0% (upper-bound only)."
+    },
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "doi": null,
+        "quote": "Eosinophils: 50-500/mm³ (1-4%)."
+      }
+    ],
+    "labPrintedRef": "<6.0",
+    "why": "Eosinophils rise with allergy, atopy, drug reactions, and parasitic infection; percent frames the differential but is derivative of the absolute count.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "FSH": {
+    "key": "FSH",
+    "symbol": "FSH",
+    "displayName": "FSH",
+    "loincComponent": "Follitropin",
+    "loincs": [
+      {
+        "code": "15067-2",
+        "longName": "Follitropin [Units/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "m[IU]/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "FSH (follitropin) is a glycoprotein hormone (alpha/beta heterodimer, ~30 kDa) reported in international units (IU) against a WHO standard; no small-molecule molar mass applies."
+    },
+    "refDefault": {
+      "min": 1.5,
+      "max": 12.4,
+      "unit": "mIU/mL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "Adult male (Roche Elecsys / Mayo reference interval).",
+      "note": "Matches patient lab-printed 1.50-12.40 mIU/mL. mIU/mL is numerically equivalent to IU/L."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Follicle-Stimulating Hormone (FSH), Serum (FSH)",
+        "year": 2025,
+        "url": "https://endocrinology.testcatalog.org/show/FSH",
+        "doi": null,
+        "quote": "Adult males: 1.5-12.4 IU/L (Roche Elecsys reference interval)."
+      }
+    ],
+    "labPrintedRef": "1.50-12.40 mIU/mL",
+    "why": "Pituitary gonadotropin acting on Sertoli cells to support spermatogenesis. With LH it localizes the level of an HPG-axis lesion (testicular vs. pituitary/hypothalamic); elevated FSH signals seminiferous-tubule/germ-cell failure.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  "FT": {
+    "key": "FT",
+    "symbol": "FT",
+    "displayName": "Testosterone.Free",
+    "loincComponent": "Testosterone.Free",
+    "loincs": [
+      {
+        "code": "2991-8",
+        "longName": "Testosterone.free [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 288.42,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "Same molecule as total testosterone; PubChem CID 6013, 288.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/6013"
+    },
+    "refDefault": {
+      "min": 40.5,
+      "max": 176.4,
+      "unit": "pg/mL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "Adult male (direct analog immunoassay range as printed by patient lab).",
+      "note": "UNCITED numeric range — taken from patient lab printout; direct analog immunoassay for free testosterone is NOT reliable (Endocrine Society 2018). Preferred: calculated free T (Vermeulen equation from total T + SHBG + albumin) or equilibrium dialysis, which correlate closely (r~0.99). Do not use this direct value for clinical decisions when SHBG is abnormal."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Endocrine Society (Bhasin S et al.)",
+        "document": "Testosterone Therapy in Men With Hypogonadism: An Endocrine Society Clinical Practice Guideline",
+        "year": 2018,
+        "url": "https://academic.oup.com/jcem/article/103/5/1715/4939465",
+        "doi": null,
+        "quote": "Free testosterone should be measured by equilibrium dialysis or calculated using an accurate formula; direct analog immunoassays for free testosterone are not reliable."
+      },
+      {
+        "organization": "Endocrine Society (Fiers T, Vermeulen A et al., J Clin Endocrinol Metab)",
+        "document": "Reassessing Free-Testosterone Calculation by LC-MS/MS Direct Equilibrium Dialysis",
+        "year": 2018,
+        "url": "https://academic.oup.com/jcem/article/103/6/2167/4956600",
+        "doi": null,
+        "quote": "Calculated free testosterone using the Vermeulen equation correlates closely with equilibrium-dialysis free testosterone, unlike direct analog immunoassays."
+      }
+    ],
+    "labPrintedRef": "40.5-176.4 pg/mL",
+    "why": "Fraction of testosterone not bound to SHBG/albumin, biologically active. Useful when SHBG is abnormal and total T is borderline. However the direct analog immunoassay reported here is unreliable; a calculated free T (from this patient's total T, SHBG, albumin) is preferred.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": true
+  },
+  "FT3": {
+    "key": "FT3",
+    "symbol": "FT3",
+    "displayName": "Triiodothyronine (T3) Free",
+    "loincComponent": "Triiodothyronine free",
+    "loincs": [
+      {
+        "code": "3051-0",
+        "longName": "Triiodothyronine (T3) Free [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 650.97,
+    "molarMassRef": {
+      "organization": "PubChem (NIH/NLM)",
+      "document": null,
+      "year": null,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/Liothyronine",
+      "doi": null,
+      "quote": null
+    },
+    "refDefault": {
+      "min": 2,
+      "max": 4.4,
+      "unit": "pg/mL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adults >=19 years",
+      "note": "Mayo Clinic Laboratories T3FR adult interval. FT3 also reported in molar pmol/L form (approx 3.1-6.8 pmol/L) using triiodothyronine MW."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "T3FR - T3 (Triiodothyronine), Free, Serum",
+        "year": 2025,
+        "url": "https://www.testcatalog.org/show/T3FR",
+        "doi": null,
+        "quote": "Reference values, >=19 years: 2.0-4.4 pg/mL."
+      }
+    ],
+    "labPrintedRef": "2.00-4.40 pg/mL",
+    "why": "Free biologically active thyroid hormone; helps characterize hyperthyroidism (e.g., T3-toxicosis) and low-T3 states; adds detail beyond TSH/FT4.",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  "FT4": {
+    "key": "FT4",
+    "symbol": "FT4",
+    "displayName": "Thyroxine (T4) Free",
+    "loincComponent": "Thyroxine free",
+    "loincs": [
+      {
+        "code": "3024-7",
+        "longName": "Thyroxine (T4) free [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 776.87,
+    "molarMassRef": {
+      "organization": "PubChem (NIH/NLM)",
+      "document": null,
+      "year": null,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5819",
+      "doi": null,
+      "quote": null
+    },
+    "refDefault": {
+      "min": 0.9,
+      "max": 1.7,
+      "unit": "ng/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adults >=20 years",
+      "note": "Mayo Clinic Laboratories FRT4 immunoassay adult interval. FT4 also reported in molar pmol/L form (approx 12-22 pmol/L) using thyroxine MW."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "FRT4 - T4 (Thyroxine), Free, Serum (Test ID 8725)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/Overview/8725",
+        "doi": null,
+        "quote": "Reference values, adults >=20 years: 0.9-1.7 ng/dL."
+      }
+    ],
+    "labPrintedRef": "0.70-2.00 ng/dL",
+    "why": "Free (non-protein-bound) thyroxine; confirms and grades thyroid status alongside TSH, and is the key marker in central (pituitary/hypothalamic) hypothyroidism where TSH is unreliable.",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  "GGT": {
+    "key": "GGT",
+    "symbol": "GGT",
+    "displayName": "Gamma glutamyl transferase",
+    "loincComponent": "Gamma glutamyl transferase",
+    "loincs": [
+      {
+        "code": "2324-2",
+        "longName": "Gamma glutamyl transferase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 8,
+      "max": 61,
+      "unit": "U/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "Adult male, ≥16 years",
+      "note": "Mayo Clinic Laboratories interval (males ≥16 y: 8-61 U/L; females ≥16 y: 5-36 U/L). Matches the patient's printed lab range. GGT rises in cholestasis/biliary obstruction and confirms hepatic (vs bony) origin of a raised ALP; also induced by alcohol and enzyme-inducing drugs."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Gamma-Glutamyltransferase (GGT), Serum (test GGT) - Reference Values",
+        "year": 2025,
+        "url": "https://gi.testcatalog.org/show/GGT",
+        "doi": null,
+        "quote": "Males ≥16 years: 8-61 U/L; Females ≥16 years: 5-36 U/L."
+      }
+    ],
+    "labPrintedRef": "8-61 U/L",
+    "why": "Sensitive marker of hepatobiliary disease and cholestasis; used to confirm the hepatic source of an elevated ALP and as a marker of alcohol use / enzyme induction.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  "GLU": {
+    "key": "GLU",
+    "symbol": "GLU",
+    "displayName": "Glucose",
+    "loincComponent": "Glucose",
+    "loincs": [
+      {
+        "code": "2339-0",
+        "longName": "Glucose [Mass/volume] in Blood",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": 180.16,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5793 (D-Glucose), Molecular Weight 180.16 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5793 (mg/dL / 18.0 = mmol/L)"
+    },
+    "refDefault": {
+      "min": null,
+      "max": 100,
+      "unit": "mg/dL",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult, fasting >=8h",
+      "note": "ADA: normal fasting plasma glucose <100 mg/dL; impaired fasting glucose (prediabetes) 100-125 mg/dL; diabetes >=126 mg/dL (confirmed). Lab prints 74-110."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "American Diabetes Association (ADA)",
+        "document": "Diabetes Diagnosis & Tests (about-diabetes/diagnosis)",
+        "year": 2025,
+        "url": "https://diabetes.org/about-diabetes/diagnosis",
+        "doi": null,
+        "quote": "Fasting blood glucose: <100 mg/dL normal; 100-125 mg/dL prediabetes; >=126 mg/dL diabetes."
+      },
+      {
+        "organization": "American Diabetes Association (ADA)",
+        "document": "2. Diagnosis and Classification of Diabetes: Standards of Care in Diabetes—2026",
+        "year": 2026,
+        "url": "https://diabetesjournals.org/care/article/49/Supplement_1/S27/163926/2-Diagnosis-and-Classification-of-Diabetes",
+        "doi": null,
+        "quote": "FPG >=126 mg/dL (7.0 mmol/L) after no caloric intake for >=8 h defines diabetes; IFG is FPG 100-125 mg/dL."
+      }
+    ],
+    "labPrintedRef": "74–110",
+    "why": "Core glycemic status marker; fasting normal <100 mg/dL, prediabetes 100-125, diabetes >=126 (ADA).",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  "HbA1c": {
+    "key": "HbA1c",
+    "symbol": "HbA1c",
+    "displayName": "Hemoglobin A1c/Hemoglobin.total",
+    "loincComponent": "Hemoglobin A1c/Hemoglobin.total",
+    "loincs": [
+      {
+        "code": "17855-8",
+        "longName": "Hemoglobin A1c/Hemoglobin.total in Blood by calculation",
+        "property": "MFr",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": null,
+      "max": 5.7,
+      "unit": "%",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "ADA: normal <5.7%; prediabetes 5.7-6.4%; diabetes >=6.5%. Reflects ~2-3 month average glycemia. Lab prints <6."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "American Diabetes Association (ADA)",
+        "document": "Understanding A1C Test (about-diabetes/a1c)",
+        "year": 2025,
+        "url": "https://diabetes.org/about-diabetes/a1c",
+        "doi": null,
+        "quote": "A1C below 5.7% is normal; 5.7% to <6.5% is prediabetes; 6.5% or higher is diabetes."
+      },
+      {
+        "organization": "American Diabetes Association (ADA)",
+        "document": "2. Diagnosis and Classification of Diabetes: Standards of Care in Diabetes—2026",
+        "year": 2026,
+        "url": "https://diabetesjournals.org/care/article/49/Supplement_1/S27/163926/2-Diagnosis-and-Classification-of-Diabetes",
+        "doi": null,
+        "quote": "A1C >=6.5% (48 mmol/mol) defines diabetes; A1C 5.7-6.4% (39-47 mmol/mol) identifies increased risk (prediabetes)."
+      }
+    ],
+    "labPrintedRef": "<6",
+    "why": "Long-term (2-3 month) glycemic control marker; ADA normal <5.7%, prediabetes 5.7-6.4%, diabetes >=6.5%.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  "HDL-C": {
+    "key": "HDL-C",
+    "symbol": "HDL-C",
+    "displayName": "Cholesterol in HDL",
+    "loincComponent": "Cholesterol in HDL",
+    "loincs": [
+      {
+        "code": "2085-9",
+        "longName": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 386.65,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5997 (Cholesterol), Molecular Weight 386.65 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5997"
+    },
+    "refDefault": {
+      "min": 40,
+      "max": null,
+      "unit": "mg/dL",
+      "operator": "gt",
+      "sex": "male",
+      "ageNote": "adult male",
+      "note": "NCEP ATP III: low HDL (CHD risk factor) <40 mg/dL; >=60 mg/dL is protective (counts as a negative risk factor). Higher is better (inverse marker)."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "NCEP (National Cholesterol Education Program) / NHLBI",
+        "document": "ATP III At-A-Glance: Quick Desk Reference",
+        "year": 2001,
+        "url": "https://www.nhlbi.nih.gov/files/docs/guidelines/atglance.pdf",
+        "doi": null,
+        "quote": "HDL cholesterol <40 mg/dL is low (a major CHD risk factor); >=60 mg/dL is high and counts as a negative (protective) risk factor."
+      },
+      {
+        "organization": "American Heart Association (Circulation) / NCEP ATP III",
+        "document": "Third Report of the NCEP Expert Panel (ATP III), Final Report",
+        "year": 2002,
+        "url": "https://www.ahajournals.org/doi/10.1161/circ.106.25.3227",
+        "doi": null,
+        "quote": "In ATP III, low HDL cholesterol was defined categorically as a level <40 mg/dL (raised from <35 mg/dL)."
+      }
+    ],
+    "labPrintedRef": ">40",
+    "why": "Anti-atherogenic (reverse cholesterol transport); inverse CHD risk marker. ATP III: <40 mg/dL low in men.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  "IGF-1": {
+    "key": "IGF-1",
+    "symbol": "IGF-1",
+    "displayName": "Somatomedin C (IGF-1)",
+    "loincComponent": "Somatomedin C",
+    "loincs": [
+      {
+        "code": "2484-4",
+        "longName": "Somatomedin C [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 84,
+      "max": 270,
+      "unit": "ng/mL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "STRONGLY AGE-BANDED: value shown is the adult male 41-45 year band (patient is ~43 y). IGF-1 declines with age, so the correct band must be selected by age; adjacent 46-50 y male band is 81-263 ng/mL.",
+      "note": "Age- and sex-specific reference interval from Warde Medical Laboratory age table. Reflects integrated growth-hormone (GH) secretion."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Warde Medical Laboratory",
+        "document": "Insulin-Like Growth Factor I (IGF-1) - age/sex reference table",
+        "year": 2025,
+        "url": "https://wardelab.com/test/insulin-like-growth-factor-i-igf-1/",
+        "doi": null,
+        "quote": "Males 41-45 years: 84-270 ng/mL; males 46-50 years: 81-263 ng/mL."
+      }
+    ],
+    "labPrintedRef": "84-283 ng/mL (age-banded)",
+    "why": "GH-dependent hepatic peptide; stable integrated index of growth-hormone status used to screen/monitor acromegaly (high) and adult GH deficiency (low). Must be read against the age/sex-matched band.",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  "Insulin": {
+    "key": "Insulin",
+    "symbol": "Insulin",
+    "displayName": "Insulin",
+    "loincComponent": "Insulin",
+    "loincs": [
+      {
+        "code": "20448-7",
+        "longName": "Insulin [Units/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "u[IU]/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 2.6,
+      "max": 24.9,
+      "unit": "µIU/mL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult, fasting",
+      "note": "No formal guideline diagnostic threshold. Reference-lab fasting interval (Labcorp) 2.6-24.9 µIU/mL. Many metabolic clinicians consider <5-9 µIU/mL metabolically optimal (heuristic, not guideline)."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Labcorp",
+        "document": "Insulin, test 004333",
+        "year": 2025,
+        "url": "https://www.labcorp.com/tests/004333/insulin",
+        "doi": null,
+        "quote": "Fasting serum insulin reference interval approximately 2.6-24.9 µIU/mL."
+      }
+    ],
+    "labPrintedRef": "2.6–24.9",
+    "why": "Fasting insulin gauges pancreatic beta-cell output and insulin resistance. No consensus diagnostic cutoff; interpreted against a reference-lab interval (2.6-24.9 µIU/mL) and, orientationally, lower-is-better for metabolic health.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  "K": {
+    "key": "K",
+    "symbol": "K",
+    "displayName": "Potassium",
+    "loincComponent": "Potassium",
+    "loincs": [
+      {
+        "code": "2823-3",
+        "longName": "Potassium [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 3.6,
+      "max": 5.2,
+      "unit": "mmol/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": ">=1 year (not sex-specific)",
+      "note": "Molar concentration (SCnc). Mayo >=1 y 3.6-5.2 mmol/L. Hemolysis and delayed separation falsely raise results. Patient lab-printed 3.50-5.30 essentially equivalent."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "BMAMA - Overview: Basic Metabolic Panel, Serum (Potassium component, unit code 113630)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/113630",
+        "doi": null,
+        "quote": "Potassium, >=1 year: 3.6-5.2 mmol/L."
+      }
+    ],
+    "labPrintedRef": "3.50-5.30 mmol/L",
+    "why": "Dominant intracellular cation; small serum shifts critically affect cardiac and neuromuscular excitability, and levels reflect renal excretion, acid-base status and aldosterone.",
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "LDL-C": {
+    "key": "LDL-C",
+    "symbol": "LDL-C",
+    "displayName": "Cholesterol in LDL",
+    "loincComponent": "Cholesterol in LDL",
+    "loincs": [
+      {
+        "code": "13457-7",
+        "longName": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 386.65,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5997 (Cholesterol), Molecular Weight 386.65 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5997"
+    },
+    "refDefault": {
+      "min": null,
+      "max": 100,
+      "unit": "mg/dL",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "NCEP ATP III: optimal <100; near/above optimal 100-129; borderline-high 130-159; high 160-189; very high >=190 mg/dL. ACC/AHA 2018 treats lower as better in ASCVD risk. Lab prints <130."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "NCEP (National Cholesterol Education Program) / NHLBI",
+        "document": "ATP III At-A-Glance: Quick Desk Reference",
+        "year": 2001,
+        "url": "https://www.nhlbi.nih.gov/files/docs/guidelines/atglance.pdf",
+        "doi": null,
+        "quote": "LDL cholesterol <100 mg/dL optimal; 100-129 near/above optimal; 130-159 borderline high; 160-189 high; >=190 very high."
+      },
+      {
+        "organization": "American Heart Association (Circulation) / NCEP ATP III",
+        "document": "Third Report of the NCEP Expert Panel (ATP III), Final Report",
+        "year": 2002,
+        "url": "https://www.ahajournals.org/doi/10.1161/circ.106.25.3227",
+        "doi": null,
+        "quote": "LDL cholesterol <100 mg/dL is identified as optimal."
+      }
+    ],
+    "labPrintedRef": "<130",
+    "why": "Primary atherogenic lipoprotein and main target of lipid-lowering therapy. ATP III optimal <100 mg/dL; usually calculated (Friedewald).",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  "LH": {
+    "key": "LH",
+    "symbol": "LH",
+    "displayName": "Luteinizing hormone",
+    "loincComponent": "Luteinizing hormone",
+    "loincs": [
+      {
+        "code": "10501-5",
+        "longName": "Luteinizing hormone [Units/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "m[IU]/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "LH is a glycoprotein hormone (alpha/beta heterodimer, ~28-33 kDa) reported in international units (IU) against a WHO standard; no small-molecule molar mass applies."
+    },
+    "refDefault": {
+      "min": 1.7,
+      "max": 8.6,
+      "unit": "mIU/mL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "Adult male (>=17y; Roche Elecsys / Mayo reference interval).",
+      "note": "Matches patient lab-printed 1.70-8.60 mIU/mL. mIU/mL is numerically equivalent to IU/L."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Luteinizing Hormone (LH), Serum (LH)",
+        "year": 2025,
+        "url": "https://endocrinology.testcatalog.org/show/LH",
+        "doi": null,
+        "quote": "Adult males: 1.7-8.6 IU/L."
+      }
+    ],
+    "labPrintedRef": "1.70-8.60 mIU/mL",
+    "why": "Pituitary gonadotropin that stimulates Leydig-cell testosterone production. Distinguishes primary (high LH) from secondary/central (low or inappropriately normal LH) hypogonadism when paired with total testosterone.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  "LYMPH#": {
+    "key": "LYMPH#",
+    "symbol": "LYMPH#",
+    "displayName": "Lymphocytes (absolute)",
+    "loincComponent": "Lymphocytes",
+    "loincs": [
+      {
+        "code": "731-0",
+        "longName": "Lymphocytes [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.7,
+      "max": 3.1,
+      "unit": "x10^3/µL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval. Medscape gives 1000-4000/mm³ (1.0-4.0 x10^3/µL). Absolute lymphocyte count is the clinically decisive value."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "doi": null,
+        "quote": "Lymphocytes (Absolute) ... 0.7-3.1 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "doi": null,
+        "quote": "Lymphocytes: 1000-4000/mm³ (20-40%)."
+      }
+    ],
+    "labPrintedRef": "1.32-3.57",
+    "why": "Absolute lymphocyte count tracks immune competence; lymphopenia/lymphocytosis flag viral illness, immune deficiency, or lymphoproliferative disease.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "LYMPH%": {
+    "key": "LYMPH%",
+    "symbol": "LYMPH%",
+    "displayName": "Lymphocytes %",
+    "loincComponent": "Lymphocytes/100 leukocytes",
+    "loincs": [
+      {
+        "code": "736-9",
+        "longName": "Lymphocytes/100 leukocytes in Blood by Automated count",
+        "property": "Naric",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 20,
+      "max": 40,
+      "unit": "%",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "Relative (percent) differential; lab-variable. Absolute lymphocyte count (LYMPH#) is the meaningful measure. Patient's own lab prints 20.0-45.0%."
+    },
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "doi": null,
+        "quote": "Lymphocytes: 1000-4000/mm³ (20-40%)."
+      }
+    ],
+    "labPrintedRef": "20.0-45.0",
+    "why": "Lymphocytes reflect adaptive (viral/immune) responses; percent frames the differential but is derivative of the absolute count.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "Mg": {
+    "key": "Mg",
+    "symbol": "Mg",
+    "displayName": "Magnesium",
+    "loincComponent": "Magnesium",
+    "loincs": [
+      {
+        "code": "19123-9",
+        "longName": "Magnesium [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "21377-7",
+        "longName": "Magnesium [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 24.305,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5462224 (Magnesium, element), standard atomic weight 24.305 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5462224"
+    },
+    "refDefault": {
+      "min": 1.7,
+      "max": 2.3,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (not sex-specific)",
+      "note": "Reported as elemental mass (mg/dL); 1 mg/dL Mg = 0.4114 mmol/L. Commonly cited adult interval 1.7-2.3 mg/dL, but there is no international consensus and labs range from ~1.6-2.6 mg/dL. Patient lab-printed 1.80-2.60. Serum reflects <1% of total-body magnesium."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (Tietz-based)",
+        "document": "Magnesium: Reference Range, Interpretation, Collection and Panels",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2088140-overview",
+        "doi": null,
+        "quote": "Adult serum magnesium reference range approximately 1.7-2.3 mg/dL (0.70-0.95 mmol/L); values vary by laboratory."
+      },
+      {
+        "organization": "NIH/PMC (consensus perspective)",
+        "document": "Recommendation on an updated standardization of serum magnesium reference ranges",
+        "year": 2022,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9186275/",
+        "doi": null,
+        "quote": "There is currently no international consensus on the serum magnesium reference interval; standardization is recommended."
+      }
+    ],
+    "labPrintedRef": "1.80-2.60 mg/dL",
+    "why": "Cofactor for hundreds of enzymes and ATP-dependent reactions; hypomagnesemia commonly accompanies and perpetuates refractory hypokalemia and hypocalcemia.",
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "MONO#": {
+    "key": "MONO#",
+    "symbol": "MONO#",
+    "displayName": "Monocytes (absolute)",
+    "loincComponent": "Monocytes",
+    "loincs": [
+      {
+        "code": "742-7",
+        "longName": "Monocytes [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.1,
+      "max": 0.9,
+      "unit": "x10^3/µL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval. Medscape gives 100-700/mm³ (0.1-0.7 x10^3/µL), comparable."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "doi": null,
+        "quote": "Monocytes (Absolute) ... 0.1-0.9 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "doi": null,
+        "quote": "Monocytes: 100-700/mm³ (2-8%)."
+      }
+    ],
+    "labPrintedRef": "0.30-0.82",
+    "why": "Absolute monocyte count flags chronic inflammation, recovery from marrow suppression, and (when persistently high) chronic myelomonocytic leukemia.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "MONO%": {
+    "key": "MONO%",
+    "symbol": "MONO%",
+    "displayName": "Monocytes %",
+    "loincComponent": "Monocytes/100 leukocytes",
+    "loincs": [
+      {
+        "code": "5905-5",
+        "longName": "Monocytes/100 leukocytes in Blood by Automated count",
+        "property": "Naric",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 2,
+      "max": 8,
+      "unit": "%",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "Relative (percent) differential; lab-variable. Absolute monocyte count (MONO#) is the meaningful measure. Patient's own lab prints 2.0-12.0%."
+    },
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "doi": null,
+        "quote": "Monocytes: 100-700/mm³ (2-8%)."
+      }
+    ],
+    "labPrintedRef": "2.0-12.0",
+    "why": "Monocytes mediate chronic inflammation and tissue macrophage supply; percent frames the differential but is derivative of the absolute count.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "Na": {
+    "key": "Na",
+    "symbol": "Na",
+    "displayName": "Sodium",
+    "loincComponent": "Sodium",
+    "loincs": [
+      {
+        "code": "2951-2",
+        "longName": "Sodium [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 135,
+      "max": 145,
+      "unit": "mmol/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": ">=1 year (not sex-specific)",
+      "note": "Electrolyte reported as molar concentration (SCnc). Mayo >=1 y 135-145 mmol/L. Patient lab-printed upper (148) is slightly wider."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "BMAMA - Overview: Basic Metabolic Panel, Serum (Sodium component, unit code 113630)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/113630",
+        "doi": null,
+        "quote": "Sodium, >=1 year: 135-145 mmol/L."
+      }
+    ],
+    "labPrintedRef": "135-148 mmol/L",
+    "why": "Principal extracellular cation governing plasma osmolality and water distribution; dysnatremia reflects water balance and ADH/renal handling rather than total-body sodium.",
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "NEUT#": {
+    "key": "NEUT#",
+    "symbol": "NEUT#",
+    "displayName": "Neutrophils (absolute)",
+    "loincComponent": "Neutrophils",
+    "loincs": [
+      {
+        "code": "751-8",
+        "longName": "Neutrophils [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 1.4,
+      "max": 7,
+      "unit": "x10^3/µL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval. Medscape gives 2500-8000/mm³ (2.5-8.0 x10^3/µL), comparable. Absolute neutrophil count is the clinically decisive value (neutropenia <1.5)."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "doi": null,
+        "quote": "Neutrophils (Absolute) ... 1.4-7.0 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "doi": null,
+        "quote": "Neutrophils: 2500-8000/mm³ (55-70%)."
+      }
+    ],
+    "labPrintedRef": "1.78-5.38",
+    "why": "Absolute neutrophil count drives clinical decisions on infection risk and neutropenia; the key myeloid-lineage marker in the differential.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "NEUT%": {
+    "key": "NEUT%",
+    "symbol": "NEUT%",
+    "displayName": "Neutrophils %",
+    "loincComponent": "Neutrophils/100 leukocytes",
+    "loincs": [
+      {
+        "code": "770-8",
+        "longName": "Neutrophils/100 leukocytes in Blood by Automated count",
+        "property": "Naric",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 55,
+      "max": 70,
+      "unit": "%",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "Relative (percent) differential; varies substantially by lab. Absolute neutrophil count (NEUT#) is the clinically meaningful measure. Patient's own lab prints a wider 40.0-75.0%."
+    },
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Differential Blood Count: Reference Range (article 2085133)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085133-overview",
+        "doi": null,
+        "quote": "Neutrophils: 2500-8000/mm³ (55-70%)."
+      }
+    ],
+    "labPrintedRef": "40.0-75.0",
+    "why": "Neutrophils are the dominant leukocyte and first responders to bacterial infection; percent contextualizes the differential but is derivative of the absolute count.",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "P": {
+    "key": "P",
+    "symbol": "P",
+    "displayName": "Phosphate",
+    "loincComponent": "Phosphate",
+    "loincs": [
+      {
+        "code": "2774-8",
+        "longName": "Phosphate [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14879-1",
+        "longName": "Phosphate [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 30.974,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5462309 (Phosphorus, element), standard atomic weight 30.974 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5462309 (assays report inorganic phosphate but result expressed as elemental phosphorus mass; 1 mg/dL P = 0.3229 mmol/L)"
+    },
+    "refDefault": {
+      "min": 2.5,
+      "max": 4.5,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (not sex-specific)",
+      "note": "Measured as inorganic phosphate, reported as elemental phosphorus mass (mg/dL). Mayo adult 2.5-4.5 mg/dL, matching patient lab-printed range."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "PHOS - Overview: Phosphorus (Inorganic), Serum (unit code 8408)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/8408",
+        "doi": null,
+        "quote": "Adults: 2.5-4.5 mg/dL for serum inorganic phosphorus."
+      }
+    ],
+    "labPrintedRef": "2.5-4.5 mg/dL",
+    "why": "Essential for ATP, nucleic acids and bone mineral; serum levels are tightly co-regulated with calcium by PTH, vitamin D and FGF23, and disturbances are central to CKD-mineral bone disorder.",
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "PRL": {
+    "key": "PRL",
+    "symbol": "PRL",
+    "displayName": "Prolactin",
+    "loincComponent": "Prolactin",
+    "loincs": [
+      {
+        "code": "15081-3",
+        "longName": "Prolactin [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "Prolactin is a single-chain polypeptide hormone (~23 kDa); reported in ng/mL (mass) or mIU/L (IU vs WHO standard). Conversion used here: 1 ng/mL ~ 21.2 mIU/L (WHO 3rd IS 84/500). No small-molecule molar mass applies."
+    },
+    "refDefault": {
+      "min": 2.5,
+      "max": 17,
+      "unit": "ng/mL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "Adult male.",
+      "note": "Derived by converting the patient lab-printed Roche range 53-360 mIU/L using 1 ng/mL ~ 21.2 mIU/L -> ~2.5-17.0 ng/mL. Corroborated by published adult-male ranges (~3-13 ng/mL, Medscape). Note macroprolactin and stress/venipuncture can spuriously elevate PRL."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Reference)",
+        "document": "Prolactin: Reference Range, Interpretation, Collection and Panels",
+        "year": 2023,
+        "url": "https://emedicine.medscape.com/article/2089400-overview",
+        "doi": null,
+        "quote": "Adult male prolactin reference range is approximately 3-13 ng/mL."
+      },
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Prolactin, Serum (PRL)",
+        "year": 2025,
+        "url": "https://endocrinology.testcatalog.org/show/PRL",
+        "doi": null,
+        "quote": "Prolactin, adult male reference interval (Roche immunoassay), reported in ng/mL."
+      }
+    ],
+    "labPrintedRef": "53-360 mIU/L (= ~2.5-17.0 ng/mL)",
+    "why": "Anterior-pituitary hormone; hyperprolactinemia (prolactinoma, dopamine-blocking drugs, hypothyroidism) suppresses GnRH/LH/FSH and causes secondary hypogonadism, low libido and infertility. Included to work up any low-testosterone finding. Relevant given this patient's stimulant (Concerta) and thyroid context.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  "PTH": {
+    "key": "PTH",
+    "symbol": "PTH",
+    "displayName": "Parathyroid Hormone (intact)",
+    "loincComponent": "Parathyrin.intact",
+    "loincs": [
+      {
+        "code": "2731-8",
+        "longName": "Parathyrin.intact [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 15,
+      "max": 65,
+      "unit": "pg/mL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (not sex-specific)",
+      "note": "Intact (2nd/3rd-generation) PTH immunoassay reference interval 15-65 pg/mL (ECLIA); assay- and vitamin-D-dependent. Must be interpreted together with serum calcium. Matches patient lab-printed range."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "NorDx / Mayo Clinic Laboratories network",
+        "document": "Parathyroid Hormone (PTH), Intact, Serum (PTHI) test catalog",
+        "year": 2025,
+        "url": "https://nordx.testcatalog.org/show/PTHI",
+        "doi": null,
+        "quote": "Reference range for intact parathyroid hormone 15-65 pg/mL by electrochemiluminescent immunoassay (ECLIA)."
+      },
+      {
+        "organization": "Mayo Clinic Laboratories Network Reference Lab",
+        "document": "Parathyroid Hormone (PTH), Intact, Plasma or Serum (PTH-INT)",
+        "year": 2025,
+        "url": "https://nrl.testcatalog.org/show/PTH-INT",
+        "doi": null,
+        "quote": "Intact PTH reference values 15-65 pg/mL; values >65 pg/mL with hypercalcemia suggest primary hyperparathyroidism."
+      }
+    ],
+    "labPrintedRef": "15-65 pg/mL",
+    "why": "Principal regulator of calcium and phosphate; the master test for distinguishing PTH-dependent (primary/secondary hyperparathyroidism) from PTH-independent causes of calcium disorders and for CKD-MBD monitoring.",
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "SHBG": {
+    "key": "SHBG",
+    "symbol": "SHBG",
+    "displayName": "Sex hormone binding globulin",
+    "loincComponent": "Sex hormone binding globulin",
+    "loincs": [
+      {
+        "code": "13967-5",
+        "longName": "Sex hormone binding globulin [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "nmol/L",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "2942-1",
+        "longName": "Sex hormone binding globulin [Moles/volume] in Serum or Plasma (older/alternate code)",
+        "property": "SCnc",
+        "unit": "nmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "SHBG is a homodimeric plasma glycoprotein (~90-100 kDa); reported as a molar concentration by immunoassay calibration, no small-molecule molar mass applies."
+    },
+    "refDefault": {
+      "min": 10,
+      "max": 57,
+      "unit": "nmol/L",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "Adult male (Mayo Clinic Laboratories reference interval).",
+      "note": "Patient lab printed a wider interval (14.5-95.0 nmol/L, assay-dependent). SHBG rises with age/thyroxine excess/liver disease and falls with obesity/insulin resistance; interpret total T in its context."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Sex Hormone-Binding Globulin (SHBG), Serum (test 200065 / SHBG1)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-notifications/attachment.php?id=14455",
+        "doi": null,
+        "quote": "Reference range for adult males: 10-57 nmol/L."
+      }
+    ],
+    "labPrintedRef": "14.5-95.0 nmol/L",
+    "why": "Principal transport protein for testosterone and estradiol; determines the free (bioavailable) fraction. Essential context for interpreting total testosterone and for computing calculated free testosterone. This patient is on levothyroxine (Euthyrox), which can raise SHBG.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  "T": {
+    "key": "T",
+    "symbol": "T",
+    "displayName": "Testosterone",
+    "loincComponent": "Testosterone",
+    "loincs": [
+      {
+        "code": "14913-8",
+        "longName": "Testosterone [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "2986-8",
+        "longName": "Testosterone [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "nmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 288.42,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 6013 (Testosterone), C19H28O2, 288.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/6013 . Conversion: 1 nmol/L = 28.84 ng/dL."
+    },
+    "refDefault": {
+      "min": 264,
+      "max": 916,
+      "unit": "ng/dL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "Harmonized, CDC-standardized reference range derived from healthy non-obese men aged 19-39y; applied to healthy adult men. Levels decline with age/adiposity.",
+      "note": "264-916 ng/dL = 9.2-31.8 nmol/L (matches patient lab-printed 9.20-31.80 nmol/L). Hypogonadism is commonly diagnosed below ~300 ng/dL (Endocrine Society / AUA). Draw morning, fasting; confirm low values on a repeat morning sample."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Endocrine Society (Travison TG et al., J Clin Endocrinol Metab)",
+        "document": "Harmonized Reference Ranges for Circulating Testosterone Levels in Men of Four Cohort Studies in the United States and Europe",
+        "year": 2017,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5460736/",
+        "doi": null,
+        "quote": "The harmonized normal range in healthy nonobese men 19 to 39 years old was 264 to 916 ng/dL (9.2 to 31.8 nmol/L)."
+      },
+      {
+        "organization": "Endocrine Society",
+        "document": "Landmark Study Defines Normal Ranges for Testosterone Levels (news release)",
+        "year": 2017,
+        "url": "https://www.endocrine.org/news-and-advocacy/news-room/2017/landmark-study-defines-normal-ranges-for-testosterone-levels",
+        "doi": null,
+        "quote": "Normal testosterone levels range from 264 to 916 ng/dL in men 19 to 39 years old who are not obese."
+      },
+      {
+        "organization": "Endocrine Society (Bhasin S et al.)",
+        "document": "Testosterone Therapy in Men With Hypogonadism: An Endocrine Society Clinical Practice Guideline",
+        "year": 2018,
+        "url": "https://academic.oup.com/jcem/article/103/5/1715/4939465",
+        "doi": null,
+        "quote": "We recommend making a diagnosis of hypogonadism only in men with symptoms and signs consistent with testosterone deficiency and unequivocally and consistently low serum total testosterone... a total testosterone level below 300 ng/dL is commonly used as a diagnostic threshold."
+      }
+    ],
+    "labPrintedRef": "9.20-31.80 nmol/L (= 264-916 ng/dL)",
+    "why": "Primary readout of Leydig-cell androgen output and the core analyte of the HPG axis; screens for hypogonadism (low libido, fatigue, low mood, relevant to a ~43y male). Total T is the recommended first-line test; interpret with SHBG when binding is abnormal.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  "T-BIL": {
+    "key": "T-BIL",
+    "symbol": "T-BIL",
+    "displayName": "Bilirubin total",
+    "loincComponent": "Bilirubin.total",
+    "loincs": [
+      {
+        "code": "1975-2",
+        "longName": "Bilirubin.total [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 584.66,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5280352 (Bilirubin), C33H36N4O6, molecular weight 584.7 g/mol (584.66214). Molar (SI) form reported in µmol/L; conversion mg/dL × 17.1 = µmol/L. https://pubchem.ncbi.nlm.nih.gov/compound/Bilirubin"
+    },
+    "refDefault": {
+      "min": 0,
+      "max": 1.2,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "Adult, ≥18 years (not sex-specific)",
+      "note": "Mayo Clinic Laboratories adult interval (≥18 years: 0.0-1.2 mg/dL). Equivalent SI ≈ 0-20.5 µmol/L (×17.1). Mildly raised unconjugated total bilirubin with normal enzymes is commonly Gilbert syndrome."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Bilirubin, Total, Serum (test BILIT / unit code 81785) - Reference Values",
+        "year": 2025,
+        "url": "https://mml.testcatalog.org/show/BILIT",
+        "doi": null,
+        "quote": "≥18 years: 0.0-1.2 mg/dL. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "0.0-1.0 mg/dL",
+    "why": "Total heme-catabolism pigment; elevation causes jaundice. Fractionation (direct vs indirect) plus enzyme pattern distinguishes hemolytic/Gilbert (unconjugated) from hepatocellular/cholestatic (conjugated) causes.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  "TC": {
+    "key": "TC",
+    "symbol": "TC",
+    "displayName": "Cholesterol",
+    "loincComponent": "Cholesterol",
+    "loincs": [
+      {
+        "code": "2093-3",
+        "longName": "Cholesterol [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 386.65,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5997 (Cholesterol), Molecular Weight 386.65 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5997"
+    },
+    "refDefault": {
+      "min": null,
+      "max": 200,
+      "unit": "mg/dL",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "NCEP ATP III: desirable <200; borderline-high 200-239; high >=240 mg/dL."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "NCEP (National Cholesterol Education Program) / NHLBI",
+        "document": "ATP III At-A-Glance: Quick Desk Reference",
+        "year": 2001,
+        "url": "https://www.nhlbi.nih.gov/files/docs/guidelines/atglance.pdf",
+        "doi": null,
+        "quote": "Total cholesterol <200 mg/dL is desirable; 200-239 mg/dL borderline high; >=240 mg/dL high."
+      },
+      {
+        "organization": "American Heart Association (Circulation) / NCEP ATP III",
+        "document": "Third Report of the NCEP Expert Panel (ATP III), Final Report",
+        "year": 2002,
+        "url": "https://www.ahajournals.org/doi/10.1161/circ.106.25.3227",
+        "doi": null,
+        "quote": "Total cholesterol categories: <200 mg/dL desirable, 200-239 borderline high, >=240 high."
+      }
+    ],
+    "labPrintedRef": "<200",
+    "why": "Global lipid burden and cardiovascular risk marker; ATP III desirable cutoff <200 mg/dL.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  "TP": {
+    "key": "TP",
+    "symbol": null,
+    "displayName": "Protein",
+    "loincComponent": "Protein",
+    "loincs": [
+      {
+        "code": "2885-2",
+        "longName": "Protein [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "g/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 6.3,
+      "max": 7.9,
+      "unit": "g/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "Adult, ≥1 year (not sex-specific)",
+      "note": "Mayo Clinic Laboratories interval (≥1 year: 6.3-7.9 g/dL). Sum of albumin + globulins; interpret with albumin and the A/G ratio. Note the patient's printed lab range (6.20-8.50) is wider than Mayo's."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Protein, Total, Serum (test TP) - Reference Values",
+        "year": 2025,
+        "url": "https://renal.testcatalog.org/show/TP",
+        "doi": null,
+        "quote": "≥1 year: 6.3-7.9 g/dL. Reference values have not been established for patients <12 months of age."
+      }
+    ],
+    "labPrintedRef": "6.20-8.50 g/dL",
+    "why": "Total of albumin plus globulins; screens for synthetic liver capacity, nutrition, and dysproteinemias. Low total protein with low albumin suggests impaired hepatic synthesis or loss; high globulin fraction raises paraproteinemia/chronic inflammation.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  "TRIG": {
+    "key": "TRIG",
+    "symbol": "TRIG",
+    "displayName": "Triglyceride",
+    "loincComponent": "Triglyceride",
+    "loincs": [
+      {
+        "code": "2571-8",
+        "longName": "Triglyceride [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 885.4,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "Conventional TG conversion uses triolein as reference lipid — PubChem CID 5497163 (Triolein), Molecular Weight 885.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5497163 (mg/dL / 88.57 = mmol/L)"
+    },
+    "refDefault": {
+      "min": null,
+      "max": 150,
+      "unit": "mg/dL",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult (fasting)",
+      "note": "NCEP ATP III: normal <150; borderline-high 150-199; high 200-499; very high >=500 mg/dL. >500 targeted first to prevent pancreatitis."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "NCEP (National Cholesterol Education Program) / NHLBI",
+        "document": "ATP III At-A-Glance: Quick Desk Reference",
+        "year": 2001,
+        "url": "https://www.nhlbi.nih.gov/files/docs/guidelines/atglance.pdf",
+        "doi": null,
+        "quote": "Serum triglycerides <150 mg/dL normal; 150-199 borderline high; 200-499 high; >=500 very high."
+      },
+      {
+        "organization": "American Heart Association (Circulation) / NCEP ATP III",
+        "document": "Third Report of the NCEP Expert Panel (ATP III), Final Report",
+        "year": 2002,
+        "url": "https://www.ahajournals.org/doi/10.1161/circ.106.25.3227",
+        "doi": null,
+        "quote": "Triglycerides <150 mg/dL are classified as normal."
+      }
+    ],
+    "labPrintedRef": "<150",
+    "why": "Marker of atherogenic dyslipidemia and metabolic/insulin-resistance risk; ATP III normal cutoff <150 mg/dL (fasting).",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false
+  },
+  "TSH": {
+    "key": "TSH",
+    "symbol": "TSH",
+    "displayName": "Thyrotropin (TSH)",
+    "loincComponent": "Thyrotropin",
+    "loincs": [
+      {
+        "code": "11580-8",
+        "longName": "Thyrotropin [Units/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "mIU/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.4,
+      "max": 4,
+      "unit": "mIU/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "American Thyroid Association general adult reference. Upper limit varies by lab/assay (~4.0-4.5 mIU/L); TSH rises with age in older adults. TSH is the first-line screen for thyroid dysfunction."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "American Thyroid Association",
+        "document": "Clinical Thyroidology for the Public / Patient Thyroid Information",
+        "year": 2020,
+        "url": "https://www.thyroid.org/patient-thyroid-information/ct-for-patients/january-2020/vol-13-issue-1-p-5-6/",
+        "doi": null,
+        "quote": "Doctors generally consider the normal TSH range to be about 0.4 to 4.0 mU/L for most adults, though ranges vary by laboratory and increase with age."
+      }
+    ],
+    "labPrintedRef": "0.400-4.000 mIU/L",
+    "why": "Pituitary thyrotropin; most sensitive first-line marker of thyroid axis status (primary hypo/hyperthyroidism) and for titrating levothyroxine.",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  "Urea": {
+    "key": "Urea",
+    "symbol": null,
+    "displayName": "Urea",
+    "loincComponent": "Urea",
+    "loincs": [
+      {
+        "code": "3091-6",
+        "longName": "Urea [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "22664-7",
+        "longName": "Urea [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 60.06,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 1176 (Urea), molecular weight 60.06 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/1176"
+    },
+    "refDefault": {
+      "min": 12.9,
+      "max": 42.8,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "adult 18-60 y",
+      "note": "Reported as whole urea molecule (LOINC 3091-6), not urea nitrogen. Tietz adult interval 2.14-7.14 mmol/L = 12.9-42.8 mg/dL. For cross-check: Mayo BUN adult male 8-24 mg/dL x 2.14 (urea/BUN mass ratio 60/28) = ~17-51 mg/dL urea. Patient lab-printed range 10-50 mg/dL is consistent."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (Tietz Clinical Guide to Laboratory Tests)",
+        "document": "Lab Values, Normal Adult: Laboratory Reference Ranges in Healthy Adults — Urea",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2172316-overview",
+        "doi": null,
+        "quote": "Adults 18-60 y serum urea reference range 2.14-7.14 mmol/L (12.9-42.8 mg/dL); 60-90 y 2.86-8.21 mmol/L (17.1-49.3 mg/dL)."
+      },
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "BUN - Overview: Blood Urea Nitrogen (BUN), Serum (unit code 81793)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/81793",
+        "doi": null,
+        "quote": "Males >=18 years: 8-24 mg/dL; Females >=18 years: 6-21 mg/dL (urea nitrogen; multiply by 2.14 to express as urea)."
+      }
+    ],
+    "labPrintedRef": "10-50 mg/dL",
+    "why": "End product of protein/amino-acid catabolism cleared by the kidneys; elevated urea reflects reduced GFR, dehydration, high protein load or catabolism (BUN:creatinine ratio distinguishes pre-renal from renal causes).",
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "Uric Acid": {
+    "key": "Uric Acid",
+    "symbol": null,
+    "displayName": "Urate",
+    "loincComponent": "Urate",
+    "loincs": [
+      {
+        "code": "3084-1",
+        "longName": "Urate [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14933-6",
+        "longName": "Urate [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 168.11,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 1175 (Uric Acid), molecular weight 168.11 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/1175"
+    },
+    "refDefault": {
+      "min": 3.7,
+      "max": 8,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": ">=13 years (adult male)",
+      "note": "Sex-specific (male range higher). Mayo male reference 3.7-8.0 mg/dL (female 2.7-6.1); hyperuricemia defined as >8.0 mg/dL in males. Lower bound has some inter-lab variability; patient lab-printed 3.0-7.0 is narrower/lower on the top."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "URIC - Overview: Uric Acid, Serum (unit code 8440)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/8440",
+        "doi": null,
+        "quote": "Hyperuricemia is most commonly defined by serum/plasma uric acid concentrations above 8.0 mg/dL in males or above 6.1 mg/dL in females; male reference interval 3.7-8.0 mg/dL, female 2.7-6.1 mg/dL."
+      }
+    ],
+    "labPrintedRef": "3.0-7.0 mg/dL",
+    "why": "Terminal product of purine metabolism; supersaturation drives gout and urate nephrolithiasis, and it is a marker in tumor lysis and metabolic syndrome.",
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "WBC": {
+    "key": "WBC",
+    "symbol": "WBC",
+    "displayName": "White Blood Cells (Leukocytes)",
+    "loincComponent": "Leukocytes",
+    "loincs": [
+      {
+        "code": "6690-2",
+        "longName": "Leukocytes [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 3.4,
+      "max": 10.8,
+      "unit": "x10^3/µL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult (>=18 years)",
+      "note": "LabCorp adult reference interval; Medscape leukocyte-count reference range is 4.5-11.0 x10^3/µL (comparable)."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "LabCorp",
+        "document": "Sample Patient Report (specimen 505271) - Reference Intervals, CBC With Differential",
+        "year": 2025,
+        "url": "https://www.labcorp.com/assets/1724",
+        "doi": null,
+        "quote": "WBC ... 3.4-10.8 x10E3/uL (adult reference interval)."
+      },
+      {
+        "organization": "Medscape / eMedicine",
+        "document": "Leukocyte Count (WBC): Reference Range (article 2054452)",
+        "year": 2023,
+        "url": "https://emedicine.medscape.com/article/2054452-overview",
+        "doi": null,
+        "quote": "The white blood cell (WBC) count reference range is 4500-11,000/µL."
+      }
+    ],
+    "labPrintedRef": "4.00-11.00",
+    "why": "Total circulating leukocyte concentration; screens for infection, inflammation, marrow suppression, leukemia, and treatment/drug effects (e.g., methylphenidate has no expected effect, but is tracked for baseline).",
+    "frequency": null,
+    "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  }
+}

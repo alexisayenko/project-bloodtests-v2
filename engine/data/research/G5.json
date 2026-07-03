@@ -1,0 +1,427 @@
+[
+  {
+    "key": "testosterone_total",
+    "symbol": "T",
+    "displayName": "Testosterone",
+    "loincComponent": "Testosterone",
+    "loincs": [
+      {
+        "code": "14913-8",
+        "longName": "Testosterone [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "2986-8",
+        "longName": "Testosterone [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "nmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 288.42,
+    "molarMassRef": "PubChem CID 6013 (Testosterone), C19H28O2, 288.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/6013 . Conversion: 1 nmol/L = 28.84 ng/dL.",
+    "refDefault": {
+      "min": 264,
+      "max": 916,
+      "unit": "ng/dL",
+      "operator": "range",
+      "sex": "male",
+      "ageNote": "Harmonized, CDC-standardized reference range derived from healthy non-obese men aged 19-39y; applied to healthy adult men. Levels decline with age/adiposity.",
+      "note": "264-916 ng/dL = 9.2-31.8 nmol/L (matches patient lab-printed 9.20-31.80 nmol/L). Hypogonadism is commonly diagnosed below ~300 ng/dL (Endocrine Society / AUA). Draw morning, fasting; confirm low values on a repeat morning sample."
+    },
+    "evidenceLevel": "high",
+    "references": [
+      {
+        "organization": "Endocrine Society (Travison TG et al., J Clin Endocrinol Metab)",
+        "document": "Harmonized Reference Ranges for Circulating Testosterone Levels in Men of Four Cohort Studies in the United States and Europe",
+        "year": 2017,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5460736/",
+        "quote": "The harmonized normal range in healthy nonobese men 19 to 39 years old was 264 to 916 ng/dL (9.2 to 31.8 nmol/L)."
+      },
+      {
+        "organization": "Endocrine Society",
+        "document": "Landmark Study Defines Normal Ranges for Testosterone Levels (news release)",
+        "year": 2017,
+        "url": "https://www.endocrine.org/news-and-advocacy/news-room/2017/landmark-study-defines-normal-ranges-for-testosterone-levels",
+        "quote": "Normal testosterone levels range from 264 to 916 ng/dL in men 19 to 39 years old who are not obese."
+      },
+      {
+        "organization": "Endocrine Society (Bhasin S et al.)",
+        "document": "Testosterone Therapy in Men With Hypogonadism: An Endocrine Society Clinical Practice Guideline",
+        "year": 2018,
+        "url": "https://academic.oup.com/jcem/article/103/5/1715/4939465",
+        "quote": "We recommend making a diagnosis of hypogonadism only in men with symptoms and signs consistent with testosterone deficiency and unequivocally and consistently low serum total testosterone... a total testosterone level below 300 ng/dL is commonly used as a diagnostic threshold."
+      }
+    ],
+    "labPrintedRef": "9.20-31.80 nmol/L (= 264-916 ng/dL)",
+    "why": "Primary readout of Leydig-cell androgen output and the core analyte of the HPG axis; screens for hypogonadism (low libido, fatigue, low mood, relevant to a ~43y male). Total T is the recommended first-line test; interpret with SHBG when binding is abnormal.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  {
+    "key": "free_testosterone",
+    "symbol": "FT",
+    "displayName": "Testosterone.Free",
+    "loincComponent": "Testosterone.Free",
+    "loincs": [
+      {
+        "code": "2991-8",
+        "longName": "Testosterone.free [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 288.42,
+    "molarMassRef": "Same molecule as total testosterone; PubChem CID 6013, 288.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/6013",
+    "refDefault": {
+      "min": 40.5,
+      "max": 176.4,
+      "unit": "pg/mL",
+      "operator": "range",
+      "sex": "male",
+      "ageNote": "Adult male (direct analog immunoassay range as printed by patient lab).",
+      "note": "UNCITED numeric range — taken from patient lab printout; direct analog immunoassay for free testosterone is NOT reliable (Endocrine Society 2018). Preferred: calculated free T (Vermeulen equation from total T + SHBG + albumin) or equilibrium dialysis, which correlate closely (r~0.99). Do not use this direct value for clinical decisions when SHBG is abnormal."
+    },
+    "evidenceLevel": "low",
+    "references": [
+      {
+        "organization": "Endocrine Society (Bhasin S et al.)",
+        "document": "Testosterone Therapy in Men With Hypogonadism: An Endocrine Society Clinical Practice Guideline",
+        "year": 2018,
+        "url": "https://academic.oup.com/jcem/article/103/5/1715/4939465",
+        "quote": "Free testosterone should be measured by equilibrium dialysis or calculated using an accurate formula; direct analog immunoassays for free testosterone are not reliable."
+      },
+      {
+        "organization": "Endocrine Society (Fiers T, Vermeulen A et al., J Clin Endocrinol Metab)",
+        "document": "Reassessing Free-Testosterone Calculation by LC-MS/MS Direct Equilibrium Dialysis",
+        "year": 2018,
+        "url": "https://academic.oup.com/jcem/article/103/6/2167/4956600",
+        "quote": "Calculated free testosterone using the Vermeulen equation correlates closely with equilibrium-dialysis free testosterone, unlike direct analog immunoassays."
+      }
+    ],
+    "labPrintedRef": "40.5-176.4 pg/mL",
+    "why": "Fraction of testosterone not bound to SHBG/albumin, biologically active. Useful when SHBG is abnormal and total T is borderline. However the direct analog immunoassay reported here is unreliable; a calculated free T (from this patient's total T, SHBG, albumin) is preferred.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": true
+  },
+  {
+    "key": "shbg",
+    "symbol": "SHBG",
+    "displayName": "Sex hormone binding globulin",
+    "loincComponent": "Sex hormone binding globulin",
+    "loincs": [
+      {
+        "code": "13967-5",
+        "longName": "Sex hormone binding globulin [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "nmol/L",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "2942-1",
+        "longName": "Sex hormone binding globulin [Moles/volume] in Serum or Plasma (older/alternate code)",
+        "property": "SCnc",
+        "unit": "nmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": "SHBG is a homodimeric plasma glycoprotein (~90-100 kDa); reported as a molar concentration by immunoassay calibration, no small-molecule molar mass applies.",
+    "refDefault": {
+      "min": 10,
+      "max": 57,
+      "unit": "nmol/L",
+      "operator": "range",
+      "sex": "male",
+      "ageNote": "Adult male (Mayo Clinic Laboratories reference interval).",
+      "note": "Patient lab printed a wider interval (14.5-95.0 nmol/L, assay-dependent). SHBG rises with age/thyroxine excess/liver disease and falls with obesity/insulin resistance; interpret total T in its context."
+    },
+    "evidenceLevel": "moderate",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Sex Hormone-Binding Globulin (SHBG), Serum (test 200065 / SHBG1)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-notifications/attachment.php?id=14455",
+        "quote": "Reference range for adult males: 10-57 nmol/L."
+      }
+    ],
+    "labPrintedRef": "14.5-95.0 nmol/L",
+    "why": "Principal transport protein for testosterone and estradiol; determines the free (bioavailable) fraction. Essential context for interpreting total testosterone and for computing calculated free testosterone. This patient is on levothyroxine (Euthyrox), which can raise SHBG.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  {
+    "key": "estradiol",
+    "symbol": "E2",
+    "displayName": "Estradiol (E2)",
+    "loincComponent": "Estradiol (E2)",
+    "loincs": [
+      {
+        "code": "2243-4",
+        "longName": "Estradiol (E2) [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 272.38,
+    "molarMassRef": "PubChem CID 5757 (Estradiol), C18H24O2, 272.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5757 . Conversion: 1 pg/mL = 3.671 pmol/L.",
+    "refDefault": {
+      "min": 10,
+      "max": 40,
+      "unit": "pg/mL",
+      "operator": "range",
+      "sex": "male",
+      "ageNote": "Adult male. Best measured by a sensitive LC-MS/MS assay in men (immunoassays are imprecise at male [low] concentrations).",
+      "note": "Matches patient lab-printed 10.00-40.00 pg/mL. Mayo LC-MS/MS (EEST) adult-male interval is reported in a similar low range (~10-40 pg/mL); use a sensitive/LC-MS/MS method for men."
+    },
+    "evidenceLevel": "moderate",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Reference)",
+        "document": "Estradiol: Reference Range, Interpretation, Collection and Panels",
+        "year": 2023,
+        "url": "https://emedicine.medscape.com/article/2089003-overview",
+        "quote": "Adult male estradiol reference range is approximately 10-40 pg/mL."
+      },
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Estradiol, Serum (EEST) — LC-MS/MS",
+        "year": 2025,
+        "url": "https://endocrinology.testcatalog.org/show/EEST",
+        "quote": "Estradiol measured by high-sensitivity LC-MS/MS; low male-range concentrations require a sensitive method."
+      }
+    ],
+    "labPrintedRef": "10.00-40.00 pg/mL",
+    "why": "Main estrogen in men (aromatized from testosterone); important for bone, libido and gynecomastia risk. Elevated E2 with low T suggests increased aromatase activity/adiposity. Should be run by a sensitive/LC-MS/MS assay in males.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  {
+    "key": "dht",
+    "symbol": "DHT",
+    "displayName": "Dihydrotestosterone",
+    "loincComponent": "Dihydrotestosterone",
+    "loincs": [
+      {
+        "code": "26454-9",
+        "longName": "Dihydrotestosterone [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 290.44,
+    "molarMassRef": "PubChem CID 10635 (5-alpha-Dihydrotestosterone / Stanolone), C19H30O2, 290.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/10635 . Conversion: 1 nmol/L = 29.04 ng/dL; 1 ng/dL = 10 pg/mL.",
+    "refDefault": {
+      "min": 112,
+      "max": 955,
+      "unit": "pg/mL",
+      "operator": "range",
+      "sex": "male",
+      "ageNote": "Adult male (Mayo Clinic Laboratories LC-MS/MS).",
+      "note": "Mayo reports 11-95 ng/dL (0.38-3.27 nmol/L); expressed in pg/mL this is ~110-950 pg/mL (unit conversion, x10 from ng/dL). Patient lab printed 250-990 pg/mL, an assay-dependent interval. Measure by LC-MS/MS."
+    },
+    "evidenceLevel": "moderate",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories / Endocrine Reviews (Swerdloff RS et al.)",
+        "document": "Dihydrotestosterone: Biochemistry, Physiology, and Clinical Implications of Elevated Blood Levels",
+        "year": 2017,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6459338/",
+        "quote": "A normal DHT range of 11 to 95 ng/dL (0.38 to 3.27 nmol/L) has been published by a well-regarded commercial clinical laboratory (Mayo Medical Laboratories) that uses LC-MS/MS for the assay of DHT."
+      }
+    ],
+    "labPrintedRef": "250-990 pg/mL",
+    "why": "Most potent androgen, made from testosterone by 5-alpha-reductase; drives prostate and scalp/hair effects. Useful in evaluating androgenic alopecia, 5-alpha-reductase issues, or monitoring 5-ARI therapy. LC-MS/MS is required for accuracy.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  {
+    "key": "lh",
+    "symbol": "LH",
+    "displayName": "Luteinizing hormone",
+    "loincComponent": "Luteinizing hormone",
+    "loincs": [
+      {
+        "code": "10501-5",
+        "longName": "Luteinizing hormone [Units/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "m[IU]/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": "LH is a glycoprotein hormone (alpha/beta heterodimer, ~28-33 kDa) reported in international units (IU) against a WHO standard; no small-molecule molar mass applies.",
+    "refDefault": {
+      "min": 1.7,
+      "max": 8.6,
+      "unit": "mIU/mL",
+      "operator": "range",
+      "sex": "male",
+      "ageNote": "Adult male (>=17y; Roche Elecsys / Mayo reference interval).",
+      "note": "Matches patient lab-printed 1.70-8.60 mIU/mL. mIU/mL is numerically equivalent to IU/L."
+    },
+    "evidenceLevel": "moderate",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Luteinizing Hormone (LH), Serum (LH)",
+        "year": 2025,
+        "url": "https://endocrinology.testcatalog.org/show/LH",
+        "quote": "Adult males: 1.7-8.6 IU/L."
+      }
+    ],
+    "labPrintedRef": "1.70-8.60 mIU/mL",
+    "why": "Pituitary gonadotropin that stimulates Leydig-cell testosterone production. Distinguishes primary (high LH) from secondary/central (low or inappropriately normal LH) hypogonadism when paired with total testosterone.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  {
+    "key": "fsh",
+    "symbol": "FSH",
+    "displayName": "FSH",
+    "loincComponent": "Follitropin",
+    "loincs": [
+      {
+        "code": "15067-2",
+        "longName": "Follitropin [Units/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "m[IU]/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": "FSH (follitropin) is a glycoprotein hormone (alpha/beta heterodimer, ~30 kDa) reported in international units (IU) against a WHO standard; no small-molecule molar mass applies.",
+    "refDefault": {
+      "min": 1.5,
+      "max": 12.4,
+      "unit": "mIU/mL",
+      "operator": "range",
+      "sex": "male",
+      "ageNote": "Adult male (Roche Elecsys / Mayo reference interval).",
+      "note": "Matches patient lab-printed 1.50-12.40 mIU/mL. mIU/mL is numerically equivalent to IU/L."
+    },
+    "evidenceLevel": "moderate",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Follicle-Stimulating Hormone (FSH), Serum (FSH)",
+        "year": 2025,
+        "url": "https://endocrinology.testcatalog.org/show/FSH",
+        "quote": "Adult males: 1.5-12.4 IU/L (Roche Elecsys reference interval)."
+      }
+    ],
+    "labPrintedRef": "1.50-12.40 mIU/mL",
+    "why": "Pituitary gonadotropin acting on Sertoli cells to support spermatogenesis. With LH it localizes the level of an HPG-axis lesion (testicular vs. pituitary/hypothalamic); elevated FSH signals seminiferous-tubule/germ-cell failure.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  {
+    "key": "prolactin",
+    "symbol": "PRL",
+    "displayName": "Prolactin",
+    "loincComponent": "Prolactin",
+    "loincs": [
+      {
+        "code": "15081-3",
+        "longName": "Prolactin [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": "Prolactin is a single-chain polypeptide hormone (~23 kDa); reported in ng/mL (mass) or mIU/L (IU vs WHO standard). Conversion used here: 1 ng/mL ~ 21.2 mIU/L (WHO 3rd IS 84/500). No small-molecule molar mass applies.",
+    "refDefault": {
+      "min": 2.5,
+      "max": 17.0,
+      "unit": "ng/mL",
+      "operator": "range",
+      "sex": "male",
+      "ageNote": "Adult male.",
+      "note": "Derived by converting the patient lab-printed Roche range 53-360 mIU/L using 1 ng/mL ~ 21.2 mIU/L -> ~2.5-17.0 ng/mL. Corroborated by published adult-male ranges (~3-13 ng/mL, Medscape). Note macroprolactin and stress/venipuncture can spuriously elevate PRL."
+    },
+    "evidenceLevel": "moderate",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Reference)",
+        "document": "Prolactin: Reference Range, Interpretation, Collection and Panels",
+        "year": 2023,
+        "url": "https://emedicine.medscape.com/article/2089400-overview",
+        "quote": "Adult male prolactin reference range is approximately 3-13 ng/mL."
+      },
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Prolactin, Serum (PRL)",
+        "year": 2025,
+        "url": "https://endocrinology.testcatalog.org/show/PRL",
+        "quote": "Prolactin, adult male reference interval (Roche immunoassay), reported in ng/mL."
+      }
+    ],
+    "labPrintedRef": "53-360 mIU/L (= ~2.5-17.0 ng/mL)",
+    "why": "Anterior-pituitary hormone; hyperprolactinemia (prolactinoma, dopamine-blocking drugs, hypothyroidism) suppresses GnRH/LH/FSH and causes secondary hypogonadism, low libido and infertility. Included to work up any low-testosterone finding. Relevant given this patient's stimulant (Concerta) and thyroid context.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  },
+  {
+    "key": "dhea_sulfate",
+    "symbol": "DHEA-S",
+    "displayName": "Dehydroepiandrosterone sulfate",
+    "loincComponent": "Dehydroepiandrosterone sulfate",
+    "loincs": [
+      {
+        "code": "2191-5",
+        "longName": "Dehydroepiandrosterone sulfate [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ug/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 368.49,
+    "molarMassRef": "PubChem CID 12594 (Dehydroepiandrosterone sulfate / prasterone sulfate), C19H28O5S, 368.5 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/12594 . Conversion: 1 ug/dL = 0.02714 umol/L.",
+    "refDefault": {
+      "min": 45,
+      "max": 345,
+      "unit": "ug/dL",
+      "operator": "range",
+      "sex": "male",
+      "ageNote": "Adult male, age 40-49y band (DHEA-S is strongly age-banded and declines with age).",
+      "note": "The patient lab-printed interval (25.00-220.00 ug/dL) is too low for an adult male and appears to be a generic/miscalibrated range. Age-banded adult-male 40-49y reference is 45-345 ug/dL (= ~1.2-9.4 umol/L). Values fall progressively in later decades."
+    },
+    "evidenceLevel": "moderate",
+    "references": [
+      {
+        "organization": "UCSF Health (Medical Tests Encyclopedia; A.D.A.M./Fischbach-based lab reference)",
+        "document": "DHEA-sulfate test",
+        "year": 2024,
+        "url": "https://www.ucsfhealth.org/care/medical-tests/dhea-sulfate-test",
+        "quote": "Male (age 40 to 49): 45 to 345 mcg/dL (1.2 to 9.4 umol/L)."
+      },
+      {
+        "organization": "MedlinePlus (U.S. National Library of Medicine)",
+        "document": "DHEA-sulfate test: Medical Encyclopedia",
+        "year": 2024,
+        "url": "https://medlineplus.gov/ency/article/003717.htm",
+        "quote": "Male (age 40 to 49): 45 to 345 mcg/dL. Normal ranges are age- and sex-specific; DHEA-S declines with age."
+      }
+    ],
+    "labPrintedRef": "25.00-220.00 ug/dL (flagged: too low for an adult male; use age-banded 45-345 ug/dL for 40-49y)",
+    "why": "Adrenal androgen precursor and the most abundant circulating steroid; marker of adrenal androgen production. Screens for adrenal sources of androgen (markedly high in adrenal tumors/CAH) and gives context for overall androgen status. Strongly age-dependent, so the 40-49y band must be used for this ~43y patient.",
+    "frequency": null,
+    "panel": "Sex hormones (HPG axis)",
+    "unreliableAssay": false
+  }
+]
