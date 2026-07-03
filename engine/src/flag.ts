@@ -26,16 +26,16 @@ export function zone(value: number, good: number, warn: number, hi = false): Zon
 
 /**
  * Clinical (optimal) thresholds — stricter than population lab ranges. Keyed by
- * marker; `hi: true` = higher-is-better. Each `RS: PENDING` awaits primary-source
- * verification (values from the live site's comments).
+ * marker; `hi: true` = higher-is-better. Each band carries an `RS:` (Reliable
+ * Source) tag per ADR-0007 (verified against ADA/AUA/CDC-AHA where applicable).
  */
 export interface ClinBand { g: number; y: number; hi?: boolean }
 export const CLIN_ZONE: Record<string, ClinBand> = {
-  GLU: { g: 100, y: 126 }, // RS: PENDING mg/dL fasting: <100 / 100-125 / >=126 (ADA diabetes criteria)
-  HbA1c: { g: 5.7, y: 6.5 }, // RS: PENDING %: <5.7 / 5.7-6.4 / >=6.5 (ADA)
-  Insulin: { g: 10, y: 25 }, // RS: PENDING uIU/mL fasting (heuristic)
-  T: { g: 500, y: 300, hi: true }, // RS: PENDING ng/dL (Endocrine Society/AUA floor ~264-300)
-  hsCRP: { g: 1, y: 3 }, // RS: PENDING mg/L CV risk (AHA/CDC)
+  GLU: { g: 100, y: 126 }, // RS [verified 2026-07-04] mg/dL fasting: <100 / 100-125 IFG / >=126 diabetes — ADA Standards of Care (Dx of Diabetes/Prediabetes)
+  HbA1c: { g: 5.7, y: 6.5 }, // RS [verified 2026-07-04] %: <5.7 / 5.7-6.4 prediabetes / >=6.5 diabetes — ADA Standards of Care
+  Insulin: { g: 10, y: 25 }, // RS [heuristic — no guideline] uIU/mL fasting; no ADA/Endo threshold for fasting insulin, orientation only
+  T: { g: 500, y: 300, hi: true }, // RS [verified 2026-07-04] ng/dL — floor 300 = AUA 2018 Testosterone Deficiency Guideline (Endo Society uses 264). Target 500 = optimal-range heuristic (no strict guideline)
+  hsCRP: { g: 1, y: 3 }, // RS [verified 2026-07-04] mg/L CV risk: <1 low / 1-3 average / >3 high — CDC/AHA 2003 consensus (Pearson et al., Circulation)
 };
 
 function clinBand(key?: string, analysis?: string): ClinBand | undefined {
