@@ -1,8 +1,22 @@
 # Analyte
 
-The measured substance — the LOINC **Component** (e.g. "Glucose").
-The key of the analyte catalog. An analyte is *not* a LOINC code:
-one analyte maps to several LOINC codes, one per property/unit.
+The measured quantity — the LOINC **Component** axis (e.g.
+"Glucose"). This is the standard term; "marker" is informal and
+"biomarker" adds a role flavour, so prose prefers **analyte** for
+the thing the lab measures. It is the key of the analyte catalog.
+
+An analyte is *not* a single LOINC code. **One analyte maps to a
+*list* of LOINC codes** — the catalog stores `loincs: [...]`, never
+a scalar `loinc`. Two independent reasons force the list:
+
+1. **Property/unit split.** The same substance in mg/dL vs mmol/L
+   is two different codes (see below).
+2. **Cross-lab duplication.** Different labs report the *same*
+   analyte under *different* LOINC codes. Real example in this
+   app's data: **SHBG (sex hormone binding globulin)** appears as
+   both **`2942-1`** and **`13967-5`** — one analyte, two codes,
+   coming from two labs. The catalog holds both under the single
+   `SHBG` analyte entry.
 
 ## Why the catalog is keyed by analyte, not by LOINC
 
@@ -16,18 +30,21 @@ concentration (MCnc) from substance/molar concentration (SCnc):
 And in lab medicine, "US conventional vs SI" *is* usually exactly
 that mass-vs-molar split. So converting US↔SI often crosses LOINC
 codes and needs the **molar mass**. Keying the catalog by analyte
-groups both codes under one entry and gives the conversion its
-bridge.
+groups all of an analyte's codes under one entry and gives the
+conversion its bridge — and lets a value from *any* lab's code
+resolve back to one analyte.
 
 ## Shape
 
 ```text
 AnalyteCatalog[Glucose] = {
   molarMass,                # bridge for mass ↔ molar conversion
-  loincs: [
+  loincs: [                 # ALWAYS a list — never one code
     { code: "2345-7",  property: "MCnc", unit: "mg/dL",  system: "US" },
     { code: "14749-6", property: "SCnc", unit: "mmol/L", system: "SI" }
   ],
+  # e.g. AnalyteCatalog[SHBG].loincs = [{code:"2942-1"}, {code:"13967-5"}]
+  # — same analyte, two labs' codes.
   symbol,
   refDefault: { min, max, source },   # curated fallback / canonical range
   lang: { en, ru, uk },               # localized names, descriptions, tooltips

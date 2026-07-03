@@ -38,9 +38,11 @@ file in [`concepts/`](concepts/); this table is the index.
 | --- | --- | --- |
 | **Observation** | One result — numeric *or* coded: a LOINC code + value + unit + lab reference range. The atomic fact. | FHIR `Observation` |
 | **Draw** | A dated lab draw — a collection of Observations from one sample/visit. | ≈ FHIR `DiagnosticReport` (simplified) |
-| **Analyte** | The measured substance (LOINC Component axis), e.g. "Glucose". The key of the analyte catalog. | LOINC axis 1 |
-| **Analyte catalog** | Reference data keyed by analyte: its LOINC codes, molar mass, symbol, reference defaults, translations, "why/frequency". Stored once, not per draw. | — |
-| **Panel** | A named group of markers (Thyroid, FBC…) plus preset clinical *lenses* (hypothyroidism, insulin resistance…). | — |
+| **Analyte** | The measured quantity (LOINC Component axis), e.g. "Glucose". The standard term for what the lab measures, and the key of the analyte catalog. One analyte carries a **list** of LOINC codes (see *Biomarker*). | LOINC axis 1 |
+| **Biomarker** | Informal / role-flavoured synonym for the measured quantity ("marker" is the same, more casual). Prose prefers **analyte** for the measured quantity; "biomarker" only when the *clinical-signal role* is meant. | — |
+| **Analyte catalog** | Reference data keyed by analyte: its **list** of LOINC codes (one analyte can have several — e.g. SHBG is both `2942-1` and `13967-5`), molar mass, symbol, reference defaults, translations, "why/frequency". Stored once, not per draw. | — |
+| **Panel** | A standardized battery a lab orders/reports as a unit and that LOINC gives a panel code (CBC `58410-2`, Lipid `57698-3`, Renal `24362-6`, Electrolytes `24326-1`). | LOINC panel code |
+| **Group / view / lens** | An app-specific thematic grouping with **no** standard code (HPG/HPT/HPA axis, "Trace elements", "Vitamins"…). Not a standard panel — don't call it one. | — |
 | **Index** | A derived figure computed by a formula over Observations (free T, HOMA-IR…), with an evidence level and reference. | — |
 | **Specimen** | The sample type (blood, urine, saliva, semen, swab). Carried by the LOINC code itself. | LOINC System axis 4 |
 | **Scale** | `Qn` (quantitative / numeric), `Ord` (ordinal), `Nom` (nominal). Discriminator for numeric vs coded results. | LOINC Scale axis 5 |
