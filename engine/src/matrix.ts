@@ -85,8 +85,8 @@ function tipOf(d: Draw, it: LabItem): string {
   return [
     `${d.date} · ${d.labName}`,
     `${it.analysis || ""}${it.symbol ? " (" + it.symbol + ")" : ""}`.trimEnd(),
-    ...valueLines,
     reportLine,
+    ...valueLines,
   ]
     .concat(it.note ? [`Note: ${it.note}`] : [])
     .concat(it.sourceRow ? [it.sourceRow] : [])
