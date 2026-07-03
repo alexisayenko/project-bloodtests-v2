@@ -14,46 +14,35 @@ exists in the product's mental model and persists across UIs and
 features. Each file covers data model, invariants, edge cases,
 and constraints.
 
-[TODO: 3-7 example concepts for this product, e.g. painting,
-palette, period, garment, outfit, …]
+Concepts in this product:
+
+- [`observation`](observation.md) — one lab result (the atomic fact)
+- [`draw`](draw.md) — a dated collection of observations
+- [`analyte`](analyte.md) — the measured substance; catalog key
+- [`panel`](panel.md) — a group of markers + clinical lenses
+- [`index`](index.md) — a derived, formula-computed figure
+- [`reference`](reference.md) — a stored citation for a clinical number
 
 ## What a concept is not
 
 - **Not a feature** — features are verbs (capabilities). They
   live in [`../features/`](../features/).
 - **Not a screen** — screens are pages where concepts and
-  features are exposed. They live in
-  [`../../ui-ux/screens/`](../../ui-ux/screens/).
+  features are exposed.
 - **Not implementation detail** — concepts describe the product's
   view of the noun, not the database table. The data model in a
   concept doc is product-shaped, not storage-shaped.
 
 ## Naming convention
 
-File name = the concept name in `kebab-case.md`
-(e.g. `painting.md`, `garment.md`, `palette.md`).
-
-Singular nouns. The folder is plural; the files are singular.
+File name = the concept name in `kebab-case.md`. Singular nouns.
+The folder is plural; the files are singular.
 
 ## File structure
 
-Each concept file is project-specific. Sections emerge from
-what the concept actually needs — a static reference noun has
-a different shape from a stateful entity, and concepts within
-the same project often differ from each other. Don't impose a
-fixed skeleton.
-
-The only convention: lead with the concept name as `# Title`
-and a one-line definition underneath, so a reader knows what
-they're looking at without reading further.
-
-```markdown
-# <Concept name>
-
-One-line definition. What this noun *is* in product terms.
-
-[concept-specific sections — pick what fits this concept]
-```
+Each concept file is project-specific. Lead with the concept name
+as `# Title` and a one-line definition underneath; sections emerge
+from what the concept actually needs.
 
 ## Adding a new concept
 

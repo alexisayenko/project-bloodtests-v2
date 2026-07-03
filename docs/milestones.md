@@ -3,12 +3,17 @@
 Dated project events — launches, releases, public posts, evidence
 artifacts. Newest first.
 
-Starts as this flat file. Extracts to `milestones/` (with
-`history.md` index + dated deep-dive files + evidence) when
-events accumulate enough to warrant their own pages — see
+Starts as this flat file. Extracts to `milestones/` when events
+accumulate enough to warrant their own pages — see
 [`README.md#section-file-folder`](README.md#section-file-folder).
 
 ## Events
 
-- [TODO: YYYY-MM-DD — event title] — [TODO: one-line summary;
-  link to artifact, post, or release if applicable].
+- **2026-07-03 — Project designed and scaffolded.** Architecture
+  decided across 7 ADRs (engine-only, SSOT, monorepo, i18n, focus
+  on blood, Zod schema-first, clinical provenance); domain model
+  (Observation / Draw / Analyte / Panel / Index / Reference) and
+  standards stack (LOINC / UCUM / FHIR / guideline sources)
+  documented. Repo generated from `project-template`, docs-first;
+  `engine/` not yet scaffolded. Successor to
+  `project-bloodtests_v1`.

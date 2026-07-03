@@ -1,160 +1,91 @@
-# project-template
+# project-bloodtests-v2
 
-Seed repo for new projects. Defines a standard folder layout,
-naming rules, and docs subtree. Copy on init; not used as a
-runtime dependency.
+Blood-test analytics: a reusable engine that turns raw lab draws
+into a normalized, localized, trend-aware view — with every
+clinical threshold and formula traceable to an authoritative
+source.
 
 ## Overview
 
-This template assumes **one product, delivered through one or
-more top-level code folders** at the repo root. Each folder is a
-deployment target — name it by what it is (`mobile/`, `web/`,
-`workers/`, `marketing-site/`, etc.). Avoid generic names like
-`app/` that don't say which one.
+Successor to `project-bloodtests_v1` (archived) and to the lab
+logic currently embedded in the personal-site build
+(`homepage/.eleventy.js`). This repo extracts that logic into a
+**framework-agnostic engine** so it can be shared, DRY, across
+multiple consumers instead of copy-pasted.
 
-Multi-product is rare; see
-[`docs/README.md`](docs/README.md#multi-product-split) for the
-split path if/when it happens.
+**Today's goal — DRY, not a service.** The engine is consumed as
+a published package by two *external* sites (the owner's personal
+site and a family member's site), each feeding its own JSON data.
+A standalone web app and mobile app are future deploy targets
+inside this same repo — added when they land, not before.
+
+Design principle running through every decision: **store what you
+can't recompute, derive everything else, and cite every clinical
+number.** Raw lab values are ground truth; unit systems, localized
+names, and derived indices are computed at render time; thresholds
+and formulas carry a stored reference to the guideline that
+justifies them.
+
+Terminology follows healthcare standards rather than invented
+words — see [`docs/product/README.md`](docs/product/README.md#glossary).
 
 ## Quick start
 
-1. Click **Use this template** on GitHub (or `git clone` and
-   remove `.git/` to start fresh).
-2. Replace this Overview and Quick start with content for the
-   new project.
-3. Keep the [Structure](#structure) section — that's the
-   canonical convention.
-4. Fill in [`docs/README.md`](docs/README.md) with the project's
-   product and docs subtree.
+Not yet scaffolded — this is currently a docs-first repo. The
+`engine/` package lands when extraction from the personal site
+begins. See [`docs/tech/decisions/`](docs/tech/decisions/) for the
+architecture already decided, and
+[`docs/product/concepts/`](docs/product/concepts/) for the domain
+model.
 
 ## Structure
 
 ### Top-level layout
 
-Folders sort first (alphabetically), then files — VS Code
-default.
+Folders sort first (alphabetically), then files.
 
 ```text
-project-root/
-├── archive/                              # obsolete code + docs (single graveyard)
-├── docs/                                 # project-level strategy + documentation
-├── scripts/                              # cross-cutting build tooling
-├── mobile/                               # mobile app (example name)
-├── web/                                  # web app or static site (example name)
-├── <shared-infra>/                       # e.g. supabase/, prisma/, infra/
-├── CLAUDE.md                             # agent-specific guidance (optional)
-├── README.md                             # this file — entry point + structure
-└── LICENSE                               # license
+project-bloodtests-v2/
+├── docs/                    # strategy, product model, ADRs, sources
+├── engine/                  # FUTURE — the shared, publishable TS package
+├── web/                     # FUTURE — standalone service site (deploy target)
+├── mobile/                  # FUTURE — app (deploy target)
+├── supabase/                # FUTURE — shared backend, when multi-user lands
+├── CLAUDE.md                # agent fast-path
+├── README.md                # this file
+└── LICENSE
 ```
 
-**Don't pre-create empty folders.** Add a folder on the day a
-second code folder, archived artifact, or per-folder doc
-actually lands — not before. See
-[`docs/README.md#section-file-folder`](docs/README.md#section-file-folder)
-for the same rule applied inside `docs/`.
+Only `docs/` exists today. Code folders are added the day real
+content lands, per the template convention — not pre-scaffolded.
 
 ### Naming
 
 | Convention | Example | Why |
 | --- | --- | --- |
-| `kebab-case.md` for documents | `branding.md`, `task-0001.md` | Reads as prose; case-safe across OSes |
-| Lowercase folders | `docs/`, `scripts/`, `archive/` | Matches URL paths; case-safe |
-| `UPPERCASE.md` only for conventionally recognized files | `README.md`, `CLAUDE.md`, `LICENSE`, `CHANGELOG.md` | Don't invent new uppercase files |
+| `kebab-case.md` for documents | `adr-0001-engine-only.md` | Reads as prose; case-safe |
+| Lowercase folders | `docs/`, `engine/` | Matches URL paths |
+| `UPPERCASE.md` only for conventional files | `README.md`, `CLAUDE.md`, `LICENSE` | Don't invent new ones |
 
-Code folders use their natural name (`mobile/`, `web/`,
-`workers/`); see [Overview](#overview).
-
-### Infra at root
-
-Folders sit unprefixed at the root when they apply across the
-project:
-
-- **`docs/`** — strategy, product, business, brand
-- **`scripts/`** — cross-cutting build tooling (e.g. release-note
-  fan-out from `docs/` to multiple code folders)
-- **`<shared-infra>/`** — shared backend / infrastructure used
-  by multiple code folders (e.g. `supabase/`, `prisma/`,
-  `infra/`)
-
-If a script or config touches one code folder only, it lives
-with that folder, not at root.
-
-### Ad-hoc root files
-
-Some root files are created on demand, not scaffolded:
-
-- `HANDOVER.md` — open work deferred between sessions. Create
-  when you have items to defer; delete when they're all resolved.
-  Not a living doc.
+Code folders use their natural name (`engine/`, `web/`,
+`mobile/`).
 
 ### Archive
 
-Single root `archive/` folder for obsolete code and docs. A
-`docs/` subfolder inside holds obsolete documentation.
-
-```text
-archive/
-├── docs/                       # obsolete project-level docs
-│   └── <old-doc>.md
-└── <old-folder>/               # obsolete code (e.g. v1 prototype)
-```
-
-A folder belongs in `archive/` when it **no longer ships**.
-Before archiving code, extract any worthwhile lessons or
-decisions into `archive/docs/` — code in archive rots; docs
-survive.
-
-`archive/` doesn't exist by default. Create on first retirement.
+The predecessor lives in its own repo, `project-bloodtests_v1`
+(renamed, redirect-preserved), not inside this repo's `archive/`.
+No `archive/` here yet.
 
 ## Documentation
 
-See [`docs/README.md`](docs/README.md) for:
+See [`docs/README.md`](docs/README.md) for the docs subtree map.
+Fast paths:
 
-- Why this folder is called `docs/` and not `specs/`
-- Product overview
-- Guiding principle: strategy at root vs per-folder
-- Top-level glossary + the four-level chain (concept → feature →
-  screen → journey)
-- Concerns (`C1, C2, …`) — cross-cutting work axes that span
-  sections; catalogued in [`docs/concerns.md`](docs/concerns.md)
-- Entry-doc convention (`<section>/README.md` pattern)
-- The `docs/` subtree map and what lives where
-- The `Section, file, folder` rule (start small, extract on growth)
-- Per-folder `<folder>/docs/` policy
-- Multi-product split (rare)
-
-## Design rationale
-
-Why this template is shaped the way it is. It's *more
-structured* than industry default for solo-founder projects, but
-every choice is a defensible divergence rather than an
-anti-pattern.
-
-**Aligned with established best practices:** README.md as folder
-entry doc (GitHub auto-renders), kebab-case.md filenames
-(case-safe), conventional commits, YAML frontmatter on docs
-(Jekyll / Hugo / MkDocs convention), ADRs (Michael Nygard's
-spec), glossary-driven vocabulary discipline (Eric Evans' DDD
-ubiquitous language), separating product specs from
-implementation (clean architecture), atomic commits referencing
-tasks.
-
-**Defensible divergences from common defaults:** tasks as
-markdown files (instead of Jira / Linear / GitHub Issues —
-portable, greppable, git-tracked, AI-readable; cost: harder to
-query at scale); the verb / noun split between concepts and
-features (this is DDD, rigorously applied); heavy doc
-scaffolding upfront (closer to the "docs as first-class
-artifact" school — Stripe, Diataxis — than to agile's "defer
-docs" tradition).
-
-**Original framings:** `concept = noun`, `feature = verb`,
-`screen = place` as a strict three-way taxonomy (DDD-flavored
-but specific); concerns axis (`C1, C2, …` — industry
-equivalents are epics, OKRs, work-streams); each top-level code
-folder named for what it is rather than fitting under a
-unifying noun.
-
-Bottom line: nothing here is anti-pattern. Heavyweight for
-throwaway experiments; benefit is that a project stays
-organized as it grows without needing a mid-life restructure.
+- [`docs/product/README.md`](docs/product/README.md) — domain
+  model + glossary (Observation, Draw, Analyte, …)
+- [`docs/product/concepts/`](docs/product/concepts/) — one file
+  per domain noun
+- [`docs/tech/README.md`](docs/tech/README.md) — stack +
+  authoritative sources (LOINC, UCUM, FHIR, clinical guidelines)
+- [`docs/tech/decisions/`](docs/tech/decisions/) — architecture
+  decision records

@@ -1,18 +1,24 @@
 # Product
 
-[TODO: one paragraph — the product's core idea, the mechanic, the
-value to the user. State the load-bearing tension in plain terms.]
+A reusable blood-test analytics engine. It takes dated lab
+**draws** — collections of individual **observations** (a LOINC
+code, a value, a unit, a lab reference range) — and produces a
+normalized, localized, trend-aware model: markers over time,
+panels and clinical lenses, derived indices, and a draw scheduler.
+The load-bearing tension: it must be **rich enough to be
+clinically useful** (unit conversion, derived indices, reference
+flagging) yet **disciplined enough to never invent a medical
+number** — every threshold and formula is traceable to a cited
+guideline.
 
-[TODO: one line — purpose. What this product enables that wasn't
-possible (or wasn't easy) before.]
+Purpose: turn a pile of lab PDFs into one queryable, trustworthy,
+multi-language health dataset that several sites can share instead
+of each re-implementing the same logic.
 
 For the wider docs/ map and what-lives-where, see
 [`../README.md`](../README.md).
 
 ## Folder map
-
-The product subtree (full docs tree in
-[`../README.md#subtree-map`](../README.md#subtree-map)):
 
 ```text
 product/
@@ -23,57 +29,43 @@ product/
 
 ## Glossary
 
-Vocabulary for the product section. Domain words ("painting",
-"garment", "palette") are *concept names* — they belong in
-[`concepts/`](concepts/), not here.
+Domain vocabulary. Terminology follows healthcare standards
+(HL7 FHIR, LOINC) rather than invented words — the standard name
+is preferred over a homegrown one. Concept nouns get their own
+file in [`concepts/`](concepts/); this table is the index.
 
-The product taxonomy is a four-level chain — each level composes
-the next. See [`../README.md#glossary`](../README.md#glossary)
-for the cross-tree index.
+| Term | Meaning | Standard |
+| --- | --- | --- |
+| **Observation** | One result — numeric *or* coded: a LOINC code + value + unit + lab reference range. The atomic fact. | FHIR `Observation` |
+| **Draw** | A dated lab draw — a collection of Observations from one sample/visit. | ≈ FHIR `DiagnosticReport` (simplified) |
+| **Analyte** | The measured substance (LOINC Component axis), e.g. "Glucose". The key of the analyte catalog. | LOINC axis 1 |
+| **Analyte catalog** | Reference data keyed by analyte: its LOINC codes, molar mass, symbol, reference defaults, translations, "why/frequency". Stored once, not per draw. | — |
+| **Panel** | A named group of markers (Thyroid, FBC…) plus preset clinical *lenses* (hypothyroidism, insulin resistance…). | — |
+| **Index** | A derived figure computed by a formula over Observations (free T, HOMA-IR…), with an evidence level and reference. | — |
+| **Specimen** | The sample type (blood, urine, saliva, semen, swab). Carried by the LOINC code itself. | LOINC System axis 4 |
+| **Scale** | `Qn` (quantitative / numeric), `Ord` (ordinal), `Nom` (nominal). Discriminator for numeric vs coded results. | LOINC Scale axis 5 |
+| **Property** | Mass concentration (MCnc, mg/dL) vs substance concentration (SCnc, mmol/L) — *why* mg/dL and mmol/L are different LOINC codes. | LOINC axis 2 |
+| **Reference** | A stored citation (organization, document, year, url/doi, quote) attached to any clinical number. | — |
 
-- **Concept** — a *noun* in the product vocabulary — a stable
-  thing the product reasons about, independent of any UI. One file
-  per concept in [`concepts/`](concepts/). Covers data model,
-  invariants, edge cases.
-- **Feature** — a *verb* — the smallest unit that delivers value
-  to the user. One file per feature in [`features/`](features/).
-  A feature acts on one or more concepts.
-- **Screen** — a *place* — a UI page where features get exposed.
-  One file per screen in
-  [`../ui-ux/screens/`](../ui-ux/screens/). A single feature can
-  appear on multiple screens; a single screen hosts multiple
-  features.
-- **Journey** — a *sequence* — a path the user takes across
-  multiple screens (onboarding, first-add → save, recovery flow).
-  Journeys live in
-  [`../ui-ux/journeys.md`](../ui-ux/journeys.md) (one section per
-  journey, extracts to `journeys/` when they grow). A journey threads
-  screens; defined and detailed in
-  [`../ui-ux/README.md`](../ui-ux/README.md).
-- **Constraint** — a self-imposed product limit ("we won't do X,
-  even though we technically could"). Distinct from *compliance*
-  (externally imposed; lives in
-  [`../business/compliance.md`](../business/compliance.md)).
-
-The chain in one line: **concept = noun, feature = verb,
-screen = place, journey = sequence**. If you can phrase the spec
-as "the user can [verb]", it's a feature. If it's "the thing
-called [noun]", it's a concept. If it's "the page where the user
-is when they do it", it's a screen. If it's "the path from one
-page to the next", it's a journey.
-
-For **Concerns** — the cross-cutting work-area axis used in task
-frontmatter (orthogonal to product sections) — see
-[`../concerns.md`](../concerns.md).
+The four-level product chain (concept = noun, feature = verb,
+screen = place, journey = sequence) is defined in
+[`../README.md#glossary`](../README.md#glossary). Screens and
+journeys are not modeled yet — the current product is a library,
+not a UI.
 
 ## Constraints
 
-Self-imposed product limits — things we won't do even though we
-technically could. Externally-imposed obligations (licensing,
-compliance, attribution) live in
-[`../business/compliance.md`](../business/compliance.md), not here.
+Self-imposed limits — things we won't do even though we could.
+Externally-imposed obligations live in
+[`../business/compliance.md`](../business/compliance.md).
 
-- **[TODO: load-bearing constraint — e.g. "free X, paid Y", "no
-  live data", "single-user only" — the tension that shapes
-  feature scope]**
-- **[TODO: secondary constraint, or remove this bullet if none]**
+- **Focus on blood only.** Other specimens (urine, saliva, semen,
+  swabs) are *supported by the schema* (LOINC carries specimen)
+  but not populated until real data lands. No premature "general
+  health data" abstraction.
+- **No un-cited clinical numbers.** Every threshold, reference
+  range, and formula must carry a `references[]` entry, or ship
+  marked `evidenceLevel: "disputed"` — never as unqualified fact.
+- **Engine stays framework- and language-agnostic.** No React, no
+  DOM, no hardcoded locale in `engine/`. Rendering and language
+  are applied by consumers at the boundary.
