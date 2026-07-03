@@ -22,3 +22,5 @@ export {
 export { buildIndices, type IndexMatrix, type IndexItem, type IndexCol, type IndexValue, type IndexBuildConfig } from "./indices/build.js";
 
 export { parseDraws, safeParseDraws, DrawSchema, DrawsSchema, LabItemSchema, UnitValueSchema, LoincSchema } from "./schema.js";
+
+export { buildLabView, type LabView, type LabViewConfig } from "./view.js";

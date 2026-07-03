@@ -34,7 +34,7 @@ interface PanelPos { pi: number; ki: number }
 const PANEL_INDEX = new Map<string, PanelPos>();
 PANELS.forEach((p, pi) => p.keys.forEach((k, ki) => PANEL_INDEX.set(k, { pi, ki })));
 
-export interface PanelRow { symbol?: string; analysis?: string; [k: string]: unknown }
+export interface PanelRow { symbol?: string; analysis?: string }
 export interface PanelGroup<R> { name: string; rows: R[] }
 
 /**
