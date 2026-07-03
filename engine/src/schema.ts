@@ -15,16 +15,16 @@ export const LoincSchema = z.string().regex(/^\d+-\d$/, "invalid LOINC code");
 
 export const UnitValueSchema = z.object({
   value: z.number().nullable(),
-  unit: z.string().optional(),
+  unit: z.string().nullable().optional(),
   refMin: z.number().nullable().optional(),
   refMax: z.number().nullable().optional(),
-  refText: z.string().optional(),
-  rawValue: z.string().optional(),
+  refText: z.string().nullable().optional(),
+  rawValue: z.string().nullable().optional(),
 });
 
 export const LabItemSchema = z.object({
-  symbol: z.string().optional(),
-  analysis: z.string().optional(),
+  symbol: z.string().nullable().optional(),
+  analysis: z.string().nullable().optional(),
   loinc: LoincSchema.nullable().optional(),
   method: z.string().nullable().optional(),
   note: z.string().nullable().optional(),

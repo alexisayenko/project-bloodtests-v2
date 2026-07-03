@@ -91,7 +91,7 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
       if ((it.symbol && excludeMarkers.has(it.symbol)) || (it.analysis && excludeMarkers.has(it.analysis))) continue;
       const key = it.symbol || it.loinc || it.analysis!;
       if (!byKey.has(key)) {
-        byKey.set(key, { key, symbol: it.symbol, analysis: it.analysis, loinc: it.loinc, unit: v.unit, refMin: v.refMin, refMax: v.refMax, byId: {}, loincs: new Set() });
+        byKey.set(key, { key, symbol: it.symbol ?? undefined, analysis: it.analysis ?? undefined, loinc: it.loinc, unit: v.unit ?? undefined, refMin: v.refMin, refMax: v.refMax, byId: {}, loincs: new Set() });
         order.push(key);
       }
       const m = byKey.get(key)!;

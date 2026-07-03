@@ -14,7 +14,7 @@ function computedItem(
   symbol: string,
   analysis: string,
   value: number,
-  unit: string | undefined,
+  unit: string | null | undefined,
   refMin: number,
   refMax: number,
   loinc: string,
