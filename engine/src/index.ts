@@ -17,6 +17,7 @@ export {
   catalogToConfig, mergeConfig, indexCatalog,
   type CatalogIndex, type CatalogConfigOptions,
 } from "./catalog/derive.js";
+export { ANALYTE_CATALOG } from "./catalog/data.js";
 
 // Catalog / grouping
 export { PANELS, groupByPanel, type Panel, type PanelGroup, type PanelRow } from "./panels.js";
