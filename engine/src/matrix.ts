@@ -70,13 +70,27 @@ function rng(o?: UnitValue): string {
 /** Multi-line hover tooltip for one measured cell (US/SI/report views). */
 function tipOf(d: Draw, it: LabItem): string {
   const report = it.original.rawValue ?? fmtNum(it.original.value);
+  const differ =
+    fmtNum(it.us.value) !== fmtNum(it.si.value) ||
+    (it.us.unit || "") !== (it.si.unit || "");
+  const valueLines = differ
+    ? [
+        `US: ${fmtNum(it.us.value)} ${it.us.unit || ""}${rng(it.us)}`.trimEnd(),
+        `SI: ${fmtNum(it.si.value)} ${it.si.unit || ""}${rng(it.si)}`.trimEnd(),
+      ]
+    : [`Value: ${fmtNum(it.us.value)} ${it.us.unit || ""}`.trimEnd()];
+  const reportLine = `Report: ${report} ${it.original.unit || ""}`.trimEnd() +
+    (it.original.refText ? ` (${it.original.refText})` : "") +
+    (it.method ? ` · ${it.method}` : "");
   return [
     `${d.date} · ${d.labName}`,
-    `${it.analysis || ""}${it.symbol ? " (" + it.symbol + ")" : ""}`,
-    `US: ${fmtNum(it.us.value)} ${it.us.unit || ""}${rng(it.us)}`,
-    `SI: ${fmtNum(it.si.value)} ${it.si.unit || ""}${rng(it.si)}`,
-    `Report: ${report} ${it.original.unit || ""}${it.method ? " · " + it.method : ""}`,
-  ].concat(it.sourceRow ? [it.sourceRow] : []).join("\n");
+    `${it.analysis || ""}${it.symbol ? " (" + it.symbol + ")" : ""}`.trimEnd(),
+    ...valueLines,
+    reportLine,
+  ]
+    .concat(it.note ? [`Note: ${it.note}`] : [])
+    .concat(it.sourceRow ? [it.sourceRow] : [])
+    .join("\n");
 }
 
 /** Compact reference-range label for a row, e.g. "10–20", "<5", ">3" or "". */
