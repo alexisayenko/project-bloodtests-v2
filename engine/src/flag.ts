@@ -15,3 +15,40 @@ export function zone(value: number, good: number, warn: number, hi = false): Zon
   if (hi) return value >= good ? "z-ok" : value >= warn ? "z-warn" : "z-bad";
   return value < good ? "z-ok" : value < warn ? "z-warn" : "z-bad";
 }
+
+/**
+ * Clinical (optimal) thresholds — stricter than population lab ranges. Keyed by
+ * marker; `hi: true` = higher-is-better. Each `RS: TODO` pending primary-source
+ * verification (values from the live site's comments).
+ */
+export interface ClinBand { g: number; y: number; hi?: boolean }
+export const CLIN_ZONE: Record<string, ClinBand> = {
+  GLU: { g: 100, y: 126 }, // RS: TODO mg/dL fasting: <100 / 100–125 / ≥126 (ADA diabetes criteria)
+  HbA1c: { g: 5.7, y: 6.5 }, // RS: TODO %: <5.7 / 5.7–6.4 / ≥6.5 (ADA)
+  Insulin: { g: 10, y: 25 }, // RS: TODO µIU/mL fasting (heuristic)
+  T: { g: 500, y: 300, hi: true }, // RS: TODO ng/dL (Endocrine Society/AUA floor ~264–300)
+  hsCRP: { g: 1, y: 3 }, // RS: TODO mg/L CV risk (AHA/CDC)
+};
+
+/**
+ * 3-zone traffic light: clinical thresholds where defined, else heuristic ±25%
+ * vs reference range. Extracted verbatim from homepage/.eleventy.js (`flagOf`).
+ * `key`/`analysis` select the clinical band; some markers carry no symbol.
+ */
+export function flagOf(
+  value: number | null | undefined,
+  refMin: number | null | undefined,
+  refMax: number | null | undefined,
+  key?: string,
+  analysis?: string,
+): Zone | "" {
+  if (value == null) return "";
+  const c = (key != null ? CLIN_ZONE[key] : undefined) ?? (analysis != null ? CLIN_ZONE[analysis] : undefined);
+  if (c) return c.hi
+    ? (value >= c.g ? "z-ok" : value >= c.y ? "z-warn" : "z-bad")
+    : (value < c.g ? "z-ok" : value < c.y ? "z-warn" : "z-bad");
+  if (refMax != null && value > refMax) return value / refMax > 1.25 ? "z-bad" : "z-warn";
+  if (refMin != null && value < refMin) return value / refMin < 0.8 ? "z-bad" : "z-warn";
+  if (refMin == null && refMax == null) return "";
+  return "z-ok";
+}
