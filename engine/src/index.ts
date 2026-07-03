@@ -18,3 +18,5 @@ export {
   type Markers,
   type IndexCtx,
 } from "./indices/definitions.js";
+
+export { buildIndices, type IndexMatrix, type IndexItem, type IndexCol, type IndexValue, type IndexBuildConfig } from "./indices/build.js";
