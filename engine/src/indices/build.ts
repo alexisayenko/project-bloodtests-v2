@@ -26,6 +26,8 @@ export interface IndexItem {
   anchor: string | null;
   formula: string;
   level: "consensus" | "heuristic";
+  meaning: string;
+  consensus: string;
   needs: string[];
   hasData: boolean;
   cells: (IndexValue | null)[];
@@ -72,7 +74,8 @@ export function buildIndices(draws: Draw[], config: IndexBuildConfig = {}): Inde
     return {
       key: d.key, name: d.name,
       itabs: Array.isArray(d.itab) ? d.itab : [d.itab],
-      anchor: d.anchor ?? null, formula: d.formula, level: d.level, needs: d.needs,
+      anchor: d.anchor ?? null, formula: d.formula, level: d.level,
+      meaning: d.meaning, consensus: d.consensus, needs: d.needs,
       hasData: n > 0, cells: cols.map((c) => values[c.id] ?? null),
     };
   });

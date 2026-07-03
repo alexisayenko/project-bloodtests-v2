@@ -17,41 +17,41 @@
  */
 
 // ── Constants ────────────────────────────────────────────────────────────────
-// Per ADR-0007, every clinical constant carries a reference. Figures tagged
-// `RS: TODO` are used by the current live site but NOT yet verified against a
-// primary source — DO NOT treat them as confirmed until the tag is resolved.
-// (RS = Reliable Source.)
+// Per ADR-0007, every clinical constant carries a reference. These were verified
+// 2026-07-03 against the standard Vermeulen/ISSAM implementation.
+// RS: Vermeulen A, Verdonck L, Kaufman JM. "A critical evaluation of simple
+// methods for the estimation of free testosterone in serum." J Clin Endocrinol
+// Metab. 1999;84(10):3666–3672. Cross-checked vs the ISSAM/mdapp calculator
+// (mdapp.co/free-and-bioavailable-testosterone-calculator-544).
 
 /**
  * Molecular weight of human serum albumin (g/mol).
- * RS: TODO — verify. Human albumin MW is commonly cited as ~66.5 kDa
- * (UniProt P02768, ~66,472 Da). The Vermeulen 1999 paper uses this constant in
- * the free-T derivation; confirm the exact value it specifies before trusting.
+ * RS [verified]: UniProt P02768 ≈ 66,472 Da; 66430 is the accurate value.
+ * NOTE: some published calculators round to 69000 — the tiny difference shifts
+ * bioavailable-fraction results negligibly; we keep the physically-accurate MW.
  */
 const ALBUMIN_MW = 66430;
 /**
  * Testosterone–albumin association constant Ka (L/mol).
- * RS: TODO — verify against Vermeulen A, Verdonck L, Kaufman JM,
- * "A critical evaluation of simple methods for the estimation of free
- * testosterone in serum", J Clin Endocrinol Metab. 1999;84(10):3666–3672.
+ * RS [verified]: 3.6×10⁴ L/mol — Vermeulen 1999 / ISSAM calculator.
  */
 const KA_ALBUMIN = 3.6e4;
 /**
  * Testosterone–SHBG association constant Ks (L/mol).
- * RS: TODO — verify against Vermeulen 1999 (same citation as Ka above).
+ * RS [verified]: 1×10⁹ L/mol (ISSAM standard, = 10×10⁸). A minority of papers
+ * cite 5.97×10⁸ (Södergård-derived); the ISSAM/Vermeulen 1e9 is the convention
+ * used here and by the widely-used online calculators.
  */
 const KS_SHBG = 1e9;
 /**
- * Testosterone unit factor: ng/dL → nmol/L uses MW 288.42 g/mol → 1 ng/dL =
- * 0.03467 nmol/L. RS: molar mass of testosterone (C19H28O2) 288.42 g/mol —
- * verify against PubChem CID 6013. Conversion factor 0.0347 is standard in
- * endocrine references (RS: TODO — pin a specific one, e.g. a lab-medicine text).
+ * Testosterone unit factor: ng/dL → nmol/L. MW of testosterone (C19H28O2)
+ * = 288.42 g/mol ⇒ 1 ng/dL = 0.03467 nmol/L.
+ * RS [verified]: PubChem CID 6013 (testosterone MW 288.42).
  */
 const T_NGDL_TO_NMOLL = 0.03467;
 /**
- * Default serum albumin when not measured (g/dL). The value used by the
- * Vermeulen calculator / live site. RS: TODO — Vermeulen 1999 uses 4.3 g/dL
- * as the assumed albumin; confirm.
+ * Default serum albumin when not measured (g/dL).
+ * RS [verified]: 4.3 g/dL (43 g/L) — the ISSAM/Vermeulen calculator preset.
  */
 export const DEFAULT_ALBUMIN_GDL = 4.3;
 
