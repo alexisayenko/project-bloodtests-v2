@@ -84,7 +84,7 @@ function tipOf(d: Draw, it: LabItem): string {
     : valueMatchesReport
       ? []
       : [`Value: ${fmtNum(it.us.value)} ${it.us.unit || ""}`.trimEnd()];
-  const reportLine = `Report: ${report} ${it.original.unit || ""}`.trimEnd() +
+  const reportLine = `Reported: ${report} ${it.original.unit || ""}`.trimEnd() +
     (it.original.refText ? ` (${it.original.refText})` : "") +
     (it.method ? ` · ${it.method}` : "");
   return [
