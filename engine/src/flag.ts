@@ -9,6 +9,8 @@
  * so the coloring is identical to the current live site.
  */
 
+import { bySymbolOrAnalysis } from "./lookup.js";
+
 export type Zone = "z-ok" | "z-warn" | "z-bad";
 
 export function zone(value: number, good: number, warn: number, hi = false): Zone {
@@ -37,9 +39,7 @@ export const CLIN_ZONE: Record<string, ClinBand> = {
 };
 
 function clinBand(key?: string, analysis?: string): ClinBand | undefined {
-  if (key != null && CLIN_ZONE[key]) return CLIN_ZONE[key];
-  if (analysis != null && CLIN_ZONE[analysis]) return CLIN_ZONE[analysis];
-  return undefined;
+  return bySymbolOrAnalysis((k) => CLIN_ZONE[k], key, analysis);
 }
 
 /** Heuristic flag vs a reference range (used when no clinical band applies). */

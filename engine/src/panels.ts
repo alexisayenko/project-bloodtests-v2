@@ -5,6 +5,8 @@
  * panel names are a catalog/i18n concern (ADR-0004).
  */
 
+import { bySymbolOrAnalysis } from "./lookup.js";
+
 export interface Panel { name: string; keys: string[] }
 
 export const PANELS: Panel[] = [
@@ -45,7 +47,7 @@ export function groupByPanel<R extends PanelRow>(rows: R[]): PanelGroup<R>[] {
   const groups: PanelGroup<R & { _ki?: number }>[] = PANELS.map((p) => ({ name: p.name, rows: [] }));
   const other: PanelGroup<R> = { name: "Other", rows: [] };
   for (const r of rows) {
-    const hit = (r.symbol != null ? PANEL_INDEX.get(r.symbol) : undefined) ?? (r.analysis != null ? PANEL_INDEX.get(r.analysis) : undefined);
+    const hit = bySymbolOrAnalysis((k) => PANEL_INDEX.get(k), r.symbol, r.analysis);
     if (hit) groups[hit.pi]!.rows.push({ ...r, _ki: hit.ki });
     else other.rows.push(r);
   }

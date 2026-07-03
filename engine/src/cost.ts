@@ -5,6 +5,8 @@
  * generalized to any panel-billed group.
  */
 
+import { bySymbolOrAnalysis } from "./lookup.js";
+
 /** A group billed as one panel (e.g. FBC) rather than per sub-marker. */
 export interface PanelBilling {
   /** Markers that belong to the panel. */
@@ -33,11 +35,9 @@ function panelOf(key: string | undefined, catalog: PriceCatalog): PanelBilling |
  * Unknown markers return `null` (excluded from totals).
  */
 export function priceOf(symbol: string | undefined, analysis: string | undefined, catalog: PriceCatalog): number | null {
-  const panel = panelOf(symbol, catalog) ?? panelOf(analysis, catalog);
+  const panel = bySymbolOrAnalysis((k) => panelOf(k, catalog), symbol, analysis);
   if (panel) return (symbol === panel.anchor || analysis === panel.anchor) ? panel.price : null;
-  if (symbol != null && catalog.prices[symbol] != null) return catalog.prices[symbol]!;
-  if (analysis != null && catalog.prices[analysis] != null) return catalog.prices[analysis]!;
-  return null;
+  return bySymbolOrAnalysis((k) => catalog.prices[k], symbol, analysis) ?? null;
 }
 
 /**

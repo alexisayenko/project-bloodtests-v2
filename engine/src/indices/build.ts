@@ -44,7 +44,7 @@ function markersOf(d: Draw): Markers {
   const m: Markers = {};
   for (const it of d.items || []) {
     const us = it.us ?? it.original;
-    if (us && us.value != null) {
+    if (us?.value != null) {
       const key = it.symbol ?? it.analysis;
       if (key != null) m[key] = us.value;
     }
@@ -66,7 +66,7 @@ export function buildIndices(draws: Draw[], config: IndexBuildConfig = {}): Inde
     for (const c of cols) {
       const ctx = { ageYears: config.ageYearsForDraw?.(c.date) };
       const v = d.fn(drawMap[c.id]!, ctx);
-      if (v != null && isFinite(v)) {
+      if (v != null && Number.isFinite(v)) {
         values[c.id] = { v: Math.round(v * 100) / 100, z: zone(v, d.cut[0], d.cut[1], d.hi) };
         n++;
       }
@@ -89,7 +89,12 @@ export function buildIndices(draws: Draw[], config: IndexBuildConfig = {}): Inde
     }
   }
   const anchored: Record<string, IndexItem[]> = {};
-  for (const it of items) if (it.anchor) (anchored[it.anchor] ??= []).push(it);
+  for (const it of items) {
+    if (it.anchor) {
+      anchored[it.anchor] ??= [];
+      anchored[it.anchor]!.push(it);
+    }
+  }
 
   return { cols, tabs, anchored };
 }

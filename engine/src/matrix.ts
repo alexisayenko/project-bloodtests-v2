@@ -13,6 +13,7 @@
 import type { Draw, LabItem, UnitValue } from "./types.js";
 import { flagOf, type Zone } from "./flag.js";
 import { fmtNum } from "./format.js";
+import { bySymbolOrAnalysis } from "./lookup.js";
 
 export type UnitSystem = "us" | "si" | "original";
 
@@ -57,33 +58,60 @@ export interface MatrixRow {
 export interface Matrix { cols: MatrixCol[]; rows: MatrixRow[] }
 
 const idOf = (d: Draw) => `${d.date}|${d.labName}`;
-const rng = (o?: UnitValue) =>
-  o && (o.refMin != null || o.refMax != null)
-    ? ` (${o.refMin != null ? fmtNum(o.refMin) : ""}–${o.refMax != null ? fmtNum(o.refMax) : ""})`
-    : "";
 
-export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
-  const system = config.system ?? "us";
-  const refOverride = config.refOverride ?? {};
-  const unreliable = config.unreliable ?? new Set<string>();
-  const excludeMarkers = config.excludeMarkers ?? new Set<string>();
-  const nameOverride = config.nameOverride ?? {};
-  const symbolOverride = config.symbolOverride ?? {};
+/** Reference-range suffix for a tooltip line, e.g. " (10–20)". */
+function rng(o?: UnitValue): string {
+  if (!o || (o.refMin == null && o.refMax == null)) return "";
+  const lo = o.refMin != null ? fmtNum(o.refMin) : "";
+  const hi = o.refMax != null ? fmtNum(o.refMax) : "";
+  return ` (${lo}–${hi})`;
+}
 
-  const cols: MatrixCol[] = [...draws]
-    .sort((a, b) => a.date.localeCompare(b.date) || a.labName.localeCompare(b.labName))
-    .map((d) => ({ id: idOf(d), date: d.date, labName: d.labName }));
+/** Multi-line hover tooltip for one measured cell (US/SI/report views). */
+function tipOf(d: Draw, it: LabItem): string {
+  const report = it.original.rawValue ?? fmtNum(it.original.value);
+  return [
+    `${d.date} · ${d.labName}`,
+    `${it.analysis || ""}${it.symbol ? " (" + it.symbol + ")" : ""}`,
+    `US: ${fmtNum(it.us.value)} ${it.us.unit || ""}${rng(it.us)}`,
+    `SI: ${fmtNum(it.si.value)} ${it.si.unit || ""}${rng(it.si)}`,
+    `Report: ${report} ${it.original.unit || ""}${it.method ? " · " + it.method : ""}`,
+  ].concat(it.sourceRow ? [it.sourceRow] : []).join("\n");
+}
 
-  interface Acc {
-    key: string; symbol?: string; analysis?: string; loinc?: string | null;
-    unit?: string; refMin?: number | null; refMax?: number | null;
-    byId: Record<string, { raw: string; value: number; refMin?: number | null; refMax?: number | null; tip: string }>;
-    loincs: Set<string>;
-  }
+/** Compact reference-range label for a row, e.g. "10–20", "<5", ">3" or "". */
+function refTextOf(refMin: number | null | undefined, refMax: number | null | undefined): string {
+  const hasLo = refMin != null && refMin > 0;
+  if (hasLo && refMax != null) return `${fmtNum(refMin)}–${fmtNum(refMax)}`;
+  if (refMax != null) return `<${fmtNum(refMax)}`;
+  if (hasLo) return `>${fmtNum(refMin)}`;
+  return "";
+}
+
+/** Row display name + display symbol, applying the personal name/symbol overrides. */
+export function displayNames(
+  symbol: string | undefined,
+  analysis: string | undefined,
+  nameOverride: Record<string, string>,
+  symbolOverride: Record<string, string>,
+): { displayName: string; displaySymbol: string } {
+  let nm = bySymbolOrAnalysis((k) => nameOverride[k], symbol, analysis) ?? analysis ?? "";
+  if (symbol && nm.endsWith(" (" + symbol + ")")) nm = nm.slice(0, nm.length - (symbol.length + 3));
+  const displaySymbol = symbol || (analysis != null ? symbolOverride[analysis] : undefined) || "";
+  return { displayName: nm, displaySymbol };
+}
+
+interface Acc {
+  key: string; symbol?: string; analysis?: string; loinc?: string | null;
+  unit?: string; refMin?: number | null; refMax?: number | null;
+  byId: Record<string, { raw: string; value: number; refMin?: number | null; refMax?: number | null; tip: string }>;
+  loincs: Set<string>;
+}
+
+/** Fold draws (ascending) into per-marker accumulators, preserving first-seen order. */
+function accumulate(asc: Draw[], system: UnitSystem, excludeMarkers: Set<string>): { byKey: Map<string, Acc>; order: string[] } {
   const byKey = new Map<string, Acc>();
   const order: string[] = [];
-  const asc = [...draws].sort((a, b) => a.date.localeCompare(b.date));
-
   for (const d of asc) {
     for (const it of d.items) {
       const v: UnitValue = (it[system] as UnitValue) || it.original;
@@ -102,29 +130,35 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
       if (it.symbol) m.symbol = it.symbol;
       const converted = it.original && v.value !== it.original.value;
       const raw = converted ? fmtNum(v.value) : (it.original?.rawValue ?? fmtNum(v.value));
-      const tip = [
-        `${d.date} · ${d.labName}`,
-        `${it.analysis || ""}${it.symbol ? " (" + it.symbol + ")" : ""}`,
-        `US: ${fmtNum(it.us.value)} ${it.us.unit || ""}${rng(it.us)}`,
-        `SI: ${fmtNum(it.si.value)} ${it.si.unit || ""}${rng(it.si)}`,
-        `Report: ${it.original.rawValue != null ? it.original.rawValue : fmtNum(it.original.value)} ${it.original.unit || ""}${it.method ? " · " + it.method : ""}`,
-      ].concat(it.sourceRow ? [it.sourceRow] : []).join("\n");
-      m.byId[idOf(d)] = { raw, value: v.value, refMin: v.refMin, refMax: v.refMax, tip };
+      m.byId[idOf(d)] = { raw, value: v.value, refMin: v.refMin, refMax: v.refMax, tip: tipOf(d, it) };
     }
   }
+  return { byKey, order };
+}
+
+export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
+  const system = config.system ?? "us";
+  const refOverride = config.refOverride ?? {};
+  const unreliable = config.unreliable ?? new Set<string>();
+  const excludeMarkers = config.excludeMarkers ?? new Set<string>();
+  const nameOverride = config.nameOverride ?? {};
+  const symbolOverride = config.symbolOverride ?? {};
+
+  const cols: MatrixCol[] = [...draws]
+    .sort((a, b) => a.date.localeCompare(b.date) || a.labName.localeCompare(b.labName))
+    .map((d) => ({ id: idOf(d), date: d.date, labName: d.labName }));
+
+  const asc = [...draws].sort((a, b) => a.date.localeCompare(b.date));
+  const { byKey, order } = accumulate(asc, system, excludeMarkers);
 
   const rows: MatrixRow[] = order.map((k) => {
     const m = byKey.get(k)!;
     const loincs = Array.from(m.loincs).sort((a, b) => a.localeCompare(b));
     const isUnreliable = (m.symbol != null && unreliable.has(m.symbol)) || (m.analysis != null && unreliable.has(m.analysis));
-    const ov = (m.symbol != null ? refOverride[m.symbol] : undefined) ?? (m.analysis != null ? refOverride[m.analysis] : undefined) ?? null;
+    const ov = bySymbolOrAnalysis((key) => refOverride[key], m.symbol, m.analysis) ?? null;
     let refMin = m.refMin, refMax = m.refMax, refNote: string | undefined;
     if (ov) { refMin = ov.refMin; refMax = ov.refMax; refNote = ov.note; }
-    const hasLo = refMin != null && refMin > 0;
-    const refText = (hasLo && refMax != null) ? `${fmtNum(refMin)}–${fmtNum(refMax)}`
-      : (refMax != null) ? `<${fmtNum(refMax)}`
-      : (hasLo) ? `>${fmtNum(refMin)}`
-      : "";
+    const refText = refTextOf(refMin, refMax);
     const cells = cols.map((c) => {
       const cell = m.byId[c.id];
       if (!cell) return null;
@@ -132,10 +166,8 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
       return { raw: cell.raw, value: cell.value, flag: isUnreliable ? "" as const : flagOf(cell.value, rMin, rMax, m.symbol, m.analysis), title: cell.tip };
     });
     const series = cells.map((cell, i) => cell ? { date: cols[i]!.date, value: cell.value } : null).filter((x): x is { date: string; value: number } => x != null);
-    let nm = (m.symbol != null ? nameOverride[m.symbol] : undefined) ?? (m.analysis != null ? nameOverride[m.analysis] : undefined) ?? m.analysis ?? "";
-    if (m.symbol && nm.endsWith(" (" + m.symbol + ")")) nm = nm.slice(0, nm.length - (m.symbol.length + 3));
-    const displaySymbol = m.symbol || (m.analysis != null ? symbolOverride[m.analysis] : undefined) || "";
-    return { key: m.key, symbol: m.symbol, analysis: m.analysis, loinc: m.loinc, loincs, unit: m.unit, refMin, refMax, refText, refNote, unreliable: isUnreliable, displayName: nm, displaySymbol, cells, series };
+    const { displayName, displaySymbol } = displayNames(m.symbol, m.analysis, nameOverride, symbolOverride);
+    return { key: m.key, symbol: m.symbol, analysis: m.analysis, loinc: m.loinc, loincs, unit: m.unit, refMin, refMax, refText, refNote, unreliable: isUnreliable, displayName, displaySymbol, cells, series };
   });
 
   rows.sort((a, b) => (a.analysis || "").localeCompare(b.analysis || ""));
