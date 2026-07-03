@@ -53,6 +53,7 @@ Architecture decision records live in
 - [ADR-0005](decisions/adr-0005-focus-on-blood.md) — focus on blood (YAGNI)
 - [ADR-0006](decisions/adr-0006-zod-schema-first.md) — Zod schema-first
 - [ADR-0007](decisions/adr-0007-clinical-provenance.md) — clinical provenance as stored references
+- [ADR-0008](decisions/adr-0008-price-catalog-per-lab.md) — price catalog per lab, current-only
 
 ## Open questions
 

@@ -22,6 +22,7 @@ Concepts in this product:
 - [`panel`](panel.md) — a group of markers + clinical lenses
 - [`index`](index.md) — a derived, formula-computed figure
 - [`reference`](reference.md) — a stored citation for a clinical number
+- [`data-layers`](data-layers.md) — the four data kinds + their homes
 
 ## What a concept is not
 
