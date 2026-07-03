@@ -9,6 +9,14 @@ export { zone, flagOf, CLIN_ZONE, type Zone, type ClinBand } from "./flag.js";
 export { fmtNum } from "./format.js";
 export { cholMgdlToMmoll, tgMgdlToMmoll, glucoseMgdlToMmoll } from "./convert.js";
 export { deriveSIUnits, SI_RULES_BY_LOINC, SI_RULES_BY_SYMBOL, SI_LOINC_BY_LOINC } from "./units.js";
+export {
+  parseCatalog, AnalyteCatalogSchema, AnalyteEntrySchema, ReferenceSchema, CatalogLoincSchema, RefRangeSchema, EvidenceLevel,
+  type AnalyteCatalog, type AnalyteEntry, type Reference, type CatalogLoinc, type RefRange,
+} from "./catalog/schema.js";
+export {
+  catalogToConfig, mergeConfig, indexCatalog,
+  type CatalogIndex, type CatalogConfigOptions,
+} from "./catalog/derive.js";
 
 // Catalog / grouping
 export { PANELS, groupByPanel, type Panel, type PanelGroup, type PanelRow } from "./panels.js";

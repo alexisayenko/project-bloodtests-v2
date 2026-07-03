@@ -17,7 +17,9 @@ import { bySymbolOrAnalysis } from "./lookup.js";
 
 export type UnitSystem = "us" | "si" | "original";
 
-export interface RefOverride { refMin: number; refMax: number; note?: string }
+// Bounds are nullable to carry one-sided ranges (e.g. "<100", ">3"); flagOf and
+// refTextOf already handle a null bound.
+export interface RefOverride { refMin: number | null; refMax: number | null; note?: string }
 
 export interface MatrixConfig {
   system?: UnitSystem;

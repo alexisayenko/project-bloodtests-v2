@@ -16,10 +16,19 @@ import { withDerived } from "./derived.js";
 import { buildMatrix, type Matrix, type MatrixConfig, type MatrixRow } from "./matrix.js";
 import { groupByPanel, type PanelGroup } from "./panels.js";
 import { buildIndices, type IndexMatrix, type IndexBuildConfig } from "./indices/build.js";
+import type { AnalyteCatalog } from "./catalog/schema.js";
+import { catalogToConfig, mergeConfig } from "./catalog/derive.js";
 
 export interface LabViewConfig extends MatrixConfig, IndexBuildConfig {
   /** Validate the input against the Zod schema before building (default true). */
   validate?: boolean;
+  /**
+   * Optional AnalyteCatalog. When present it supplies the canonical, cited
+   * baseline (display names, reference-range overrides, unreliable-assay set);
+   * any explicit override on this config still wins key-by-key. Its ranges are
+   * gated to the active unit `system` (mass vs molar).
+   */
+  catalog?: AnalyteCatalog;
 }
 
 export interface LabView {
@@ -32,8 +41,13 @@ export interface LabView {
 export function buildLabView(rawDraws: unknown, config: LabViewConfig = {}): LabView {
   const draws: Draw[] = config.validate === false ? (rawDraws as Draw[]) : parseDraws(rawDraws);
   const derived = withDerived(draws);
-  const matrix = buildMatrix(derived, config);
+  // Fold the catalog (canonical baseline) under the explicit config (personal
+  // overrides win) before building the matrix.
+  const cfg: LabViewConfig = config.catalog
+    ? mergeConfig(catalogToConfig(config.catalog, { system: config.system }), config)
+    : config;
+  const matrix = buildMatrix(derived, cfg);
   const panels = groupByPanel(matrix.rows);
-  const indices = buildIndices(derived, config);
+  const indices = buildIndices(derived, cfg);
   return { matrix, panels, indices };
 }
