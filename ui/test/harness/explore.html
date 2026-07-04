@@ -1,8 +1,8 @@
 <!doctype html>
 <!-- Playwright harness for <lab-explore>: deterministic fixture, real canvas.
      Serve the ui/ dir over http (ES modules don't load from file://):
-       python3 -m http.server <port> --directory ui
-     then open /harness/explore.html -->
+       python3 -m http.server <port>  (from the ui/ dir)
+     then open /test/harness/explore.html -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -16,7 +16,7 @@
   <h1>lab-explore harness</h1>
   <lab-explore id="x"></lab-explore>
   <script type="module">
-    import { exploreFromLabs } from "../dist/index.js";
+    import { exploreFromLabs } from "../../dist/index.js";
 
     // deterministic fixture — T reading 12 in band [8.6, 29] must show 16.7 %
     const labs = {

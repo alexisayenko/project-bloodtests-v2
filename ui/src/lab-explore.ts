@@ -17,6 +17,7 @@ import {
   theme,
   xAxis,
   smoothScale,
+  eventBands,
   monthYear,
   type Navigator,
   type SetTarget,
@@ -365,7 +366,6 @@ export class LabExplore extends HTMLElement {
 
     const th = theme();
     const bandCol = th.dark ? "rgba(46,204,113,0.10)" : "rgba(30,132,73,0.08)";
-    const dpr = Math.max(1, window.devicePixelRatio || 1);
     const W = () => wrap.clientWidth || 920;
 
     const drawBand = (uu: uPlot) => {
@@ -379,35 +379,13 @@ export class LabExplore extends HTMLElement {
       ctx.restore();
     };
 
-    const events = m.events ?? [];
-    const drawEvents = (uu: uPlot) => {
-      const on = this.#activeEvents();
-      if (!on.length) return;
-      const ctx = uu.ctx,
-        bb = uu.bbox;
-      ctx.save();
-      ctx.beginPath();
-      ctx.rect(bb.left, bb.top, bb.width, bb.height);
-      ctx.clip();
-      ctx.font = 10 * dpr + "px " + getComputedStyle(document.body).fontFamily;
-      ctx.textAlign = "left";
-      ctx.textBaseline = "top";
-      for (const ev of events) {
-        if (!on.includes(ev.id)) continue;
-        for (const p of ev.periods) {
-          const x0 = uu.valToPos(ts(p.start), "x", true);
-          const x1 = uu.valToPos(p.end ? ts(p.end) : uu.scales.x!.max!, "x", true);
-          if (x1 < bb.left || x0 > bb.left + bb.width) continue;
-          const lx = Math.max(x0, bb.left);
-          const rx = Math.min(x1, bb.left + bb.width);
-          ctx.fillStyle = ev.color;
-          ctx.fillRect(lx, bb.top, rx - lx, bb.height);
-          ctx.fillStyle = th.dark ? (ev.textDark ?? ev.text) : ev.text;
-          ctx.fillText(" " + (p.label || ev.label), lx, bb.top + 2 * dpr);
-        }
-      }
-      ctx.restore();
-    };
+    // band drawing lives in chart-kit; the component only supplies the event
+    // list (model data) and the active set (its checkbox row)
+    const drawEvents = eventBands({
+      events: m.events ?? [],
+      active: () => this.#activeEvents(),
+      dark: th.dark,
+    });
 
     // tooltip rows: actual value + unit, normalized % — the shell/date come from chart-kit
     const tipRows = (idx: number): string => {

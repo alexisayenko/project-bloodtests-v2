@@ -8,14 +8,17 @@ import type { Theme } from "./theme.js";
 
 const DAY = 86400;
 
-/** The slice of a uPlot instance the axis formatter reads. */
+/**
+ * The slice of a uPlot instance the axis formatter reads — kept a structural
+ * supertype of `uPlot` so the function satisfies uPlot's `Axis.Values` type.
+ */
 interface AxisPlot {
-  scales: { x: { min: number; max: number } };
+  scales: { [key: string]: { min?: number | null; max?: number | null } };
 }
 
 export function xAxisValues(self: AxisPlot, splits: number[]): string[] {
-  const sc = self.scales.x;
-  const days = (sc.max - sc.min) / DAY;
+  const sc = self.scales["x"];
+  const days = ((sc?.max ?? 0) - (sc?.min ?? 0)) / DAY;
   return splits.map((s) => {
     const d = new Date(s * 1000);
     const Y = d.getUTCFullYear();

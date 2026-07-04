@@ -472,6 +472,8 @@ describe("provenance-inspect (docs/product/features/provenance-inspect.md)", () 
       personal: false,
       displayName: "Platelets",
       shownRange: "150–400 10^9/L",
+      loincs: [],
+      references: [],
     };
     el.model = m;
     click(row(el, "PLT").querySelector(".info-badge")!);

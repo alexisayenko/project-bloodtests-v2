@@ -9,6 +9,7 @@ Toggle shaded treatment-period bands (Ova-Mit, Ozempic) over the [markers-overla
 - One `Events:` checkbox per event in the toolbar (`.ev-tog`, `explore.njk:17-21`). Homepage ships two: **Ova-Mit** (checked by default in markup) and **Ozempic** (unchecked by default).
 - Event definitions (`EVENTS`, `explore.njk:43-46`) are baked from the site-global `events` data at build time: each event has an id, label, its own band `color` plus light/dark label text colors, and a list of `{start, end, label}` periods. Ova-Mit period labels include the dose when present ("Ova-Mit " + dose).
 - Checked events draw as full-height shaded rectangles behind the series, clipped to the plot area, with the period label (or event label) painted at the top-left inside the band (`drawEvents`, `explore.njk:138-160`). Multiple periods of one event each get their own band.
+- In the component split, the band *drawing* is domain-agnostic and lives in chart-kit (`eventBands`, `chart/src/events.ts`) — any time chart (weight, CGM, glucose) can shade labeled periods. `<lab-explore>` keeps the checkbox row, its persistence, and the event list from the model.
 - **Open-ended periods** (`end: null`) draw from `start` to `uu.scales.x.max` — the right edge of the *current visible window* — so an ongoing treatment band extends indefinitely as you [pan](chart-pan.md) / [zoom](chart-zoom.md) right (`explore.njk:150`).
 - Toggling only calls `u.redraw()` — no data rebuild (`explore.njk:254-258`).
 

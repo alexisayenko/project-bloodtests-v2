@@ -13,6 +13,8 @@ export type { Theme } from "./theme.js";
 export { xAxis, xAxisValues } from "./axis.js";
 export { smoothScale } from "./scale.js";
 export type { ScalePlot, SetTarget } from "./scale.js";
+export { eventBands } from "./events.js";
+export type { EventBand, EventPeriod, EventPlot, EventBandsConfig } from "./events.js";
 export { isoDate, monthYear, MON } from "./dates.js";
 
 // uPlot is re-exported so component consumers construct charts from the same

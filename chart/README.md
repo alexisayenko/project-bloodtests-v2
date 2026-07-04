@@ -9,6 +9,8 @@ shared machinery every chart needs, with zero knowledge of what's plotted:
 - `theme` — shared visual tokens (`--muted` axis color, dark-mode grid, spline)
 - `xAxis` / `xAxisValues` — time axis with span-adaptive tick labels
 - `smoothScale` — eased y-autoscale so re-windowing never jerks
+- `eventBands` — `drawClear` hook shading labeled time periods (medication
+  courses, diet phases); open-ended periods follow the visible right edge
 - `isoDate` / `monthYear` — tooltip-header date formatters
 
 Extracted 1:1 from `labchart.js` (carried as byte-identical copies on
