@@ -8,4 +8,7 @@ export default defineConfig({
   sourcemap: true,
   target: "es2022",
   outDir: "dist",
+  // ship self-contained: chart-kit (which bundles uPlot) folds into this file
+  // so static-site consumers keep vendoring exactly one script
+  noExternal: ["@alexisayenko/chart-kit"],
 });

@@ -7,9 +7,19 @@
  */
 
 import { LabMatrix } from "./lab-matrix.js";
+import { LabExplore } from "./lab-explore.js";
 
 export { LabMatrix } from "./lab-matrix.js";
 export type { LabMatrixModel, LabRow, LabCol, LabCell, LabPanelGroup } from "./types.js";
+export { LabExplore } from "./lab-explore.js";
+export { exploreFromLabs } from "./explore-model.js";
+export type { ExploreBandOverride, ExploreFromLabsOptions } from "./explore-model.js";
+export type {
+  LabExploreModel,
+  ExploreMarker,
+  ExploreEvent,
+  ExplorePeriod,
+} from "./explore-types.js";
 
 /** Register the element once (guards against double-registration / SSR). */
 export function defineLabMatrix(tag = "lab-matrix"): void {
@@ -18,4 +28,12 @@ export function defineLabMatrix(tag = "lab-matrix"): void {
   }
 }
 
+/** Register the element once (guards against double-registration / SSR). */
+export function defineLabExplore(tag = "lab-explore"): void {
+  if (typeof customElements !== "undefined" && !customElements.get(tag)) {
+    customElements.define(tag, LabExplore);
+  }
+}
+
 defineLabMatrix();
+defineLabExplore();

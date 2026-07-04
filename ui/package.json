@@ -22,6 +22,9 @@
     "typecheck": "tsc --noEmit",
     "prepare": "tsup"
   },
+  "dependencies": {
+    "@alexisayenko/chart-kit": "file:../chart"
+  },
   "devDependencies": {
     "@alexisayenko/bloodtests-engine": "file:../engine",
     "@types/node": "^26.1.0",

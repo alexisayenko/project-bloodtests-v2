@@ -1,9 +1,19 @@
 # @alexisayenko/bloodtests-ui
 
-The **render layer** for the blood-test engine — a framework-agnostic
-`<lab-matrix>` web component. The engine turns lab data into a view-model; this
-turns the view-model into DOM. Works in any HTML page (Eleventy, plain static,
-mobile webview) — no framework required.
+The **render layer** for the blood-test engine — framework-agnostic web
+components. The engine turns lab data into a view-model; this turns the
+view-model into DOM. Works in any HTML page (Eleventy, plain static, mobile
+webview) — no framework required.
+
+Two elements (importing the module registers both):
+
+- **`<lab-matrix>`** — the marker × draw results table (lenses, US/SI, EN/RU,
+  detail density, panel collapse, popups).
+- **`<lab-explore>`** — markers overlaid on one time chart, normalized to % of
+  reference range (picker, event bands, zoom/pan via
+  [`@alexisayenko/chart-kit`](../chart/)). Build its model with
+  `exploreFromLabs(labsModel, opts)` (ADR-0010). Replaces the twin
+  hand-written Explore implementations on the homepage and natalga.com.
 
 ```html
 <lab-matrix></lab-matrix>

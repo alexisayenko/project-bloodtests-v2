@@ -1,0 +1,534 @@
+/**
+ * <lab-explore> — overlay blood markers on one time chart, each normalized to
+ * % of its reference range. Behavior port of the homepage Explore include
+ * (explore.njk) onto @alexisayenko/chart-kit, per ADR-0010. Same features:
+ * marker picker (panel-grouped badges), zoom/pan with persisted view, event
+ * bands, autoscale toggle, actual-value tooltip; same localStorage keys by
+ * default so existing users keep their state.
+ *
+ * Charts need a 2D canvas; in DOM-only environments (happy-dom tests, SSR)
+ * everything except the plot itself still renders and works.
+ */
+
+import {
+  uPlot,
+  navigator,
+  tooltip,
+  theme,
+  xAxis,
+  smoothScale,
+  monthYear,
+  type Navigator,
+  type SetTarget,
+} from "@alexisayenko/chart-kit";
+import type { ExploreEvent, ExploreMarker, LabExploreModel } from "./explore-types.js";
+import { EXPLORE_STYLES, UPLOT_CSS } from "./explore-styles.js";
+
+const PALETTE = [
+  "#9f2f28", "#2f6f9f", "#1e8449", "#b8860b", "#7d3c98", "#16a085", "#c0392b", "#5d6d7e",
+  "#d35400", "#2980b9", "#27ae60", "#8e44ad", "#d4ac0d", "#a93226", "#1abc9c", "#e67e22",
+];
+
+const DEFAULT_STEPS = [
+  { label: "6 months", days: 182 },
+  { label: "1 year", days: 365 },
+  { label: "2 years", days: 730 },
+  { label: "3 years", days: 1095 },
+  { label: "5 years", days: 1825 },
+  { label: "10 years", days: 3650 },
+];
+
+const DEFAULT_INTRO =
+  "Pick markers below to overlay them, normalized to % of each marker's reference range " +
+  "(0–100 % = within normal, shaded). Hover for actual values · drag to scroll · −/+ to zoom.";
+
+interface UsedMarker extends ExploreMarker {
+  key: string;
+}
+
+function ts(s: string): number {
+  return Date.parse(s) / 1000;
+}
+
+function canvasSupported(): boolean {
+  try {
+    return !!document.createElement("canvas").getContext("2d");
+  } catch {
+    return false;
+  }
+}
+
+export class LabExplore extends HTMLElement {
+  #model: LabExploreModel | null = null;
+  #root: ShadowRoot;
+
+  // selection
+  #sel: string[] = [];
+  #selSet: Record<string, 1> = {};
+
+  // chart state (rebuilt on every selection change)
+  #u: uPlot | null = null;
+  #used: UsedMarker[] = [];
+  #abs: (number | null)[][] = [];
+  #data: (number | null)[][] = [];
+  #x: number[] = [];
+  #gdates: string[] = [];
+  #allLo = 0;
+  #allHi = 100;
+  #setPct: SetTarget | null = null;
+  #showTip: ((self: uPlot) => void) | null = null;
+  #nav: Navigator | null = null;
+
+  #colorMap: Record<string, string> = {};
+  #colorN = 0;
+  #ro: ResizeObserver | null = null;
+
+  constructor() {
+    super();
+    this.#root = this.attachShadow({ mode: "open" });
+  }
+
+  get model(): LabExploreModel | null {
+    return this.#model;
+  }
+
+  set model(m: LabExploreModel | null) {
+    this.#model = m;
+    this.#render();
+  }
+
+  disconnectedCallback(): void {
+    if (this.#u) {
+      this.#u.destroy();
+      this.#u = null;
+    }
+    this.#ro?.disconnect();
+  }
+
+  // ---- persistence -------------------------------------------------------
+
+  #key(which: "sel" | "view" | "autoscale"): string {
+    const p = this.#model?.persist;
+    if (which === "sel") return p?.sel ?? "exploreSel";
+    if (which === "view") return p?.view ?? "hpgChartView";
+    return p?.autoscale ?? "hpgAutoscale";
+  }
+
+  #evKey(id: string): string {
+    return (this.#model?.persist?.evPrefix ?? "exploreEv:") + id;
+  }
+
+  #saveSel(): void {
+    try {
+      localStorage.setItem(this.#key("sel"), JSON.stringify(this.#sel));
+    } catch {
+      /* private mode */
+    }
+  }
+
+  // ---- render ------------------------------------------------------------
+
+  #render(): void {
+    const m = this.#model;
+    if (this.#u) {
+      this.#u.destroy();
+      this.#u = null;
+    }
+    this.#ro?.disconnect();
+    this.#ro = null;
+    if (!m || !Object.keys(m.markers).length) {
+      this.#root.innerHTML = `<style>${EXPLORE_STYLES}</style><p class="muted">No plottable markers.</p>`;
+      return;
+    }
+
+    const events = m.events ?? [];
+    this.#root.innerHTML =
+      `<style>${UPLOT_CSS}${EXPLORE_STYLES}</style>` +
+      `<p class="muted hpg-note">${m.intro ?? DEFAULT_INTRO}</p>` +
+      `<div class="chart-toolbar">` +
+      `<div class="zoom-ctrl">` +
+      `<button type="button" class="zoom" data-zoom="out" aria-label="Zoom out">−</button>` +
+      `<span class="zoom-label"></span>` +
+      `<button type="button" class="zoom" data-zoom="in" aria-label="Zoom in">+</button>` +
+      `</div>` +
+      `<label class="hpg-auto"><input type="checkbox" data-autoscale> Autoscale vertical</label>` +
+      `</div>` +
+      (events.length
+        ? `<div class="src-toggles"><span class="tog-label muted">Events:</span>` +
+          events
+            .map(
+              (ev) =>
+                `<label><input type="checkbox" class="ev-tog" value="${ev.id}"${ev.defaultOn ? " checked" : ""}> ${ev.label}</label>`,
+            )
+            .join("") +
+          `</div>`
+        : "") +
+      `<div class="axis-caps"><span class="cap-left">% of reference range</span></div>` +
+      `<div class="chart-wrap"></div>` +
+      `<div class="marker-picker"></div>`;
+
+    // selection: persisted → default
+    this.#sel = [];
+    try {
+      const sv = JSON.parse(localStorage.getItem(this.#key("sel")) ?? "null");
+      if (Array.isArray(sv)) this.#sel = sv as string[];
+    } catch {
+      /* fall back to defaults */
+    }
+    if (!this.#sel.length && !localStorage.getItem(this.#key("sel")))
+      this.#sel = (m.defaultSelection ?? []).slice();
+    this.#sel = this.#sel.filter((k) => k in m.markers);
+    this.#selSet = {};
+    for (const k of this.#sel) this.#selSet[k] = 1;
+
+    // stable global date axis across all markers, so the timeline never shifts on toggle
+    const gds: Record<string, 1> = {};
+    for (const k of Object.keys(m.markers))
+      for (const p of m.markers[k]!.data) gds[p[0]] = 1;
+    this.#gdates = Object.keys(gds).sort();
+    this.#x = this.#gdates.map(ts);
+
+    this.#buildPicker();
+    this.#wireToolbar();
+    this.#refreshBadges();
+    this.#makeChart();
+  }
+
+  #colorFor(k: string): string {
+    if (!(k in this.#colorMap))
+      this.#colorMap[k] = PALETTE[this.#colorN++ % PALETTE.length]!;
+    return this.#colorMap[k]!;
+  }
+
+  #buildPicker(): void {
+    const m = this.#model!;
+    const picker = this.#root.querySelector(".marker-picker")!;
+    const byPanel: Record<string, string[]> = {};
+    const order: string[] = [];
+    for (const k of Object.keys(m.markers)) {
+      const p = m.markers[k]!.panel;
+      if (!byPanel[p]) {
+        byPanel[p] = [];
+        order.push(p);
+      }
+      byPanel[p]!.push(k);
+    }
+    for (const pname of order) {
+      const box = document.createElement("div");
+      box.className = "picker-panel";
+      const cap = document.createElement("button");
+      cap.type = "button";
+      cap.className = "picker-cap";
+      cap.textContent = pname;
+      cap.title = "Select / deselect all in this panel";
+      cap.addEventListener("click", () => this.#togglePanel(byPanel[pname]!));
+      box.appendChild(cap);
+      const bb = document.createElement("div");
+      bb.className = "picker-badges";
+      for (const k of byPanel[pname]!) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "mbadge";
+        b.dataset.key = k;
+        b.textContent = m.markers[k]!.label;
+        b.addEventListener("click", () => this.#toggle(k));
+        bb.appendChild(b);
+      }
+      box.appendChild(bb);
+      picker.appendChild(box);
+    }
+  }
+
+  #refreshBadges(): void {
+    this.#root.querySelectorAll<HTMLElement>(".mbadge").forEach((b) => {
+      const k = b.dataset.key!;
+      const on = !!this.#selSet[k];
+      b.classList.toggle("on", on);
+      b.style.background = on ? this.#colorFor(k) : "";
+      b.style.borderColor = on ? this.#colorFor(k) : "";
+    });
+  }
+
+  #toggle(k: string): void {
+    if (this.#selSet[k]) {
+      delete this.#selSet[k];
+      this.#sel = this.#sel.filter((s) => s !== k);
+    } else {
+      this.#selSet[k] = 1;
+      this.#sel.push(k);
+    }
+    this.#saveSel();
+    this.#refreshBadges();
+    this.#rebuildKeepScroll();
+  }
+
+  #togglePanel(keys: string[]): void {
+    const anyOn = keys.some((k) => this.#selSet[k]);
+    for (const k of keys) {
+      if (anyOn) {
+        // anything on → clear the whole panel
+        delete this.#selSet[k];
+        this.#sel = this.#sel.filter((s) => s !== k);
+      } else if (!this.#selSet[k]) {
+        this.#selSet[k] = 1;
+        this.#sel.push(k);
+      }
+    }
+    this.#saveSel();
+    this.#refreshBadges();
+    this.#rebuildKeepScroll();
+  }
+
+  #wireToolbar(): void {
+    const asc = this.#root.querySelector<HTMLInputElement>("[data-autoscale]")!;
+    try {
+      asc.checked = localStorage.getItem(this.#key("autoscale")) === "1";
+    } catch {
+      /* default off */
+    }
+    asc.addEventListener("change", () => {
+      try {
+        localStorage.setItem(this.#key("autoscale"), asc.checked ? "1" : "0");
+      } catch {
+        /* private mode */
+      }
+      this.#nav?.apply();
+    });
+
+    // event overlay checkboxes (persisted) — a redraw is enough, no chart rebuild
+    this.#root.querySelectorAll<HTMLInputElement>(".ev-tog").forEach((c) => {
+      try {
+        const s = localStorage.getItem(this.#evKey(c.value));
+        if (s !== null) c.checked = s === "1";
+      } catch {
+        /* keep defaultOn */
+      }
+      c.addEventListener("change", () => {
+        try {
+          localStorage.setItem(this.#evKey(c.value), c.checked ? "1" : "0");
+        } catch {
+          /* private mode */
+        }
+        this.#u?.redraw();
+      });
+    });
+  }
+
+  #autoOn(): boolean {
+    return !!this.#root.querySelector<HTMLInputElement>("[data-autoscale]")?.checked;
+  }
+
+  #activeEvents(): string[] {
+    return Array.from(this.#root.querySelectorAll<HTMLInputElement>(".ev-tog:checked")).map(
+      (c) => c.value,
+    );
+  }
+
+  // ---- chart -------------------------------------------------------------
+
+  #buildData(): void {
+    const m = this.#model!;
+    this.#used = this.#sel
+      .filter((k) => k in m.markers)
+      .map((k) => ({ key: k, ...m.markers[k]! }));
+    this.#abs = [];
+    this.#data = [this.#x];
+    for (const mk of this.#used) {
+      const map: Record<string, number> = {};
+      for (const p of mk.data) map[p[0]] = p[1];
+      const abs = this.#gdates.map((d) => (d in map ? map[d]! : null));
+      const rng = mk.refMax - mk.refMin;
+      this.#abs.push(abs);
+      this.#data.push(
+        abs.map((v) => (v == null ? null : Math.round(((v - mk.refMin) / rng) * 1000) / 10)),
+      );
+    }
+    const allN: number[] = [];
+    for (let si = 1; si < this.#data.length; si++)
+      for (const v of this.#data[si]!) if (v != null) allN.push(v);
+    this.#allLo = Math.min(0, allN.length ? Math.min(...allN) : 0);
+    this.#allHi = Math.max(100, allN.length ? Math.max(...allN) : 100);
+    const ap = (this.#allHi - this.#allLo) * 0.06 + 1;
+    this.#allLo -= ap;
+    this.#allHi += ap;
+  }
+
+  #makeChart(): void {
+    this.#buildData();
+    const m = this.#model!;
+    const wrap = this.#root.querySelector<HTMLElement>(".chart-wrap")!;
+
+    if (!canvasSupported()) {
+      wrap.innerHTML = `<p class="muted">Chart needs a browser canvas to render.</p>`;
+      return;
+    }
+
+    const th = theme();
+    const bandCol = th.dark ? "rgba(46,204,113,0.10)" : "rgba(30,132,73,0.08)";
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const W = () => wrap.clientWidth || 920;
+
+    const drawBand = (uu: uPlot) => {
+      const ctx = uu.ctx,
+        bb = uu.bbox;
+      const y0 = uu.valToPos(0, "pct", true);
+      const y100 = uu.valToPos(100, "pct", true);
+      ctx.save();
+      ctx.fillStyle = bandCol;
+      ctx.fillRect(bb.left, Math.min(y0, y100), bb.width, Math.abs(y100 - y0));
+      ctx.restore();
+    };
+
+    const events = m.events ?? [];
+    const drawEvents = (uu: uPlot) => {
+      const on = this.#activeEvents();
+      if (!on.length) return;
+      const ctx = uu.ctx,
+        bb = uu.bbox;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(bb.left, bb.top, bb.width, bb.height);
+      ctx.clip();
+      ctx.font = 10 * dpr + "px " + getComputedStyle(document.body).fontFamily;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+      for (const ev of events) {
+        if (!on.includes(ev.id)) continue;
+        for (const p of ev.periods) {
+          const x0 = uu.valToPos(ts(p.start), "x", true);
+          const x1 = uu.valToPos(p.end ? ts(p.end) : uu.scales.x!.max!, "x", true);
+          if (x1 < bb.left || x0 > bb.left + bb.width) continue;
+          const lx = Math.max(x0, bb.left);
+          const rx = Math.min(x1, bb.left + bb.width);
+          ctx.fillStyle = ev.color;
+          ctx.fillRect(lx, bb.top, rx - lx, bb.height);
+          ctx.fillStyle = th.dark ? (ev.textDark ?? ev.text) : ev.text;
+          ctx.fillText(" " + (p.label || ev.label), lx, bb.top + 2 * dpr);
+        }
+      }
+      ctx.restore();
+    };
+
+    // tooltip rows: actual value + unit, normalized % — the shell/date come from chart-kit
+    const tipRows = (idx: number): string => {
+      let rows = "";
+      this.#used.forEach((mk, i) => {
+        const a = this.#abs[i]![idx];
+        if (a == null) return;
+        const norm = this.#data[i + 1]![idx];
+        const note =
+          mk.goodAbove != null && a >= mk.goodAbove
+            ? ` <span class="u-tip-ok">✓ ${mk.goodNote || "optimal"}</span>`
+            : "";
+        rows +=
+          `<div class="u-tip-row"><span class="u-tip-dot" style="background:${this.#colorFor(mk.key)}"></span>` +
+          `${mk.label}: <b>${a}${mk.unit ? " " + mk.unit : ""}</b> <span class="muted">(${norm}%)</span>${note}</div>`;
+      });
+      return rows;
+    };
+
+    if (!this.#nav) {
+      const FULL = {
+        min: this.#x.length ? this.#x[0]! : 0,
+        max: this.#x.length ? this.#x[this.#x.length - 1]! : 1,
+      };
+      this.#nav = navigator({
+        steps: m.steps ?? DEFAULT_STEPS,
+        full: FULL,
+        persistKey: this.#key("view"),
+        defaultStepIdx: m.defaultStepIdx ?? 3, // default view: latest 3 years
+        defaultAnchor: "end",
+        overscroll: m.overscroll ?? 0.25, // only 25% empty room past the last point
+        zoomIn: this.#root.querySelector<HTMLButtonElement>('[data-zoom="in"]'),
+        zoomOut: this.#root.querySelector<HTMLButtonElement>('[data-zoom="out"]'),
+        label: this.#root.querySelector<HTMLElement>(".zoom-label"),
+        onApply: (xmin, xmax) => {
+          if (!this.#u) return;
+          this.#u.setScale("x", { min: xmin, max: xmax }); // x instant (pan); y eased via setPct
+          if (this.#autoOn()) {
+            // fit the % axis to the visible window
+            let lo = Infinity,
+              hi = -Infinity;
+            for (let si = 1; si < this.#data.length; si++)
+              for (let i = 0; i < this.#x.length; i++) {
+                if (this.#x[i]! < xmin || this.#x[i]! > xmax) continue;
+                const v = this.#data[si]![i];
+                if (v == null) continue;
+                if (v < lo) lo = v;
+                if (v > hi) hi = v;
+              }
+            if (isFinite(lo)) {
+              const p = (hi - lo) * 0.1 || 5;
+              this.#setPct?.(lo - p, hi + p);
+            } else this.#setPct?.(this.#allLo, this.#allHi);
+          } else {
+            this.#setPct?.(this.#allLo, this.#allHi); // eased toward the fixed full range
+          }
+        },
+      });
+    }
+
+    const series: uPlot.Series[] = [{}];
+    this.#used.forEach((mk) => {
+      series.push({
+        label: mk.label,
+        scale: "pct",
+        stroke: this.#colorFor(mk.key),
+        width: 1.5,
+        spanGaps: true,
+        paths: th.spline,
+        points: { show: true, size: 4 },
+        value: (_self: uPlot, _rv: number | null, si: number, di: number | null) => {
+          if (di == null) return "--";
+          const a = this.#abs[si - 1]![di];
+          return a == null ? "--" : a + (this.#used[si - 1]!.unit ? " " + this.#used[si - 1]!.unit : "");
+        },
+      });
+    });
+
+    if (this.#u) {
+      this.#u.destroy();
+      this.#u = null;
+    }
+    this.#u = new uPlot(
+      {
+        width: W(),
+        height: 360,
+        scales: { x: { time: true }, pct: {} },
+        series,
+        axes: [
+          xAxis(th),
+          { scale: "pct", stroke: th.axis, grid: { stroke: th.grid, width: 0.5 } },
+        ],
+        legend: { show: true, live: false },
+        cursor: { drag: { x: false, y: false } },
+        hooks: {
+          drawClear: [drawBand, drawEvents],
+          setCursor: [(self: uPlot) => this.#showTip?.(self)],
+        },
+      },
+      this.#data as uPlot.AlignedData,
+      wrap,
+    );
+    this.#showTip = tooltip(this.#u as never, tipRows, monthYear) as (self: uPlot) => void;
+    this.#setPct = smoothScale(this.#u, "pct", { min: this.#allLo, max: this.#allHi });
+    this.#nav.attachPan(this.#u.over);
+    this.#nav.apply();
+
+    if (!this.#ro && typeof ResizeObserver !== "undefined") {
+      this.#ro = new ResizeObserver(() => {
+        if (this.#u) this.#u.setSize({ width: W(), height: 360 });
+      });
+      this.#ro.observe(wrap);
+    }
+  }
+
+  // rebuild the chart without letting the uPlot teardown jump the page scroll
+  #rebuildKeepScroll(): void {
+    const sy = window.scrollY,
+      sx = window.scrollX;
+    this.#makeChart();
+    window.scrollTo(sx, sy);
+    requestAnimationFrame(() => window.scrollTo(sx, sy));
+  }
+}
