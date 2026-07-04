@@ -61,6 +61,14 @@ const DEFAULT_I18N: Record<string, string> = {
   "badge.consensus": "consensus",
   "badge.heuristic": "heuristic",
   "badge.uncited": "uncited",
+  "control.unitsUS": "Units: US",
+  "control.unitsSI": "Units: SI",
+  "control.detailsFull": "Details: full",
+  "control.detailsCompact": "Details: compact",
+  "control.langEN": "Lang: EN",
+  "control.langRU": "Язык: RU",
+  "control.expandAll": "Expand all",
+  "control.collapseAll": "Collapse all",
 };
 
 /** EN/RU helper matching the njk `la` (attributes) / `lt` (span) macros. */
@@ -85,14 +93,59 @@ class I18n {
   span(id: string): string {
     return `<span data-en="${esc(this.enVal(id))}" data-ru="${esc(this.ruVal(id))}">${esc(this.enVal(id))}</span>`;
   }
+  /** The string for `id` in the active language (RU→EN fallback). For JS-built labels. */
+  text(id: string, ru: boolean): string {
+    return ru ? this.ruVal(id) : this.enVal(id);
+  }
 }
+
+/** Toolbar styling (mirrors the homepage .panel-controls buttons), scoped to the shadow. */
+const TOOLBAR_CSS = `
+.labs-toolbar { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin: 0.4rem 0; }
+.labs-toolbar .lm-btn { font-size: 0.75rem; padding: 0.2rem 0.7rem; border: 1px solid var(--_rule); border-radius: 3px; background: var(--_bg); color: var(--_muted); cursor: pointer; }
+.labs-toolbar .lm-btn:hover { color: var(--_fg); border-color: var(--_fg); }
+.labs-toolbar .lm-btn[aria-pressed="true"] { color: var(--_fg); border-color: var(--_fg); }
+.labs-toolbar .lm-sep { width: 1px; align-self: stretch; min-height: 1.2em; background: var(--_rule-soft); margin: 0 0.15rem; }
+`;
+
+/** Static explainer for the ⚠ unreliable-assay badge (direct free-T). */
+const WARN_HTML =
+  '<strong>Direct free-testosterone assay — not reliable.</strong> The direct (analog) immunoassay for free testosterone is known to be inaccurate. The Endocrine Society advises against it and recommends estimating free T from total testosterone, SHBG and albumin with the Vermeulen equation (or equilibrium dialysis). The free-T value shown here is the calculated Vermeulen figure — not this direct assay.<span class="tip-refs"><a href="https://academic.oup.com/jcem/article/103/5/1715/4939465" target="_blank" rel="noopener noreferrer">Endocrine Society (Bhasin 2018)</a><a href="https://academic.oup.com/jcem/article/84/10/3666/2660556" target="_blank" rel="noopener noreferrer">Vermeulen 1999</a></span>';
 
 /** ` data-en=".." data-ru=".."` for arbitrary model text (RU falls back to EN). */
 const biAttr = (en: unknown, ru?: unknown): string =>
   ` data-en="${esc(en)}" data-ru="${esc(ru == null || ru === "" ? en : ru)}"`;
 
+const LS = {
+  units: "labsV2.units",
+  details: "labsV2.details",
+  lang: "labsV2.lang",
+  collapsed: "labsV2.collapsedPanels",
+};
+const lsGet = (k: string): string | null => {
+  try {
+    return localStorage.getItem(k);
+  } catch {
+    return null;
+  }
+};
+const lsSet = (k: string, v: string): void => {
+  try {
+    localStorage.setItem(k, v);
+  } catch {
+    /* storage unavailable (private mode) — persistence is best-effort */
+  }
+};
+
 export class LabMatrix extends HTMLElement {
   private _model: LabMatrixModel | null = null;
+  private _i18n = new I18n();
+  private _wired = false;
+  private siOn = false;
+  private minOn = false;
+  private ruOn = false;
+  private collapsed: Set<string> = new Set();
+  private popupTarget: HTMLElement | null = null;
 
   /** The view-model to render. Setting it re-renders. */
   set model(m: LabMatrixModel | null) {
@@ -119,6 +172,11 @@ export class LabMatrix extends HTMLElement {
 
   connectedCallback(): void {
     if (!this.shadowRoot) this.attachShadow({ mode: "open" });
+    // load persisted view state (units / detail / language / collapsed panels)
+    this.siOn = lsGet(LS.units) === "si";
+    this.minOn = lsGet(LS.details) === "min";
+    this.ruOn = lsGet(LS.lang) === "ru";
+    this.wireOnce();
     this.render();
   }
 
@@ -126,11 +184,12 @@ export class LabMatrix extends HTMLElement {
     const root = this.shadowRoot;
     if (!root) return;
     const m = this._model;
+    this.popupTarget = null; // the previous popup's target node is about to be replaced
     if (!m || !m.matrix) {
       root.innerHTML = "";
       return;
     }
-    const t = new I18n(m.i18n);
+    const t = (this._i18n = new I18n(m.i18n));
     const cols = m.matrix.cols ?? [];
     const scheduleCols = m.scheduleCols ?? (m.scheduleCosts ?? []).map((s) => s.col);
     const scheduleCosts = m.scheduleCosts ?? [];
@@ -219,13 +278,239 @@ export class LabMatrix extends HTMLElement {
         .join("") +
       `</tr>`;
 
+    // self-contained toolbar (US/SI · full/compact · EN/RU · expand/collapse all).
+    // Labels are set by applyState() in the active language.
+    const toolbar =
+      `<div class="labs-toolbar" part="toolbar">` +
+      `<button type="button" class="lm-btn" data-act="units" aria-pressed="false"></button>` +
+      `<button type="button" class="lm-btn" data-act="detail" aria-pressed="false"></button>` +
+      `<button type="button" class="lm-btn" data-act="lang" aria-pressed="false"></button>` +
+      `<span class="lm-sep"></span>` +
+      `<button type="button" class="lm-btn" data-act="expand-all"></button>` +
+      `<button type="button" class="lm-btn" data-act="collapse-all"></button>` +
+      `</div>`;
+
+    // the tap/click popup (styled by #cell-popup rules; lives inside the shadow)
+    const popup =
+      `<div id="cell-popup" hidden><button type="button" class="tip-close" aria-label="Close">×</button><div class="tip-body"></div></div>`;
+
     root.innerHTML =
-      `<style>${STYLES}</style>` +
+      `<style>${STYLES}${TOOLBAR_CSS}</style>` +
+      toolbar +
       `<div class="labs-scroll"><table class="labs matrix">` +
       `<thead>${head}</thead>` +
       `<tbody>${panelsHtml}${idxTabs}</tbody>` +
       `<tfoot>${foot}</tfoot>` +
-      `</table></div>`;
+      `</table></div>` +
+      popup;
+
+    this.applyState();
+  }
+
+  // ---- behaviours (phase 3) — all scoped to the shadow root -----------------
+
+  /** Attach the delegated listeners once (they survive re-renders). */
+  private wireOnce(): void {
+    if (this._wired) return;
+    this._wired = true;
+    // click delegation via composedPath() so it works across the shadow boundary
+    document.addEventListener("click", (e) => this.onDocClick(e));
+    document.addEventListener("keydown", (e) => this.onKeydown(e));
+    window.addEventListener("resize", () => this.closePopup());
+    // reposition the popup on any scroll (capture catches the inner .labs-scroll too)
+    window.addEventListener("scroll", () => { if (this.popupTarget) this.placePopup(this.popupTarget); }, true);
+  }
+
+  /** Re-apply persisted view state to the freshly-rendered DOM. */
+  private applyState(): void {
+    this.applyLang(this.ruOn);
+    this.applyUnits(this.siOn);
+    this.applyDetail(this.minOn);
+    this.applyCollapse();
+  }
+
+  private q<T extends Element = Element>(sel: string): T | null {
+    return this.shadowRoot ? this.shadowRoot.querySelector<T>(sel) : null;
+  }
+  private qa(sel: string): Element[] {
+    return this.shadowRoot ? Array.from(this.shadowRoot.querySelectorAll(sel)) : [];
+  }
+
+  /** US ⇄ SI — swap each cell value + the row range/units + the shown LOINC code. */
+  private applyUnits(si: boolean): void {
+    for (const td of this.qa("td.num[data-si]")) {
+      const v = si ? td.getAttribute("data-si") : td.getAttribute("data-us");
+      if (v != null && v !== "") td.textContent = v;
+    }
+    for (const s of this.qa(".unit-ref")) {
+      s.textContent = (si ? s.getAttribute("data-si") : s.getAttribute("data-us")) || "";
+    }
+    for (const a of this.qa("a.loinc[data-si-loinc]")) {
+      const code = si ? a.getAttribute("data-si-loinc") : a.getAttribute("data-us-loinc");
+      if (code) {
+        a.textContent = code;
+        a.setAttribute("href", `https://loinc.org/${code}/`);
+      }
+    }
+    const btn = this.q('[data-act="units"]');
+    if (btn) {
+      btn.textContent = this._i18n.text(si ? "control.unitsSI" : "control.unitsUS", this.ruOn);
+      btn.setAttribute("aria-pressed", String(si));
+    }
+  }
+
+  /** full ⇄ compact — compact hides lab names + long analyte names (CSS). */
+  private applyDetail(min: boolean): void {
+    this.q("table.labs.matrix")?.classList.toggle("min-details", min);
+    const btn = this.q('[data-act="detail"]');
+    if (btn) {
+      btn.textContent = this._i18n.text(min ? "control.detailsCompact" : "control.detailsFull", this.ruOn);
+      btn.setAttribute("aria-pressed", String(min));
+    }
+  }
+
+  /** EN ⇄ RU — swap every data-en/data-ru node's textContent (fallback: EN, never blank). */
+  private applyLang(ru: boolean): void {
+    for (const el of this.qa("[data-en]")) {
+      const en = el.getAttribute("data-en");
+      const rv = el.getAttribute("data-ru");
+      el.textContent = ru && rv != null && rv !== "" ? rv : en || "";
+    }
+    const btn = this.q('[data-act="lang"]');
+    if (btn) {
+      btn.textContent = this._i18n.text(ru ? "control.langRU" : "control.langEN", ru);
+      btn.setAttribute("aria-pressed", String(ru));
+    }
+    // unit/detail button labels are language-dependent → refresh them
+    this.applyUnits(this.siOn);
+    this.applyDetail(this.minOn);
+  }
+
+  /** Collapse/expand panels per the persisted set (default: all collapsed). */
+  private applyCollapse(): void {
+    const panelRows = this.qa("tr.panel-row[data-panel]") as HTMLElement[];
+    // first render with no saved state → default all panels collapsed
+    if (!lsGet(LS.collapsed)) {
+      this.collapsed = new Set(panelRows.map((pr) => pr.getAttribute("data-panel") || ""));
+    } else if (this.collapsed.size === 0) {
+      try {
+        const saved = JSON.parse(lsGet(LS.collapsed) || "[]");
+        if (Array.isArray(saved)) this.collapsed = new Set(saved as string[]);
+      } catch { /* keep empty */ }
+    }
+    for (const pr of panelRows) {
+      pr.classList.add("collapsible");
+      this.applyPanel(pr);
+    }
+  }
+
+  private applyPanel(pr: HTMLElement): void {
+    const name = pr.getAttribute("data-panel") || "";
+    const isC = this.collapsed.has(name);
+    pr.classList.toggle("collapsed", isC);
+    const escName = (window.CSS && CSS.escape) ? CSS.escape(name) : name;
+    for (const r of this.qa(`tr[data-panel="${escName}"]`)) {
+      if (r !== pr) r.classList.toggle("panel-collapsed", isC);
+    }
+  }
+
+  private togglePanel(pr: HTMLElement): void {
+    const name = pr.getAttribute("data-panel") || "";
+    if (this.collapsed.has(name)) this.collapsed.delete(name);
+    else this.collapsed.add(name);
+    this.applyPanel(pr);
+    lsSet(LS.collapsed, JSON.stringify([...this.collapsed]));
+  }
+
+  private onAct(act: string): void {
+    if (act === "units") { this.siOn = !this.siOn; this.applyUnits(this.siOn); lsSet(LS.units, this.siOn ? "si" : "us"); }
+    else if (act === "detail") { this.minOn = !this.minOn; this.applyDetail(this.minOn); lsSet(LS.details, this.minOn ? "min" : "full"); }
+    else if (act === "lang") { this.ruOn = !this.ruOn; this.applyLang(this.ruOn); lsSet(LS.lang, this.ruOn ? "ru" : "en"); }
+    else if (act === "expand-all" || act === "collapse-all") {
+      const panelRows = this.qa("tr.panel-row[data-panel]") as HTMLElement[];
+      this.collapsed = act === "expand-all" ? new Set() : new Set(panelRows.map((pr) => pr.getAttribute("data-panel") || ""));
+      for (const pr of panelRows) this.applyPanel(pr);
+      lsSet(LS.collapsed, JSON.stringify([...this.collapsed]));
+    }
+  }
+
+  // ---- popup ---------------------------------------------------------------
+
+  private popupEl(): HTMLElement | null {
+    return this.shadowRoot ? (this.shadowRoot.getElementById("cell-popup") as HTMLElement | null) : null;
+  }
+
+  private closePopup(): void {
+    if (this.popupTarget) this.popupTarget.classList.remove("tip-open");
+    this.popupTarget = null;
+    const pop = this.popupEl();
+    if (pop) pop.hidden = true;
+  }
+
+  private openPopup(el: HTMLElement, html?: string): void {
+    const pop = this.popupEl();
+    if (!pop) return;
+    if (this.popupTarget === el) { this.closePopup(); return; }
+    this.closePopup();
+    const body = pop.querySelector(".tip-body") as HTMLElement | null;
+    if (body) {
+      if (html != null) body.innerHTML = html;
+      else body.textContent = el.getAttribute("data-tip") || "";
+    }
+    this.popupTarget = el;
+    el.classList.add("tip-open");
+    this.placePopup(el);
+  }
+
+  private placePopup(el: HTMLElement): void {
+    const pop = this.popupEl();
+    if (!pop) return;
+    const r = el.getBoundingClientRect();
+    pop.hidden = false; // must be visible to measure
+    const pw = pop.offsetWidth, ph = pop.offsetHeight;
+    const gap = 6, vw = window.innerWidth, vh = window.innerHeight;
+    const left = Math.min(Math.max(8, r.left), vw - pw - 8);
+    let top = r.bottom + gap;
+    if (top + ph > vh - 8) top = Math.max(8, r.top - ph - gap);
+    pop.style.left = `${left}px`;
+    pop.style.top = `${top}px`;
+  }
+
+  private onDocClick(e: Event): void {
+    const sr = this.shadowRoot;
+    if (!sr) return;
+    const path = (e as Event & { composedPath?: () => EventTarget[] }).composedPath?.() ?? [];
+    const match = (sel: string): HTMLElement | null =>
+      (path.find((n) => n instanceof HTMLElement && n.matches(sel)) as HTMLElement | undefined) ?? null;
+    const pop = this.popupEl();
+
+    const act = match("[data-act]");
+    if (act && sr.contains(act)) { this.onAct(act.getAttribute("data-act") || ""); return; }
+    if (match(".tip-close")) { this.closePopup(); return; }
+    if (pop && path.includes(pop)) return; // clicks inside the popup (links) don't dismiss
+
+    const warn = match("[data-warn]");
+    const info = match("[data-analyte-info]");
+    const cell = match("td.num.has-tip");
+    const panel = match("tr.panel-row.collapsible");
+    if (warn && sr.contains(warn)) this.openPopup(warn, WARN_HTML);
+    else if (info && sr.contains(info)) {
+      const src = info.parentNode ? (info.parentNode as Element).querySelector(".analyte-pop") : null;
+      this.openPopup(info, src ? src.innerHTML : "");
+    } else if (cell && sr.contains(cell)) this.openPopup(cell);
+    else if (panel && sr.contains(panel)) { this.togglePanel(panel); this.closePopup(); }
+    else this.closePopup();
+  }
+
+  private onKeydown(e: KeyboardEvent): void {
+    const sr = this.shadowRoot;
+    if (!sr) return;
+    if (e.key === "Escape") { this.closePopup(); return; }
+    const active = sr.activeElement as HTMLElement | null;
+    if ((e.key === "Enter" || e.key === " ") && active && active.matches("td.num.has-tip")) {
+      e.preventDefault();
+      this.openPopup(active);
+    }
   }
 
   /** A measured-marker row: marker column + data cells + scheduled-draw cells. */

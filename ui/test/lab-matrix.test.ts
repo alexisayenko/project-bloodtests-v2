@@ -273,3 +273,95 @@ describe("<lab-matrix> (phase 2 markup port)", () => {
     el.remove();
   });
 });
+
+describe("<lab-matrix> behaviours (phase 3)", () => {
+  const click = (n: Element) => n.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, cancelable: true }));
+  const fresh = (): LabMatrix => {
+    try { localStorage.clear(); } catch { /* ignore */ }
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    el.model = MODEL;
+    return el;
+  };
+
+  it("renders a self-contained toolbar with default labels", () => {
+    const el = fresh();
+    const sr = el.shadowRoot!;
+    expect(sr.querySelectorAll(".labs-toolbar .lm-btn").length).toBe(5);
+    expect(sr.querySelector('[data-act="units"]')!.textContent).toBe("Units: US");
+    expect(sr.querySelector('[data-act="lang"]')!.textContent).toBe("Lang: EN");
+    el.remove();
+  });
+
+  it("US/SI toggle swaps cell values + range + button state", () => {
+    const el = fresh();
+    const sr = el.shadowRoot!;
+    const cell = sr.querySelector('tr[data-key="HGB"] td.num.low')!;
+    const unitRef = sr.querySelector('tr[data-key="HGB"] .unit-ref')!;
+    expect(cell.textContent).toBe("14.8"); // US
+    click(sr.querySelector('[data-act="units"]')!);
+    expect(cell.textContent).toBe("148"); // SI (data-si)
+    expect(unitRef.textContent).toBe("135–175 g/L");
+    expect(sr.querySelector('[data-act="units"]')!.getAttribute("aria-pressed")).toBe("true");
+    el.remove();
+  });
+
+  it("EN/RU toggle swaps translatable text (name → Russian)", () => {
+    const el = fresh();
+    const sr = el.shadowRoot!;
+    const name = sr.querySelector('tr[data-key="HGB"] .analyte-name')!;
+    expect(name.textContent).toBe("Hemoglobin");
+    click(sr.querySelector('[data-act="lang"]')!);
+    expect(name.textContent).toBe("Гемоглобин");
+    expect(sr.querySelector('[data-act="lang"]')!.textContent).toBe("Язык: RU");
+    // unit button label also localised (falls back to EN default here)
+    el.remove();
+  });
+
+  it("full/compact toggle sets .min-details on the table", () => {
+    const el = fresh();
+    const sr = el.shadowRoot!;
+    const table = sr.querySelector("table.labs.matrix")!;
+    expect(table.classList.contains("min-details")).toBe(false);
+    click(sr.querySelector('[data-act="detail"]')!);
+    expect(table.classList.contains("min-details")).toBe(true);
+    el.remove();
+  });
+
+  it("panels default to collapsed; clicking a panel row expands it", () => {
+    const el = fresh();
+    const sr = el.shadowRoot!;
+    const panel = sr.querySelector("tr.panel-row.collapsible")!;
+    const member = sr.querySelector('tr[data-key="HGB"]')!;
+    expect(panel.classList.contains("collapsed")).toBe(true);
+    expect(member.classList.contains("panel-collapsed")).toBe(true);
+    click(panel);
+    expect(panel.classList.contains("collapsed")).toBe(false);
+    expect(member.classList.contains("panel-collapsed")).toBe(false);
+    el.remove();
+  });
+
+  it("clicking a cell opens the popup with its tooltip; Escape closes", () => {
+    const el = fresh();
+    const sr = el.shadowRoot!;
+    const pop = sr.getElementById("cell-popup") as HTMLElement;
+    expect(pop.hidden).toBe(true);
+    click(sr.querySelector('tr[data-key="HGB"] td.num.low')!);
+    expect(pop.hidden).toBe(false);
+    expect(pop.querySelector(".tip-body")!.textContent).toBe("2026-01 · Lab");
+    document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    expect(pop.hidden).toBe(true);
+    el.remove();
+  });
+
+  it("clicking the ⓘ badge opens the provenance popup (analyte-pop innerHTML)", () => {
+    const el = fresh();
+    const sr = el.shadowRoot!;
+    const pop = sr.getElementById("cell-popup") as HTMLElement;
+    click(sr.querySelector('tr[data-key="HGB"] .info-badge')!);
+    expect(pop.hidden).toBe(false);
+    expect(pop.querySelector(".tip-body .ap-badge.ap-lvl-guideline")).toBeTruthy();
+    expect(pop.querySelector(".tip-body .ap-quote")!.textContent).toContain("Haemoglobin thresholds");
+    el.remove();
+  });
+});
