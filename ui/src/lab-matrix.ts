@@ -390,9 +390,13 @@ export class LabMatrix extends HTMLElement {
     for (const tr of markerRows) {
       tr.hidden = isAll ? false : !(keyList && keyList.indexOf(tr.dataset["key"] || "") !== -1);
     }
-    // 2. panel separators — visible only if heading ≥1 visible marker
+    // 2. panel separators — in "all", visible only if heading ≥1 visible marker;
+    //    in any lens (curated cross-panel set) the source-panel headers are noise,
+    //    so hide every panel header. (Derived-index separators are handled below.)
     for (const h of panelHeaders) {
-      h.hidden = !markerRows.some((r) => !r.hidden && r.dataset["panel"] === h.dataset["panel"]);
+      h.hidden = isAll
+        ? !markerRows.some((r) => !r.hidden && r.dataset["panel"] === h.dataset["panel"])
+        : true;
     }
     // 3. derived-index rows — shown when their itab matches the active lens
     let anyBottomIdx = false;

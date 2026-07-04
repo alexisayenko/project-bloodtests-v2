@@ -200,14 +200,15 @@ describe("lens-filter (docs/product/features/lens-filter.md)", () => {
     expect(row(el, "CHOL").hidden).toBe(true);
     // that lens's derived-index row surfaces
     expect((sr(el).querySelector('tr.idx-row[data-itab="anemia"]') as HTMLElement).hidden).toBe(false);
-    // panel headers with no visible markers disappear
+    // in a lens (a curated cross-panel set) ALL panel headers are hidden — the
+    // source-panel headers are noise once the markers are gathered cross-panel
     const headers = Array.from(sr(el).querySelectorAll("tr.panel-row[data-panel]")) as HTMLElement[];
-    const byName = (n: string) => headers.find((h) => h.getAttribute("data-panel") === n)!;
-    expect(byName("Complete blood count (CBC)").hidden).toBe(false);
-    expect(byName("Lipids").hidden).toBe(true);
-    expect(byName("Hormones").hidden).toBe(true);
+    for (const h of headers) expect(h.hidden).toBe(true);
     // the picked tab reads as active
     expect(sr(el).querySelector('[data-lens="anemia"]')!.getAttribute("aria-pressed")).toBe("true");
+    // ...but in the "all" view the panel headers are visible again
+    click(sr(el).querySelector('[data-lens="all"]')!);
+    for (const h of headers) expect(h.hidden).toBe(false);
   });
 
   it("a lens with a bottom (non-inline) index also reveals its 'Derived indices' separator", () => {

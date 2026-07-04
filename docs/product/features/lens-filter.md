@@ -12,6 +12,10 @@ Narrow the whole matrix to a single clinical lens (cardio, insulin-resistance, h
 - `model.lensTabs` — optional `LabLensTab[]` (`types.ts:137`, each `{ key, label, labelRu }`) that render the in-component tab bar. When absent, the host page drives selection via `.view` instead (`types.ts:163`).
 - A lens key also matches the `itab` on derived-index rows, so a lens's indices surface alongside its markers.
 
+### Reference alignment
+
+The **Kidney** lens mirrors a standard renal battery — the [Mayo Clinic Labs Renal Function Panel (113634)](https://www.mayocliniclabs.com/test-catalog/overview/113634) / [LOINC 24362-6 (Renal function 2000 panel)](https://loinc.org/24362-6/): electrolytes (Na, K, Cl) + glucose + albumin + creatinine/urea + calcium/phosphorus — gathered cross-panel rather than as one ordered panel. On top of that battery it adds our own kidney-specific markers that those standard panels omit: Cystatin C, uric acid, and urine ACR.
+
 ## How it works
 
 `applyView(key)` (`lab-matrix.ts:371`) runs three steps mirroring the homepage `setView`:
