@@ -39,7 +39,14 @@
     "why": "Pituitary corticotropin; paired with morning cortisol it localizes HPA-axis disorders (ACTH-dependent vs independent Cushing, primary vs secondary adrenal insufficiency).",
     "frequency": null,
     "panel": "Thyroid, pituitary & growth axis",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Кортикотропин (АКТГ)",
+        "why": "Гипофизарный кортикотропин; в паре с утренним кортизолом локализует нарушения оси ГГН (АКТГ-зависимый и АКТГ-независимый синдром Кушинга, первичная и вторичная надпочечниковая недостаточность).",
+        "note": "УТРЕННИЙ интервал: референсный диапазон установлен по образцам, взятым с 7:00 до 10:00 (по Mayo); для дневных заборов референсные значения не установлены. АКТГ — пептид из 39 аминокислот, измеряется в единицах массы (pg/mL); клинически применимого молярного пересчёта нет."
+      }
+    }
   },
   "ALB": {
     "key": "ALB",
@@ -81,7 +88,14 @@
     "why": "Major hepatic synthetic protein and oncotic driver; a marker of chronic liver synthetic function and nutritional/inflammatory status. Falls in cirrhosis, protein loss, and systemic inflammation (negative acute-phase reactant).",
     "frequency": null,
     "panel": "Liver & proteins",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Альбумин",
+        "why": "Основной синтезируемый печенью белок и главный фактор онкотического давления; маркёр синтетической функции печени, нутритивного и воспалительного статуса. Снижается при циррозе, потере белка и системном воспалении (негативный белок острой фазы).",
+        "note": "Интервал Mayo Clinic Laboratories (≥12 месяцев: 3.5-5.0 g/dL). Обратите внимание: напечатанный диапазон лаборатории пациента (3.50-5.40) имеет более высокий верхний предел, чем у Mayo. Низкий альбумин указывает на сниженный синтез в печени (хроническое заболевание печени), потерю (нефротический синдром/энтеропатия) или воспаление."
+      }
+    }
   },
   "ALP": {
     "key": "ALP",
@@ -123,7 +137,14 @@
     "why": "Marker of cholestasis/biliary obstruction (and bone turnover). Disproportionate ALP elevation suggests infiltrative or obstructive hepatobiliary disease; paired with GGT to separate hepatic from bony origin.",
     "frequency": null,
     "panel": "Liver & proteins",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Щелочная фосфатаза",
+        "why": "Маркёр холестаза/обструкции желчевыводящих путей (и костного метаболизма). Непропорциональное повышение ЩФ указывает на инфильтративное или обструктивное гепатобилиарное заболевание; в паре с ГГТ разграничивает печёночное и костное происхождение.",
+        "note": "Взрослый интервал Mayo Clinic Laboratories (≥19 лет: 40-129 U/L); Mayo не разделяет взрослый диапазон по полу. ЩФ повышается при холестазе и заболеваниях костей; для локализации источника сопоставляйте с ГГТ."
+      }
+    }
   },
   "ALT": {
     "key": "ALT",
@@ -165,7 +186,14 @@
     "why": "Most liver-specific aminotransferase; sensitive marker of hepatocellular injury (viral/steatotic/drug-induced hepatitis). Elevations often precede clinical signs.",
     "frequency": null,
     "panel": "Liver & proteins",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Аланинаминотрансфераза",
+        "why": "Наиболее печёночноспецифичная аминотрансфераза; чувствительный маркёр повреждения гепатоцитов (вирусный/стеатозный/лекарственный гепатит). Повышение часто предшествует клиническим признакам.",
+        "note": "Интервал Mayo Clinic Laboratories (мужчины ≥6 лет: 7-55 U/L; женщины ≥6 лет: 7-45 U/L). Примечание: AASLD/ACG рекомендуют более низкий «здоровый» верхний предел нормы ~29-33 U/L для мужчин при скрининге хронического заболевания печени; обычный печатаемый лабораторный ВГН (<41) выше."
+      }
+    }
   },
   "AMY": {
     "key": "AMY",
@@ -207,7 +235,14 @@
     "why": "Pancreatic/salivary hydrolase; elevated in acute pancreatitis and pancreatic/salivary duct disease. Included with liver-panel enzymes to cover pancreatobiliary causes of abdominal pain (lipase is more specific).",
     "frequency": null,
     "panel": "Liver & proteins",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Амилаза",
+        "why": "Панкреатическая/слюнная гидролаза; повышается при остром панкреатите и заболеваниях панкреатических/слюнных протоков. Включена в печёночную панель для охвата панкреатобилиарных причин боли в животе (липаза более специфична).",
+        "note": "Взрослый интервал Mayo Clinic Laboratories (≥18 лет: 28-100 U/L; по обновлению теста Mayo/MLabs 2022 г.). Амилаза — панкреатический/слюнный фермент, не печёночный; не разделяется по полу. Значение получено из проиндексированного поиском содержимого каталога Mayo — см. ссылку."
+      }
+    }
   },
   "AST": {
     "key": "AST",
@@ -249,7 +284,14 @@
     "why": "Hepatocellular injury marker; released from damaged liver cells (also cardiac/skeletal muscle). Interpreted with ALT (AST:ALT ratio) to distinguish alcoholic vs other liver disease.",
     "frequency": null,
     "panel": "Liver & proteins",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Аспартатаминотрансфераза",
+        "why": "Маркёр повреждения гепатоцитов; высвобождается из повреждённых клеток печени (а также сердечной/скелетной мышцы). Интерпретируется вместе с АЛТ (соотношение АСТ:АЛТ) для различения алкогольного и других поражений печени.",
+        "note": "Взрослый мужской интервал Mayo Clinic Laboratories (мужчины ≥14 лет: 8-48 U/L; женщины ≥14 лет: 8-43 U/L). Примечание: AASLD/ACG приводят более низкий «здоровый/истинно нормальный» верхний предел ~29-33 U/L для мужчин для выявления НАЖБП/хронического заболевания печени; обычные лабораторные ВГН (например, печатаемый <40) выше."
+      }
+    }
   },
   "B12": {
     "key": "B12",
@@ -305,7 +347,14 @@
     "why": "Cobalamin is required for hematopoiesis and neurological function; deficiency causes macrocytic (megaloblastic) anemia and irreversible neuropathy/subacute combined degeneration. Screened with folate; confirmed with methylmalonic acid when borderline.",
     "frequency": "annual",
     "panel": "Vitamins & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Витамин B12 (кобаламин)",
+        "why": "Кобаламин необходим для кроветворения и работы нервной системы; дефицит вызывает макроцитарную (мегалобластную) анемию и необратимую нейропатию/подострую комбинированную дегенерацию спинного мозга. Скринируется вместе с фолатом; при пограничных значениях подтверждается метилмалоновой кислотой.",
+        "note": "Сывороточный кобаламин; эквивалент в единицах СИ ~148-590 pmol/L (×0.7378). Общий B12 — малочувствительный маркёр: значения 200-350 pg/mL всё ещё могут соответствовать дефициту, поэтому пограничные/низкие результаты подтверждают метилмалоновой кислотой (+/- гомоцистеином), которые повышаются при истинном дефиците. Ложно снижен при дефиците фолата/беременности; ложно повышен при заболеваниях печени/миелопролиферативных состояниях."
+      }
+    }
   },
   "BASO#": {
     "key": "BASO#",
@@ -355,7 +404,14 @@
     "why": "Absolute basophil count screens for basophilia associated with chronic myeloid leukemia and other myeloproliferative neoplasms.",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Базофилы (абсолютное число)",
+        "why": "Абсолютное число базофилов выявляет базофилию, связанную с хроническим миелолейкозом и другими миелопролиферативными новообразованиями.",
+        "note": "Взрослый референсный интервал LabCorp. Medscape приводит 25-100/mm³ (0.025-0.1 x10^3/µL); автоматический верхний предел LabCorp (0.2) шире. Абсолютное число базофилов — клинически решающее значение."
+      }
+    }
   },
   "BASO%": {
     "key": "BASO%",
@@ -397,7 +453,14 @@
     "why": "Basophils are the rarest leukocyte; persistent basophilia can signal myeloproliferative disease. Percent is derivative of the absolute count.",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Базофилы, %",
+        "why": "Базофилы — самые редкие лейкоциты; стойкая базофилия может указывать на миелопролиферативное заболевание. Процент является производным от абсолютного числа.",
+        "note": "Относительный (процентный) показатель лейкоцитарной формулы; варьирует между лабораториями. Абсолютное число базофилов (BASO#) — значимая мера. Лаборатория пациента печатает <1.0% (только верхний предел), что согласуется с указанным верхним пределом."
+      }
+    }
   },
   "Ca": {
     "key": "Ca",
@@ -457,7 +520,14 @@
     "why": "Total serum calcium (protein-bound + ionized) reflects skeletal and mineral homeostasis under PTH and vitamin D; abnormalities point to parathyroid disease, malignancy, vitamin D disorders and CKD.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Кальций",
+        "why": "Общий кальций сыворотки (связанный с белком + ионизированный) отражает скелетный и минеральный гомеостаз под действием ПТГ и витамина D; отклонения указывают на заболевания паращитовидных желёз, злокачественные опухоли, нарушения обмена витамина D и ХБП.",
+        "note": "Общий кальций как элементарная масса (mg/dL); 1 mg/dL Ca = 0.2495 mmol/L. Широко используемый взрослый референс 8.6-10.2 mg/dL; интерпретировать с учётом альбумина (коррекция +0.8 mg/dL на каждый 1 g/dL альбумина ниже 4.0) или измерять ионизированный кальций. Напечатанный лабораторией пациента 8.40-10.20 немного шире по нижней границе."
+      }
+    }
   },
   "Calcitonin": {
     "key": "Calcitonin",
@@ -499,7 +569,14 @@
     "why": "Thyroid C-cell hormone; the principal tumor marker for medullary thyroid carcinoma (MTC) and C-cell hyperplasia (elevated basal, or markedly hyperresponsive to calcium/pentagastrin stimulation), and used to monitor for MTC recurrence.",
     "frequency": null,
     "panel": "Tumor markers",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Кальцитонин",
+        "why": "Гормон C-клеток щитовидной железы; основной опухолевый маркёр медуллярного рака щитовидной железы (МРЩЖ) и гиперплазии C-клеток (повышенный базальный уровень или выраженный гиперответ на стимуляцию кальцием/пентагастрином), используется для мониторинга рецидива МРЩЖ.",
+        "note": "Половоспецифичный: ARUP мужчины (3 года и старше) 0.0-7.5 pg/mL (женщины 0.0-5.1 pg/mL) — у мужчин больше масса C-клеток щитовидной железы и выше базальный кальцитонин. Mayo приводит сопоставимый мужской верхний предел (~<=8.4 pg/mL). Пример единицы UCUM для LOINC 1992-7 — ng/L, численно идентична pg/mL (1 ng/L = 1 pg/mL). Базальный кальцитонин, значительно превышающий референс, — ключевой биохимический маркёр медуллярного рака щитовидной железы / гиперплазии C-клеток."
+      }
+    }
   },
   "Cl": {
     "key": "Cl",
@@ -541,7 +618,14 @@
     "why": "Major extracellular anion tracking sodium and bicarbonate; used with the anion gap to classify metabolic acidoses and assess acid-base balance.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Хлорид",
+        "why": "Основной внеклеточный анион, следующий за натрием и бикарбонатом; используется вместе с анионным интервалом для классификации метаболических ацидозов и оценки кислотно-щелочного баланса.",
+        "note": "Молярная концентрация (SCnc). Mayo взрослые >=18 лет 98-107 mmol/L. Напечатанный лабораторией пациента 98-106 практически эквивалентен."
+      }
+    }
   },
   "Cortisol": {
     "key": "Cortisol",
@@ -605,7 +689,14 @@
     "why": "Primary adrenal glucocorticoid under HPA/ACTH control; morning value screens for adrenal insufficiency (low) and Cushing syndrome (high). Must be interpreted against collection time due to diurnal rhythm.",
     "frequency": null,
     "panel": "Thyroid, pituitary & growth axis",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Кортизол",
+        "why": "Основной глюкокортикоид надпочечников под контролем оси ГГН/АКТГ; утреннее значение скринирует надпочечниковую недостаточность (низкое) и синдром Кушинга (высокое). Должно интерпретироваться с учётом времени забора из-за суточного ритма.",
+        "note": "СУТОЧНО-ЗАВИСИМЫЙ показатель: это УТРЕННИЙ интервал (образец взят с 6:00 до 10:00) по ARUP. Кортизол достигает пика ранним утром и минимума поздним вечером; интерпретировать строго по времени забора. Дневные значения существенно ниже. Молярная форма в nmol/L (примерно 166-508 nmol/L)."
+      }
+    }
   },
   "CREAT": {
     "key": "CREAT",
@@ -657,7 +748,14 @@
     "why": "Muscle-derived waste filtered by the glomerulus and minimally reabsorbed; the primary endogenous marker of GFR and the basis of eGFR estimation.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Креатинин",
+        "why": "Продукт мышечного метаболизма, фильтруемый клубочками и минимально реабсорбируемый; основной эндогенный маркёр СКФ и основа для расчёта рСКФ.",
+        "note": "Половоспецифичный; верхний предел у мужчин выше, чем у женщин, из-за большей мышечной массы. Mayo мужчины >=15 лет 0.74-1.35 mg/dL. Напечатанный лабораторией пациента верхний предел (1.40) немного шире."
+      }
+    }
   },
   "CRP": {
     "key": "CRP",
@@ -699,7 +797,14 @@
     "why": "Non-specific acute-phase reactant; screens for and tracks the intensity of systemic inflammation/infection and monitors response to treatment. Complements ESR (rises and falls faster).",
     "frequency": null,
     "panel": "Inflammation & coagulation",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "C-реактивный белок",
+        "why": "Неспецифический белок острой фазы; скринирует и отслеживает интенсивность системного воспаления/инфекции и мониторирует ответ на лечение. Дополняет СОЭ (повышается и снижается быстрее).",
+        "note": "Стандартный (не высокочувствительный) CRP. ARUP сообщает <0.5 mg/dL, что равно <5.0 mg/L (1 mg/dL = 10 mg/L); единица каталога — mg/L по LOINC. CRP — неспецифический белок острой фазы, повышающийся в течение часов при воспалении, инфекции или повреждении тканей. Для стратификации сердечно-сосудистого риска используйте высокочувствительный анализ (hsCRP), который разрешает низкий диапазон <10 mg/L."
+      }
+    }
   },
   "D-BIL": {
     "key": "D-BIL",
@@ -751,7 +856,14 @@
     "why": "Conjugated bilirubin fraction; elevation points to hepatocellular dysfunction or biliary obstruction (cholestasis) rather than hemolysis/Gilbert syndrome.",
     "frequency": null,
     "panel": "Liver & proteins",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Билирубин прямой",
+        "why": "Фракция конъюгированного билирубина; повышение указывает на гепатоцеллюлярную дисфункцию или обструкцию желчных путей (холестаз), а не на гемолиз/синдром Жильбера.",
+        "note": "Интервал Mayo Clinic Laboratories (≥12 месяцев: 0.0-0.3 mg/dL). Эквивалент СИ ≈ 0-5 µmol/L (×17.1). Конъюгированный (прямой) билирубин >0.3 mg/dL или повышенная прямая фракция указывают на гепатобилиарное/холестатическое заболевание."
+      }
+    }
   },
   "D-Dimer": {
     "key": "D-Dimer",
@@ -801,7 +913,14 @@
     "why": "Fibrin degradation product; a highly sensitive but non-specific marker of active clot breakdown. A value below the (age-adjusted) FEU cutoff, with low/moderate pretest probability, safely excludes DVT/PE; elevation is non-specific (VTE, DIC, infection, malignancy, recent surgery, pregnancy).",
     "frequency": null,
     "panel": "Inflammation & coagulation",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "D-димер",
+        "why": "Продукт деградации фибрина; высокочувствительный, но неспецифический маркёр активного распада тромба. Значение ниже (возраст-скорректированного) порога FEU при низкой/умеренной претестовой вероятности безопасно исключает ТГВ/ТЭЛА; повышение неспецифично (ВТЭ, ДВС, инфекция, злокачественная опухоль, недавняя операция, беременность).",
+        "note": "ОГОВОРКА ПО ЕДИНИЦАМ: D-димер измеряется либо в фибриноген-эквивалентных единицах (FEU), либо в единицах D-димера (DDU); FEU ~ 2x DDU, поэтому пороговое значение должно соответствовать единице отчёта (LOINC 48065-7 — код FEU). Порог <500 ng/mL FEU (= <0.5 mg/L FEU) — это порог для исключения ВТЭ, используемый при низкой/умеренной клинической претестовой вероятности, а НЕ «норма здоровья». Возраст-скорректированный порог для пациентов >50 лет = возраст x 10 ng/mL FEU. Анализ ДВС ARUP сообщает 0.0-0.4 ug/mL FEU (= 0-400 ng/mL FEU) на другой платформе. Образец — обеднённая тромбоцитами плазма."
+      }
+    }
   },
   "DHEA-S": {
     "key": "DHEA-S",
@@ -861,7 +980,14 @@
     "why": "Adrenal androgen precursor and the most abundant circulating steroid; marker of adrenal androgen production. Screens for adrenal sources of androgen (markedly high in adrenal tumors/CAH) and gives context for overall androgen status. Strongly age-dependent, so the 40-49y band must be used for this ~43y patient.",
     "frequency": null,
     "panel": "Sex hormones (HPG axis)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Дегидроэпиандростерон-сульфат",
+        "why": "Предшественник надпочечниковых андрогенов и самый распространённый циркулирующий стероид; маркёр продукции надпочечниковых андрогенов. Скринирует надпочечниковые источники андрогенов (резко повышен при опухолях надпочечников/ВГКН) и даёт контекст общего андрогенного статуса. Сильно зависит от возраста, поэтому для этого пациента ~43 лет следует использовать интервал 40-49 лет.",
+        "note": "Напечатанный лабораторией пациента интервал (25.00-220.00 ug/dL) слишком низок для взрослого мужчины и, по-видимому, является общим/неоткалиброванным диапазоном. Возрастной референс для взрослого мужчины 40-49 лет составляет 45-345 ug/dL (= ~1.2-9.4 umol/L). Значения прогрессивно снижаются в последующие десятилетия."
+      }
+    }
   },
   "DHT": {
     "key": "DHT",
@@ -913,7 +1039,14 @@
     "why": "Most potent androgen, made from testosterone by 5-alpha-reductase; drives prostate and scalp/hair effects. Useful in evaluating androgenic alopecia, 5-alpha-reductase issues, or monitoring 5-ARI therapy. LC-MS/MS is required for accuracy.",
     "frequency": null,
     "panel": "Sex hormones (HPG axis)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Дигидротестостерон",
+        "why": "Самый мощный андроген, образуется из тестостерона под действием 5-альфа-редуктазы; определяет эффекты на простату и волосы кожи головы. Полезен при оценке андрогенной алопеции, нарушений 5-альфа-редуктазы или мониторинге терапии ингибиторами 5-АР. Для точности требуется ЖХ-МС/МС.",
+        "note": "Mayo сообщает 11-95 ng/dL (0.38-3.27 nmol/L); в pg/mL это ~110-950 pg/mL (пересчёт единиц, x10 из ng/dL). Лаборатория пациента напечатала 250-990 pg/mL — метод-зависимый интервал. Измерять методом ЖХ-МС/МС."
+      }
+    }
   },
   "E2": {
     "key": "E2",
@@ -973,7 +1106,14 @@
     "why": "Main estrogen in men (aromatized from testosterone); important for bone, libido and gynecomastia risk. Elevated E2 with low T suggests increased aromatase activity/adiposity. Should be run by a sensitive/LC-MS/MS assay in males.",
     "frequency": null,
     "panel": "Sex hormones (HPG axis)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Эстрадиол (E2)",
+        "why": "Основной эстроген у мужчин (образуется ароматизацией из тестостерона); важен для костей, либидо и риска гинекомастии. Повышенный E2 при низком T указывает на повышенную активность ароматазы/ожирение. У мужчин следует определять чувствительным методом/ЖХ-МС/МС.",
+        "note": "Соответствует напечатанному лабораторией пациента 10.00-40.00 pg/mL. Взрослый мужской интервал Mayo ЖХ-МС/МС (EEST) указан в схожем низком диапазоне (~10-40 pg/mL); у мужчин используйте чувствительный метод/ЖХ-МС/МС."
+      }
+    }
   },
   "EO#": {
     "key": "EO#",
@@ -1023,7 +1163,14 @@
     "why": "Absolute eosinophil count grades eosinophilia (allergy, parasites, drug reaction, hypereosinophilic syndromes) more reliably than percent.",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Эозинофилы (абсолютное число)",
+        "why": "Абсолютное число эозинофилов оценивает степень эозинофилии (аллергия, паразиты, лекарственная реакция, гиперэозинофильные синдромы) надёжнее, чем процент.",
+        "note": "Взрослый референсный интервал LabCorp. Medscape приводит 50-500/mm³ (0.05-0.5 x10^3/µL). Абсолютное число эозинофилов — клинически решающее значение."
+      }
+    }
   },
   "EO%": {
     "key": "EO%",
@@ -1065,7 +1212,14 @@
     "why": "Eosinophils rise with allergy, atopy, drug reactions, and parasitic infection; percent frames the differential but is derivative of the absolute count.",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Эозинофилы, %",
+        "why": "Эозинофилы повышаются при аллергии, атопии, лекарственных реакциях и паразитарной инфекции; процент отражает лейкоцитарную формулу, но является производным от абсолютного числа.",
+        "note": "Относительный (процентный) показатель лейкоцитарной формулы; варьирует между лабораториями. Абсолютное число эозинофилов (EO#) — значимая мера. Лаборатория пациента печатает <6.0% (только верхний предел)."
+      }
+    }
   },
   "ESR": {
     "key": "ESR",
@@ -1107,7 +1261,14 @@
     "why": "Non-specific marker of inflammation (rises/falls slowly); used to screen for and monitor inflammatory/rheumatologic conditions (e.g. polymyalgia rheumatica, giant cell arteritis) and infections, usually alongside CRP.",
     "frequency": null,
     "panel": "Inflammation & coagulation",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Скорость оседания эритроцитов",
+        "why": "Неспецифический маркёр воспаления (повышается/снижается медленно); используется для скрининга и мониторинга воспалительных/ревматологических состояний (например, ревматическая полимиалгия, гигантоклеточный артериит) и инфекций, обычно вместе с CRP.",
+        "note": "Метод Вестергрена. Зависит от пола и возраста: взрослые мужчины <=15 mm/h (женщины <=20 mm/h). СОЭ физиологически повышается с возрастом; широко применяемое эмпирическое правило верхнего предела — возраст/2 для мужчин (и (возраст+10)/2 для женщин), поэтому у пожилого мужчины потолок выше (Mayo для мужчин 51+ лет до ~20 mm/h). Неспецифична — повышается при воспалении, инфекции, анемии, беременности и парапротеинемии."
+      }
+    }
   },
   "Fe": {
     "key": "Fe",
@@ -1163,7 +1324,14 @@
     "why": "Circulating iron bound to transferrin; part of the iron-studies panel used with TIBC, transferrin saturation and ferritin to distinguish iron deficiency from iron overload and anemia of chronic disease.",
     "frequency": "annual",
     "panel": "Iron studies",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Железо (сыворотка)",
+        "why": "Циркулирующее железо, связанное с трансферрином; часть панели исследования обмена железа, используемой вместе с ОЖСС, насыщением трансферрина и ферритином для различения дефицита железа, перегрузки железом и анемии хронического заболевания.",
+        "note": "Взрослый мужской интервал; эквивалент СИ 14-32 umol/L (x0.1791). Сывороточное железо имеет выраженную СУТОЧНУЮ вариацию (выше утром, ниже вечером) и колеблется в зависимости от недавнего поступления, поэтому единичное значение интерпретируется вместе с ОЖСС/насыщением трансферрина и ферритином, а не отдельно."
+      }
+    }
   },
   "Ferritin": {
     "key": "Ferritin",
@@ -1213,7 +1381,14 @@
     "why": "Primary marker of body iron stores; low ferritin is the most specific indicator of iron-deficiency anemia, while high ferritin flags iron overload (hemochromatosis) or, non-specifically, inflammation/liver injury (acute-phase reactant).",
     "frequency": "annual",
     "panel": "Iron studies",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Ферритин",
+        "why": "Основной маркёр запасов железа в организме; низкий ферритин — наиболее специфичный показатель железодефицитной анемии, тогда как высокий ферритин указывает на перегрузку железом (гемохроматоз) или, неспецифически, на воспаление/повреждение печени (белок острой фазы).",
+        "note": "Взрослый мужской интервал (нормальные взрослые лабораторные значения по Medscape/Tietz). Ферритин — белок (нет стандартной молярной единицы), поэтому ng/mL численно = mcg/L и молярный LOINC/пересчёт не применяется. ВОЗ определяет дефицит железа у практически здоровых взрослых как сывороточный ферритин <15 mcg/L; ферритин — белок острой фазы и повышается при воспалении/заболевании печени, поэтому «нормальное» значение не исключает дефицит при высоком CRP."
+      }
+    }
   },
   "Folic Acid": {
     "key": "Folic Acid",
@@ -1269,7 +1444,14 @@
     "why": "Folate is required for DNA synthesis and hematopoiesis; deficiency causes macrocytic (megaloblastic) anemia. Measured alongside B12 because the two deficiencies overlap and giving folate alone can mask B12 deficiency while its neuropathy progresses.",
     "frequency": "annual",
     "panel": "Vitamins & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Фолат",
+        "why": "Фолат необходим для синтеза ДНК и кроветворения; дефицит вызывает макроцитарную (мегалобластную) анемию. Измеряется вместе с B12, поскольку два дефицита перекрываются и назначение одного фолата может маскировать дефицит B12, пока прогрессирует его нейропатия.",
+        "note": "Сывороточный фолат; эквивалент СИ ~4.5-45.3 nmol/L (x2.266). Сывороточный фолат отражает недавнее поступление и является ненадёжным показателем тканевых запасов; биохимический дефицит — <3 ng/mL (<6.7 nmol/L). После введения в США обогащения продуктов фолиевой кислотой предложены более высокие взрослые референсные значения (5.8-32.8 ng/mL). Фолат эритроцитов лучше отражает запасы в организме."
+      }
+    }
   },
   "FSH": {
     "key": "FSH",
@@ -1314,7 +1496,14 @@
     "why": "Pituitary gonadotropin acting on Sertoli cells to support spermatogenesis. With LH it localizes the level of an HPG-axis lesion (testicular vs. pituitary/hypothalamic); elevated FSH signals seminiferous-tubule/germ-cell failure.",
     "frequency": null,
     "panel": "Sex hormones (HPG axis)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Фолликулостимулирующий гормон (ФСГ)",
+        "why": "Гипофизарный гонадотропин, действующий на клетки Сертоли для поддержки сперматогенеза. Вместе с ЛГ локализует уровень поражения оси ГГГ (тестикулярный или гипофизарно-гипоталамический); повышенный ФСГ сигнализирует о недостаточности семенных канальцев/зародышевых клеток.",
+        "note": "Соответствует напечатанному лабораторией пациента 1.50-12.40 mIU/mL. mIU/mL численно эквивалентна IU/L."
+      }
+    }
   },
   "FT": {
     "key": "FT",
@@ -1374,7 +1563,14 @@
     "why": "Fraction of testosterone not bound to SHBG/albumin, biologically active. Useful when SHBG is abnormal and total T is borderline. However the direct analog immunoassay reported here is unreliable; a calculated free T (from this patient's total T, SHBG, albumin) is preferred.",
     "frequency": null,
     "panel": "Sex hormones (HPG axis)",
-    "unreliableAssay": true
+    "unreliableAssay": true,
+    "lang": {
+      "ru": {
+        "displayName": "Тестостерон свободный",
+        "why": "Фракция тестостерона, не связанная с ГСПГ/альбумином, биологически активная. Полезна при аномальном ГСПГ и пограничном общем тестостероне. Однако указанный здесь прямой аналоговый иммуноанализ ненадёжен; предпочтителен расчётный свободный тестостерон (по общему T, ГСПГ и альбумину этого пациента).",
+        "note": "НЕЦИТИРУЕМЫЙ числовой диапазон — взят из распечатки лаборатории пациента; прямой аналоговый иммуноанализ свободного тестостерона НЕнадёжен (Endocrine Society 2018). Предпочтительно: расчётный свободный T (уравнение Вермёлена по общему T + ГСПГ + альбумину) или равновесный диализ, которые тесно коррелируют (r~0.99). Не используйте это прямое значение для клинических решений при аномальном ГСПГ."
+      }
+    }
   },
   "FT3": {
     "key": "FT3",
@@ -1430,7 +1626,14 @@
     "why": "Free biologically active thyroid hormone; helps characterize hyperthyroidism (e.g., T3-toxicosis) and low-T3 states; adds detail beyond TSH/FT4.",
     "frequency": null,
     "panel": "Thyroid, pituitary & growth axis",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Трийодтиронин (T3) свободный",
+        "why": "Свободный биологически активный гормон щитовидной железы; помогает охарактеризовать гипертиреоз (например, T3-токсикоз) и состояния низкого T3; добавляет детали помимо ТТГ/свободного T4.",
+        "note": "Взрослый интервал Mayo Clinic Laboratories T3FR. FT3 также сообщается в молярной форме pmol/L (примерно 3.1-6.8 pmol/L) с использованием молярной массы трийодтиронина."
+      }
+    }
   },
   "FT4": {
     "key": "FT4",
@@ -1486,7 +1689,14 @@
     "why": "Free (non-protein-bound) thyroxine; confirms and grades thyroid status alongside TSH, and is the key marker in central (pituitary/hypothalamic) hypothyroidism where TSH is unreliable.",
     "frequency": null,
     "panel": "Thyroid, pituitary & growth axis",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Тироксин (T4) свободный",
+        "why": "Свободный (не связанный с белком) тироксин; подтверждает и оценивает тиреоидный статус вместе с ТТГ и является ключевым маркёром центрального (гипофизарно-гипоталамического) гипотиреоза, где ТТГ ненадёжен.",
+        "note": "Взрослый интервал иммуноанализа Mayo Clinic Laboratories FRT4. FT4 также сообщается в молярной форме pmol/L (примерно 12-22 pmol/L) с использованием молярной массы тироксина."
+      }
+    }
   },
   "GGT": {
     "key": "GGT",
@@ -1528,7 +1738,14 @@
     "why": "Sensitive marker of hepatobiliary disease and cholestasis; used to confirm the hepatic source of an elevated ALP and as a marker of alcohol use / enzyme induction.",
     "frequency": null,
     "panel": "Liver & proteins",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Гамма-глутамилтрансфераза",
+        "why": "Чувствительный маркёр гепатобилиарного заболевания и холестаза; используется для подтверждения печёночного источника повышенной ЩФ и как маркёр употребления алкоголя / индукции ферментов.",
+        "note": "Интервал Mayo Clinic Laboratories (мужчины ≥16 лет: 8-61 U/L; женщины ≥16 лет: 5-36 U/L). Соответствует напечатанному лабораторией диапазону. ГГТ повышается при холестазе/обструкции желчных путей и подтверждает печёночное (а не костное) происхождение повышенной ЩФ; также индуцируется алкоголем и ферментиндуцирующими препаратами."
+      }
+    }
   },
   "GLU": {
     "key": "GLU",
@@ -1588,7 +1805,14 @@
     "why": "Core glycemic status marker; fasting normal <100 mg/dL, prediabetes 100-125, diabetes >=126 (ADA).",
     "frequency": null,
     "panel": "Lipids & glycemic",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Глюкоза",
+        "why": "Основной маркёр гликемического статуса; норма натощак <100 mg/dL, предиабет 100-125, диабет >=126 (ADA).",
+        "note": "ADA: нормальная глюкоза плазмы натощак <100 mg/dL; нарушенная гликемия натощак (предиабет) 100-125 mg/dL; диабет >=126 mg/dL (подтверждённый). Лаборатория печатает 74-110."
+      }
+    }
   },
   "HbA1c": {
     "key": "HbA1c",
@@ -1638,7 +1862,14 @@
     "why": "Long-term (2-3 month) glycemic control marker; ADA normal <5.7%, prediabetes 5.7-6.4%, diabetes >=6.5%.",
     "frequency": null,
     "panel": "Lipids & glycemic",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Гликированный гемоглобин A1c / общий гемоглобин",
+        "why": "Маркёр долговременного (2-3 месяца) гликемического контроля; норма ADA <5.7%, предиабет 5.7-6.4%, диабет >=6.5%.",
+        "note": "ADA: норма <5.7%; предиабет 5.7-6.4%; диабет >=6.5%. Отражает среднюю гликемию за ~2-3 месяца. Лаборатория печатает <6."
+      }
+    }
   },
   "HCT": {
     "key": "HCT",
@@ -1688,7 +1919,14 @@
     "why": "Packed red-cell volume fraction; corroborates hemoglobin for anemia vs erythrocytosis and is sensitive to plasma-volume (hydration) shifts.",
     "frequency": "annual",
     "panel": "Complete blood count (CBC)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Гематокрит",
+        "why": "Объёмная фракция упакованных эритроцитов; подтверждает гемоглобин при анемии и эритроцитозе и чувствителен к сдвигам объёма плазмы (гидратации).",
+        "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый мужской (16-150 лет) интервал 40-50 %. StatPearls даёт более широкий 40-54 % для взрослых мужчин. Гематокрит — объёмная фракция (VFr), сообщаемая как % объёма упакованных эритроцитов."
+      }
+    }
   },
   "HDL-C": {
     "key": "HDL-C",
@@ -1748,7 +1986,14 @@
     "why": "Anti-atherogenic (reverse cholesterol transport); inverse CHD risk marker. ATP III: <40 mg/dL low in men.",
     "frequency": null,
     "panel": "Lipids & glycemic",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Холестерин ЛПВП",
+        "why": "Антиатерогенный (обратный транспорт холестерина); обратный маркёр риска ИБС. ATP III: <40 mg/dL — низкий у мужчин.",
+        "note": "NCEP ATP III: низкий ЛПВП (фактор риска ИБС) <40 mg/dL; >=60 mg/dL — защитный (учитывается как отрицательный фактор риска). Выше — лучше (обратный маркёр)."
+      }
+    }
   },
   "HGB": {
     "key": "HGB",
@@ -1798,7 +2043,14 @@
     "why": "Primary measure of blood oxygen-carrying capacity; the defining value for anemia (low) and erythrocytosis/polycythemia (high).",
     "frequency": "annual",
     "panel": "Complete blood count (CBC)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Гемоглобин",
+        "why": "Основной показатель кислородтранспортной способности крови; определяющее значение для анемии (низкое) и эритроцитоза/полицитемии (высокое).",
+        "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый мужской (16-150 лет) интервал 13.5-17.0 g/dL. ВОЗ/StatPearls приводят более широкий 13-18 g/dL для взрослых мужчин. Гемоглобин измеряется в массовой концентрации (g/dL; в СИ g/L, то же свойство MCnc); клинически применимого молярного пересчёта для показателя ОАК нет."
+      }
+    }
   },
   "hsCRP": {
     "key": "hsCRP",
@@ -1848,7 +2100,14 @@
     "why": "Low-range CRP assay used for cardiovascular risk stratification: hsCRP adds prognostic information beyond the standard lipid panel. AHA/CDC tiers (<1 / 1-3 / >3 mg/L) map to low/average/high vascular risk.",
     "frequency": null,
     "panel": "Inflammation & coagulation",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Высокочувствительный C-реактивный белок",
+        "why": "Анализ CRP низкого диапазона для стратификации сердечно-сосудистого риска: hsCRP добавляет прогностическую информацию помимо стандартной липидной панели. Уровни AHA/CDC (<1 / 1-3 / >3 mg/L) соответствуют низкому/среднему/высокому сосудистому риску.",
+        "note": "hsCRP — ТОТ ЖЕ показатель, что и CRP, измеренный анализом низкого диапазона (высокой чувствительности) для стратификации сердечно-сосудистого риска, а НЕ отдельная молекула. Классической «нормы» нет; в качестве порогов используются уровни риска AHA/CDC (Pearson 2003): НИЗКИЙ риск <1.0 mg/L, СРЕДНИЙ/умеренный риск 1.0-3.0 mg/L, ВЫСОКИЙ риск >3.0 mg/L. Этот refDefault кодирует верхний (высокого риска) порог >3.0 mg/L (оператор lt, max 3). Значения >10 mg/L указывают на острое воспаление/инфекцию, а не на базовый сосудистый риск, и тест следует повторить."
+      }
+    }
   },
   "IgA": {
     "key": "IgA",
@@ -1890,7 +2149,14 @@
     "why": "Main mucosal-immunity immunoglobulin; measured to work up recurrent infection, suspected immunodeficiency (selective IgA deficiency, CVID) and monoclonal gammopathy/IgA myeloma.",
     "frequency": null,
     "panel": "Immunoglobulins",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Иммуноглобулин A",
+        "why": "Основной иммуноглобулин слизистого иммунитета; определяется при обследовании по поводу рецидивирующих инфекций, подозрении на иммунодефицит (селективный дефицит IgA, ОВИН) и моноклональной гаммапатии/IgA-миеломы.",
+        "note": "Возрастной взрослый интервал ARUP (19 лет и старше: 68-408 mg/dL). Сывороточный IgA повышается в детстве и выходит на плато во взрослом возрасте, поэтому применяется интервал >=19 лет. Низкий IgA указывает на селективный дефицит IgA или общий вариабельный иммунодефицит; диффузное повышение бывает при хронической инфекции/воспалении или заболевании печени, моноклональный пик — при IgA-миеломе."
+      }
+    }
   },
   "IGF-1": {
     "key": "IGF-1",
@@ -1932,7 +2198,14 @@
     "why": "GH-dependent hepatic peptide; stable integrated index of growth-hormone status used to screen/monitor acromegaly (high) and adult GH deficiency (low). Must be read against the age/sex-matched band.",
     "frequency": null,
     "panel": "Thyroid, pituitary & growth axis",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Соматомедин C (ИФР-1)",
+        "why": "СТГ-зависимый печёночный пептид; стабильный интегральный показатель статуса гормона роста, используемый для скрининга/мониторинга акромегалии (высокий) и дефицита гормона роста у взрослых (низкий). Должен оцениваться по возраст/пол-соответствующему интервалу.",
+        "note": "Возраст- и пол-специфичный референсный интервал из возрастной таблицы Warde Medical Laboratory. Отражает интегральную секрецию гормона роста (СТГ)."
+      }
+    }
   },
   "IgG": {
     "key": "IgG",
@@ -1974,7 +2247,14 @@
     "why": "Principal immunoglobulin of long-term humoral immunity; measured to evaluate recurrent infections, suspected immunodeficiency, and to detect/monitor monoclonal gammopathy (IgG myeloma/MGUS).",
     "frequency": null,
     "panel": "Immunoglobulins",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Иммуноглобулин G",
+        "why": "Главный иммуноглобулин долговременного гуморального иммунитета; определяется для оценки рецидивирующих инфекций, подозрения на иммунодефицит и для выявления/мониторинга моноклональной гаммапатии (IgG-миелома/MGUS).",
+        "note": "Возрастной взрослый интервал ARUP (19 лет и старше: 768-1632 mg/dL). IgG — наиболее распространённый сывороточный иммуноглобулин и медиатор долговременного гуморального иммунитета. Низкий IgG (гипогаммаглобулинемия) указывает на первичный/вторичный иммунодефицит или потерю белка; поликлональное повышение отражает хроническую инфекцию/воспаление/аутоиммунитет или заболевание печени, моноклональный пик — IgG-миелому/MGUS."
+      }
+    }
   },
   "Insulin": {
     "key": "Insulin",
@@ -2016,7 +2296,14 @@
     "why": "Fasting insulin gauges pancreatic beta-cell output and insulin resistance. No consensus diagnostic cutoff; interpreted against a reference-lab interval (2.6-24.9 µIU/mL) and, orientationally, lower-is-better for metabolic health.",
     "frequency": null,
     "panel": "Lipids & glycemic",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Инсулин",
+        "why": "Инсулин натощак оценивает секрецию бета-клеток поджелудочной железы и инсулинорезистентность. Консенсусного диагностического порога нет; интерпретируется по референсному лабораторному интервалу (2.6-24.9 µIU/mL) и, ориентировочно, «чем ниже, тем лучше» для метаболического здоровья.",
+        "note": "Формального диагностического порога по рекомендациям нет. Референсный лабораторный интервал натощак (Labcorp) 2.6-24.9 µIU/mL. Многие метаболические клиницисты считают <5-9 µIU/mL метаболически оптимальным (эвристика, не рекомендация)."
+      }
+    }
   },
   "K": {
     "key": "K",
@@ -2058,7 +2345,14 @@
     "why": "Dominant intracellular cation; small serum shifts critically affect cardiac and neuromuscular excitability, and levels reflect renal excretion, acid-base status and aldosterone.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Калий",
+        "why": "Доминирующий внутриклеточный катион; небольшие сдвиги в сыворотке критически влияют на возбудимость сердца и нервно-мышечной системы, а уровни отражают почечную экскрецию, кислотно-щелочной статус и альдостерон.",
+        "note": "Молярная концентрация (SCnc). Mayo >=1 года 3.6-5.2 mmol/L. Гемолиз и задержка сепарации ложно повышают результаты. Напечатанный лабораторией пациента 3.50-5.30 практически эквивалентен."
+      }
+    }
   },
   "LDL-C": {
     "key": "LDL-C",
@@ -2118,7 +2412,14 @@
     "why": "Primary atherogenic lipoprotein and main target of lipid-lowering therapy. ATP III optimal <100 mg/dL; usually calculated (Friedewald).",
     "frequency": null,
     "panel": "Lipids & glycemic",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Холестерин ЛПНП",
+        "why": "Основной атерогенный липопротеин и главная мишень липидснижающей терапии. ATP III оптимально <100 mg/dL; обычно рассчитывается (по Фридвальду).",
+        "note": "NCEP ATP III: оптимально <100; близко/выше оптимального 100-129; погранично высокий 130-159; высокий 160-189; очень высокий >=190 mg/dL. ACC/AHA 2018 считает, что при риске АССЗ ниже — лучше. Лаборатория печатает <130."
+      }
+    }
   },
   "LH": {
     "key": "LH",
@@ -2163,7 +2464,14 @@
     "why": "Pituitary gonadotropin that stimulates Leydig-cell testosterone production. Distinguishes primary (high LH) from secondary/central (low or inappropriately normal LH) hypogonadism when paired with total testosterone.",
     "frequency": null,
     "panel": "Sex hormones (HPG axis)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Лютеинизирующий гормон",
+        "why": "Гипофизарный гонадотропин, стимулирующий продукцию тестостерона клетками Лейдига. Разграничивает первичный (высокий ЛГ) и вторичный/центральный (низкий или неадекватно нормальный ЛГ) гипогонадизм при сопоставлении с общим тестостероном.",
+        "note": "Соответствует напечатанному лабораторией пациента 1.70-8.60 mIU/mL. mIU/mL численно эквивалентна IU/L."
+      }
+    }
   },
   "LYMPH#": {
     "key": "LYMPH#",
@@ -2213,7 +2521,14 @@
     "why": "Absolute lymphocyte count tracks immune competence; lymphopenia/lymphocytosis flag viral illness, immune deficiency, or lymphoproliferative disease.",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Лимфоциты (абсолютное число)",
+        "why": "Абсолютное число лимфоцитов отражает иммунную компетентность; лимфопения/лимфоцитоз указывают на вирусное заболевание, иммунодефицит или лимфопролиферативное заболевание.",
+        "note": "Взрослый референсный интервал LabCorp. Medscape приводит 1000-4000/mm³ (1.0-4.0 x10^3/µL). Абсолютное число лимфоцитов — клинически решающее значение."
+      }
+    }
   },
   "LYMPH%": {
     "key": "LYMPH%",
@@ -2255,7 +2570,14 @@
     "why": "Lymphocytes reflect adaptive (viral/immune) responses; percent frames the differential but is derivative of the absolute count.",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Лимфоциты, %",
+        "why": "Лимфоциты отражают адаптивный (вирусный/иммунный) ответ; процент отражает лейкоцитарную формулу, но является производным от абсолютного числа.",
+        "note": "Относительный (процентный) показатель лейкоцитарной формулы; варьирует между лабораториями. Абсолютное число лимфоцитов (LYMPH#) — значимая мера. Лаборатория пациента печатает 20.0-45.0%."
+      }
+    }
   },
   "MCH": {
     "key": "MCH",
@@ -2305,7 +2627,14 @@
     "why": "Average hemoglobin content per red cell; supports MCV in characterizing hypochromic vs normochromic anemia.",
     "frequency": "annual",
     "panel": "Complete blood count (CBC)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Среднее содержание гемоглобина в эритроците (MCH)",
+        "why": "Среднее содержание гемоглобина в одном эритроците; дополняет MCV в характеристике гипохромной и нормохромной анемии.",
+        "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый (16-150 лет) интервал 27-32 pg, не разделён по полу; StatPearls согласуется (27-32 pg/эритроцит). Средняя масса гемоглобина на эритроцит; следует за MCV."
+      }
+    }
   },
   "MCHC": {
     "key": "MCHC",
@@ -2355,7 +2684,14 @@
     "why": "Hemoglobin concentration within red cells; low = hypochromia (iron deficiency), high (>36) suggests spherocytosis or analytic artifact (lipemia, cold agglutinins).",
     "frequency": "annual",
     "panel": "Complete blood count (CBC)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Средняя концентрация гемоглобина в эритроците (MCHC)",
+        "why": "Концентрация гемоглобина внутри эритроцитов; низкая = гипохромия (дефицит железа), высокая (>36) указывает на сфероцитоз или аналитический артефакт (липемия, холодовые агглютинины).",
+        "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый (16-150 лет) интервал 32-35 g/dL, не разделён по полу. StatPearls описывает нормальную плотность около 34% Hb/клетку. Высокие значения (>36) указывают на сфероцитоз или аналитическую интерференцию."
+      }
+    }
   },
   "MCV": {
     "key": "MCV",
@@ -2405,7 +2741,14 @@
     "why": "Average red-cell volume; the primary index for classifying anemia by cell size (micro-/normo-/macrocytic).",
     "frequency": "annual",
     "panel": "Complete blood count (CBC)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Средний объём эритроцита (MCV)",
+        "why": "Средний объём эритроцита; основной показатель для классификации анемии по размеру клеток (микро-/нормо-/макроцитарная).",
+        "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый (16-150 лет) интервал 79-99 fL, не разделён по полу; StatPearls даёт 80-100 fL. Свойство LOINC отображается как EntMeanVol (энтитивный средний объём). Классифицирует анемию как микроцитарную/нормоцитарную/макроцитарную."
+      }
+    }
   },
   "Mg": {
     "key": "Mg",
@@ -2465,7 +2808,14 @@
     "why": "Cofactor for hundreds of enzymes and ATP-dependent reactions; hypomagnesemia commonly accompanies and perpetuates refractory hypokalemia and hypocalcemia.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Магний",
+        "why": "Кофактор сотен ферментов и АТФ-зависимых реакций; гипомагниемия часто сопровождает и поддерживает рефрактерную гипокалиемию и гипокальциемию.",
+        "note": "Сообщается как элементарная масса (mg/dL); 1 mg/dL Mg = 0.4114 mmol/L. Часто цитируемый взрослый интервал 1.7-2.3 mg/dL, но международного консенсуса нет, и в лабораториях он варьирует от ~1.6-2.6 mg/dL. Напечатанный лабораторией пациента 1.80-2.60. Сыворотка отражает <1% общего магния организма."
+      }
+    }
   },
   "MONO#": {
     "key": "MONO#",
@@ -2515,7 +2865,14 @@
     "why": "Absolute monocyte count flags chronic inflammation, recovery from marrow suppression, and (when persistently high) chronic myelomonocytic leukemia.",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Моноциты (абсолютное число)",
+        "why": "Абсолютное число моноцитов указывает на хроническое воспаление, восстановление после подавления костного мозга и (при стойком повышении) хронический миеломоноцитарный лейкоз.",
+        "note": "Взрослый референсный интервал LabCorp. Medscape приводит 100-700/mm³ (0.1-0.7 x10^3/µL), сопоставимо."
+      }
+    }
   },
   "MONO%": {
     "key": "MONO%",
@@ -2557,7 +2914,14 @@
     "why": "Monocytes mediate chronic inflammation and tissue macrophage supply; percent frames the differential but is derivative of the absolute count.",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Моноциты, %",
+        "why": "Моноциты опосредуют хроническое воспаление и пополнение тканевых макрофагов; процент отражает лейкоцитарную формулу, но является производным от абсолютного числа.",
+        "note": "Относительный (процентный) показатель лейкоцитарной формулы; варьирует между лабораториями. Абсолютное число моноцитов (MONO#) — значимая мера. Лаборатория пациента печатает 2.0-12.0%."
+      }
+    }
   },
   "MPV": {
     "key": "MPV",
@@ -2599,7 +2963,14 @@
     "why": "Average platelet size; elevated MPV points to active platelet production/consumption (peripheral destruction), low MPV to marrow hypoproduction.",
     "frequency": "annual",
     "panel": "Complete blood count (CBC)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Средний объём тромбоцита (MPV)",
+        "why": "Средний размер тромбоцитов; повышенный MPV указывает на активную продукцию/потребление тромбоцитов (периферическое разрушение), низкий MPV — на гипопродукцию костным мозгом.",
+        "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый интервал 9-12.2 fL, установлен локально на анализаторах Sysmex Мичиганского университета; не разделён по полу. Свойство LOINC отображается как EntMeanVol. Более высокие значения указывают на более молодые/крупные тромбоциты (повышенный оборот)."
+      }
+    }
   },
   "Na": {
     "key": "Na",
@@ -2641,7 +3012,14 @@
     "why": "Principal extracellular cation governing plasma osmolality and water distribution; dysnatremia reflects water balance and ADH/renal handling rather than total-body sodium.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Натрий",
+        "why": "Главный внеклеточный катион, определяющий осмоляльность плазмы и распределение воды; дизнатриемия отражает водный баланс и обработку АДГ/почками, а не общий натрий организма.",
+        "note": "Электролит, сообщаемый как молярная концентрация (SCnc). Mayo >=1 года 135-145 mmol/L. Напечатанный лабораторией пациента верхний предел (148) немного шире."
+      }
+    }
   },
   "NEUT#": {
     "key": "NEUT#",
@@ -2691,7 +3069,14 @@
     "why": "Absolute neutrophil count drives clinical decisions on infection risk and neutropenia; the key myeloid-lineage marker in the differential.",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Нейтрофилы (абсолютное число)",
+        "why": "Абсолютное число нейтрофилов определяет клинические решения о риске инфекции и нейтропении; ключевой маркёр миелоидной линии в лейкоцитарной формуле.",
+        "note": "Взрослый референсный интервал LabCorp. Medscape приводит 2500-8000/mm³ (2.5-8.0 x10^3/µL), сопоставимо. Абсолютное число нейтрофилов — клинически решающее значение (нейтропения <1.5)."
+      }
+    }
   },
   "NEUT%": {
     "key": "NEUT%",
@@ -2733,7 +3118,14 @@
     "why": "Neutrophils are the dominant leukocyte and first responders to bacterial infection; percent contextualizes the differential but is derivative of the absolute count.",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Нейтрофилы, %",
+        "why": "Нейтрофилы — доминирующие лейкоциты и первые ответчики на бактериальную инфекцию; процент контекстуализирует лейкоцитарную формулу, но является производным от абсолютного числа.",
+        "note": "Относительный (процентный) показатель лейкоцитарной формулы; существенно варьирует между лабораториями. Абсолютное число нейтрофилов (NEUT#) — клинически значимая мера. Лаборатория пациента печатает более широкий 40.0-75.0%."
+      }
+    }
   },
   "P": {
     "key": "P",
@@ -2785,7 +3177,14 @@
     "why": "Essential for ATP, nucleic acids and bone mineral; serum levels are tightly co-regulated with calcium by PTH, vitamin D and FGF23, and disturbances are central to CKD-mineral bone disorder.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Фосфор неорганический",
+        "why": "Необходим для АТФ, нуклеиновых кислот и минерализации костей; уровни в сыворотке жёстко ко-регулируются с кальцием посредством ПТГ, витамина D и FGF23, а нарушения занимают центральное место в минерально-костных нарушениях при ХБП.",
+        "note": "Измеряется как неорганический фосфат, сообщается как элементарная масса фосфора (mg/dL). Mayo взрослые 2.5-4.5 mg/dL, соответствует напечатанному лабораторией пациента диапазону."
+      }
+    }
   },
   "PLT": {
     "key": "PLT",
@@ -2835,7 +3234,14 @@
     "why": "Platelet concentration; screens for thrombocytopenia (bleeding risk) and thrombocytosis (reactive or myeloproliferative).",
     "frequency": "annual",
     "panel": "Complete blood count (CBC)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Тромбоциты",
+        "why": "Концентрация тромбоцитов; скринирует тромбоцитопению (риск кровотечения) и тромбоцитоз (реактивный или миелопролиферативный).",
+        "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), интервал 150-400 K/uL (= x10^3/µL), не разделён по полу; StatPearls согласуется (150 000-400 000/µL). Пример UCUM для LOINC — 10*9/L, численно идентичен 10*3/µL."
+      }
+    }
   },
   "PRL": {
     "key": "PRL",
@@ -2895,7 +3301,14 @@
     "why": "Anterior-pituitary hormone; hyperprolactinemia (prolactinoma, dopamine-blocking drugs, hypothyroidism) suppresses GnRH/LH/FSH and causes secondary hypogonadism, low libido and infertility. Included to work up any low-testosterone finding. Relevant given this patient's stimulant (Concerta) and thyroid context.",
     "frequency": null,
     "panel": "Sex hormones (HPG axis)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Пролактин",
+        "why": "Гормон передней доли гипофиза; гиперпролактинемия (пролактинома, дофамин-блокирующие препараты, гипотиреоз) подавляет ГнРГ/ЛГ/ФСГ и вызывает вторичный гипогонадизм, снижение либидо и бесплодие. Включён для обследования при любом низком тестостероне. Актуален с учётом контекста стимулятора (Concerta) и щитовидной железы у этого пациента.",
+        "note": "Получен пересчётом напечатанного лабораторией пациента диапазона Roche 53-360 mIU/L с использованием 1 ng/mL ~ 21.2 mIU/L -> ~2.5-17.0 ng/mL. Подтверждён опубликованными взрослыми мужскими диапазонами (~3-13 ng/mL, Medscape). Учтите, что макропролактин и стресс/венепункция могут ложно повышать ПРЛ."
+      }
+    }
   },
   "Protein Total": {
     "key": "Protein Total",
@@ -2937,7 +3350,14 @@
     "why": "Sum of all serum proteins (mainly albumin and globulins); a screen of hepatic synthetic function, nutritional/hydration status and dysproteinemias. A raised total protein with normal albumin (high globulin gap) prompts evaluation for a paraprotein.",
     "frequency": "annual",
     "panel": "Liver & protein",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Общий белок",
+        "why": "Сумма всех белков сыворотки (в основном альбумин и глобулины); скрининг синтетической функции печени, нутритивного/гидратационного статуса и диспротеинемий. Повышенный общий белок при нормальном альбумине (высокий глобулиновый разрыв) требует обследования на парапротеин.",
+        "note": "Общий белок сыворотки (альбумин + глобулины); g/dL = g/L / 10 (пересчёт массы того же свойства, не молярный, поэтому molarMass нет). Интерпретируется с альбумином и соотношением альбумин/глобулины: снижен при печёночной синтетической недостаточности, потере белка (нефротический синдром/энтеропатия) и недоедании; повышен при обезвоживании или моноклональной/поликлональной гаммапатии."
+      }
+    }
   },
   "PSA": {
     "key": "PSA",
@@ -2979,7 +3399,14 @@
     "why": "Prostate-specific glycoprotein; screening and monitoring marker for prostate cancer (and BPH/prostatitis). Rising or elevated total PSA prompts risk assessment (age-specific cutoffs, free:total ratio, PSA velocity) and possible biopsy.",
     "frequency": null,
     "panel": "Tumor markers",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Простатоспецифический антиген (общий)",
+        "why": "Простатоспецифический гликопротеин; маркёр скрининга и мониторинга рака простаты (а также ДГПЖ/простатита). Растущий или повышенный общий ПСА требует оценки риска (возраст-специфичные пороги, соотношение свободный:общий ПСА, скорость ПСА) и возможной биопсии.",
+        "note": "Общий ПСА. Традиционный единый порог <4.0 ng/mL (ARUP). ПСА зависит от возраста, поэтому многие лаборатории применяют возраст-специфичные верхние пределы (Oesterling): 40-49 лет <=2.5, 50-59 лет <=3.5, 60-69 лет <=4.5, 70-79 лет <=6.5 ng/mL. 4.0-10.0 ng/mL — диагностическая «серая зона», где соотношение свободный:общий ПСА помогает стратифицировать риск рака; >10 ng/mL несёт высокую вероятность рака. ПСА также повышается при ДГПЖ, простатите, недавней эякуляции/инструментальном вмешательстве, поэтому неспецифичен для рака."
+      }
+    }
   },
   "PTH": {
     "key": "PTH",
@@ -3029,7 +3456,14 @@
     "why": "Principal regulator of calcium and phosphate; the master test for distinguishing PTH-dependent (primary/secondary hyperparathyroidism) from PTH-independent causes of calcium disorders and for CKD-MBD monitoring.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Паратгормон (интактный)",
+        "why": "Главный регулятор кальция и фосфата; основной тест для различения ПТГ-зависимых (первичный/вторичный гиперпаратиреоз) и ПТГ-независимых причин нарушений кальция и для мониторинга МКН-ХБП.",
+        "note": "Референсный интервал иммуноанализа интактного (2-го/3-го поколения) ПТГ 15-65 pg/mL (ECLIA); зависит от метода и витамина D. Должен интерпретироваться вместе с сывороточным кальцием. Соответствует напечатанному лабораторией пациента диапазону."
+      }
+    }
   },
   "RBC": {
     "key": "RBC",
@@ -3079,7 +3513,14 @@
     "why": "Erythrocyte concentration; denominator for the red-cell indices (MCV, MCH) and part of the anemia/erythrocytosis picture.",
     "frequency": "annual",
     "panel": "Complete blood count (CBC)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Эритроциты",
+        "why": "Концентрация эритроцитов; знаменатель для эритроцитарных индексов (MCV, MCH) и часть картины анемии/эритроцитоза.",
+        "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый мужской (16-150 лет) интервал 4.40-5.70 M/uL (= x10^6/µL). StatPearls даёт 4.6-6.2 млн клеток/µL для взрослых мужчин. Пример UCUM для LOINC — 10*12/L, численно идентичен 10*6/µL."
+      }
+    }
   },
   "RDW-CV": {
     "key": "RDW-CV",
@@ -3129,7 +3570,14 @@
     "why": "Anisocytosis index (coefficient of variation of red-cell size); helps subclassify anemias (iron deficiency raises RDW, thalassemia trait often keeps it normal).",
     "frequency": "annual",
     "panel": "Complete blood count (CBC)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Ширина распределения эритроцитов (CV)",
+        "why": "Индекс анизоцитоза (коэффициент вариации размера эритроцитов); помогает субклассифицировать анемии (дефицит железа повышает RDW, талассемическая черта часто оставляет его нормальным).",
+        "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый (16-150 лет) интервал 11.5-15.0 %, не разделён по полу; StatPearls даёт ~11.5-15%. RDW-CV = СО объёма эритроцитов / MCV x 100; процентная мера анизоцитоза. Текущее свойство LOINC 788-0 — DistWidth (Ratio), UCUM %."
+      }
+    }
   },
   "RDW-SD": {
     "key": "RDW-SD",
@@ -3171,7 +3619,14 @@
     "why": "Direct-measured (volume, fL) anisocytosis index independent of MCV; useful when a normal MCV masks a mixed micro-/macrocytic population that widens the distribution.",
     "frequency": "annual",
     "panel": "Complete blood count (CBC)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Ширина распределения эритроцитов (SD)",
+        "why": "Прямо измеренный (объём, fL) индекс анизоцитоза, независимый от MCV; полезен, когда нормальный MCV маскирует смешанную микро-/макроцитарную популяцию, расширяющую распределение.",
+        "note": "RDW-SD зависит от анализатора (получен на Sysmex: ширина в fL гистограммы эритроцитов на уровне высоты 20%) и не разделён по полу. Широко цитируемый взрослый референс ~39-46 fL. БОЛЕЕ СЛАБАЯ доказательная база, чем у других индексов: таблицы ОАК Michigan Medicine и StatPearls не приводят RDW-SD, поэтому это взято из потребительского справочника результатов анализов, а не из первичной референсной лаборатории; точные пороги считайте ориентировочными."
+      }
+    }
   },
   "SHBG": {
     "key": "SHBG",
@@ -3216,7 +3671,14 @@
     "why": "Principal transport protein for testosterone and estradiol; determines the free (bioavailable) fraction. Essential context for interpreting total testosterone and for computing calculated free testosterone. This patient is on levothyroxine (Euthyrox), which can raise SHBG.",
     "frequency": null,
     "panel": "Sex hormones (HPG axis)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Глобулин, связывающий половые гормоны (ГСПГ)",
+        "why": "Главный транспортный белок для тестостерона и эстрадиола; определяет свободную (биодоступную) фракцию. Необходимый контекст для интерпретации общего тестостерона и для расчёта свободного тестостерона. Этот пациент принимает левотироксин (Euthyrox), который может повышать ГСПГ.",
+        "note": "Лаборатория пациента напечатала более широкий интервал (14.5-95.0 nmol/L, метод-зависимый). ГСПГ повышается с возрастом/избытком тироксина/заболеванием печени и снижается при ожирении/инсулинорезистентности; общий T интерпретируйте в этом контексте."
+      }
+    }
   },
   "T": {
     "key": "T",
@@ -3284,7 +3746,14 @@
     "why": "Primary readout of Leydig-cell androgen output and the core analyte of the HPG axis; screens for hypogonadism (low libido, fatigue, low mood, relevant to a ~43y male). Total T is the recommended first-line test; interpret with SHBG when binding is abnormal.",
     "frequency": null,
     "panel": "Sex hormones (HPG axis)",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Тестостерон",
+        "why": "Основной показатель андрогенной продукции клеток Лейдига и ключевой аналит оси ГГГ; скринирует гипогонадизм (снижение либидо, усталость, сниженное настроение, актуально для мужчины ~43 лет). Общий тестостерон — рекомендуемый тест первой линии; интерпретируйте с ГСПГ при аномальном связывании.",
+        "note": "264-916 ng/dL = 9.2-31.8 nmol/L (соответствует напечатанному лабораторией пациента 9.20-31.80 nmol/L). Гипогонадизм обычно диагностируется ниже ~300 ng/dL (Endocrine Society / AUA). Забор утром, натощак; низкие значения подтверждайте повторным утренним образцом."
+      }
+    }
   },
   "T-BIL": {
     "key": "T-BIL",
@@ -3336,7 +3805,14 @@
     "why": "Total heme-catabolism pigment; elevation causes jaundice. Fractionation (direct vs indirect) plus enzyme pattern distinguishes hemolytic/Gilbert (unconjugated) from hepatocellular/cholestatic (conjugated) causes.",
     "frequency": null,
     "panel": "Liver & proteins",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Билирубин общий",
+        "why": "Общий пигмент катаболизма гема; повышение вызывает желтуху. Фракционирование (прямой и непрямой) плюс ферментный профиль различают гемолитические/Жильбера (неконъюгированный) и гепатоцеллюлярные/холестатические (конъюгированный) причины.",
+        "note": "Взрослый интервал Mayo Clinic Laboratories (≥18 лет: 0.0-1.2 mg/dL). Эквивалент СИ ≈ 0-20.5 µmol/L (×17.1). Умеренно повышенный неконъюгированный общий билирубин при нормальных ферментах обычно указывает на синдром Жильбера."
+      }
+    }
   },
   "TC": {
     "key": "TC",
@@ -3396,7 +3872,14 @@
     "why": "Global lipid burden and cardiovascular risk marker; ATP III desirable cutoff <200 mg/dL.",
     "frequency": null,
     "panel": "Lipids & glycemic",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Холестерин общий",
+        "why": "Общая липидная нагрузка и маркёр сердечно-сосудистого риска; желательный порог ATP III <200 mg/dL.",
+        "note": "NCEP ATP III: желательно <200; погранично высокий 200-239; высокий >=240 mg/dL."
+      }
+    }
   },
   "TIBC": {
     "key": "TIBC",
@@ -3452,7 +3935,14 @@
     "why": "Measures the blood's total capacity to bind iron (largely transferrin); combined with serum iron it yields transferrin saturation, the key discriminator between iron deficiency (high TIBC, low saturation) and iron overload (low TIBC, high saturation).",
     "frequency": "annual",
     "panel": "Iron studies",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Общая железосвязывающая способность (ОЖСС)",
+        "why": "Измеряет общую способность крови связывать железо (в основном трансферрин); в сочетании с сывороточным железом даёт насыщение трансферрина — ключевой дискриминатор между дефицитом железа (высокая ОЖСС, низкое насыщение) и перегрузкой железом (низкая ОЖСС, высокое насыщение).",
+        "note": "Общая железосвязывающая способность; эквивалент СИ 45-82 umol/L (моли железа, x0.1791). ОЖСС повышается при дефиците железа (повышенная регуляция трансферрина) и снижается при перегрузке железом и воспалении. В источнике не разделена по полу. Насыщение трансферрина = сывороточное железо / ОЖСС (норма ~20-50%)."
+      }
+    }
   },
   "TRF": {
     "key": "TRF",
@@ -3508,7 +3998,14 @@
     "why": "The main iron-transport protein; measured directly (or via TIBC) in the iron-studies workup. High in iron deficiency, low in inflammation/malnutrition/liver disease, and used to compute transferrin saturation.",
     "frequency": "annual",
     "panel": "Iron studies",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Трансферрин",
+        "why": "Главный железотранспортный белок; измеряется напрямую (или через ОЖСС) при исследовании обмена железа. Повышен при дефиците железа, снижен при воспалении/недоедании/заболевании печени, используется для расчёта насыщения трансферрина.",
+        "note": "Железотранспортный гликопротеин; эквивалент СИ ~27-46 umol/L (x0.1257). Трансферрин — НЕГАТИВНЫЙ белок острой фазы (снижается при воспалении, недоедании, заболевании печени) и ПОВЫШАЕТСЯ при дефиците железа. Тесно следует за ОЖСС (трансферрин несёт ~70-80% железосвязывающей способности)."
+      }
+    }
   },
   "TRIG": {
     "key": "TRIG",
@@ -3568,7 +4065,14 @@
     "why": "Marker of atherogenic dyslipidemia and metabolic/insulin-resistance risk; ATP III normal cutoff <150 mg/dL (fasting).",
     "frequency": null,
     "panel": "Lipids & glycemic",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Триглицериды",
+        "why": "Маркёр атерогенной дислипидемии и метаболического/инсулинорезистентного риска; нормальный порог ATP III <150 mg/dL (натощак).",
+        "note": "NCEP ATP III: норма <150; погранично высокий 150-199; высокий 200-499; очень высокий >=500 mg/dL. >500 в первую очередь корректируют для профилактики панкреатита."
+      }
+    }
   },
   "TSH": {
     "key": "TSH",
@@ -3610,7 +4114,14 @@
     "why": "Pituitary thyrotropin; most sensitive first-line marker of thyroid axis status (primary hypo/hyperthyroidism) and for titrating levothyroxine.",
     "frequency": null,
     "panel": "Thyroid, pituitary & growth axis",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Тиреотропный гормон (ТТГ)",
+        "why": "Гипофизарный тиреотропин; наиболее чувствительный маркёр первой линии статуса тиреоидной оси (первичный гипо-/гипертиреоз) и для титрования левотироксина.",
+        "note": "Общий взрослый референс Американской тиреоидной ассоциации. Верхний предел варьирует по лаборатории/методу (~4.0-4.5 mIU/L); ТТГ повышается с возрастом у пожилых. ТТГ — скрининг первой линии дисфункции щитовидной железы."
+      }
+    }
   },
   "Urea": {
     "key": "Urea",
@@ -3670,7 +4181,14 @@
     "why": "End product of protein/amino-acid catabolism cleared by the kidneys; elevated urea reflects reduced GFR, dehydration, high protein load or catabolism (BUN:creatinine ratio distinguishes pre-renal from renal causes).",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Мочевина",
+        "why": "Конечный продукт катаболизма белков/аминокислот, выводимый почками; повышенная мочевина отражает сниженную СКФ, обезвоживание, высокую белковую нагрузку или катаболизм (соотношение мочевина:креатинин различает преренальные и ренальные причины).",
+        "note": "Сообщается как целая молекула мочевины (LOINC 3091-6), а не азот мочевины. Взрослый интервал Tietz 2.14-7.14 mmol/L = 12.9-42.8 mg/dL. Для перекрёстной проверки: Mayo BUN взрослый мужчина 8-24 mg/dL x 2.14 (массовое соотношение мочевина/BUN 60/28) = ~17-51 mg/dL мочевины. Напечатанный лабораторией пациента диапазон 10-50 mg/dL согласуется."
+      }
+    }
   },
   "Uric Acid": {
     "key": "Uric Acid",
@@ -3722,7 +4240,14 @@
     "why": "Terminal product of purine metabolism; supersaturation drives gout and urate nephrolithiasis, and it is a marker in tumor lysis and metabolic syndrome.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Мочевая кислота",
+        "why": "Конечный продукт метаболизма пуринов; перенасыщение вызывает подагру и уратный нефролитиаз, а также является маркёром при синдроме лизиса опухоли и метаболическом синдроме.",
+        "note": "Половоспецифичный (мужской диапазон выше). Mayo мужской референс 3.7-8.0 mg/dL (женский 2.7-6.1); гиперурикемия определяется как >8.0 mg/dL у мужчин. Нижняя граница имеет некоторую межлабораторную вариабельность; напечатанный лабораторией пациента 3.0-7.0 уже/ниже по верхней границе."
+      }
+    }
   },
   "Vit D": {
     "key": "Vit D",
@@ -3786,7 +4311,14 @@
     "why": "25-hydroxyvitamin D is the storage form and the standard marker of vitamin D status; screens for deficiency (bone loss, osteomalacia, secondary hyperparathyroidism) and guides supplementation. Relevant given the patient's thyroid/endocrine follow-up.",
     "frequency": "annual",
     "panel": "Vitamins & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "25-гидроксивитамин D (25-OH D)",
+        "why": "25-гидроксивитамин D — форма хранения и стандартный маркёр статуса витамина D; скринирует дефицит (потеря костной массы, остеомаляция, вторичный гиперпаратиреоз) и направляет назначение добавок. Актуален с учётом тиреоидного/эндокринного наблюдения пациента.",
+        "note": "Общий 25-OH D (D3+D2); эквивалент СИ ~75-250 nmol/L (x2.496). Пороги Endocrine Society (2011): дефицит <20 ng/mL, недостаточность 21-29 ng/mL, достаточность 30-100 ng/mL (часто предпочтителен целевой уровень 40-60 ng/mL). Примечание: пороги Endocrine Society 2011 выше, чем популяционный референс Institute of Medicine (>=20 ng/mL достаточно для большинства людей); некоторые лаборатории сообщают достаточность от 20-30 ng/mL."
+      }
+    }
   },
   "WBC": {
     "key": "WBC",
@@ -3836,7 +4368,14 @@
     "why": "Total circulating leukocyte concentration; screens for infection, inflammation, marrow suppression, leukemia, and treatment/drug effects (e.g., methylphenidate has no expected effect, but is tracked for baseline).",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Лейкоциты",
+        "why": "Общая концентрация циркулирующих лейкоцитов; скринирует инфекцию, воспаление, подавление костного мозга, лейкоз и эффекты лечения/препаратов (например, у метилфенидата ожидаемого эффекта нет, но он отслеживается для исходного уровня).",
+        "note": "Взрослый референсный интервал LabCorp; референсный диапазон количества лейкоцитов Medscape — 4.5-11.0 x10^3/µL (сопоставимо)."
+      }
+    }
   },
   "Zn": {
     "key": "Zn",
@@ -3892,6 +4431,13 @@
     "why": "Essential trace mineral cofactor for hundreds of enzymes and immune function; low serum zinc supports a diagnosis of deficiency (impaired wound healing, dermatitis, taste/smell loss, immune impairment), though it is an imperfect marker of total-body zinc.",
     "frequency": "annual",
     "panel": "Vitamins & minerals",
-    "unreliableAssay": false
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Цинк",
+        "why": "Незаменимый микроэлемент-кофактор для сотен ферментов и иммунной функции; низкий сывороточный цинк поддерживает диагноз дефицита (нарушение заживления ран, дерматит, потеря вкуса/обоняния, иммунные нарушения), хотя и является несовершенным маркёром общего цинка организма.",
+        "note": "Сывороточный/плазменный цинк; эквивалент СИ ~11.5-21.4 umol/L (x0.153). Сывороточный цинк — грубый показатель статуса (снижается при воспалении как негативный белок острой фазы и при гемодилюции); интерпретировать с учётом клинического контекста. Образцы не натощак и гемолизированные искажают результаты."
+      }
+    }
   }
 }

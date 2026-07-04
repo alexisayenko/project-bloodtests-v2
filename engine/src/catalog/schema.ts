@@ -59,6 +59,17 @@ export const EvidenceLevel = z.enum([
 ]);
 export type EvidenceLevel = z.infer<typeof EvidenceLevel>;
 
+/**
+ * Translatable, user-facing text for one locale. All fields optional/nullable so
+ * a locale can carry only the fields that have been translated so far.
+ */
+export const LocaleTextSchema = z.object({
+  displayName: z.string().nullable().optional(),  // localized analyte name
+  why: z.string().nullable().optional(),          // localized one-line clinical rationale
+  note: z.string().nullable().optional(),         // localized refDefault.note prose
+});
+export type LocaleText = z.infer<typeof LocaleTextSchema>;
+
 export const AnalyteEntrySchema = z.object({
   key: z.string(),                                 // catalog key (short name, else analysis name)
   shortName: z.string().nullable().optional(),
@@ -76,9 +87,9 @@ export const AnalyteEntrySchema = z.object({
   panel: z.string().nullable().optional(),         // panel / group membership
   unreliableAssay: z.boolean().default(false),     // e.g. direct free-T immunoassay
   lang: z.object({
-    en: z.string().nullable().optional(),
-    ru: z.string().nullable().optional(),
-    uk: z.string().nullable().optional(),
+    en: LocaleTextSchema.nullable().optional(),
+    ru: LocaleTextSchema.nullable().optional(),
+    uk: LocaleTextSchema.nullable().optional(),
   }).nullable().optional(),
 });
 export type AnalyteEntry = z.infer<typeof AnalyteEntrySchema>;
