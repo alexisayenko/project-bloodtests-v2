@@ -106,6 +106,10 @@ const TOOLBAR_CSS = `
 .labs-toolbar .lm-btn:hover { color: var(--_fg); border-color: var(--_fg); }
 .labs-toolbar .lm-btn[aria-pressed="true"] { color: var(--_fg); border-color: var(--_fg); }
 .labs-toolbar .lm-sep { width: 1px; align-self: stretch; min-height: 1.2em; background: var(--_rule-soft); margin: 0 0.15rem; }
+.lab-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0.4rem 0 0.2rem; }
+.lab-tabs .lab-tab { font-size: 0.78rem; padding: 0.25rem 0.8rem; border: 1px solid var(--_rule); border-radius: 999px; background: var(--_bg); color: var(--_muted); cursor: pointer; }
+.lab-tabs .lab-tab:hover { color: var(--_fg); border-color: var(--_fg); }
+.lab-tabs .lab-tab[aria-pressed="true"] { color: var(--_bg); background: var(--_accent); border-color: var(--_accent); }
 `;
 
 /** Static explainer for the ⚠ unreliable-assay badge (direct free-T). */
@@ -146,6 +150,17 @@ export class LabMatrix extends HTMLElement {
   private ruOn = false;
   private collapsed: Set<string> = new Set();
   private popupTarget: HTMLElement | null = null;
+  private _view = "all";
+  private _keyViews: Record<string, string[]> = {};
+
+  /** Active clinical-lens view ("all" or a lens key). Filters the table. */
+  set view(k: string) {
+    this._view = k || "all";
+    this.applyView(this._view);
+  }
+  get view(): string {
+    return this._view;
+  }
 
   /** The view-model to render. Setting it re-renders. */
   set model(m: LabMatrixModel | null) {
@@ -190,6 +205,7 @@ export class LabMatrix extends HTMLElement {
       return;
     }
     const t = (this._i18n = new I18n(m.i18n));
+    this._keyViews = m.keyViews ?? {};
     const cols = m.matrix.cols ?? [];
     const scheduleCols = m.scheduleCols ?? (m.scheduleCosts ?? []).map((s) => s.col);
     const scheduleCosts = m.scheduleCosts ?? [];
@@ -278,6 +294,21 @@ export class LabMatrix extends HTMLElement {
         .join("") +
       `</tr>`;
 
+    // optional in-component lens tab bar (host page can also drive `.view` directly)
+    const tabsBar = (m.lensTabs ?? []).length
+      ? `<div class="lab-tabs" role="tablist">` +
+        (m.lensTabs ?? [])
+          .map(
+            (tb) =>
+              `<button type="button" class="lab-tab" role="tab" data-lens="${esc(tb.key)}"${biAttr(
+                tb.label,
+                tb.labelRu,
+              )} aria-pressed="false">${esc(tb.label)}</button>`,
+          )
+          .join("") +
+        `</div>`
+      : "";
+
     // self-contained toolbar (US/SI · full/compact · EN/RU · expand/collapse all).
     // Labels are set by applyState() in the active language.
     const toolbar =
@@ -296,6 +327,7 @@ export class LabMatrix extends HTMLElement {
 
     root.innerHTML =
       `<style>${STYLES}${TOOLBAR_CSS}</style>` +
+      tabsBar +
       toolbar +
       `<div class="labs-scroll"><table class="labs matrix">` +
       `<thead>${head}</thead>` +
@@ -327,6 +359,48 @@ export class LabMatrix extends HTMLElement {
     this.applyUnits(this.siOn);
     this.applyDetail(this.minOn);
     this.applyCollapse();
+    this.applyView(this._view);
+  }
+
+  /**
+   * Clinical-lens filter: "all" shows every marker + inline indices; a lens key
+   * shows only that lens's curated markers (keyViews) + its derived-index rows.
+   * Mirrors the homepage setView (marker/panel/index steps); the Explore mode and
+   * host-page side panels stay in the host page.
+   */
+  private applyView(key: string): void {
+    if (!this.shadowRoot) return;
+    const isAll = key === "all" || !this._keyViews[key];
+    const keyList = this._keyViews[key];
+    const markerRows = this.qa("tbody tr[data-panel]:not(.panel-row)") as HTMLElement[];
+    const panelHeaders = this.qa("tbody tr.panel-row[data-panel]") as HTMLElement[];
+    const idxRows = this.qa("tbody tr.idx-row") as HTMLElement[];
+    const idxSeps = this.qa("tbody tr.idx-sep") as HTMLElement[];
+    // 1. marker rows — curated key-subset, or all
+    for (const tr of markerRows) {
+      tr.hidden = isAll ? false : !(keyList && keyList.indexOf(tr.dataset["key"] || "") !== -1);
+    }
+    // 2. panel separators — visible only if heading ≥1 visible marker
+    for (const h of panelHeaders) {
+      h.hidden = !markerRows.some((r) => !r.hidden && r.dataset["panel"] === h.dataset["panel"]);
+    }
+    // 3. derived-index rows — shown when their itab matches the active lens
+    let anyBottomIdx = false;
+    for (const tr of idxRows) {
+      const on = !isAll && tr.dataset["itab"] === key;
+      tr.hidden = !on;
+      if (on && !tr.classList.contains("idx-inline")) anyBottomIdx = true;
+    }
+    for (const s of idxSeps) s.hidden = !(s.dataset["itab"] === key && anyBottomIdx);
+    // reflect active tab
+    for (const b of this.qa("[data-lens]")) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-lens") === key));
+    }
+  }
+
+  private setView(key: string): void {
+    this._view = key || "all";
+    this.applyView(this._view);
   }
 
   private q<T extends Element = Element>(sel: string): T | null {
@@ -484,6 +558,8 @@ export class LabMatrix extends HTMLElement {
       (path.find((n) => n instanceof HTMLElement && n.matches(sel)) as HTMLElement | undefined) ?? null;
     const pop = this.popupEl();
 
+    const lens = match("[data-lens]");
+    if (lens && sr.contains(lens)) { this.setView(lens.getAttribute("data-lens") || "all"); return; }
     const act = match("[data-act]");
     if (act && sr.contains(act)) { this.onAct(act.getAttribute("data-act") || ""); return; }
     if (match(".tip-close")) { this.closePopup(); return; }

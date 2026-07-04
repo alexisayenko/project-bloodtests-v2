@@ -365,3 +365,65 @@ describe("<lab-matrix> behaviours (phase 3)", () => {
     el.remove();
   });
 });
+
+describe("<lab-matrix> lens views (phase 3b)", () => {
+  const click = (n: Element) => n.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, cancelable: true }));
+  const LENS_MODEL: LabMatrixModel = {
+    matrix: { cols: [{ id: "c", date: "2026-01", labName: "Lab" }], rows: [] },
+    keyViews: { anemia: ["HGB"] },
+    lensTabs: [
+      { key: "all", label: "All" },
+      { key: "anemia", label: "Anemia", labelRu: "Анемия" },
+    ],
+    panels: [
+      {
+        name: "CBC",
+        rows: [
+          { key: "HGB", shortName: "HGB", displayName: "Hemoglobin", cells: [{ raw: "15" }] },
+          { key: "PLT", shortName: "PLT", displayName: "Platelets", cells: [{ raw: "250" }] },
+        ],
+      },
+    ],
+    indices: {
+      anchored: { HGB: [{ itab: "anemia", name: "TSAT", formula: "Fe/TIBC", hasData: true, cells: [{ z: "z-ok", v: "30" }] }] },
+    },
+  };
+  const mountLens = (): LabMatrix => {
+    try { localStorage.clear(); } catch { /* ignore */ }
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    el.model = LENS_MODEL;
+    return el;
+  };
+
+  it("renders the lens tab bar and defaults to All (all markers, indices hidden)", () => {
+    const el = mountLens();
+    const sr = el.shadowRoot!;
+    expect(sr.querySelectorAll(".lab-tabs .lab-tab").length).toBe(2);
+    expect((sr.querySelector('tr[data-key="HGB"]') as HTMLElement).hidden).toBe(false);
+    expect((sr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(false);
+    expect((sr.querySelector("tr.idx-row") as HTMLElement).hidden).toBe(true);
+    el.remove();
+  });
+
+  it("selecting a lens filters to its markers + shows its indices", () => {
+    const el = mountLens();
+    const sr = el.shadowRoot!;
+    click(sr.querySelector('[data-lens="anemia"]')!);
+    expect((sr.querySelector('tr[data-key="HGB"]') as HTMLElement).hidden).toBe(false); // in anemia set
+    expect((sr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(true); // not in set
+    expect((sr.querySelector('tr.idx-row[data-itab="anemia"]') as HTMLElement).hidden).toBe(false);
+    expect(sr.querySelector('[data-lens="anemia"]')!.getAttribute("aria-pressed")).toBe("true");
+    el.remove();
+  });
+
+  it("is host-controllable via the .view property", () => {
+    const el = mountLens();
+    const sr = el.shadowRoot!;
+    el.view = "anemia";
+    expect((sr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(true);
+    el.view = "all";
+    expect((sr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(false);
+    el.remove();
+  });
+});

@@ -133,6 +133,13 @@ export interface LabScheduleCost {
   total: number;
 }
 
+/** One clinical-lens tab (filters the table to a curated marker subset + its indices). */
+export interface LabLensTab {
+  key: string; // "all" or a lens key matching keyViews / index itab
+  label: string;
+  labelRu?: string;
+}
+
 /** UI-string dictionaries for the EN/RU toggle (phase 3 wires the switch). */
 export interface LabI18n {
   en?: Record<string, string>;
@@ -150,6 +157,10 @@ export interface LabMatrixModel {
   rxLabels?: Record<string, string>;
   /** UI-string dictionaries for the language toggle. */
   i18n?: LabI18n;
+  /** lens key → curated marker (data-key) subset shown when that lens is active. */
+  keyViews?: Record<string, string[]>;
+  /** optional in-component lens tab bar; when absent the host drives `.view`. */
+  lensTabs?: LabLensTab[];
   drawCount?: number;
   markerCount?: number;
   ok?: boolean;
