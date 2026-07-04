@@ -288,9 +288,9 @@ describe("<lab-matrix> behaviours (phase 3)", () => {
     const el = fresh();
     const sr = el.shadowRoot!;
     expect(sr.querySelectorAll(".labs-toolbar .lm-btn").length).toBe(4);
-    expect(sr.querySelector('[data-act="collapse-toggle"]')!.textContent).toBe("Expand all");
-    expect(sr.querySelector('[data-act="units"]')!.textContent).toBe("Units: US");
-    expect(sr.querySelector('[data-act="lang"]')!.textContent).toBe("Lang: EN");
+    expect(sr.querySelector('[data-act="collapse-toggle"] .tg.active')!.textContent).toBe("Expand all");
+    expect(sr.querySelector('[data-act="units"] .tg.active')!.textContent).toBe("Units: US");
+    expect(sr.querySelector('[data-act="lang"] .tg.active')!.textContent).toBe("Lang: EN");
     el.remove();
   });
 
@@ -314,7 +314,7 @@ describe("<lab-matrix> behaviours (phase 3)", () => {
     expect(name.textContent).toBe("Hemoglobin");
     click(sr.querySelector('[data-act="lang"]')!);
     expect(name.textContent).toBe("Гемоглобин");
-    expect(sr.querySelector('[data-act="lang"]')!.textContent).toBe("Язык: RU");
+    expect(sr.querySelector('[data-act="lang"] .tg.active')!.textContent).toBe("Язык: RU");
     // unit button label also localised (falls back to EN default here)
     el.remove();
   });

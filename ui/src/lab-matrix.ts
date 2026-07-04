@@ -105,6 +105,11 @@ export const TOOLBAR_CSS = `
 .labs-toolbar .lm-btn { font-size: 0.75rem; padding: 0.2rem 0.7rem; border: 1px solid var(--_rule); border-radius: 3px; background: var(--_bg); color: var(--_muted); cursor: pointer; }
 .labs-toolbar .lm-btn:hover { color: var(--_fg); border-color: var(--_fg); }
 .labs-toolbar .lm-btn[aria-pressed="true"] { color: var(--_fg); border-color: var(--_fg); }
+/* toggle: stack both state labels in one grid cell so the button width is the
+   widest label (no reflow when the value flips within a language) */
+.labs-toolbar .lm-toggle { display: inline-grid; }
+.labs-toolbar .lm-toggle .tg { grid-area: 1 / 1; text-align: center; white-space: nowrap; }
+.labs-toolbar .lm-toggle .tg:not(.active) { visibility: hidden; }
 .labs-toolbar .lm-sep { width: 1px; align-self: stretch; min-height: 1.2em; background: var(--_rule-soft); margin: 0 0.15rem; }
 .lab-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0.4rem 0 0.2rem; }
 .lab-tabs .lab-tab { font-size: 0.78rem; padding: 0.25rem 0.8rem; border: 1px solid var(--_rule); border-radius: 999px; background: var(--_bg); color: var(--_muted); cursor: pointer; }
@@ -312,13 +317,18 @@ export class LabMatrix extends HTMLElement {
     // self-contained toolbar. Collapse/expand leads as a single toggle (offers
     // "Expand all" when everything is collapsed, "Collapse all" otherwise);
     // then US/SI · full/compact · EN/RU. Labels set by applyState() in-language.
+    // Each toggle stacks both state labels in one grid cell so the button width
+    // is fixed to the widest label (no reflow when the value flips).
+    const toggle = (act: string, kA: string, kB: string) =>
+      `<button type="button" class="lm-btn lm-toggle" data-act="${act}" aria-pressed="false">` +
+      `<span class="tg" data-tk="${kA}"></span><span class="tg" data-tk="${kB}"></span></button>`;
     const toolbar =
       `<div class="labs-toolbar" part="toolbar">` +
-      `<button type="button" class="lm-btn" data-act="collapse-toggle"></button>` +
+      toggle("collapse-toggle", "control.expandAll", "control.collapseAll") +
       `<span class="lm-sep"></span>` +
-      `<button type="button" class="lm-btn" data-act="units" aria-pressed="false"></button>` +
-      `<button type="button" class="lm-btn" data-act="detail" aria-pressed="false"></button>` +
-      `<button type="button" class="lm-btn" data-act="lang" aria-pressed="false"></button>` +
+      toggle("units", "control.unitsUS", "control.unitsSI") +
+      toggle("detail", "control.detailsFull", "control.detailsCompact") +
+      toggle("lang", "control.langEN", "control.langRU") +
       `</div>`;
 
     // the tap/click popup (styled by #cell-popup rules; lives inside the shadow)
@@ -426,21 +436,29 @@ export class LabMatrix extends HTMLElement {
         a.setAttribute("href", `https://loinc.org/${code}/`);
       }
     }
-    const btn = this.q('[data-act="units"]');
-    if (btn) {
-      btn.textContent = this._i18n.text(si ? "control.unitsSI" : "control.unitsUS", this.ruOn);
-      btn.setAttribute("aria-pressed", String(si));
-    }
+    this.setToggle("units", si ? "control.unitsSI" : "control.unitsUS", si);
   }
 
   /** full ⇄ compact — compact hides lab names + long analyte names (CSS). */
   private applyDetail(min: boolean): void {
     this.q("table.labs.matrix")?.classList.toggle("min-details", min);
-    const btn = this.q('[data-act="detail"]');
-    if (btn) {
-      btn.textContent = this._i18n.text(min ? "control.detailsCompact" : "control.detailsFull", this.ruOn);
-      btn.setAttribute("aria-pressed", String(min));
+    this.setToggle("detail", min ? "control.detailsCompact" : "control.detailsFull", min);
+  }
+
+  /**
+   * Fill both stacked labels of a toggle in the current language and mark the
+   * active one. Both stay in the DOM (inactive one hidden), so the button width
+   * is the max of the two labels — stable when the value flips.
+   */
+  private setToggle(act: string, activeKey: string, pressed: boolean): void {
+    const btn = this.q(`[data-act="${act}"]`);
+    if (!btn) return;
+    for (const s of btn.querySelectorAll<HTMLElement>(".tg")) {
+      const k = s.getAttribute("data-tk") || "";
+      s.textContent = this._i18n.text(k, this.ruOn);
+      s.classList.toggle("active", k === activeKey);
     }
+    btn.setAttribute("aria-pressed", String(pressed));
   }
 
   /** EN ⇄ RU — swap every data-en/data-ru node's textContent (fallback: EN, never blank). */
@@ -450,26 +468,17 @@ export class LabMatrix extends HTMLElement {
       const rv = el.getAttribute("data-ru");
       el.textContent = ru && rv != null && rv !== "" ? rv : en || "";
     }
-    const btn = this.q('[data-act="lang"]');
-    if (btn) {
-      btn.textContent = this._i18n.text(ru ? "control.langRU" : "control.langEN", ru);
-      btn.setAttribute("aria-pressed", String(ru));
-    }
-    // unit/detail button labels are language-dependent → refresh them
+    this.setToggle("lang", ru ? "control.langRU" : "control.langEN", ru);
+    // other toggle labels are language-dependent → refresh them
     this.applyUnits(this.siOn);
     this.applyDetail(this.minOn);
-    const ex = this.q('[data-act="expand-all"]');
-    if (ex) ex.textContent = this._i18n.text("control.expandAll", ru);
     this.applyCollapseToggleLabel();
   }
 
   /** Label the single collapse/expand toggle by current state (all-collapsed → offer Expand). */
   private applyCollapseToggleLabel(): void {
-    const btn = this.q('[data-act="collapse-toggle"]');
-    if (!btn) return;
     const allCollapsed = this.allPanelsCollapsed();
-    btn.textContent = this._i18n.text(allCollapsed ? "control.expandAll" : "control.collapseAll", this.ruOn);
-    btn.setAttribute("aria-pressed", String(!allCollapsed));
+    this.setToggle("collapse-toggle", allCollapsed ? "control.expandAll" : "control.collapseAll", !allCollapsed);
   }
 
   /** True when every panel is collapsed (the toggle then offers "Expand all"). */

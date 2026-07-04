@@ -165,6 +165,9 @@ const row = (el: LabMatrix, key: string): HTMLElement =>
   sr(el).querySelector(`tr[data-key="${key}"]`) as HTMLElement;
 const btn = (el: LabMatrix, act: string): HTMLElement =>
   sr(el).querySelector(`[data-act="${act}"]`) as HTMLElement;
+/** The visible label of a toggle button = its currently-active stacked span. */
+const lbl = (el: LabMatrix, act: string): string =>
+  btn(el, act).querySelector(".tg.active")?.textContent ?? "";
 const popup = (el: LabMatrix): HTMLElement => sr(el).getElementById("cell-popup") as HTMLElement;
 
 beforeEach(() => {
@@ -241,7 +244,7 @@ describe("units-toggle (docs/product/features/units-toggle.md)", () => {
     expect(hgbRef.textContent).toBe("135–175 g/L");
     expect(cholLoinc.textContent).toBe("14647-2");
     expect(cholLoinc.getAttribute("href")).toBe("https://loinc.org/14647-2/");
-    expect(btn(el, "units").textContent).toBe("Units: SI");
+    expect(lbl(el, "units")).toBe("Units: SI");
     expect(btn(el, "units").getAttribute("aria-pressed")).toBe("true");
   });
 
@@ -250,7 +253,7 @@ describe("units-toggle (docs/product/features/units-toggle.md)", () => {
     click(btn(el, "units"));
     click(btn(el, "units"));
     expect(row(el, "HGB").querySelector("td.num.low")!.textContent).toBe("14.8");
-    expect(btn(el, "units").textContent).toBe("Units: US");
+    expect(lbl(el, "units")).toBe("Units: US");
     expect(btn(el, "units").getAttribute("aria-pressed")).toBe("false");
   });
 
@@ -260,7 +263,7 @@ describe("units-toggle (docs/product/features/units-toggle.md)", () => {
     expect(localStorage.getItem("labsV2.units")).toBe("si");
     el = remount(el);
     expect(row(el, "HGB").querySelector("td.num.low")!.textContent).toBe("148");
-    expect(btn(el, "units").textContent).toBe("Units: SI");
+    expect(lbl(el, "units")).toBe("Units: SI");
   });
 });
 
@@ -274,7 +277,7 @@ describe("language-toggle (docs/product/features/language-toggle.md)", () => {
     click(btn(el, "lang"));
     expect(name.textContent).toBe("Гемоглобин");
     expect(panel.textContent).toBe("Общий анализ крови");
-    expect(btn(el, "lang").textContent).toBe("Язык: RU");
+    expect(lbl(el, "lang")).toBe("Язык: RU");
     expect(btn(el, "lang").getAttribute("aria-pressed")).toBe("true");
   });
 
@@ -292,7 +295,7 @@ describe("language-toggle (docs/product/features/language-toggle.md)", () => {
     el.model = m;
     click(btn(el, "lang"));
     // units-button label re-rendered in the new language (applyLang re-runs applyUnits)
-    expect(btn(el, "units").textContent).toBe("Единицы: US");
+    expect(lbl(el, "units")).toBe("Единицы: US");
     expect(sr(el).querySelector("thead th.marker-col")!.textContent).toBe("Маркер");
   });
 
@@ -302,7 +305,7 @@ describe("language-toggle (docs/product/features/language-toggle.md)", () => {
     expect(localStorage.getItem("labsV2.lang")).toBe("ru");
     el = remount(el);
     expect(row(el, "HGB").querySelector(".analyte-name")!.textContent).toBe("Гемоглобин");
-    expect(btn(el, "lang").textContent).toBe("Язык: RU");
+    expect(lbl(el, "lang")).toBe("Язык: RU");
   });
 });
 
@@ -312,10 +315,10 @@ describe("details-toggle (docs/product/features/details-toggle.md)", () => {
     const el = mount();
     const table = sr(el).querySelector("table.labs.matrix")!;
     expect(table.classList.contains("min-details")).toBe(false);
-    expect(btn(el, "detail").textContent).toBe("Details: full");
+    expect(lbl(el, "detail")).toBe("Details: full");
     click(btn(el, "detail"));
     expect(table.classList.contains("min-details")).toBe(true);
-    expect(btn(el, "detail").textContent).toBe("Details: compact");
+    expect(lbl(el, "detail")).toBe("Details: compact");
     expect(btn(el, "detail").getAttribute("aria-pressed")).toBe("true");
     // purely visual: values + names still in the DOM
     expect(row(el, "HGB").querySelector("td.num.low")!.textContent).toBe("14.8");
@@ -328,7 +331,7 @@ describe("details-toggle (docs/product/features/details-toggle.md)", () => {
     expect(localStorage.getItem("labsV2.details")).toBe("min");
     el = remount(el);
     expect(sr(el).querySelector("table.labs.matrix")!.classList.contains("min-details")).toBe(true);
-    expect(btn(el, "detail").textContent).toBe("Details: compact");
+    expect(lbl(el, "detail")).toBe("Details: compact");
   });
 });
 
@@ -345,24 +348,24 @@ describe("panels-collapse (docs/product/features/panels-collapse.md)", () => {
     const tog = sr(el).querySelector<HTMLElement>('[data-act="collapse-toggle"]')!;
     expect(first).toBe(tog);
     // default load = all collapsed → toggle offers "Expand all"
-    expect(tog.textContent).toBe("Expand all");
+    expect(tog.querySelector(".tg.active")?.textContent).toBe("Expand all");
     click(tog);
-    expect(tog.textContent).toBe("Collapse all"); // now everything is open
+    expect(tog.querySelector(".tg.active")?.textContent).toBe("Collapse all"); // now everything is open
     sr(el).querySelector<HTMLElement>('[data-act="lang"]')!.click();
-    expect(tog.textContent).toBe("Свернуть все");
+    expect(tog.querySelector(".tg.active")?.textContent).toBe("Свернуть все");
     click(tog); // collapse all again
-    expect(tog.textContent).toBe("Развернуть все");
+    expect(tog.querySelector(".tg.active")?.textContent).toBe("Развернуть все");
   });
 
   it("the toggle offers Collapse while any panel is open (mixed state)", () => {
     const el = mount();
     const tog = btn(el, "collapse-toggle");
-    expect(tog.textContent).toBe("Expand all"); // all collapsed
+    expect(tog.querySelector(".tg.active")?.textContent).toBe("Expand all"); // all collapsed
     // open just one panel → not-all-collapsed → toggle flips to Collapse all
     click(sr(el).querySelector('tr.panel-row[data-panel="Complete blood count (CBC)"]')!);
-    expect(tog.textContent).toBe("Collapse all");
+    expect(tog.querySelector(".tg.active")?.textContent).toBe("Collapse all");
     click(tog); // collapses everything
-    expect(tog.textContent).toBe("Expand all");
+    expect(tog.querySelector(".tg.active")?.textContent).toBe("Expand all");
   });
 
   it("on a first-ever load every panel opens collapsed", () => {
