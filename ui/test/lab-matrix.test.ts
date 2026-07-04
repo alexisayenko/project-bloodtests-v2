@@ -428,3 +428,40 @@ describe("<lab-matrix> lens views (phase 3b)", () => {
     el.remove();
   });
 });
+
+describe("marker cell — badge placement + price alignment", () => {
+  const cellFor = (row) => {
+    const el = document.createElement("lab-matrix");
+    document.body.appendChild(el);
+    el.model = {
+      matrix: { cols: [{ id: "a", date: "2025-01", labName: "L" }], rows: [] },
+      panels: [{ name: "P", rows: [row] }],
+    };
+    return el.shadowRoot.querySelector("td.marker-col");
+  };
+  const prov = { hasCatalog: true, personal: false, displayName: "x", shownRange: "x", loincs: [], references: [] };
+
+  it("single-name marker: ⓘ rides the name line, no orphaned code line", () => {
+    const c = cellFor({ key: "CORT", shortName: "Cortisol", displayName: "Cortisol",
+      unit: "µg/dL", refText: "6–18.4", provenance: prov, cells: [null] });
+    expect(c.querySelector(".sym-loinc")).toBeNull(); // no code + no loinc → no code line
+    expect(c.querySelector(".info-badge")).toBeTruthy();
+    expect(c.querySelector(".sym-loinc .info-badge")).toBeNull(); // not orphaned in a code line
+  });
+
+  it("coded marker: ⓘ stays on the code line", () => {
+    const c = cellFor({ key: "HGB", shortName: "HGB", displayName: "Hemoglobin", displayShortName: "HGB",
+      unit: "g/dL", refText: "13.5–17.5", loincs: ["718-7"], provenance: prov, cells: [null] });
+    expect(c.querySelector(".sym-loinc .info-badge")).toBeTruthy();
+  });
+
+  it("price is a right-side sibling of the range (no ' · ' prefix)", () => {
+    const c = cellFor({ key: "HGB", shortName: "HGB", displayName: "Hemoglobin", displayShortName: "HGB",
+      unit: "g/dL", refText: "13.5–17.5", scheduled: true, price: 5, cells: [null] });
+    const meta = c.querySelector(".meta");
+    expect(meta.querySelector(".meta-ref .unit-ref")).toBeTruthy();
+    expect(meta.querySelector(".meta-price .mprice").textContent).toBe("€5");
+    expect(meta.querySelector(".meta-ref .meta-price")).toBeNull(); // price is outside the range group
+    expect(meta.textContent).not.toContain("· €"); // separator dropped
+  });
+});

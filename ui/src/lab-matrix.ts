@@ -668,12 +668,22 @@ export class LabMatrix extends HTMLElement {
     const showSym = !!r.displayShortName && r.displayShortName !== (r.displayName || r.analysis);
     const hasLoinc = loincs.length > 0;
 
-    // ---- symbol + LOINC-codes + warn/info badges line (only when there's something to show)
+    // ⚠ unreliable + ⓘ provenance badges. They sit on the code line when there
+    // IS a visible short-name; for single-name markers (no code line) they move
+    // up onto the name line so the ⓘ is never orphaned on its own row.
+    const warn = r.unreliable
+      ? `<button type="button" class="warn-badge" data-warn aria-label="Why this measurement is unreliable">⚠</button>`
+      : "";
+    const info = r.provenance
+      ? ` <button type="button" class="info-badge" data-analyte-info aria-label="Reference-range source for ${esc(
+          name,
+        )}">ⓘ</button>${this.analytePopup(r.provenance, t)}`
+      : "";
+    const nameBadges = showSym ? "" : `${warn ? " " + warn : ""}${info}`;
+
+    // ---- symbol + (hidden) LOINC-codes line — only when there's a code or LOINC to carry
     let symLoinc = "";
-    if (showSym || hasLoinc || r.provenance) {
-      const warn = r.unreliable
-        ? `<button type="button" class="warn-badge" data-warn aria-label="Why this measurement is unreliable">⚠</button>`
-        : "";
+    if (showSym || hasLoinc) {
       const symText = showSym ? esc(r.displayShortName) : "";
       let loincHtml = "";
       if (hasLoinc) {
@@ -687,29 +697,25 @@ export class LabMatrix extends HTMLElement {
           .join(" / ");
         loincHtml = `<span class="loinc-codes">${showSym ? " · " : ""}${links}</span>`;
       }
-      const info = r.provenance
-        ? ` <button type="button" class="info-badge" data-analyte-info aria-label="Reference-range source for ${esc(
-            name,
-          )}">ⓘ</button>${this.analytePopup(r.provenance, t)}`
-        : "";
-      symLoinc = `<span class="sym-loinc muted">${warn}${symText}${loincHtml}${info}</span>`;
+      // visible code → badges live here; otherwise the line carries only the (hidden) LOINC
+      symLoinc = `<span class="sym-loinc muted">${showSym ? `${warn}${symText}${loincHtml}${info}` : loincHtml}</span>`;
     }
 
-    // ---- reference-range meta (US/SI), optional price + "not measured yet"
+    // ---- reference-range meta (US/SI): range (+ "not measured yet") left, price right
     const usRef = r.refText ? `${r.refText}${r.unit ? " " + r.unit : ""}` : r.unit || "";
     const siRef = r.siRefText ? `${r.siRefText}${r.siUnit ? " " + r.siUnit : ""}` : r.siUnit || "";
     const price =
       r.scheduled && r.price != null
-        ? `<span class="meta-price"> · <span class="mprice">€${esc(r.price)}</span></span>`
+        ? `<span class="meta-price"><span class="mprice">€${esc(r.price)}</span></span>`
         : "";
     const planned = r.planned ? `<span class="meta-planned"> · ${t.span("meta.notMeasuredYet")}</span>` : "";
-    const meta = `<span class="meta muted"><span class="unit-ref" data-us="${esc(usRef)}" data-si="${esc(
-      siRef,
-    )}">${esc(usRef)}</span>${price}${planned}</span>`;
+    const meta = `<span class="meta muted"><span class="meta-ref"><span class="unit-ref" data-us="${esc(
+      usRef,
+    )}" data-si="${esc(siRef)}">${esc(usRef)}</span>${planned}</span>${price}</span>`;
 
     return (
       `<td class="marker-col${showSym ? " has-sym" : ""}">` +
-      `<span class="analyte-name"${biAttr(name, nameRu)}>${esc(name)}</span>` +
+      `<span class="analyte-name"${biAttr(name, nameRu)}>${esc(name)}</span>${nameBadges}` +
       symLoinc +
       meta +
       `</td>`
