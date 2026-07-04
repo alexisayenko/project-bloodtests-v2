@@ -1,0 +1,36 @@
+{
+  "name": "@alexisayenko/chart-kit",
+  "version": "0.0.0",
+  "description": "Domain-agnostic time-navigation harness for uPlot health charts: zoom-stepper, drag-to-pan, view persistence, tooltip shell, theme, adaptive time axis, smooth y-autoscale. Extracted from labchart.js (ADR-0010).",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepare": "tsup"
+  },
+  "dependencies": {
+    "uplot": "^1.6.32"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "happy-dom": "^15.11.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "license": "MIT"
+}
