@@ -376,7 +376,7 @@ export const INDEX_DEFS: IndexDef[] = [
     lang: { ru: {
       name: "рСКФ — цистатин C",
       meaning: "СКФ, оценённая по цистатину C вместо креатинина — не зависит от мышц, поэтому обходит смещение из-за вашей высокой мышечной массы (~80 кг). Если этот показатель нормальный, тогда как рСКФ по креатинину около 70, почки в порядке, а значение креатинина было мышцами. Те же стадии: ≥90 норма · 60–89 незначительно · <60 снижена.",
-      consensus: "CKD-EPI цистатин C — рекомендуемая независимая от мышц оценка СКФ; предпочтительна, когда креатинин ненадёжен (высокая мышечная масса, спортсмены, ампутанты).",
+      consensus: "CKD-EPI цистатин C — рекомендуемая независимая от мышц оценка СКФ; предпочтительна, когда креатинин ненадёжен (высокая мышечная масса, спортсмены, люди после ампутации).",
     } },
     fn: (m, ctx) => { if (!has(m, "Cystatin C") || ctx.ageYears == null) { return null; } const female = ctx.sex === "female"; const s = m["Cystatin C"]! / 0.8; return 133 * Math.pow(Math.min(s, 1), -0.499) * Math.pow(Math.max(s, 1), -1.328) * Math.pow(0.996, ctx.ageYears) * (female ? 0.932 : 1); } },
   { key: "egfrcrcys", name: "eGFR — creatinine + cystatin C", itab: "kidney", formula: "CKD-EPI cr-cys (2021)", cut: [90, 60], hi: true, needs: ["CREAT", "Cystatin C"], level: "consensus",
