@@ -34,6 +34,21 @@ The capabilities documented so far, grouped by where they live.
 - [`unreliable-warn`](unreliable-warn.md) — ⚠ warning that a result is flagged unreliable
 - [`loinc-link`](loinc-link.md) — each analyte's LOINC code(s), linked to loinc.org (ADR-0009)
 
+**Chart harness** (`@alexisayenko/chart-kit` — extraction decided in ADR-0010;
+today lives as `labchart.js` copies on both consumer sites):
+
+- [`chart-zoom`](chart-zoom.md) — step the time window through preset spans; view persisted
+- [`chart-pan`](chart-pan.md) — drag through time, with overscroll past the data ends
+- [`chart-inspect`](chart-inspect.md) — hover/tap for exact values at a date (tooltip shell)
+
+**Explore** (`<lab-explore>` — extraction decided in ADR-0010; today two
+implementations: homepage Nunjucks include + natalga hand-rolled copy):
+
+- [`markers-overlay`](markers-overlay.md) — overlay markers normalized to % of reference range
+- [`markers-pick`](markers-pick.md) — pick overlaid markers via panel-grouped badges; persisted
+- [`events-overlay`](events-overlay.md) — toggle shaded treatment-period bands (Ova-Mit, Ozempic)
+- [`autoscale-toggle`](autoscale-toggle.md) — fixed full-range y-axis vs auto-fit to visible data
+
 ## What a feature is
 
 A feature is the smallest unit that delivers value to the user — a
