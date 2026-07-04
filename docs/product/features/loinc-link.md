@@ -1,15 +1,15 @@
 # LOINC link
 
-See each analyte's LOINC code(s) in the matrix and click through to its definition on loinc.org — the universal terminology anchor for the marker (ADR-0009).
+See each analyte's LOINC code(s) and click through to its definition on loinc.org — the universal terminology anchor for the marker (ADR-0009). LOINC is surfaced in the ⓘ provenance popup, which shows the code, its full long name, and unit; the inline marker-column copy is hidden in **both** detail modes to keep the primary scan uncluttered (decision 2026-07-05).
 
-## In the marker column
+## In the marker column (rendered, hidden)
 
-`markerCell` (`ui/src/lab-matrix.ts:646`) renders each code in `r.loincs[]` (`LabRow`, `ui/src/types.ts:77`) as an `<a class="loinc">` inside `.loinc-codes`, multiple codes joined by ` / `. Each link:
+`markerCell` (`ui/src/lab-matrix.ts:646`) still renders each code in `r.loincs[]` (`LabRow`, `ui/src/types.ts:77`) as an `<a class="loinc">` inside `.loinc-codes` (multiple codes joined by ` / `), but `.marker-col .loinc-codes` is `display:none` (`ui/src/styles.ts`) — the element is kept for the unit-following logic below, not shown. Each link:
 
 - points to `https://loinc.org/<code>/` (`target="_blank" rel="noopener noreferrer"`);
 - carries `data-us-loinc` = the code and `data-si-loinc` = `r.siLoincs[i]` (falling back to the same code).
 
-Because a marker can have a different LOINC in US vs SI reporting, `applyUnits` (`lab-matrix.ts:422`) swaps the visible code and rewrites the `href` to `https://loinc.org/<code>/` when the units toggle flips — the LOINC follows the unit system alongside the values (see [`units-convert.md`](units-convert.md)).
+Because a marker can have a different LOINC in US vs SI reporting, `applyUnits` (`lab-matrix.ts:422`) swaps the code and rewrites the `href` to `https://loinc.org/<code>/` when the units toggle flips — so the popup's LOINC follows the unit system alongside the values (see [`units-convert.md`](units-convert.md)).
 
 ## In the provenance popup
 

@@ -137,7 +137,9 @@ export const STYLES = `
 .labs.matrix.min-details thead .lab { display: none; }
 .labs.matrix.min-details .marker-col.has-sym .analyte-name { display: none; }
 /* compact: hide LOINC codes (they remain in the ⓘ provenance popup) */
-.labs.matrix.min-details .marker-col .loinc-codes { display: none; }
+/* LOINC lives in the ⓘ provenance popup (code + long name + unit + loinc.org
+   link); keep it out of the inline marker column in both detail modes */
+.labs.matrix .marker-col .loinc-codes { display: none; }
 .labs.matrix.min-details .marker-col .meta-price { display: none; }
 .labs.matrix.min-details .marker-col .meta-planned { display: none; }
 /* scheduled-draw marker — blue (yellow is reserved for warnings); matches the
