@@ -174,7 +174,8 @@ describe("<lab-matrix> (phase 2 markup port)", () => {
     expect(pop.querySelector(".ap-refs .ap-quote")?.textContent).toContain("Haemoglobin thresholds");
     expect(pop.querySelector(".ap-refs a.ap-cite")?.getAttribute("href")).toBe("https://who.int");
     expect(pop.querySelector(".ap-why span:not(.ap-lbl)")?.getAttribute("data-ru")).toBe("Определяет анемию.");
-    expect(pop.querySelector(".ap-molar")?.textContent).toContain("64500");
+    // molar mass is kept in the model/catalog but no longer rendered in the popup
+    expect(pop.querySelector(".ap-molar")).toBeNull();
     // reference-range meta carries US + SI
     const unitRef = marker.querySelector(".meta .unit-ref") as HTMLElement;
     expect(unitRef.getAttribute("data-us")).toBe("13.5–17.5 g/dL");

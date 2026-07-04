@@ -816,29 +816,13 @@ export class LabMatrix extends HTMLElement {
       refs = `<div class="ap-sec ap-refs">${label}${items}</div>`;
     }
 
-    // Why + molar mass
+    // Why
     const why = p.why
       ? `<div class="ap-sec ap-why"><span class="ap-lbl"${t.attr("popup.why")}>Why</span> <span${biAttr(
           p.why,
           p.whyRu,
         )}>${esc(p.why)}</span></div>`
       : "";
-    let molar = "";
-    if (p.molarMass != null && p.molarMass !== "") {
-      const mref =
-        p.molarMassRef && p.molarMassRef.cite
-          ? ` <span class="ap-molar-ref">— ${
-              p.molarMassRef.url
-                ? `<a href="${esc(p.molarMassRef.url)}" target="_blank" rel="noopener noreferrer">${esc(
-                    p.molarMassRef.cite,
-                  )}</a>`
-                : esc(p.molarMassRef.cite)
-            }</span>`
-          : "";
-      molar = `<div class="ap-sec ap-molar"><span class="ap-lbl"${t.attr(
-        "popup.molarMass",
-      )}>Molar mass</span> ${esc(p.molarMass)} <span${t.attr("popup.molarMassUnit")}>g/mol</span>${mref}</div>`;
-    }
 
     return (
       `<div class="analyte-pop" hidden><div class="ap-root">` +
@@ -847,7 +831,6 @@ export class LabMatrix extends HTMLElement {
       range +
       refs +
       why +
-      molar +
       `</div></div>`
     );
   }

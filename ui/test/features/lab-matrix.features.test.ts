@@ -490,11 +490,10 @@ describe("provenance-inspect (docs/product/features/provenance-inspect.md)", () 
     const cite = body.querySelector(".ap-refs a.ap-cite")!;
     expect(cite.textContent).toBe("WHO, 2011");
     expect(cite.getAttribute("href")).toBe("https://who.int");
-    // why + molar mass with reference
+    // why
     expect(body.querySelector(".ap-why")!.textContent).toContain("Defines anemia.");
-    expect(body.querySelector(".ap-molar")!.textContent).toContain("64500");
-    expect(body.querySelector(".ap-molar")!.textContent).toContain("g/mol");
-    expect(body.querySelector(".ap-molar-ref a")!.getAttribute("href")).toBe("https://iupac.org");
+    // molar mass is kept in the model/catalog but no longer rendered in the popup
+    expect(body.querySelector(".ap-molar")).toBeNull();
   });
 
   it("an analyte without a curated source says so instead of showing a citation", () => {
