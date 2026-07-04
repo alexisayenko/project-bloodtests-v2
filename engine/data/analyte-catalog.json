@@ -2,7 +2,7 @@
   "ACTH": {
     "key": "ACTH",
     "shortName": "ACTH",
-    "displayName": "Corticotropin (ACTH)",
+    "displayName": "Corticotropin",
     "loincComponent": "Corticotropin",
     "loincs": [
       {
@@ -1051,8 +1051,8 @@
   "E2": {
     "key": "E2",
     "shortName": "E2",
-    "displayName": "Estradiol (E2)",
-    "loincComponent": "Estradiol (E2)",
+    "displayName": "Estradiol",
+    "loincComponent": "Estradiol",
     "loincs": [
       {
         "code": "2243-4",
@@ -1109,7 +1109,7 @@
     "unreliableAssay": false,
     "lang": {
       "ru": {
-        "displayName": "Эстрадиол (E2)",
+        "displayName": "Эстрадиол",
         "why": "Основной эстроген у мужчин (образуется ароматизацией из тестостерона); важен для костей, либидо и риска гинекомастии. Повышенный E2 при низком T указывает на повышенную активность ароматазы/ожирение. У мужчин следует определять чувствительным методом/ЖХ-МС/МС.",
         "note": "Соответствует напечатанному лабораторией пациента 10.00-40.00 pg/mL. Взрослый мужской интервал Mayo ЖХ-МС/МС (EEST) указан в схожем низком диапазоне (~10-40 pg/mL); у мужчин используйте чувствительный метод/ЖХ-МС/МС."
       }
@@ -1456,7 +1456,7 @@
   "FSH": {
     "key": "FSH",
     "shortName": "FSH",
-    "displayName": "Follicle-stimulating hormone (FSH)",
+    "displayName": "Follicle-stimulating hormone",
     "loincComponent": "Follitropin",
     "loincs": [
       {
@@ -2161,7 +2161,7 @@
   "IGF-1": {
     "key": "IGF-1",
     "shortName": "IGF-1",
-    "displayName": "Somatomedin C (IGF-1)",
+    "displayName": "Somatomedin C",
     "loincComponent": "Somatomedin C",
     "loincs": [
       {
@@ -2630,7 +2630,7 @@
     "unreliableAssay": false,
     "lang": {
       "ru": {
-        "displayName": "Среднее содержание гемоглобина в эритроците (MCH)",
+        "displayName": "Среднее содержание гемоглобина в эритроците",
         "why": "Среднее содержание гемоглобина в одном эритроците; дополняет MCV в характеристике гипохромной и нормохромной анемии.",
         "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый (16-150 лет) интервал 27-32 pg, не разделён по полу; StatPearls согласуется (27-32 pg/эритроцит). Средняя масса гемоглобина на эритроцит; следует за MCV."
       }
@@ -2687,7 +2687,7 @@
     "unreliableAssay": false,
     "lang": {
       "ru": {
-        "displayName": "Средняя концентрация гемоглобина в эритроците (MCHC)",
+        "displayName": "Средняя концентрация гемоглобина в эритроците",
         "why": "Концентрация гемоглобина внутри эритроцитов; низкая = гипохромия (дефицит железа), высокая (>36) указывает на сфероцитоз или аналитический артефакт (липемия, холодовые агглютинины).",
         "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый (16-150 лет) интервал 32-35 g/dL, не разделён по полу. StatPearls описывает нормальную плотность около 34% Hb/клетку. Высокие значения (>36) указывают на сфероцитоз или аналитическую интерференцию."
       }
@@ -2744,7 +2744,7 @@
     "unreliableAssay": false,
     "lang": {
       "ru": {
-        "displayName": "Средний объём эритроцита (MCV)",
+        "displayName": "Средний объём эритроцита",
         "why": "Средний объём эритроцита; основной показатель для классификации анемии по размеру клеток (микро-/нормо-/макроцитарная).",
         "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый (16-150 лет) интервал 79-99 fL, не разделён по полу; StatPearls даёт 80-100 fL. Свойство LOINC отображается как EntMeanVol (энтитивный средний объём). Классифицирует анемию как микроцитарную/нормоцитарную/макроцитарную."
       }
@@ -2966,7 +2966,7 @@
     "unreliableAssay": false,
     "lang": {
       "ru": {
-        "displayName": "Средний объём тромбоцита (MPV)",
+        "displayName": "Средний объём тромбоцита",
         "why": "Средний размер тромбоцитов; повышенный MPV указывает на активную продукцию/потребление тромбоцитов (периферическое разрушение), низкий MPV — на гипопродукцию костным мозгом.",
         "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021), взрослый интервал 9-12.2 fL, установлен локально на анализаторах Sysmex Мичиганского университета; не разделён по полу. Свойство LOINC отображается как EntMeanVol. Более высокие значения указывают на более молодые/крупные тромбоциты (повышенный оборот)."
       }
@@ -4077,7 +4077,7 @@
   "TSH": {
     "key": "TSH",
     "shortName": "TSH",
-    "displayName": "Thyrotropin (TSH)",
+    "displayName": "Thyrotropin",
     "loincComponent": "Thyrotropin",
     "loincs": [
       {

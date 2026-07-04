@@ -11,7 +11,7 @@ const catalog: AnalyteCatalog = parseCatalog(
 describe("indexCatalog", () => {
   const idx = indexCatalog(catalog);
   it("indexes by shortName, key and every LOINC", () => {
-    expect(idx.byShortName.get("TSH")?.displayName).toBe("Thyrotropin (TSH)");
+    expect(idx.byShortName.get("TSH")?.displayName).toBe("Thyrotropin");
     expect(idx.byKey.get("GLU")?.shortName).toBe("GLU");
     // Glucose carries its mass LOINC 2339-0
     expect(idx.byLoinc.get("2339-0")?.shortName).toBe("GLU");
@@ -21,7 +21,7 @@ describe("indexCatalog", () => {
 describe("catalogToConfig", () => {
   it("derives display names keyed by shortName", () => {
     const { nameOverride } = catalogToConfig(catalog);
-    expect(nameOverride!["TSH"]).toBe("Thyrotropin (TSH)");
+    expect(nameOverride!["TSH"]).toBe("Thyrotropin");
     expect(nameOverride!["GLU"]).toBe("Glucose");
   });
 
@@ -74,7 +74,7 @@ describe("mergeConfig", () => {
     // explicit name wins
     expect(merged.nameOverride!["GLU"]).toBe("Glucose (fasting)");
     // catalog name survives where not overridden
-    expect(merged.nameOverride!["TSH"]).toBe("Thyrotropin (TSH)");
+    expect(merged.nameOverride!["TSH"]).toBe("Thyrotropin");
     // unreliable sets union (catalog's FT + explicit TSH)
     expect(merged.unreliable!.has("FT")).toBe(true);
     expect(merged.unreliable!.has("TSH")).toBe(true);
