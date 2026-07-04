@@ -11,5 +11,5 @@ export function byShortNameOrAnalysis<T>(
   shortName?: string,
   analysis?: string,
 ): T | undefined {
-  return (shortName != null ? get(shortName) : undefined) ?? (analysis != null ? get(analysis) : undefined);
+  return (shortName == null ? undefined : get(shortName)) ?? (analysis == null ? undefined : get(analysis));
 }

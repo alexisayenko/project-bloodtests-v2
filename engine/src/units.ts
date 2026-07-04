@@ -137,7 +137,7 @@ export function deriveSIUnits(draws: Draw[]): Draw[] {
       const value = massToMolar(item.us.value, srcUnit, rule.unit, rule.molarMass);
       if (value == null) return item; // source unit not a mass concentration — leave as-is
       const conv = (v: number | null | undefined): number | null | undefined =>
-        v != null ? (massToMolar(v, srcUnit, rule.unit, rule.molarMass) ?? v) : v;
+        v == null ? v : (massToMolar(v, srcUnit, rule.unit, rule.molarMass) ?? v);
       const si: UnitValue = {
         ...item.si,
         value,

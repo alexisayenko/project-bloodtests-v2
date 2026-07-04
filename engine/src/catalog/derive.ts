@@ -83,6 +83,12 @@ function boundsForSystem(
   return null; // want mass but catalog is molar (not present today) — skip rather than guess
 }
 
+/** The MatrixConfig fields this adapter derives from the catalog. */
+type DerivedConfigKey = "nameOverride" | "refOverride" | "unreliable";
+
+/** The subset of MatrixConfig this adapter derives from the catalog. */
+export type DerivedConfig = Pick<MatrixConfig, DerivedConfigKey>;
+
 export interface CatalogConfigOptions {
   /** Active unit system — gates the unit-specific (mass/molar) ranges. Default "us". */
   system?: UnitSystem;
@@ -99,7 +105,7 @@ export interface CatalogConfigOptions {
 export function catalogToConfig(
   catalog: AnalyteCatalog,
   opts: CatalogConfigOptions = {},
-): Pick<MatrixConfig, "nameOverride" | "refOverride" | "unreliable"> {
+): DerivedConfig {
   const system = opts.system ?? "us";
   const includeRanges = opts.includeRanges ?? true;
 
@@ -107,25 +113,38 @@ export function catalogToConfig(
   const refOverride: Record<string, RefOverride> = {};
   const unreliable = new Set<string>();
 
-  const put = <T>(bag: Record<string, T>, e: AnalyteEntry, v: T) => {
-    if (e.shortName) bag[e.shortName] = v;
-    if (e.key && e.key !== e.shortName) bag[e.key] = v;
-  };
-
   for (const e of Object.values(catalog)) {
-    if (e.displayName) put(nameOverride, e, e.displayName);
-    if (e.unreliableAssay) { if (e.shortName) unreliable.add(e.shortName); if (e.key) unreliable.add(e.key); }
-    if (includeRanges && e.refDefault) {
-      const b = boundsForSystem(e, e.refDefault, system);
-      if (b) {
-        const ov: RefOverride = { refMin: b.refMin, refMax: b.refMax };
-        if (e.refDefault.note) ov.note = e.refDefault.note;
-        put(refOverride, e, ov);
-      }
+    if (e.displayName) putBoth(nameOverride, e, e.displayName);
+    if (e.unreliableAssay) addUnreliable(unreliable, e);
+    if (includeRanges) {
+      const ov = refOverrideFor(e, system);
+      if (ov) putBoth(refOverride, e, ov);
     }
   }
 
   return { nameOverride, refOverride, unreliable };
+}
+
+/** Store a value under both the entry's short name and its catalog key (when distinct). */
+function putBoth<T>(bag: Record<string, T>, e: AnalyteEntry, v: T): void {
+  if (e.shortName) bag[e.shortName] = v;
+  if (e.key && e.key !== e.shortName) bag[e.key] = v;
+}
+
+/** Mark an entry's short name and catalog key as unreliable. */
+function addUnreliable(unreliable: Set<string>, e: AnalyteEntry): void {
+  if (e.shortName) unreliable.add(e.shortName);
+  if (e.key) unreliable.add(e.key);
+}
+
+/** Derive a unit-guarded RefOverride from an entry's cited refDefault, or null if none applies. */
+function refOverrideFor(e: AnalyteEntry, system: UnitSystem): RefOverride | null {
+  if (!e.refDefault) return null;
+  const b = boundsForSystem(e, e.refDefault, system);
+  if (!b) return null;
+  const ov: RefOverride = { refMin: b.refMin, refMax: b.refMax };
+  if (e.refDefault.note) ov.note = e.refDefault.note;
+  return ov;
 }
 
 /**
@@ -134,9 +153,9 @@ export function catalogToConfig(
  * the explicit config passes through untouched.
  */
 export function mergeConfig<C extends MatrixConfig>(
-  base: Pick<MatrixConfig, "nameOverride" | "refOverride" | "unreliable">,
+  base: DerivedConfig,
   explicit: C,
-): C & Pick<Required<MatrixConfig>, "nameOverride" | "refOverride" | "unreliable"> {
+): C & Pick<Required<MatrixConfig>, DerivedConfigKey> {
   return {
     ...explicit,
     nameOverride: { ...base.nameOverride, ...explicit.nameOverride },

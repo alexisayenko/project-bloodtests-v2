@@ -84,8 +84,8 @@ export function parseConcUnit(unit: string | null | undefined): ConcUnit | null 
 
   let base: "g" | "mol";
   let prefixStr: string;
-  if (/mol$/.test(num)) { base = "mol"; prefixStr = num.slice(0, -3); }
-  else if (/g$/.test(num)) { base = "g"; prefixStr = num.slice(0, -1); }
+  if (num.endsWith("mol")) { base = "mol"; prefixStr = num.slice(0, -3); }
+  else if (num.endsWith("g")) { base = "g"; prefixStr = num.slice(0, -1); }
   else return null;
 
   const prefix = SI_PREFIX[prefixStr];
@@ -113,7 +113,7 @@ export function massToMolar(
   const m = parseConcUnit(massUnit);
   const s = parseConcUnit(molarUnit);
   if (!m || !s || m.base !== "g" || s.base !== "mol") return null;
-  if (molarMassGPerMol == null || !(molarMassGPerMol > 0)) return null;
+  if (molarMassGPerMol == null || molarMassGPerMol <= 0) return null;
   const gramsPerL = (value * m.prefix) / m.volumeL;
   const molPerL = gramsPerL / molarMassGPerMol;
   return (molPerL * s.volumeL) / s.prefix;
