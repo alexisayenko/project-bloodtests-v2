@@ -1979,6 +1979,13 @@
         "property": "MCnc",
         "unit": "ng/mL",
         "system": "Ser/Plas"
+      },
+      {
+        "code": "15081-3",
+        "longName": "Prolactin [Units/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "mIU/L",
+        "system": "Ser/Plas"
       }
     ],
     "molarMass": null,
