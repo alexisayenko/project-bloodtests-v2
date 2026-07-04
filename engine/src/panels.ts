@@ -5,7 +5,7 @@
  * panel names are a catalog/i18n concern (ADR-0004).
  */
 
-import { bySymbolOrAnalysis } from "./lookup.js";
+import { byShortNameOrAnalysis } from "./lookup.js";
 
 /**
  * A display grouping of analytes.
@@ -50,7 +50,7 @@ interface PanelPos { pi: number; ki: number }
 const PANEL_INDEX = new Map<string, PanelPos>();
 PANELS.forEach((p, pi) => p.keys.forEach((k, ki) => PANEL_INDEX.set(k, { pi, ki })));
 
-export interface PanelRow { symbol?: string; analysis?: string }
+export interface PanelRow { shortName?: string; analysis?: string }
 export interface PanelGroup<R> { name: string; rows: R[] }
 
 /**
@@ -61,7 +61,7 @@ export function groupByPanel<R extends PanelRow>(rows: R[]): PanelGroup<R>[] {
   const groups: PanelGroup<R & { _ki?: number }>[] = PANELS.map((p) => ({ name: p.name, rows: [] }));
   const other: PanelGroup<R> = { name: "Other", rows: [] };
   for (const r of rows) {
-    const hit = bySymbolOrAnalysis((k) => PANEL_INDEX.get(k), r.symbol, r.analysis);
+    const hit = byShortNameOrAnalysis((k) => PANEL_INDEX.get(k), r.shortName, r.analysis);
     if (hit) groups[hit.pi]!.rows.push({ ...r, _ki: hit.ki });
     else other.rows.push(r);
   }

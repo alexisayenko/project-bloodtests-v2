@@ -8,10 +8,10 @@ const u = (value: number, unit: string, refMin?: number, refMax?: number) =>
 
 // Build an item whose si is (wrongly) equal to us in mg/dL — the real bug shape.
 const item = (
-  symbol: string,
+  shortName: string,
   loinc: string,
   us: ReturnType<typeof u>,
-) => ({ symbol, loinc, original: us, us, si: { ...us } });
+) => ({ shortName, loinc, original: us, us, si: { ...us } });
 
 describe("deriveSIUnits — mass→molar SI conversion", () => {
   it("converts glucose 94 mg/dL → ~5.22 mmol/L", () => {
@@ -47,9 +47,9 @@ describe("deriveSIUnits — mass→molar SI conversion", () => {
     expect(glu.si.refMax).toBeCloseTo(6.11, 2);
   });
 
-  it("matches by symbol when LOINC is absent", () => {
+  it("matches by shortName when LOINC is absent", () => {
     const [d] = deriveSIUnits([
-      draw([{ symbol: "GLU", original: u(94, "mg/dL"), us: u(94, "mg/dL"), si: u(94, "mg/dL") }]),
+      draw([{ shortName: "GLU", original: u(94, "mg/dL"), us: u(94, "mg/dL"), si: u(94, "mg/dL") }]),
     ]);
     expect(d!.items[0]!.si.value).toBeCloseTo(5.217, 2);
     expect(d!.items[0]!.si.unit).toBe("mmol/L");
@@ -66,7 +66,7 @@ describe("deriveSIUnits — mass→molar SI conversion", () => {
   it("leaves non-configured analytes' si byte-identical and does not mutate input", () => {
     const prlSi = { value: 190.8, unit: "mIU/L", refMin: 86, refMax: 324 };
     const input = [
-      draw([{ symbol: "PRL", analysis: "Prolactin", loinc: "2842-3",
+      draw([{ shortName: "PRL", analysis: "Prolactin", loinc: "2842-3",
         original: { value: 9, unit: "ng/mL" }, us: { value: 9, unit: "ng/mL" }, si: prlSi }]),
     ];
     const out = deriveSIUnits(input);

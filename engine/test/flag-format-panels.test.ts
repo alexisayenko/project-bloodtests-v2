@@ -37,13 +37,13 @@ describe("fmtNum — golden-master vs live", () => {
 describe("groupByPanel", () => {
   it("groups, orders within panel, and buckets unknowns to Other", () => {
     const rows = [
-      { symbol: "HDL-C" }, { symbol: "TC" }, { symbol: "ZZZ" }, { symbol: "TSH" },
+      { shortName: "HDL-C" }, { shortName: "TC" }, { shortName: "ZZZ" }, { shortName: "TSH" },
     ];
     const groups = groupByPanel(rows);
     const lipids = groups.find((x) => x.name === "Lipids")!;
-    expect(lipids.rows.map((r) => r.symbol)).toEqual(["TC", "HDL-C"]); // TC before HDL-C per panel key order
-    expect(groups.find((x) => x.name === "HPT axis (thyroid)")!.rows.map((r) => r.symbol)).toEqual(["TSH"]);
+    expect(lipids.rows.map((r) => r.shortName)).toEqual(["TC", "HDL-C"]); // TC before HDL-C per panel key order
+    expect(groups.find((x) => x.name === "HPT axis (thyroid)")!.rows.map((r) => r.shortName)).toEqual(["TSH"]);
     expect(groups.at(-1)!.name).toBe("Other");
-    expect(groups.at(-1)!.rows.map((r) => r.symbol)).toEqual(["ZZZ"]);
+    expect(groups.at(-1)!.rows.map((r) => r.shortName)).toEqual(["ZZZ"]);
   });
 });

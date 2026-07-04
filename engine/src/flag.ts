@@ -9,7 +9,7 @@
  * so the coloring is identical to the current live site.
  */
 
-import { bySymbolOrAnalysis } from "./lookup.js";
+import { byShortNameOrAnalysis } from "./lookup.js";
 
 export type Zone = "z-ok" | "z-warn" | "z-bad";
 
@@ -39,7 +39,7 @@ export const CLIN_ZONE: Record<string, ClinBand> = {
 };
 
 function clinBand(key?: string, analysis?: string): ClinBand | undefined {
-  return bySymbolOrAnalysis((k) => CLIN_ZONE[k], key, analysis);
+  return byShortNameOrAnalysis((k) => CLIN_ZONE[k], key, analysis);
 }
 
 /** Heuristic flag vs a reference range (used when no clinical band applies). */
@@ -53,7 +53,7 @@ function heuristicFlag(value: number, refMin?: number | null, refMax?: number | 
 /**
  * 3-zone traffic light: clinical thresholds where defined, else heuristic +/-25%
  * vs reference range. `key`/`analysis` select the clinical band; some analytes
- * carry no symbol.
+ * carry no short name.
  */
 export function flagOf(
   value: number | null | undefined,

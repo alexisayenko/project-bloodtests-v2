@@ -4,16 +4,16 @@ import type { Matrix, MatrixRow } from "../src/matrix.js";
 import type { PriceCatalog } from "../src/cost.js";
 
 const row = (over: Partial<MatrixRow> & { key: string }): MatrixRow => ({
-  key: over.key, symbol: over.symbol, analysis: over.analysis, loinc: null, loincs: [],
-  unit: over.unit, refText: over.refText ?? "", unreliable: false, displayName: "", displaySymbol: "",
+  key: over.key, shortName: over.shortName, analysis: over.analysis, loinc: null, loincs: [],
+  unit: over.unit, refText: over.refText ?? "", unreliable: false, displayName: "", displayShortName: "",
   cells: over.cells ?? [{ raw: "1", value: 1, flag: "", title: "" }], series: over.series ?? [],
 });
 
 const matrix: Matrix = {
   cols: [{ id: "2024|A", date: "2024-01-01", labName: "A" }],
   rows: [
-    row({ key: "GLU", symbol: "GLU", analysis: "Glucose", unit: "mg/dL", refText: "70-110", cells: [{ raw: "90", value: 90, flag: "z-ok", title: "" }], series: [{ date: "2024-01-01", value: 90 }] }),
-    row({ key: "T", symbol: "T", analysis: "Testosterone", unit: "ng/dL", cells: [{ raw: "500", value: 500, flag: "", title: "" }] }),
+    row({ key: "GLU", shortName: "GLU", analysis: "Glucose", unit: "mg/dL", refText: "70-110", cells: [{ raw: "90", value: 90, flag: "z-ok", title: "" }], series: [{ date: "2024-01-01", value: 90 }] }),
+    row({ key: "T", shortName: "T", analysis: "Testosterone", unit: "ng/dL", cells: [{ raw: "500", value: 500, flag: "", title: "" }] }),
   ],
 };
 

@@ -10,16 +10,16 @@ const catalog: AnalyteCatalog = parseCatalog(
 
 describe("indexCatalog", () => {
   const idx = indexCatalog(catalog);
-  it("indexes by symbol, key and every LOINC", () => {
-    expect(idx.bySymbol.get("TSH")?.displayName).toBe("Thyrotropin (TSH)");
-    expect(idx.byKey.get("GLU")?.symbol).toBe("GLU");
+  it("indexes by shortName, key and every LOINC", () => {
+    expect(idx.byShortName.get("TSH")?.displayName).toBe("Thyrotropin (TSH)");
+    expect(idx.byKey.get("GLU")?.shortName).toBe("GLU");
     // Glucose carries its mass LOINC 2339-0
-    expect(idx.byLoinc.get("2339-0")?.symbol).toBe("GLU");
+    expect(idx.byLoinc.get("2339-0")?.shortName).toBe("GLU");
   });
 });
 
 describe("catalogToConfig", () => {
-  it("derives display names keyed by symbol", () => {
+  it("derives display names keyed by shortName", () => {
     const { nameOverride } = catalogToConfig(catalog);
     expect(nameOverride!["TSH"]).toBe("Thyrotropin (TSH)");
     expect(nameOverride!["GLU"]).toBe("Glucose");

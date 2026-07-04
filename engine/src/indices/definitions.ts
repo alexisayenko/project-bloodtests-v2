@@ -14,7 +14,7 @@
 import { cholMgdlToMmoll, tgMgdlToMmoll, glucoseMgdlToMmoll } from "../convert.js";
 import { calculatedFreeTestosterone } from "./free-testosterone.js";
 
-/** Marker values for one draw, keyed by symbol (e.g. `{ "TC": 200 }`). */
+/** Marker values for one draw, keyed by short name (e.g. `{ "TC": 200 }`). */
 export type Markers = Record<string, number | undefined>;
 
 /** Personal / temporal context an index may need. Engine-external. */

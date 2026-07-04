@@ -13,7 +13,7 @@
 import type { Matrix, MatrixRow, MatrixCol } from "./matrix.js";
 import { displayNames } from "./matrix.js";
 import { priceOf, type PriceCatalog } from "./cost.js";
-import { bySymbolOrAnalysis } from "./lookup.js";
+import { byShortNameOrAnalysis } from "./lookup.js";
 
 export interface NextAssayItem {
   key: string;
@@ -58,7 +58,7 @@ export interface PlanMatrix { cols: MatrixCol[]; rows: PlanRow[] }
 export interface PlanOverlayConfig {
   priceCatalog: PriceCatalog;
   nameOverride?: Record<string, string>;
-  symbolOverride?: Record<string, string>;
+  shortNameOverride?: Record<string, string>;
   /** default "when" for a next-assay item without one (live uses "Sep 2026"). */
   defaultWhen?: string;
 }
@@ -66,29 +66,29 @@ export interface PlanOverlayConfig {
 const covers = (list: string[] | "all", sym?: string, an?: string): boolean =>
   list === "all" || (sym != null && list.includes(sym)) || (an != null && list.includes(an));
 
-/** Whether a row's analyte (symbol or analysis) is part of a scheduled draw. */
+/** Whether a row's analyte (short name or analysis) is part of a scheduled draw. */
 const inDraw = (s: ScheduleDraw, r: PlanRow): boolean =>
-  (r.symbol != null && s.keys.includes(r.symbol)) || (r.analysis != null && s.keys.includes(r.analysis));
+  (r.shortName != null && s.keys.includes(r.shortName)) || (r.analysis != null && s.keys.includes(r.analysis));
 
 // 1. flag existing rows with their next-assay reason
 function flagNextAssay(rows: PlanRow[], nextAssay: NextAssayItem[], defaultWhen: string): void {
   const nextByKey: Record<string, NextAssayItem> = {};
   for (const n of nextAssay) nextByKey[n.key] = n;
   for (const r of rows) {
-    const n = bySymbolOrAnalysis((k) => nextByKey[k], r.symbol, r.analysis);
+    const n = byShortNameOrAnalysis((k) => nextByKey[k], r.shortName, r.analysis);
     if (n) { r.next = n.reason; r.whenAssay = n.when ?? defaultWhen; }
   }
 }
 
 // 2. inject phantom rows for never-measured *planned* analytes
 function injectPhantomRows(rows: PlanRow[], nextAssay: NextAssayItem[], cols: MatrixCol[], defaultWhen: string): void {
-  const have = new Set<string | undefined>(rows.flatMap((r) => [r.symbol, r.analysis]));
+  const have = new Set<string | undefined>(rows.flatMap((r) => [r.shortName, r.analysis]));
   for (const n of nextAssay) {
     if (n.planned && !have.has(n.key)) {
       rows.push({
-        key: n.key, symbol: n.key, analysis: n.name, loinc: null, loincs: [], unit: n.unit ?? "",
+        key: n.key, shortName: n.key, analysis: n.name, loinc: null, loincs: [], unit: n.unit ?? "",
         refText: "", unreliable: false, planned: true, next: n.reason, whenAssay: n.when ?? defaultWhen,
-        displayName: "", displaySymbol: "", cells: cols.map(() => null), series: [],
+        displayName: "", displayShortName: "", cells: cols.map(() => null), series: [],
         sched: [], scheduled: false, price: null, schedRx: [],
       });
     }
@@ -104,17 +104,17 @@ function markScheduleMembership(rows: PlanRow[], schedule: ScheduleDraw[]): void
 }
 
 // 4. display name (real rows already have it; recompute uniformly to match live phantom handling)
-function applyDisplayNames(rows: PlanRow[], nameOverride: Record<string, string>, symbolOverride: Record<string, string>): void {
+function applyDisplayNames(rows: PlanRow[], nameOverride: Record<string, string>, shortNameOverride: Record<string, string>): void {
   for (const r of rows) {
-    const { displayName, displaySymbol } = displayNames(r.symbol, r.analysis, nameOverride, symbolOverride);
+    const { displayName, displayShortName } = displayNames(r.shortName, r.analysis, nameOverride, shortNameOverride);
     r.displayName = displayName;
-    r.displaySymbol = displaySymbol;
+    r.displayShortName = displayShortName;
   }
 }
 
 // 5. price per row
 function applyPrices(rows: PlanRow[], priceCatalog: PriceCatalog): void {
-  for (const r of rows) r.price = priceOf(r.symbol, r.analysis, priceCatalog);
+  for (const r of rows) r.price = priceOf(r.shortName, r.analysis, priceCatalog);
 }
 
 // 6. per-draw prescriber badges
@@ -124,8 +124,8 @@ function applyRxBadges(rows: PlanRow[], schedule: ScheduleDraw[]): void {
       if (!s.rx || !inDraw(s, r)) return [];
       const conf = s.confirmed ?? {};
       return Object.keys(s.rx)
-        .filter((c) => covers(s.rx![c]!, r.symbol, r.analysis))
-        .map((c) => ({ code: c, planned: !(conf[c] != null && covers(conf[c]!, r.symbol, r.analysis)) }));
+        .filter((c) => covers(s.rx![c]!, r.shortName, r.analysis))
+        .map((c) => ({ code: c, planned: !(conf[c] != null && covers(conf[c]!, r.shortName, r.analysis)) }));
     });
   }
 }
@@ -134,14 +134,14 @@ export function applyPlan(matrix: Matrix, plan: LabPlan, config: PlanOverlayConf
   const { cols } = matrix;
   const priceCatalog = config.priceCatalog;
   const nameOverride = config.nameOverride ?? {};
-  const symbolOverride = config.symbolOverride ?? {};
+  const shortNameOverride = config.shortNameOverride ?? {};
   const defaultWhen = config.defaultWhen ?? "Sep 2026";
   const rows: PlanRow[] = matrix.rows.map((r) => ({ ...r, sched: [], scheduled: false, price: null, schedRx: [] }));
 
   flagNextAssay(rows, plan.nextAssay, defaultWhen);
   injectPhantomRows(rows, plan.nextAssay, cols, defaultWhen);
   markScheduleMembership(rows, plan.schedule);
-  applyDisplayNames(rows, nameOverride, symbolOverride);
+  applyDisplayNames(rows, nameOverride, shortNameOverride);
   applyPrices(rows, priceCatalog);
   applyRxBadges(rows, plan.schedule);
 

@@ -5,7 +5,7 @@
  * generalized to any panel-billed group.
  */
 
-import { bySymbolOrAnalysis } from "./lookup.js";
+import { byShortNameOrAnalysis } from "./lookup.js";
 
 /** A group billed as one panel (e.g. FBC) rather than per sub-analyte. */
 export interface PanelBilling {
@@ -34,10 +34,10 @@ function panelOf(key: string | undefined, catalog: PriceCatalog): PanelBilling |
  * its anchor row and `null` on the others (so a naive row-sum stays correct).
  * Unknown analytes return `null` (excluded from totals).
  */
-export function priceOf(symbol: string | undefined, analysis: string | undefined, catalog: PriceCatalog): number | null {
-  const panel = bySymbolOrAnalysis((k) => panelOf(k, catalog), symbol, analysis);
-  if (panel) return (symbol === panel.anchor || analysis === panel.anchor) ? panel.price : null;
-  return bySymbolOrAnalysis((k) => catalog.prices[k], symbol, analysis) ?? null;
+export function priceOf(shortName: string | undefined, analysis: string | undefined, catalog: PriceCatalog): number | null {
+  const panel = byShortNameOrAnalysis((k) => panelOf(k, catalog), shortName, analysis);
+  if (panel) return (shortName === panel.anchor || analysis === panel.anchor) ? panel.price : null;
+  return byShortNameOrAnalysis((k) => catalog.prices[k], shortName, analysis) ?? null;
 }
 
 /**

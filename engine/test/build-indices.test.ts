@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { buildIndices } from "../src/indices/build.js";
 import type { Draw } from "../src/types.js";
 
-const item = (symbol: string, value: number) => ({ symbol, analysis: symbol, original: { value }, us: { value }, si: { value } });
+const item = (shortName: string, value: number) => ({ shortName, analysis: shortName, original: { value }, us: { value }, si: { value } });
 const draws: Draw[] = [
   { date: "2024-01-01", labName: "A", items: [item("TC", 200), item("HDL-C", 50)] },
   { date: "2025-01-01", labName: "B", items: [item("TC", 240), item("HDL-C", 40)] },

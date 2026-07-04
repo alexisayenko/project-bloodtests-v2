@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { massToMolar, parseConcUnit } from "../src/convert.js";
-import { deriveSIUnits, SI_LOINC_BY_LOINC, SI_RULES_BY_SYMBOL } from "../src/units.js";
+import { deriveSIUnits, SI_LOINC_BY_LOINC, SI_RULES_BY_SHORTNAME } from "../src/units.js";
 import type { Draw } from "../src/types.js";
 
 /**
@@ -94,9 +94,9 @@ describe("parseConcUnit", () => {
 
 // ---------------------------------------------------------------------------
 const draw = (items: Draw["items"]): Draw => ({ date: "2025-06-01", labName: "X", items });
-const massItem = (symbol: string, loinc: string, value: number, unit: string, refMin?: number, refMax?: number) => {
+const massItem = (shortName: string, loinc: string, value: number, unit: string, refMin?: number, refMax?: number) => {
   const us = { value, unit, refMin, refMax };
-  return { symbol, loinc, original: { ...us }, us, si: { ...us } };
+  return { shortName, loinc, original: { ...us }, us, si: { ...us } };
 };
 
 describe("deriveSIUnits — catalog-driven mass→molar (the bug fix)", () => {
@@ -143,9 +143,9 @@ describe("SI_LOINC_BY_LOINC — SI view exposes the molar (SCnc) LOINC", () => {
   });
 
   it("the rule's target unit matches the analyte's molar view", () => {
-    expect(SI_RULES_BY_SYMBOL["FT4"]!.unit).toBe("pmol/L");
-    expect(SI_RULES_BY_SYMBOL["Cortisol"]!.unit).toBe("nmol/L");
-    expect(SI_RULES_BY_SYMBOL["T"]!.unit).toBe("nmol/L");
-    expect(SI_RULES_BY_SYMBOL["GLU"]!.unit).toBe("mmol/L");
+    expect(SI_RULES_BY_SHORTNAME["FT4"]!.unit).toBe("pmol/L");
+    expect(SI_RULES_BY_SHORTNAME["Cortisol"]!.unit).toBe("nmol/L");
+    expect(SI_RULES_BY_SHORTNAME["T"]!.unit).toBe("nmol/L");
+    expect(SI_RULES_BY_SHORTNAME["GLU"]!.unit).toBe("mmol/L");
   });
 });

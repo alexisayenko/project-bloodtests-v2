@@ -4,7 +4,7 @@
  * molar mass, a curated display name, and a CITED recommended reference range.
  *
  * This consolidates data that today is scattered across the consumer
- * (NAME_OVERRIDE/SYMBOL_OVERRIDE), labPlan.json (refOverride) and several engine
+ * (NAME_OVERRIDE/SHORT_NAME_OVERRIDE), labPlan.json (refOverride) and several engine
  * modules (panels, units, indices, flag). It is keyed by analyte, per ADR-0007
  * (clinical provenance) and docs/product/concepts/analyte.md.
  *
@@ -60,8 +60,8 @@ export const EvidenceLevel = z.enum([
 export type EvidenceLevel = z.infer<typeof EvidenceLevel>;
 
 export const AnalyteEntrySchema = z.object({
-  key: z.string(),                                 // catalog key (symbol, else analysis name)
-  symbol: z.string().nullable().optional(),
+  key: z.string(),                                 // catalog key (short name, else analysis name)
+  shortName: z.string().nullable().optional(),
   displayName: z.string(),                         // curated human name (LOINC Component-derived)
   loincComponent: z.string().nullable().optional(),// LOINC axis-1 Component ("Glucose", "Cholesterol in HDL"…)
   loincs: z.array(CatalogLoincSchema).default([]),

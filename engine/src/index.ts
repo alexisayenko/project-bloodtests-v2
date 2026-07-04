@@ -8,7 +8,7 @@ export { parseDraws, safeParseDraws, DrawSchema, DrawsSchema, LabItemSchema, Uni
 export { zone, flagOf, CLIN_ZONE, type Zone, type ClinBand } from "./flag.js";
 export { fmtNum } from "./format.js";
 export { cholMgdlToMmoll, tgMgdlToMmoll, glucoseMgdlToMmoll, massToMolar, parseConcUnit, type ConcUnit } from "./convert.js";
-export { deriveSIUnits, SI_RULES_BY_LOINC, SI_RULES_BY_SYMBOL, SI_LOINC_BY_LOINC, type SIRule } from "./units.js";
+export { deriveSIUnits, SI_RULES_BY_LOINC, SI_RULES_BY_SHORTNAME, SI_LOINC_BY_LOINC, type SIRule } from "./units.js";
 export {
   parseCatalog, AnalyteCatalogSchema, AnalyteEntrySchema, ReferenceSchema, CatalogLoincSchema, RefRangeSchema, EvidenceLevel,
   type AnalyteCatalog, type AnalyteEntry, type Reference, type CatalogLoinc, type RefRange,

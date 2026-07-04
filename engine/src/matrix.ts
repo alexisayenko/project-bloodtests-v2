@@ -2,7 +2,7 @@
  * Lab matrix builder — pivots draws × analytes into a time matrix with cells,
  * flags, reference text and sparkline series. Extracted verbatim from
  * homepage/.eleventy.js (`labMatrix`), with the personal/catalog inputs
- * (reference overrides, name/symbol overrides, unreliable & excluded sets)
+ * (reference overrides, name/short-name overrides, unreliable & excluded sets)
  * taken as CONFIG rather than hardcoded — the engine holds none of them.
  *
  * The plan overlay (next-assay flags, scheduled-draw columns, prices, Rx
@@ -13,7 +13,7 @@
 import type { Draw, LabItem, UnitValue } from "./types.js";
 import { flagOf, type Zone } from "./flag.js";
 import { fmtNum } from "./format.js";
-import { bySymbolOrAnalysis } from "./lookup.js";
+import { byShortNameOrAnalysis } from "./lookup.js";
 
 export type UnitSystem = "us" | "si" | "original";
 
@@ -27,7 +27,7 @@ export interface MatrixConfig {
   unreliable?: Set<string>;
   excludeMarkers?: Set<string>; // public field (homepage-consumed); LOINC term for the measured quantity is "analyte"
   nameOverride?: Record<string, string>;
-  symbolOverride?: Record<string, string>;
+  shortNameOverride?: Record<string, string>;
 }
 
 export interface MatrixCol { id: string; date: string; labName: string }
@@ -41,7 +41,7 @@ export interface MatrixCell {
 
 export interface MatrixRow {
   key: string;
-  symbol?: string;
+  shortName?: string;
   analysis?: string;
   loinc?: string | null;
   loincs: string[];
@@ -52,7 +52,7 @@ export interface MatrixRow {
   refNote?: string;
   unreliable: boolean;
   displayName: string;
-  displaySymbol: string;
+  displayShortName: string;
   cells: (MatrixCell | null)[];
   series: { date: string; value: number }[];
 }
@@ -91,7 +91,7 @@ function tipOf(d: Draw, it: LabItem): string {
     (it.method ? ` · ${it.method}` : "");
   return [
     `${d.date} · ${d.labName}`,
-    `${it.analysis || ""}${it.symbol ? " (" + it.symbol + ")" : ""}`.trimEnd(),
+    `${it.analysis || ""}${it.shortName ? " (" + it.shortName + ")" : ""}`.trimEnd(),
     reportLine,
     ...valueLines,
   ]
@@ -109,21 +109,21 @@ function refTextOf(refMin: number | null | undefined, refMax: number | null | un
   return "";
 }
 
-/** Row display name + display symbol, applying the personal name/symbol overrides. */
+/** Row display name + display short name, applying the personal name/short-name overrides. */
 export function displayNames(
-  symbol: string | undefined,
+  shortName: string | undefined,
   analysis: string | undefined,
   nameOverride: Record<string, string>,
-  symbolOverride: Record<string, string>,
-): { displayName: string; displaySymbol: string } {
-  let nm = bySymbolOrAnalysis((k) => nameOverride[k], symbol, analysis) ?? analysis ?? "";
-  if (symbol && nm.endsWith(" (" + symbol + ")")) nm = nm.slice(0, nm.length - (symbol.length + 3));
-  const displaySymbol = symbol || (analysis != null ? symbolOverride[analysis] : undefined) || "";
-  return { displayName: nm, displaySymbol };
+  shortNameOverride: Record<string, string>,
+): { displayName: string; displayShortName: string } {
+  let nm = byShortNameOrAnalysis((k) => nameOverride[k], shortName, analysis) ?? analysis ?? "";
+  if (shortName && nm.endsWith(" (" + shortName + ")")) nm = nm.slice(0, nm.length - (shortName.length + 3));
+  const displayShortName = shortName || (analysis != null ? shortNameOverride[analysis] : undefined) || "";
+  return { displayName: nm, displayShortName };
 }
 
 interface Acc {
-  key: string; symbol?: string; analysis?: string; loinc?: string | null;
+  key: string; shortName?: string; analysis?: string; loinc?: string | null;
   unit?: string; refMin?: number | null; refMax?: number | null;
   byId: Record<string, { raw: string; value: number; refMin?: number | null; refMax?: number | null; tip: string }>;
   loincs: Set<string>;
@@ -137,10 +137,10 @@ function accumulate(asc: Draw[], system: UnitSystem, excludeAnalytes: Set<string
     for (const it of d.items) {
       const v: UnitValue = (it[system] as UnitValue) || it.original;
       if (v.value == null) continue;
-      if ((it.symbol && excludeAnalytes.has(it.symbol)) || (it.analysis && excludeAnalytes.has(it.analysis))) continue;
-      const key = it.symbol || it.loinc || it.analysis!;
+      if ((it.shortName && excludeAnalytes.has(it.shortName)) || (it.analysis && excludeAnalytes.has(it.analysis))) continue;
+      const key = it.shortName || it.loinc || it.analysis!;
       if (!byKey.has(key)) {
-        byKey.set(key, { key, symbol: it.symbol ?? undefined, analysis: it.analysis ?? undefined, loinc: it.loinc, unit: v.unit ?? undefined, refMin: v.refMin, refMax: v.refMax, byId: {}, loincs: new Set() });
+        byKey.set(key, { key, shortName: it.shortName ?? undefined, analysis: it.analysis ?? undefined, loinc: it.loinc, unit: v.unit ?? undefined, refMin: v.refMin, refMax: v.refMax, byId: {}, loincs: new Set() });
         order.push(key);
       }
       const m = byKey.get(key)!;
@@ -148,7 +148,7 @@ function accumulate(asc: Draw[], system: UnitSystem, excludeAnalytes: Set<string
       if (v.unit) m.unit = v.unit;
       if (v.refMin != null) m.refMin = v.refMin;
       if (v.refMax != null) m.refMax = v.refMax;
-      if (it.symbol) m.symbol = it.symbol;
+      if (it.shortName) m.shortName = it.shortName;
       const converted = it.original && v.value !== it.original.value;
       const raw = converted ? fmtNum(v.value) : (it.original?.rawValue ?? fmtNum(v.value));
       m.byId[idOf(d)] = { raw, value: v.value, refMin: v.refMin, refMax: v.refMax, tip: tipOf(d, it) };
@@ -163,7 +163,7 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
   const unreliable = config.unreliable ?? new Set<string>();
   const excludeAnalytes = config.excludeMarkers ?? new Set<string>();
   const nameOverride = config.nameOverride ?? {};
-  const symbolOverride = config.symbolOverride ?? {};
+  const shortNameOverride = config.shortNameOverride ?? {};
 
   const cols: MatrixCol[] = [...draws]
     .sort((a, b) => a.date.localeCompare(b.date) || a.labName.localeCompare(b.labName))
@@ -175,8 +175,8 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
   const rows: MatrixRow[] = order.map((k) => {
     const m = byKey.get(k)!;
     const loincs = Array.from(m.loincs).sort((a, b) => a.localeCompare(b));
-    const isUnreliable = (m.symbol != null && unreliable.has(m.symbol)) || (m.analysis != null && unreliable.has(m.analysis));
-    const ov = bySymbolOrAnalysis((key) => refOverride[key], m.symbol, m.analysis) ?? null;
+    const isUnreliable = (m.shortName != null && unreliable.has(m.shortName)) || (m.analysis != null && unreliable.has(m.analysis));
+    const ov = byShortNameOrAnalysis((key) => refOverride[key], m.shortName, m.analysis) ?? null;
     let refMin = m.refMin, refMax = m.refMax, refNote: string | undefined;
     if (ov) { refMin = ov.refMin; refMax = ov.refMax; refNote = ov.note; }
     const refText = refTextOf(refMin, refMax);
@@ -188,11 +188,11 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
       // refMin/refMax shown in the marker column), so labs that printed no range
       // don't leave uncolored cells. An override still wins for every cell.
       const rMin = ov ? ov.refMin : (cell.refMin ?? refMin), rMax = ov ? ov.refMax : (cell.refMax ?? refMax);
-      return { raw: cell.raw, value: cell.value, flag: isUnreliable ? "" as const : flagOf(cell.value, rMin, rMax, m.symbol, m.analysis), title: cell.tip };
+      return { raw: cell.raw, value: cell.value, flag: isUnreliable ? "" as const : flagOf(cell.value, rMin, rMax, m.shortName, m.analysis), title: cell.tip };
     });
     const series = cells.map((cell, i) => cell ? { date: cols[i]!.date, value: cell.value } : null).filter((x): x is { date: string; value: number } => x != null);
-    const { displayName, displaySymbol } = displayNames(m.symbol, m.analysis, nameOverride, symbolOverride);
-    return { key: m.key, symbol: m.symbol, analysis: m.analysis, loinc: m.loinc, loincs, unit: m.unit, refMin, refMax, refText, refNote, unreliable: isUnreliable, displayName, displaySymbol, cells, series };
+    const { displayName, displayShortName } = displayNames(m.shortName, m.analysis, nameOverride, shortNameOverride);
+    return { key: m.key, shortName: m.shortName, analysis: m.analysis, loinc: m.loinc, loincs, unit: m.unit, refMin, refMax, refText, refNote, unreliable: isUnreliable, displayName, displayShortName, cells, series };
   });
 
   rows.sort((a, b) => (a.analysis || "").localeCompare(b.analysis || ""));

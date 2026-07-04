@@ -1,7 +1,7 @@
 {
   "ACTH": {
     "key": "ACTH",
-    "symbol": "ACTH",
+    "shortName": "ACTH",
     "displayName": "Corticotropin (ACTH)",
     "loincComponent": "Corticotropin",
     "loincs": [
@@ -43,7 +43,7 @@
   },
   "ALB": {
     "key": "ALB",
-    "symbol": "ALB",
+    "shortName": "ALB",
     "displayName": "Albumin",
     "loincComponent": "Albumin",
     "loincs": [
@@ -85,7 +85,7 @@
   },
   "ALP": {
     "key": "ALP",
-    "symbol": "ALP",
+    "shortName": "ALP",
     "displayName": "Alkaline phosphatase",
     "loincComponent": "Alkaline phosphatase",
     "loincs": [
@@ -127,7 +127,7 @@
   },
   "ALT": {
     "key": "ALT",
-    "symbol": "ALT",
+    "shortName": "ALT",
     "displayName": "Alanine aminotransferase",
     "loincComponent": "Alanine aminotransferase",
     "loincs": [
@@ -169,7 +169,7 @@
   },
   "AMY": {
     "key": "AMY",
-    "symbol": null,
+    "shortName": null,
     "displayName": "Amylase",
     "loincComponent": "Amylase",
     "loincs": [
@@ -211,7 +211,7 @@
   },
   "AST": {
     "key": "AST",
-    "symbol": "AST",
+    "shortName": "AST",
     "displayName": "Aspartate aminotransferase",
     "loincComponent": "Aspartate aminotransferase",
     "loincs": [
@@ -253,7 +253,7 @@
   },
   "BASO#": {
     "key": "BASO#",
-    "symbol": "BASO#",
+    "shortName": "BASO#",
     "displayName": "Basophils (absolute)",
     "loincComponent": "Basophils",
     "loincs": [
@@ -303,7 +303,7 @@
   },
   "BASO%": {
     "key": "BASO%",
-    "symbol": "BASO%",
+    "shortName": "BASO%",
     "displayName": "Basophils %",
     "loincComponent": "Basophils/100 leukocytes",
     "loincs": [
@@ -345,7 +345,7 @@
   },
   "Ca": {
     "key": "Ca",
-    "symbol": "Ca",
+    "shortName": "Ca",
     "displayName": "Calcium",
     "loincComponent": "Calcium",
     "loincs": [
@@ -405,7 +405,7 @@
   },
   "Cl": {
     "key": "Cl",
-    "symbol": "Cl",
+    "shortName": "Cl",
     "displayName": "Chloride",
     "loincComponent": "Chloride",
     "loincs": [
@@ -447,7 +447,7 @@
   },
   "Cortisol": {
     "key": "Cortisol",
-    "symbol": null,
+    "shortName": null,
     "displayName": "Cortisol",
     "loincComponent": "Cortisol",
     "loincs": [
@@ -511,7 +511,7 @@
   },
   "CREAT": {
     "key": "CREAT",
-    "symbol": "CREAT",
+    "shortName": "CREAT",
     "displayName": "Creatinine",
     "loincComponent": "Creatinine",
     "loincs": [
@@ -563,7 +563,7 @@
   },
   "D-BIL": {
     "key": "D-BIL",
-    "symbol": "D-BIL",
+    "shortName": "D-BIL",
     "displayName": "Bilirubin direct",
     "loincComponent": "Bilirubin.direct",
     "loincs": [
@@ -615,7 +615,7 @@
   },
   "DHEA-S": {
     "key": "DHEA-S",
-    "symbol": "DHEA-S",
+    "shortName": "DHEA-S",
     "displayName": "Dehydroepiandrosterone sulfate",
     "loincComponent": "Dehydroepiandrosterone sulfate",
     "loincs": [
@@ -675,7 +675,7 @@
   },
   "DHT": {
     "key": "DHT",
-    "symbol": "DHT",
+    "shortName": "DHT",
     "displayName": "Dihydrotestosterone",
     "loincComponent": "Dihydrotestosterone",
     "loincs": [
@@ -727,7 +727,7 @@
   },
   "E2": {
     "key": "E2",
-    "symbol": "E2",
+    "shortName": "E2",
     "displayName": "Estradiol (E2)",
     "loincComponent": "Estradiol (E2)",
     "loincs": [
@@ -787,7 +787,7 @@
   },
   "EO#": {
     "key": "EO#",
-    "symbol": "EO#",
+    "shortName": "EO#",
     "displayName": "Eosinophils (absolute)",
     "loincComponent": "Eosinophils",
     "loincs": [
@@ -837,7 +837,7 @@
   },
   "EO%": {
     "key": "EO%",
-    "symbol": "EO%",
+    "shortName": "EO%",
     "displayName": "Eosinophils %",
     "loincComponent": "Eosinophils/100 leukocytes",
     "loincs": [
@@ -879,7 +879,7 @@
   },
   "FSH": {
     "key": "FSH",
-    "symbol": "FSH",
+    "shortName": "FSH",
     "displayName": "FSH",
     "loincComponent": "Follitropin",
     "loincs": [
@@ -924,7 +924,7 @@
   },
   "FT": {
     "key": "FT",
-    "symbol": "FT",
+    "shortName": "FT",
     "displayName": "Testosterone.Free",
     "loincComponent": "Testosterone.Free",
     "loincs": [
@@ -984,7 +984,7 @@
   },
   "FT3": {
     "key": "FT3",
-    "symbol": "FT3",
+    "shortName": "FT3",
     "displayName": "Triiodothyronine (T3) Free",
     "loincComponent": "Triiodothyronine free",
     "loincs": [
@@ -1040,7 +1040,7 @@
   },
   "FT4": {
     "key": "FT4",
-    "symbol": "FT4",
+    "shortName": "FT4",
     "displayName": "Thyroxine (T4) Free",
     "loincComponent": "Thyroxine free",
     "loincs": [
@@ -1096,7 +1096,7 @@
   },
   "GGT": {
     "key": "GGT",
-    "symbol": "GGT",
+    "shortName": "GGT",
     "displayName": "Gamma glutamyl transferase",
     "loincComponent": "Gamma glutamyl transferase",
     "loincs": [
@@ -1138,7 +1138,7 @@
   },
   "GLU": {
     "key": "GLU",
-    "symbol": "GLU",
+    "shortName": "GLU",
     "displayName": "Glucose",
     "loincComponent": "Glucose",
     "loincs": [
@@ -1198,7 +1198,7 @@
   },
   "HbA1c": {
     "key": "HbA1c",
-    "symbol": "HbA1c",
+    "shortName": "HbA1c",
     "displayName": "Hemoglobin A1c/Hemoglobin.total",
     "loincComponent": "Hemoglobin A1c/Hemoglobin.total",
     "loincs": [
@@ -1248,7 +1248,7 @@
   },
   "HDL-C": {
     "key": "HDL-C",
-    "symbol": "HDL-C",
+    "shortName": "HDL-C",
     "displayName": "Cholesterol in HDL",
     "loincComponent": "Cholesterol in HDL",
     "loincs": [
@@ -1308,7 +1308,7 @@
   },
   "IGF-1": {
     "key": "IGF-1",
-    "symbol": "IGF-1",
+    "shortName": "IGF-1",
     "displayName": "Somatomedin C (IGF-1)",
     "loincComponent": "Somatomedin C",
     "loincs": [
@@ -1350,7 +1350,7 @@
   },
   "Insulin": {
     "key": "Insulin",
-    "symbol": "Insulin",
+    "shortName": "Insulin",
     "displayName": "Insulin",
     "loincComponent": "Insulin",
     "loincs": [
@@ -1392,7 +1392,7 @@
   },
   "K": {
     "key": "K",
-    "symbol": "K",
+    "shortName": "K",
     "displayName": "Potassium",
     "loincComponent": "Potassium",
     "loincs": [
@@ -1434,7 +1434,7 @@
   },
   "LDL-C": {
     "key": "LDL-C",
-    "symbol": "LDL-C",
+    "shortName": "LDL-C",
     "displayName": "Cholesterol in LDL",
     "loincComponent": "Cholesterol in LDL",
     "loincs": [
@@ -1494,7 +1494,7 @@
   },
   "LH": {
     "key": "LH",
-    "symbol": "LH",
+    "shortName": "LH",
     "displayName": "Luteinizing hormone",
     "loincComponent": "Luteinizing hormone",
     "loincs": [
@@ -1539,7 +1539,7 @@
   },
   "LYMPH#": {
     "key": "LYMPH#",
-    "symbol": "LYMPH#",
+    "shortName": "LYMPH#",
     "displayName": "Lymphocytes (absolute)",
     "loincComponent": "Lymphocytes",
     "loincs": [
@@ -1589,7 +1589,7 @@
   },
   "LYMPH%": {
     "key": "LYMPH%",
-    "symbol": "LYMPH%",
+    "shortName": "LYMPH%",
     "displayName": "Lymphocytes %",
     "loincComponent": "Lymphocytes/100 leukocytes",
     "loincs": [
@@ -1631,7 +1631,7 @@
   },
   "Mg": {
     "key": "Mg",
-    "symbol": "Mg",
+    "shortName": "Mg",
     "displayName": "Magnesium",
     "loincComponent": "Magnesium",
     "loincs": [
@@ -1691,7 +1691,7 @@
   },
   "MONO#": {
     "key": "MONO#",
-    "symbol": "MONO#",
+    "shortName": "MONO#",
     "displayName": "Monocytes (absolute)",
     "loincComponent": "Monocytes",
     "loincs": [
@@ -1741,7 +1741,7 @@
   },
   "MONO%": {
     "key": "MONO%",
-    "symbol": "MONO%",
+    "shortName": "MONO%",
     "displayName": "Monocytes %",
     "loincComponent": "Monocytes/100 leukocytes",
     "loincs": [
@@ -1783,7 +1783,7 @@
   },
   "Na": {
     "key": "Na",
-    "symbol": "Na",
+    "shortName": "Na",
     "displayName": "Sodium",
     "loincComponent": "Sodium",
     "loincs": [
@@ -1825,7 +1825,7 @@
   },
   "NEUT#": {
     "key": "NEUT#",
-    "symbol": "NEUT#",
+    "shortName": "NEUT#",
     "displayName": "Neutrophils (absolute)",
     "loincComponent": "Neutrophils",
     "loincs": [
@@ -1875,7 +1875,7 @@
   },
   "NEUT%": {
     "key": "NEUT%",
-    "symbol": "NEUT%",
+    "shortName": "NEUT%",
     "displayName": "Neutrophils %",
     "loincComponent": "Neutrophils/100 leukocytes",
     "loincs": [
@@ -1917,7 +1917,7 @@
   },
   "P": {
     "key": "P",
-    "symbol": "P",
+    "shortName": "P",
     "displayName": "Phosphate",
     "loincComponent": "Phosphate",
     "loincs": [
@@ -1969,7 +1969,7 @@
   },
   "PRL": {
     "key": "PRL",
-    "symbol": "PRL",
+    "shortName": "PRL",
     "displayName": "Prolactin",
     "loincComponent": "Prolactin",
     "loincs": [
@@ -2029,7 +2029,7 @@
   },
   "PTH": {
     "key": "PTH",
-    "symbol": "PTH",
+    "shortName": "PTH",
     "displayName": "Parathyroid Hormone (intact)",
     "loincComponent": "Parathyrin.intact",
     "loincs": [
@@ -2079,7 +2079,7 @@
   },
   "SHBG": {
     "key": "SHBG",
-    "symbol": "SHBG",
+    "shortName": "SHBG",
     "displayName": "Sex hormone binding globulin",
     "loincComponent": "Sex hormone binding globulin",
     "loincs": [
@@ -2124,7 +2124,7 @@
   },
   "T": {
     "key": "T",
-    "symbol": "T",
+    "shortName": "T",
     "displayName": "Testosterone",
     "loincComponent": "Testosterone",
     "loincs": [
@@ -2192,7 +2192,7 @@
   },
   "T-BIL": {
     "key": "T-BIL",
-    "symbol": "T-BIL",
+    "shortName": "T-BIL",
     "displayName": "Bilirubin total",
     "loincComponent": "Bilirubin.total",
     "loincs": [
@@ -2244,7 +2244,7 @@
   },
   "TC": {
     "key": "TC",
-    "symbol": "TC",
+    "shortName": "TC",
     "displayName": "Cholesterol",
     "loincComponent": "Cholesterol",
     "loincs": [
@@ -2304,7 +2304,7 @@
   },
   "TP": {
     "key": "TP",
-    "symbol": null,
+    "shortName": null,
     "displayName": "Protein",
     "loincComponent": "Protein",
     "loincs": [
@@ -2346,7 +2346,7 @@
   },
   "TRIG": {
     "key": "TRIG",
-    "symbol": "TRIG",
+    "shortName": "TRIG",
     "displayName": "Triglyceride",
     "loincComponent": "Triglyceride",
     "loincs": [
@@ -2406,7 +2406,7 @@
   },
   "TSH": {
     "key": "TSH",
-    "symbol": "TSH",
+    "shortName": "TSH",
     "displayName": "Thyrotropin (TSH)",
     "loincComponent": "Thyrotropin",
     "loincs": [
@@ -2448,7 +2448,7 @@
   },
   "Urea": {
     "key": "Urea",
-    "symbol": null,
+    "shortName": null,
     "displayName": "Urea",
     "loincComponent": "Urea",
     "loincs": [
@@ -2508,7 +2508,7 @@
   },
   "Uric Acid": {
     "key": "Uric Acid",
-    "symbol": null,
+    "shortName": null,
     "displayName": "Urate",
     "loincComponent": "Urate",
     "loincs": [
@@ -2560,7 +2560,7 @@
   },
   "WBC": {
     "key": "WBC",
-    "symbol": "WBC",
+    "shortName": "WBC",
     "displayName": "White Blood Cells (Leukocytes)",
     "loincComponent": "Leukocytes",
     "loincs": [

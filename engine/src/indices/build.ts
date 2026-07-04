@@ -45,7 +45,7 @@ function markersOf(d: Draw): Markers {
   for (const it of d.items || []) {
     const us = it.us ?? it.original;
     if (us?.value != null) {
-      const key = it.symbol ?? it.analysis;
+      const key = it.shortName ?? it.analysis;
       if (key != null) m[key] = us.value;
     }
   }

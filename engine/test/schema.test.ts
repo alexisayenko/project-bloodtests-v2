@@ -6,7 +6,7 @@ const goodDraw = {
   labName: "LabA",
   sourceFile: "2025-06-LabA.pdf",
   items: [
-    { symbol: "GLU", analysis: "Glucose", loinc: "2345-7", original: { value: 90, unit: "mg/dL", rawValue: "90" }, us: { value: 90, unit: "mg/dL" }, si: { value: 5, unit: "mmol/L" } },
+    { shortName: "GLU", analysis: "Glucose", loinc: "2345-7", original: { value: 90, unit: "mg/dL", rawValue: "90" }, us: { value: 90, unit: "mg/dL" }, si: { value: 5, unit: "mmol/L" } },
   ],
 };
 
@@ -29,9 +29,27 @@ describe("schema — draws", () => {
     expect(r.success).toBe(false);
   });
 
-  it("rejects an item with no identity (no symbol/analysis/loinc)", () => {
+  it("rejects an item with no identity (no shortName/analysis/loinc)", () => {
     const r = DrawSchema.safeParse({ ...goodDraw, items: [{ original: { value: 1 }, us: { value: 1 }, si: { value: 1 } }] });
     expect(r.success).toBe(false);
+  });
+
+  it("accepts the legacy `symbol` key and aliases it to shortName", () => {
+    const legacy = {
+      ...goodDraw,
+      items: [{ symbol: "GLU", analysis: "Glucose", loinc: "2345-7", original: { value: 90, unit: "mg/dL", rawValue: "90" }, us: { value: 90, unit: "mg/dL" }, si: { value: 5, unit: "mmol/L" } }],
+    };
+    const parsed = parseDraws([legacy]);
+    expect(parsed[0]!.items[0]!.shortName).toBe("GLU");
+    expect("symbol" in parsed[0]!.items[0]!).toBe(false);
+  });
+
+  it("prefers an explicit shortName over a co-present legacy symbol", () => {
+    const both = {
+      ...goodDraw,
+      items: [{ symbol: "OLD", shortName: "GLU", analysis: "Glucose", loinc: "2345-7", original: { value: 90 }, us: { value: 90 }, si: { value: 5 } }],
+    };
+    expect(parseDraws([both])[0]!.items[0]!.shortName).toBe("GLU");
   });
 
   it("catches a typo'd unit type (number instead of string)", () => {

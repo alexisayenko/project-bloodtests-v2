@@ -48,7 +48,7 @@ const firstLoincWith = (e: AnalyteEntry, prop: string): CatalogLoinc | undefined
 
 interface BuiltRules {
   byLoinc: Record<string, SIRule>;
-  bySymbol: Record<string, SIRule>;
+  byShortName: Record<string, SIRule>;
   siLoincByLoinc: Record<string, string>;
 }
 
@@ -60,7 +60,7 @@ interface BuiltRules {
  */
 function buildSIRules(catalog: AnalyteCatalog): BuiltRules {
   const byLoinc: Record<string, SIRule> = {};
-  const bySymbol: Record<string, SIRule> = {};
+  const byShortName: Record<string, SIRule> = {};
   const siLoincByLoinc: Record<string, string> = {};
 
   for (const e of Object.values(catalog)) {
@@ -83,13 +83,13 @@ function buildSIRules(catalog: AnalyteCatalog): BuiltRules {
 
     byLoinc[mass.code] = rule;
     siLoincByLoinc[mass.code] = molar.code;
-    if (e.symbol) bySymbol[e.symbol] = rule;
-    // Also key by the catalog key (= analysis name for symbol-less analytes such
-    // as "Cortisol"), matching the engine's symbol-first / analysis-fallback lookup.
-    if (e.key && e.key !== e.symbol) bySymbol[e.key] = rule;
+    if (e.shortName) byShortName[e.shortName] = rule;
+    // Also key by the catalog key (= analysis name for short-name-less analytes such
+    // as "Cortisol"), matching the engine's short-name-first / analysis-fallback lookup.
+    if (e.key && e.key !== e.shortName) byShortName[e.key] = rule;
   }
 
-  return { byLoinc, bySymbol, siLoincByLoinc };
+  return { byLoinc, byShortName, siLoincByLoinc };
 }
 
 const RULES = buildSIRules(ANALYTE_CATALOG);
@@ -97,8 +97,8 @@ const RULES = buildSIRules(ANALYTE_CATALOG);
 /** Analyte → SI rule, keyed by its mass (MCnc) LOINC. */
 export const SI_RULES_BY_LOINC: Record<string, SIRule> = RULES.byLoinc;
 
-/** Analyte → SI rule, keyed by symbol (and catalog key for symbol-less analytes). */
-export const SI_RULES_BY_SYMBOL: Record<string, SIRule> = RULES.bySymbol;
+/** Analyte → SI rule, keyed by short name (and catalog key for short-name-less analytes). */
+export const SI_RULES_BY_SHORTNAME: Record<string, SIRule> = RULES.byShortName;
 
 /**
  * Mass-concentration (MCnc) LOINC → molar substance-concentration (SCnc) LOINC.
@@ -109,11 +109,11 @@ export const SI_RULES_BY_SYMBOL: Record<string, SIRule> = RULES.bySymbol;
  */
 export const SI_LOINC_BY_LOINC: Record<string, string> = RULES.siLoincByLoinc;
 
-/** Resolve a rule for an item: LOINC first, then symbol, then analysis name. */
+/** Resolve a rule for an item: LOINC first, then short name, then analysis name. */
 function ruleFor(item: LabItem): SIRule | undefined {
   if (item.loinc != null && SI_RULES_BY_LOINC[item.loinc]) return SI_RULES_BY_LOINC[item.loinc];
-  if (item.symbol != null && SI_RULES_BY_SYMBOL[item.symbol]) return SI_RULES_BY_SYMBOL[item.symbol];
-  if (item.analysis != null && SI_RULES_BY_SYMBOL[item.analysis]) return SI_RULES_BY_SYMBOL[item.analysis];
+  if (item.shortName != null && SI_RULES_BY_SHORTNAME[item.shortName]) return SI_RULES_BY_SHORTNAME[item.shortName];
+  if (item.analysis != null && SI_RULES_BY_SHORTNAME[item.analysis]) return SI_RULES_BY_SHORTNAME[item.analysis];
   return undefined;
 }
 

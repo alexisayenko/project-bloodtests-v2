@@ -4,8 +4,13 @@
  * — if needed — a JSON Schema export for non-TS consumers.
  *
  * This models the CURRENT results shape (as in homepage/bloodtests.json:
- * per-item original/us/si + symbol/analysis). The normalized Observation model
+ * per-item original/us/si + shortName/analysis). The normalized Observation model
  * (loinc-only item, names in the catalog) is a later transform, not this file.
+ *
+ * Backward-compat: the analyte short code was historically keyed `symbol`. A
+ * preprocess step aliases a legacy `symbol` key onto `shortName` (only when
+ * `shortName` is absent), so un-migrated data (e.g. the natalga.com site) still
+ * parses. New data should use `shortName`.
  */
 
 import { z } from "zod";
@@ -22,8 +27,8 @@ export const UnitValueSchema = z.object({
   rawValue: z.string().nullable().optional(),
 });
 
-export const LabItemSchema = z.object({
-  symbol: z.string().nullable().optional(),
+export const LabItemObjectSchema = z.object({
+  shortName: z.string().nullable().optional(),
   analysis: z.string().nullable().optional(),
   loinc: LoincSchema.nullable().optional(),
   method: z.string().nullable().optional(),
@@ -32,9 +37,25 @@ export const LabItemSchema = z.object({
   original: UnitValueSchema,
   us: UnitValueSchema,
   si: UnitValueSchema,
-}).refine((it) => it.symbol != null || it.analysis != null || it.loinc != null, {
-  message: "item needs at least one of symbol / analysis / loinc",
+}).refine((it) => it.shortName != null || it.analysis != null || it.loinc != null, {
+  message: "item needs at least one of shortName / analysis / loinc",
 });
+
+/**
+ * Accepts the current `shortName` key and the legacy `symbol` alias: a bare
+ * `symbol` is renamed to `shortName` before validation (only if `shortName`
+ * isn't already present), so un-migrated data still parses into the new shape.
+ */
+export const LabItemSchema = z.preprocess((val) => {
+  if (val && typeof val === "object" && !Array.isArray(val)) {
+    const o = val as Record<string, unknown>;
+    if ("symbol" in o && !("shortName" in o)) {
+      const { symbol, ...rest } = o;
+      return { ...rest, shortName: symbol };
+    }
+  }
+  return val;
+}, LabItemObjectSchema);
 
 export const DrawSchema = z.object({
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "date must be YYYY-MM-DD"),

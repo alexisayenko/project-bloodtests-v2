@@ -6,13 +6,13 @@ const uv = (value: number, unit: string, refMin?: number, refMax?: number): Unit
 
 const draws: Draw[] = [
   { date: "2024-01-01", labName: "LabA", items: [
-    { symbol: "GLU", analysis: "Glucose", loinc: "2345-7", original: uv(90, "mg/dL", 70, 110), us: uv(90, "mg/dL", 70, 110), si: uv(5, "mmol/L") },
-    { symbol: "DHEA-S", analysis: "DHEA Sulfate", loinc: "2191-5", original: uv(200, "ug/dL", 25, 220), us: uv(200, "ug/dL", 25, 220), si: uv(200, "ug/dL") },
-    { symbol: "FT", analysis: "Free Testosterone", original: uv(15, "pg/mL", 8, 25), us: uv(15, "pg/mL", 8, 25), si: uv(15, "pg/mL") },
+    { shortName: "GLU", analysis: "Glucose", loinc: "2345-7", original: uv(90, "mg/dL", 70, 110), us: uv(90, "mg/dL", 70, 110), si: uv(5, "mmol/L") },
+    { shortName: "DHEA-S", analysis: "DHEA Sulfate", loinc: "2191-5", original: uv(200, "ug/dL", 25, 220), us: uv(200, "ug/dL", 25, 220), si: uv(200, "ug/dL") },
+    { shortName: "FT", analysis: "Free Testosterone", original: uv(15, "pg/mL", 8, 25), us: uv(15, "pg/mL", 8, 25), si: uv(15, "pg/mL") },
   ] },
   { date: "2025-06-01", labName: "LabB", items: [
-    { symbol: "GLU", analysis: "Glucose", loinc: "2345-7", original: uv(130, "mg/dL", 70, 110), us: uv(130, "mg/dL", 70, 110), si: uv(7.2, "mmol/L") },
-    { symbol: "SHBG", analysis: "SHBG", loinc: "13967-5", original: uv(40, "nmol/L", 18, 54), us: uv(40, "nmol/L", 18, 54), si: uv(40, "nmol/L") },
+    { shortName: "GLU", analysis: "Glucose", loinc: "2345-7", original: uv(130, "mg/dL", 70, 110), us: uv(130, "mg/dL", 70, 110), si: uv(7.2, "mmol/L") },
+    { shortName: "SHBG", analysis: "SHBG", loinc: "13967-5", original: uv(40, "nmol/L", 18, 54), us: uv(40, "nmol/L", 18, 54), si: uv(40, "nmol/L") },
   ] },
 ];
 
@@ -21,7 +21,7 @@ const config: MatrixConfig = {
   unreliable: new Set(["FT", "Free Testosterone"]),
   excludeMarkers: new Set(["Insulin Resistance (Glu/Ins ratio)"]),
   nameOverride: { GLU: "Glucose", "DHEA-S": "Dehydroepiandrosterone sulfate" },
-  symbolOverride: { "Folic Acid": "B9" },
+  shortNameOverride: { "Folic Acid": "B9" },
 };
 
 describe("buildMatrix — golden-master vs live labMatrix core", () => {
@@ -76,15 +76,15 @@ describe("buildMatrix — cell falls back to row reference range when a draw omi
   // heuristic ±25% path applies).
   const drawsNoBand: Draw[] = [
     { date: "2024-01-01", labName: "LabWithRange", items: [
-      { symbol: "NEUT#", analysis: "Neutrophils (absolute)", original: uv(3.0, "10^9/L", 1.78, 5.38), us: uv(3.0, "10^9/L", 1.78, 5.38), si: uv(3.0, "10^9/L", 1.78, 5.38) },
+      { shortName: "NEUT#", analysis: "Neutrophils (absolute)", original: uv(3.0, "10^9/L", 1.78, 5.38), us: uv(3.0, "10^9/L", 1.78, 5.38), si: uv(3.0, "10^9/L", 1.78, 5.38) },
     ] },
     { date: "2024-06-01", labName: "Ygia", items: [
       // In-range value, but Ygia printed no reference range on this line.
-      { symbol: "NEUT#", analysis: "Neutrophils (absolute)", original: uv(4.0, "10^9/L"), us: uv(4.0, "10^9/L"), si: uv(4.0, "10^9/L") },
+      { shortName: "NEUT#", analysis: "Neutrophils (absolute)", original: uv(4.0, "10^9/L"), us: uv(4.0, "10^9/L"), si: uv(4.0, "10^9/L") },
     ] },
     { date: "2024-09-01", labName: "Ygia", items: [
       // Above the row range, still no printed range on the line → should warn.
-      { symbol: "NEUT#", analysis: "Neutrophils (absolute)", original: uv(6.0, "10^9/L"), us: uv(6.0, "10^9/L"), si: uv(6.0, "10^9/L") },
+      { shortName: "NEUT#", analysis: "Neutrophils (absolute)", original: uv(6.0, "10^9/L"), us: uv(6.0, "10^9/L"), si: uv(6.0, "10^9/L") },
     ] },
   ];
 

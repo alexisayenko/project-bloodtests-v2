@@ -15,7 +15,7 @@
 
 import type { AnalyteCatalog, AnalyteEntry, RefRange } from "./schema.js";
 import type { MatrixConfig, RefOverride, UnitSystem } from "../matrix.js";
-import { SI_RULES_BY_SYMBOL } from "../units.js";
+import { SI_RULES_BY_SHORTNAME } from "../units.js";
 import { massToMolar, parseConcUnit } from "../convert.js";
 
 /**
@@ -26,31 +26,31 @@ import { massToMolar, parseConcUnit } from "../convert.js";
  * view; the SI view converts it to the same canonical threshold in molar units.
  * Every other analyte's range is unit-system-agnostic and safe in any view.
  *
- * The rule set is catalog-driven (see units.ts SI_RULES_BY_SYMBOL): any analyte
+ * The rule set is catalog-driven (see units.ts SI_RULES_BY_SHORTNAME): any analyte
  * with a cited molar mass + mass/molar LOINC pair converts, not just the lipids.
  */
 const round2 = (x: number): number => Math.round(x * 100) / 100;
 
 export interface CatalogIndex {
-  /** entries keyed by analyte symbol (present on most entries) */
-  bySymbol: Map<string, AnalyteEntry>;
-  /** entries keyed by catalog key (symbol, else analysis name) */
+  /** entries keyed by analyte short name (present on most entries) */
+  byShortName: Map<string, AnalyteEntry>;
+  /** entries keyed by catalog key (short name, else analysis name) */
   byKey: Map<string, AnalyteEntry>;
   /** entries keyed by every LOINC code they carry */
   byLoinc: Map<string, AnalyteEntry>;
 }
 
-/** Build symbol/key/LOINC lookup maps over a catalog (last entry wins on collision). */
+/** Build short-name/key/LOINC lookup maps over a catalog (last entry wins on collision). */
 export function indexCatalog(catalog: AnalyteCatalog): CatalogIndex {
-  const bySymbol = new Map<string, AnalyteEntry>();
+  const byShortName = new Map<string, AnalyteEntry>();
   const byKey = new Map<string, AnalyteEntry>();
   const byLoinc = new Map<string, AnalyteEntry>();
   for (const [key, e] of Object.entries(catalog)) {
     byKey.set(key, e);
-    if (e.symbol) bySymbol.set(e.symbol, e);
+    if (e.shortName) byShortName.set(e.shortName, e);
     for (const l of e.loincs ?? []) if (l.code) byLoinc.set(l.code, e);
   }
-  return { bySymbol, byKey, byLoinc };
+  return { byShortName, byKey, byLoinc };
 }
 
 /**
@@ -65,7 +65,7 @@ function boundsForSystem(
   system: UnitSystem,
 ): { refMin: number | null; refMax: number | null } | null {
   if (r.min == null && r.max == null) return null; // nothing to override with
-  const rule = SI_RULES_BY_SYMBOL[e.symbol ?? e.key];
+  const rule = SI_RULES_BY_SHORTNAME[e.shortName ?? e.key];
   if (!rule) return { refMin: r.min, refMax: r.max }; // unit-system-agnostic
   // Molar analyte: catalog range is stored in mass units. US/original keep it; SI
   // converts to the analyte's molar unit using its (own refDefault) source unit,
@@ -93,8 +93,8 @@ export interface CatalogConfigOptions {
 /**
  * Derive the engine's injected config from the catalog: display names, the
  * unreliable-assay set, and (unit-guarded) reference-range overrides. Keys are
- * the analyte symbol and, when different, the catalog key — matching the
- * engine's symbol-first / analysis-fallback lookup.
+ * the analyte short name and, when different, the catalog key — matching the
+ * engine's short-name-first / analysis-fallback lookup.
  */
 export function catalogToConfig(
   catalog: AnalyteCatalog,
@@ -108,13 +108,13 @@ export function catalogToConfig(
   const unreliable = new Set<string>();
 
   const put = <T>(bag: Record<string, T>, e: AnalyteEntry, v: T) => {
-    if (e.symbol) bag[e.symbol] = v;
-    if (e.key && e.key !== e.symbol) bag[e.key] = v;
+    if (e.shortName) bag[e.shortName] = v;
+    if (e.key && e.key !== e.shortName) bag[e.key] = v;
   };
 
   for (const e of Object.values(catalog)) {
     if (e.displayName) put(nameOverride, e, e.displayName);
-    if (e.unreliableAssay) { if (e.symbol) unreliable.add(e.symbol); if (e.key) unreliable.add(e.key); }
+    if (e.unreliableAssay) { if (e.shortName) unreliable.add(e.shortName); if (e.key) unreliable.add(e.key); }
     if (includeRanges && e.refDefault) {
       const b = boundsForSystem(e, e.refDefault, system);
       if (b) {
