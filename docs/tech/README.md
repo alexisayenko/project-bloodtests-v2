@@ -20,6 +20,12 @@ decisions — the "how it runs" layer.
 Terminology and clinical data are grounded in standards, not
 invented. These are the references the catalog and schema draw on.
 
+> **The evidence hierarchy — which sources map to which `evidenceLevel`
+> tier (guideline / reference-lab / textbook / consensus / heuristic),
+> how much to trust each (ADA, Mayo, ARUP, Tietz, eMedicine, PubChem…),
+> and how to cite them — lives in
+> [`reliable-sources.md`](reliable-sources.md).**
+
 - **LOINC** — <https://loinc.org> — codes for lab observations.
   Six axes: Component / Property / Time / System / Scale / Method.
   Each marker links to `loinc.org/<code>/`. **Does not carry
