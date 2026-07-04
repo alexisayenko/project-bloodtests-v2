@@ -86,7 +86,7 @@ export const STYLES = `
    capped to 13rem (that would crush the spanned data columns). */
 .labs.matrix tfoot .cost-label.marker-col { min-width: 0; max-width: none; }
 .labs.matrix thead .marker-col { z-index: 3; box-shadow: inset -2px 0 0 0 var(--_muted), inset 0 -1px 0 var(--_rule); }
-.labs.matrix .marker-col .analyte-name { font-weight: 500; display: block; }
+.labs.matrix .marker-col .analyte-name { font-weight: 500; display: inline; }
 .labs.matrix .marker-col .sym-loinc { display: block; font-size: 0.85em; }
 /* range (+status) on the left, price pushed to the right edge of the cell */
 .labs.matrix .marker-col .meta { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; font-size: 0.78em; }
