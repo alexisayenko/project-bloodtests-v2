@@ -15,6 +15,8 @@ import { INDEX_DEFS, type Markers } from "./definitions.js";
 export interface IndexBuildConfig {
   /** Patient age in years at a given draw date (for eGFR, FIB-4). */
   ageYearsForDraw?: (isoDate: string) => number | undefined;
+  /** Patient sex — selects the CKD-EPI eGFR coefficients. Defaults to "male" when absent. */
+  sex?: "male" | "female";
 }
 
 export interface IndexCol { id: string; date: string; labName: string }
@@ -64,7 +66,7 @@ export function buildIndices(draws: Draw[], config: IndexBuildConfig = {}): Inde
     const values: Record<string, IndexValue> = {};
     let n = 0;
     for (const c of cols) {
-      const ctx = { ageYears: config.ageYearsForDraw?.(c.date) };
+      const ctx = { ageYears: config.ageYearsForDraw?.(c.date), sex: config.sex };
       const v = d.fn(drawMap[c.id]!, ctx);
       if (v != null && Number.isFinite(v)) {
         values[c.id] = { v: Math.round(v * 100) / 100, z: zone(v, d.cut[0], d.cut[1], d.hi) };

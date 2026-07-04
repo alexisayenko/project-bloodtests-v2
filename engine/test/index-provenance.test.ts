@@ -51,4 +51,14 @@ describe("IndexCatalog clinical provenance (ADR-0007)", () => {
     ).map((d) => d.key);
     expect(offenders).toEqual([]);
   });
+
+  // LOINC identity is OPTIONAL (many indices are our own constructs with no
+  // LOINC term). Where present, it must be a well-formed LOINC code
+  // (digits + check digit, e.g. "9830-1").
+  it("any present loinc code is a well-formed LOINC identifier", () => {
+    const offenders = INDEX_DEFS.filter(
+      (d) => d.loinc != null && !/^\d+-\d$/.test(d.loinc),
+    ).map((d) => `${d.key}=${d.loinc}`);
+    expect(offenders).toEqual([]);
+  });
 });

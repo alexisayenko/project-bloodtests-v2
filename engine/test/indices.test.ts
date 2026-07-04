@@ -17,7 +17,7 @@ const CTX: IndexCtx = { ageYears: 43 };
 const GOLD: Record<string, number> = {
   ka: 3, tchdl: 4, ldlhdl: 2.4, aip: 0.117209, nonhdl: 150, remnant: 30,
   vldl: 30, apobapoa: 0.692308, tyg: 8.871365, gi: 11.875, homair: 1.874669,
-  cft: 93.163378, tlh: 100, te2: 16.666667, dhtt: 8, cortdhea: 60.994842,
+  cft: 93.163378, tlh: 100, te2: 16.666667, dhtt: 8, cortdhea: 0.060995, // corrected: both sides nmol/L (old homepage divided by DHEA-S in µmol/L, 1000× off)
   ft3ft4: 0.284597, deritis: 1.25, fib4: 0.961509, tsat: 28.571429,
   egfr: 95.771443, egfrcys: 95.735419, egfrcrcys: 98.326698,
 };
@@ -43,5 +43,20 @@ describe("index definitions — golden-master vs live homepage", () => {
   it("returns null when age is required but absent (eGFR)", () => {
     const egfr = INDEX_DEFS.find((d) => d.key === "egfr")!;
     expect(egfr.fn({ CREAT: 1.0 }, {})).toBeNull();
+  });
+
+  it("eGFR applies female CKD-EPI coefficients when sex is female (all lower than male)", () => {
+    const F: IndexCtx = { ...CTX, sex: "female" };
+    const egfr = INDEX_DEFS.find((d) => d.key === "egfr")!;
+    const egfrcys = INDEX_DEFS.find((d) => d.key === "egfrcys")!;
+    const egfrcrcys = INDEX_DEFS.find((d) => d.key === "egfrcrcys")!;
+    // same fixture (CREAT 1.0, Cystatin C 0.9, age 43) via the female equations
+    expect(egfr.fn(M, F)!).toBeCloseTo(71.693, 1);
+    expect(egfrcys.fn(M, F)!).toBeCloseTo(89.225, 1);
+    expect(egfrcrcys.fn(M, F)!).toBeCloseTo(82.593, 1);
+    // female estimate is lower than the male one for the same inputs
+    expect(egfr.fn(M, F)!).toBeLessThan(GOLD["egfr"]!);
+    // default (no sex) stays male — golden unchanged
+    expect(egfr.fn(M, CTX)!).toBeCloseTo(GOLD["egfr"]!, 5);
   });
 });
