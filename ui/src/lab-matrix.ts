@@ -100,7 +100,7 @@ class I18n {
 }
 
 /** Toolbar styling (mirrors the homepage .panel-controls buttons), scoped to the shadow. */
-const TOOLBAR_CSS = `
+export const TOOLBAR_CSS = `
 .labs-toolbar { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin: 0.4rem 0; }
 .labs-toolbar .lm-btn { font-size: 0.75rem; padding: 0.2rem 0.7rem; border: 1px solid var(--_rule); border-radius: 3px; background: var(--_bg); color: var(--_muted); cursor: pointer; }
 .labs-toolbar .lm-btn:hover { color: var(--_fg); border-color: var(--_fg); }

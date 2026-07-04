@@ -35,7 +35,6 @@ export const STYLES = `
   border: 1px solid var(--_rule-soft);
   border-radius: 3px;
 }
-}
 .labs.matrix {
   border-collapse: collapse;
   font-size: 0.82rem;
