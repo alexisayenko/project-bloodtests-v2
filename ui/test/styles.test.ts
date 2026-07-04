@@ -60,6 +60,12 @@ describe("shadow CSS carries the out-of-block .labs rules", () => {
     ".labs.matrix tr.unreliable .analyte-name",
     ".labs.matrix .ref-note",
     ".labs.matrix .muted",
+    ".rx-badge",
+    ".rx-K",
+    ".rx-D",
+    ".rx-S",
+    ".rx-G",
+    ".rx-planned.rx-K",
   ];
   for (const sel of REQUIRED) {
     it(`has "${sel}"`, () => {

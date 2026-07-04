@@ -334,19 +334,35 @@ describe("details-toggle (docs/product/features/details-toggle.md)", () => {
 
 // ---------------------------------------------------------------------------
 describe("panels-collapse (docs/product/features/panels-collapse.md)", () => {
-  it("expand-all / collapse-all buttons carry visible labels in both languages (v3 bug 2026-07-05)", () => {
+  it("a single collapse/expand toggle leads the toolbar, labeled by state, in both languages", () => {
     const el = document.createElement("lab-matrix") as LabMatrix;
     document.body.appendChild(el);
     const m = makeModel();
     m.i18n = { en: {}, ru: { "control.expandAll": "Развернуть все", "control.collapseAll": "Свернуть все" } };
     el.model = m;
-    const ex = sr(el).querySelector<HTMLElement>('[data-act="expand-all"]')!;
-    const co = sr(el).querySelector<HTMLElement>('[data-act="collapse-all"]')!;
-    expect(ex.textContent).toBe("Expand all");
-    expect(co.textContent).toBe("Collapse all");
+    // it is the first button in the toolbar (moved to the left)
+    const first = sr(el).querySelector<HTMLElement>(".labs-toolbar .lm-btn")!;
+    const tog = sr(el).querySelector<HTMLElement>('[data-act="collapse-toggle"]')!;
+    expect(first).toBe(tog);
+    // default load = all collapsed → toggle offers "Expand all"
+    expect(tog.textContent).toBe("Expand all");
+    click(tog);
+    expect(tog.textContent).toBe("Collapse all"); // now everything is open
     sr(el).querySelector<HTMLElement>('[data-act="lang"]')!.click();
-    expect(ex.textContent).toBe("Развернуть все");
-    expect(co.textContent).toBe("Свернуть все");
+    expect(tog.textContent).toBe("Свернуть все");
+    click(tog); // collapse all again
+    expect(tog.textContent).toBe("Развернуть все");
+  });
+
+  it("the toggle offers Collapse while any panel is open (mixed state)", () => {
+    const el = mount();
+    const tog = btn(el, "collapse-toggle");
+    expect(tog.textContent).toBe("Expand all"); // all collapsed
+    // open just one panel → not-all-collapsed → toggle flips to Collapse all
+    click(sr(el).querySelector('tr.panel-row[data-panel="Complete blood count (CBC)"]')!);
+    expect(tog.textContent).toBe("Collapse all");
+    click(tog); // collapses everything
+    expect(tog.textContent).toBe("Expand all");
   });
 
   it("on a first-ever load every panel opens collapsed", () => {
@@ -370,13 +386,13 @@ describe("panels-collapse (docs/product/features/panels-collapse.md)", () => {
     expect(row(el, "HGB").classList.contains("panel-collapsed")).toBe(true);
   });
 
-  it("expand-all / collapse-all act on every panel at once", () => {
+  it("the toggle acts on every panel at once", () => {
     const el = mount();
-    click(btn(el, "expand-all"));
+    click(btn(el, "collapse-toggle")); // all collapsed → expand all
     for (const pr of sr(el).querySelectorAll("tr.panel-row[data-panel]"))
       expect(pr.classList.contains("collapsed")).toBe(false);
     expect(row(el, "FT").classList.contains("panel-collapsed")).toBe(false);
-    click(btn(el, "collapse-all"));
+    click(btn(el, "collapse-toggle")); // → collapse all
     for (const pr of sr(el).querySelectorAll("tr.panel-row[data-panel]"))
       expect(pr.classList.contains("collapsed")).toBe(true);
     expect(row(el, "FT").classList.contains("panel-collapsed")).toBe(true);

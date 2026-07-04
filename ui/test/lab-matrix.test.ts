@@ -287,7 +287,8 @@ describe("<lab-matrix> behaviours (phase 3)", () => {
   it("renders a self-contained toolbar with default labels", () => {
     const el = fresh();
     const sr = el.shadowRoot!;
-    expect(sr.querySelectorAll(".labs-toolbar .lm-btn").length).toBe(5);
+    expect(sr.querySelectorAll(".labs-toolbar .lm-btn").length).toBe(4);
+    expect(sr.querySelector('[data-act="collapse-toggle"]')!.textContent).toBe("Expand all");
     expect(sr.querySelector('[data-act="units"]')!.textContent).toBe("Units: US");
     expect(sr.querySelector('[data-act="lang"]')!.textContent).toBe("Lang: EN");
     el.remove();

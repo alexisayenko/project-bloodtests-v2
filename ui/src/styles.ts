@@ -140,8 +140,10 @@ export const STYLES = `
 .labs.matrix.min-details .marker-col .loinc-codes { display: none; }
 .labs.matrix.min-details .marker-col .meta-price { display: none; }
 .labs.matrix.min-details .marker-col .meta-planned { display: none; }
-.na-mark { color: #b9882b; }
-@media (prefers-color-scheme: dark) { .na-mark { color: #d9bd7a; } }
+/* scheduled-draw marker — blue (yellow is reserved for warnings); matches the
+   table's existing .low blue so it stays on-palette */
+.na-mark { color: #2f6f9f; }
+@media (prefers-color-scheme: dark) { .na-mark { color: #6fa8d4; } }
 /* tap/click popup replacing the native cell tooltip (mobile-friendly) */
 .labs.matrix td.num.has-tip { cursor: pointer; }
 .labs.matrix td.num.has-tip:focus-visible { outline: 2px solid var(--_accent); outline-offset: -2px; }
@@ -216,4 +218,15 @@ export const STYLES = `
 .labs.matrix tr.unreliable .analyte-name { color: var(--_muted); font-weight: 400; }
 .labs.matrix .ref-note { display: block; color: var(--_muted); font-size: 0.66rem; font-style: italic; }
 .labs.matrix .muted { color: var(--_muted); }
+
+/* prescription badges (K/D/S/G) on scheduled-draw cells — style.css 1063-1070 */
+.rx-badge { margin-left: 4px; font-size: 0.58rem; font-weight: 700; border: 1px solid currentColor; border-radius: 3px; padding: 0 2px; vertical-align: middle; }
+.rx-K { color: #b9882b; }
+.rx-D { color: #1f5f8b; }
+.rx-S { color: #9a5ea3; }
+.rx-G { color: #4a8a4a; }
+.rx-planned.rx-K { color: #8f8672; } .rx-planned.rx-D { color: #6e7883; } .rx-planned.rx-S { color: #837985; } .rx-planned.rx-G { color: #717c69; }
+@media (prefers-color-scheme: dark) {
+  .rx-planned.rx-K { color: #a89f8a; } .rx-planned.rx-D { color: #8b95a0; } .rx-planned.rx-S { color: #9c92a0; } .rx-planned.rx-G { color: #90a08a; }
+}
 `;

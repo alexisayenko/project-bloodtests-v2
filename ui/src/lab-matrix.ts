@@ -309,16 +309,16 @@ export class LabMatrix extends HTMLElement {
         `</div>`
       : "";
 
-    // self-contained toolbar (US/SI · full/compact · EN/RU · expand/collapse all).
-    // Labels are set by applyState() in the active language.
+    // self-contained toolbar. Collapse/expand leads as a single toggle (offers
+    // "Expand all" when everything is collapsed, "Collapse all" otherwise);
+    // then US/SI · full/compact · EN/RU. Labels set by applyState() in-language.
     const toolbar =
       `<div class="labs-toolbar" part="toolbar">` +
+      `<button type="button" class="lm-btn" data-act="collapse-toggle"></button>` +
+      `<span class="lm-sep"></span>` +
       `<button type="button" class="lm-btn" data-act="units" aria-pressed="false"></button>` +
       `<button type="button" class="lm-btn" data-act="detail" aria-pressed="false"></button>` +
       `<button type="button" class="lm-btn" data-act="lang" aria-pressed="false"></button>` +
-      `<span class="lm-sep"></span>` +
-      `<button type="button" class="lm-btn" data-act="expand-all"></button>` +
-      `<button type="button" class="lm-btn" data-act="collapse-all"></button>` +
       `</div>`;
 
     // the tap/click popup (styled by #cell-popup rules; lives inside the shadow)
@@ -460,8 +460,22 @@ export class LabMatrix extends HTMLElement {
     this.applyDetail(this.minOn);
     const ex = this.q('[data-act="expand-all"]');
     if (ex) ex.textContent = this._i18n.text("control.expandAll", ru);
-    const co = this.q('[data-act="collapse-all"]');
-    if (co) co.textContent = this._i18n.text("control.collapseAll", ru);
+    this.applyCollapseToggleLabel();
+  }
+
+  /** Label the single collapse/expand toggle by current state (all-collapsed → offer Expand). */
+  private applyCollapseToggleLabel(): void {
+    const btn = this.q('[data-act="collapse-toggle"]');
+    if (!btn) return;
+    const allCollapsed = this.allPanelsCollapsed();
+    btn.textContent = this._i18n.text(allCollapsed ? "control.expandAll" : "control.collapseAll", this.ruOn);
+    btn.setAttribute("aria-pressed", String(!allCollapsed));
+  }
+
+  /** True when every panel is collapsed (the toggle then offers "Expand all"). */
+  private allPanelsCollapsed(): boolean {
+    const panelRows = this.qa("tr.panel-row[data-panel]") as HTMLElement[];
+    return panelRows.length > 0 && panelRows.every((pr) => this.collapsed.has(pr.getAttribute("data-panel") || ""));
   }
 
   /** Collapse/expand panels per the persisted set (default: all collapsed). */
@@ -480,6 +494,7 @@ export class LabMatrix extends HTMLElement {
       pr.classList.add("collapsible");
       this.applyPanel(pr);
     }
+    this.applyCollapseToggleLabel();
   }
 
   private applyPanel(pr: HTMLElement): void {
@@ -498,17 +513,21 @@ export class LabMatrix extends HTMLElement {
     else this.collapsed.add(name);
     this.applyPanel(pr);
     lsSet(LS.collapsed, JSON.stringify([...this.collapsed]));
+    this.applyCollapseToggleLabel();
   }
 
   private onAct(act: string): void {
     if (act === "units") { this.siOn = !this.siOn; this.applyUnits(this.siOn); lsSet(LS.units, this.siOn ? "si" : "us"); }
     else if (act === "detail") { this.minOn = !this.minOn; this.applyDetail(this.minOn); lsSet(LS.details, this.minOn ? "min" : "full"); }
     else if (act === "lang") { this.ruOn = !this.ruOn; this.applyLang(this.ruOn); lsSet(LS.lang, this.ruOn ? "ru" : "en"); }
-    else if (act === "expand-all" || act === "collapse-all") {
+    else if (act === "collapse-toggle") {
       const panelRows = this.qa("tr.panel-row[data-panel]") as HTMLElement[];
-      this.collapsed = act === "expand-all" ? new Set() : new Set(panelRows.map((pr) => pr.getAttribute("data-panel") || ""));
+      // all collapsed → expand every panel; otherwise collapse every panel
+      const expand = this.allPanelsCollapsed();
+      this.collapsed = expand ? new Set() : new Set(panelRows.map((pr) => pr.getAttribute("data-panel") || ""));
       for (const pr of panelRows) this.applyPanel(pr);
       lsSet(LS.collapsed, JSON.stringify([...this.collapsed]));
+      this.applyCollapseToggleLabel();
     }
   }
 
