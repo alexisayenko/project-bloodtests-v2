@@ -334,6 +334,21 @@ describe("details-toggle (docs/product/features/details-toggle.md)", () => {
 
 // ---------------------------------------------------------------------------
 describe("panels-collapse (docs/product/features/panels-collapse.md)", () => {
+  it("expand-all / collapse-all buttons carry visible labels in both languages (v3 bug 2026-07-05)", () => {
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    const m = makeModel();
+    m.i18n = { en: {}, ru: { "control.expandAll": "Развернуть все", "control.collapseAll": "Свернуть все" } };
+    el.model = m;
+    const ex = sr(el).querySelector<HTMLElement>('[data-act="expand-all"]')!;
+    const co = sr(el).querySelector<HTMLElement>('[data-act="collapse-all"]')!;
+    expect(ex.textContent).toBe("Expand all");
+    expect(co.textContent).toBe("Collapse all");
+    sr(el).querySelector<HTMLElement>('[data-act="lang"]')!.click();
+    expect(ex.textContent).toBe("Развернуть все");
+    expect(co.textContent).toBe("Свернуть все");
+  });
+
   it("on a first-ever load every panel opens collapsed", () => {
     const el = mount();
     for (const pr of sr(el).querySelectorAll("tr.panel-row[data-panel]"))

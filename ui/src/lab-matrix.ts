@@ -458,6 +458,10 @@ export class LabMatrix extends HTMLElement {
     // unit/detail button labels are language-dependent → refresh them
     this.applyUnits(this.siOn);
     this.applyDetail(this.minOn);
+    const ex = this.q('[data-act="expand-all"]');
+    if (ex) ex.textContent = this._i18n.text("control.expandAll", ru);
+    const co = this.q('[data-act="collapse-all"]');
+    if (co) co.textContent = this._i18n.text("control.collapseAll", ru);
   }
 
   /** Collapse/expand panels per the persisted set (default: all collapsed). */

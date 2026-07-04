@@ -43,3 +43,34 @@ describe("shadow stylesheets parse cleanly", () => {
     expect(braceProfile(STYLES.slice(0, idx)).min).toBe(0);
   });
 });
+
+/**
+ * Selector parity with the live page CSS. The port originally took only the
+ * main .labs block (style.css 878-1059); these rules live outside it and were
+ * silently absent from the shadow (v3 bug 2026-07-05: planned rows lost their
+ * italic/muted styling).
+ */
+describe("shadow CSS carries the out-of-block .labs rules", () => {
+  const REQUIRED = [
+    ".labs.matrix tfoot .cost-row td.cost-total",
+    ".labs.matrix .marker-col .mprice",
+    ".labs.matrix tr.planned-row .analyte-name",
+    ".labs.matrix tr.planned-row td.num",
+    ".labs.matrix tr.unreliable td.num",
+    ".labs.matrix tr.unreliable .analyte-name",
+    ".labs.matrix .ref-note",
+    ".labs.matrix .muted",
+  ];
+  for (const sel of REQUIRED) {
+    it(`has "${sel}"`, () => {
+      expect(STYLES).toContain(sel);
+    });
+  }
+
+  it("planned rows are italic + muted (the reported symptom)", () => {
+    const i = STYLES.indexOf(".labs.matrix tr.planned-row .analyte-name");
+    const body = STYLES.slice(i, STYLES.indexOf("}", i));
+    expect(body).toContain("font-style: italic");
+    expect(body).toContain("var(--_muted)");
+  });
+});

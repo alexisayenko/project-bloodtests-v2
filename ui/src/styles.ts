@@ -205,4 +205,15 @@ export const STYLES = `
   #cell-popup .ap-tag-personal { color: #c79ccb; }
 }
 .labs.matrix tfoot .cost-row th.cost-label { text-align: right; font-weight: 600; font-size: 0.72rem; color: var(--_muted); padding-right: 0.5rem; border-top: 2px solid var(--_rule-soft); }
+
+/* --- rules living outside the main .labs block in the live stylesheet
+       (style.css 1060-1103, 1400) — ported for parity --- */
+.labs.matrix tfoot .cost-row td.cost-total { text-align: center; font-weight: 600; font-size: 0.72rem; white-space: nowrap; border-top: 2px solid var(--_rule-soft); border-left: 1px solid var(--_rule-soft); }
+.labs.matrix .marker-col .mprice { white-space: nowrap; }
+.labs.matrix tr.planned-row .analyte-name { color: var(--_muted); font-weight: 400; font-style: italic; }
+.labs.matrix tr.planned-row td.num { opacity: 0.5; }
+.labs.matrix tr.unreliable td.num { color: var(--_muted); opacity: 0.6; font-style: italic; font-weight: 400; }
+.labs.matrix tr.unreliable .analyte-name { color: var(--_muted); font-weight: 400; }
+.labs.matrix .ref-note { display: block; color: var(--_muted); font-size: 0.66rem; font-style: italic; }
+.labs.matrix .muted { color: var(--_muted); }
 `;
