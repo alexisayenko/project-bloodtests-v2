@@ -8,6 +8,32 @@ spec is the durable home for a capability; tasks
 ([`../../tasks/`](../../tasks/)) are the ephemeral implementation
 log.
 
+## Feature index
+
+The capabilities documented so far, grouped by where they live.
+
+**Engine** (`@alexisayenko/bloodtests-engine` — data in, view-model out):
+
+- [`results-pivot`](results-pivot.md) — pivot observations across draws into the marker × date matrix
+- [`range-flag`](range-flag.md) — flag each result against its reference range into clinical zones
+- [`units-convert`](units-convert.md) — convert US ↔ SI, incl. mass ↔ molar via molar mass
+- [`indices-derive`](indices-derive.md) — compute derived indices (eGFR, ratios) from markers; sex-aware
+- [`provenance-cite`](provenance-cite.md) — attach a cited source to every clinical number (ADR-0007)
+- [`plan-overlay`](plan-overlay.md) — overlay a lab plan / scheduled draws onto the matrix
+- [`cost-estimate`](cost-estimate.md) — estimate per-draw cost from the per-lab price catalog (ADR-0008)
+
+**GUI** (`@alexisayenko/bloodtests-ui` — the `<lab-matrix>` web component):
+
+- [`lens-filter`](lens-filter.md) — filter the table to a clinical lens (cardio, IR, thyroid…)
+- [`units-toggle`](units-toggle.md) — switch the whole table between US and SI units
+- [`language-toggle`](language-toggle.md) — switch UI + content between English and Russian
+- [`details-toggle`](details-toggle.md) — switch between full and compact detail density
+- [`panels-collapse`](panels-collapse.md) — collapse/expand panels; expand-all / collapse-all
+- [`cell-inspect`](cell-inspect.md) — tap a result cell for its raw + SI detail
+- [`provenance-inspect`](provenance-inspect.md) — tap ⓘ for an analyte's range provenance
+- [`unreliable-warn`](unreliable-warn.md) — ⚠ warning that a result is flagged unreliable
+- [`loinc-link`](loinc-link.md) — each analyte's LOINC code(s), linked to loinc.org (ADR-0009)
+
 ## What a feature is
 
 A feature is the smallest unit that delivers value to the user — a
