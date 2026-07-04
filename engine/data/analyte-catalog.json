@@ -310,7 +310,7 @@
       {
         "code": "706-2",
         "longName": "Basophils/100 leukocytes in Blood by Automated count",
-        "property": "Naric",
+        "property": "NFr",
         "unit": "%",
         "system": "Bld"
       }
@@ -350,14 +350,14 @@
     "loincComponent": "Calcium",
     "loincs": [
       {
-        "code": "49765-1",
+        "code": "17861-6",
         "longName": "Calcium [Mass/volume] in Serum or Plasma",
         "property": "MCnc",
         "unit": "mg/dL",
         "system": "Ser/Plas"
       },
       {
-        "code": "17861-6",
+        "code": "2000-8",
         "longName": "Calcium [Moles/volume] in Serum or Plasma",
         "property": "SCnc",
         "unit": "mmol/L",
@@ -687,8 +687,8 @@
         "system": "Ser/Plas"
       },
       {
-        "code": "26454-9",
-        "longName": "Dihydrotestosterone [Mass/volume] in Serum or Plasma",
+        "code": "1848-1",
+        "longName": "Androstanolone [Mass/volume] in Serum or Plasma",
         "property": "MCnc",
         "unit": "ng/dL",
         "system": "Ser/Plas"
@@ -844,7 +844,7 @@
       {
         "code": "713-8",
         "longName": "Eosinophils/100 leukocytes in Blood by Automated count",
-        "property": "Naric",
+        "property": "NFr",
         "unit": "%",
         "system": "Bld"
       }
@@ -1596,7 +1596,7 @@
       {
         "code": "736-9",
         "longName": "Lymphocytes/100 leukocytes in Blood by Automated count",
-        "property": "Naric",
+        "property": "NFr",
         "unit": "%",
         "system": "Bld"
       }
@@ -1643,7 +1643,7 @@
         "system": "Ser/Plas"
       },
       {
-        "code": "21377-7",
+        "code": "2601-3",
         "longName": "Magnesium [Moles/volume] in Serum or Plasma",
         "property": "SCnc",
         "unit": "mmol/L",
@@ -1748,7 +1748,7 @@
       {
         "code": "5905-5",
         "longName": "Monocytes/100 leukocytes in Blood by Automated count",
-        "property": "Naric",
+        "property": "NFr",
         "unit": "%",
         "system": "Bld"
       }
@@ -1882,7 +1882,7 @@
       {
         "code": "770-8",
         "longName": "Neutrophils/100 leukocytes in Blood by Automated count",
-        "property": "Naric",
+        "property": "NFr",
         "unit": "%",
         "system": "Bld"
       }
@@ -1974,7 +1974,7 @@
     "loincComponent": "Prolactin",
     "loincs": [
       {
-        "code": "15081-3",
+        "code": "2842-3",
         "longName": "Prolactin [Mass/volume] in Serum or Plasma",
         "property": "MCnc",
         "unit": "ng/mL",
@@ -2079,13 +2079,6 @@
       {
         "code": "13967-5",
         "longName": "Sex hormone binding globulin [Moles/volume] in Serum or Plasma",
-        "property": "SCnc",
-        "unit": "nmol/L",
-        "system": "Ser/Plas"
-      },
-      {
-        "code": "2942-1",
-        "longName": "Sex hormone binding globulin [Moles/volume] in Serum or Plasma (older/alternate code)",
         "property": "SCnc",
         "unit": "nmol/L",
         "system": "Ser/Plas"

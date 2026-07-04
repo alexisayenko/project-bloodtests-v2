@@ -1,5 +1,11 @@
 // Assemble the AnalyteCatalog from the per-panel research JSON files.
 //
+// ⚠ BOOTSTRAP ONLY — do NOT re-run against a curated catalog. data/analyte-catalog.json
+// is now the hand-maintained source of truth: it carries curation the research files
+// don't (added molar LOINCs, LOINC-code corrections from the loinc.org audit). Running
+// this again would OVERWRITE that curation with the raw research merge. Kept as the
+// provenance archive of how the catalog was first assembled.
+//
 //   node scripts/build-catalog.mjs
 //
 // Reads the G*.json research files (each a JSON array of AnalyteEntry-shaped
