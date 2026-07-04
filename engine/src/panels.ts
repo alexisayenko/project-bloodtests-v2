@@ -31,13 +31,12 @@ export const PANELS: Panel[] = [
   { name: "Kidney", keys: ["Urea", "CREAT", "Uric Acid", "Cystatin C", "ACR"], loincPanel: "24362-6" }, // Renal function panel
   // Electrolytes + macro-minerals + trace elements + vitamins united into one
   // app grouping (spans multiple standard batteries, so no single loincPanel).
-  { name: "Electrolytes, minerals & vitamins", keys: ["Na", "K", "Cl", "Ca", "P", "Mg", "Fe", "Zn", "Cu", "Se", "Vit D", "B12", "Folic Acid"] },
+  { name: "Electrolytes, minerals & vitamins", keys: ["Na", "K", "Cl", "Ca", "P", "Mg", "PTH", "Fe", "Zn", "Cu", "Se", "Vit D", "B12", "Folic Acid"] },
   { name: "Iron studies", keys: ["TIBC", "TRF", "Ferritin"] }, // app grouping
   { name: "Thyroid (HPT axis)", keys: ["TSH", "FT4", "FT3", "Anti-TPO", "Anti-Tg"] }, // app axis lens — not a standard panel
   { name: "Sex hormones (HPG axis)", keys: ["T", "FT", "DHT", "SHBG", "E2", "FSH", "LH", "PRL"] }, // app axis lens
   { name: "Adrenal (HPA axis)", keys: ["Cortisol", "ACTH", "DHEA-S"] }, // app axis lens
   { name: "GH / IGF-1 axis", keys: ["IGF-1"] }, // app axis lens
-  { name: "Calcium-regulating hormones", keys: ["PTH"] }, // app grouping
   { name: "Inflammation & coagulation", keys: ["ESR", "CRP", "hsCRP", "Homocysteine", "D-Dimer"] }, // app grouping
   { name: "Immunoglobulins", keys: ["IgA", "IgG", "IgM"] }, // app grouping
   { name: "Tumor markers", keys: ["PSA", "Calcitonin"] }, // app grouping
