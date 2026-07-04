@@ -447,7 +447,7 @@
   },
   "Cortisol": {
     "key": "Cortisol",
-    "shortName": null,
+    "shortName": "Cortisol",
     "displayName": "Cortisol",
     "loincComponent": "Cortisol",
     "loincs": [
