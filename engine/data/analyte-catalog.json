@@ -251,6 +251,62 @@
     "panel": "Liver & proteins",
     "unreliableAssay": false
   },
+  "B12": {
+    "key": "B12",
+    "shortName": "B12",
+    "displayName": "Vitamin B12 (cobalamin)",
+    "loincComponent": "Cobalamin (Vitamin B12)",
+    "loincs": [
+      {
+        "code": "2132-9",
+        "longName": "Cobalamin (Vitamin B12) [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14685-2",
+        "longName": "Cobalamin (Vitamin B12) [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "pmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 1355.37,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5311498 (Cyanocobalamin / Vitamin B12), C63H88CoN14O14P, molecular weight 1355.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5311498 . Conversion: 1 pg/mL = 0.7378 pmol/L.",
+      "year": null,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5311498",
+      "doi": null,
+      "quote": null
+    },
+    "refDefault": {
+      "min": 200,
+      "max": 800,
+      "unit": "pg/mL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Serum cobalamin; equivalent SI ~148-590 pmol/L (x0.7378). Total B12 is an insensitive marker: values 200-350 pg/mL can still be deficient, so borderline/low results are confirmed with methylmalonic acid (+/- homocysteine), which rise in true deficiency. Falsely low in folate deficiency/pregnancy; falsely high in liver disease/myeloproliferative states."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine, Tietz-based)",
+        "document": "Lab Values, Normal Adult: Laboratory Reference Ranges in Healthy Adults (article 2172316)",
+        "year": 2025,
+        "url": "https://emedicine.medscape.com/article/2172316-overview",
+        "doi": null,
+        "quote": "Vitamin B12: 200-800 pg/mL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Cobalamin is required for hematopoiesis and neurological function; deficiency causes macrocytic (megaloblastic) anemia and irreversible neuropathy/subacute combined degeneration. Screened with folate; confirmed with methylmalonic acid when borderline.",
+    "frequency": "annual",
+    "panel": "Vitamins & minerals",
+    "unreliableAssay": false
+  },
   "BASO#": {
     "key": "BASO#",
     "shortName": "BASO#",
@@ -401,6 +457,48 @@
     "why": "Total serum calcium (protein-bound + ionized) reflects skeletal and mineral homeostasis under PTH and vitamin D; abnormalities point to parathyroid disease, malignancy, vitamin D disorders and CKD.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "Calcitonin": {
+    "key": "Calcitonin",
+    "shortName": "Calcitonin",
+    "displayName": "Calcitonin",
+    "loincComponent": "Calcitonin",
+    "loincs": [
+      {
+        "code": "1992-7",
+        "longName": "Calcitonin [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0,
+      "max": 7.5,
+      "unit": "pg/mL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "adult male (>=3 years)",
+      "note": "Sex-specific: ARUP males (3 years and older) 0.0-7.5 pg/mL (females 0.0-5.1 pg/mL) - men have a larger thyroid C-cell mass and higher basal calcitonin. Mayo cites a comparable male upper limit (~<=8.4 pg/mL). LOINC 1992-7 example UCUM unit is ng/L, numerically identical to pg/mL (1 ng/L = 1 pg/mL). A basal calcitonin markedly above the reference is the key biochemical marker of medullary thyroid carcinoma / C-cell hyperplasia."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Calcitonin (test 0070006) - Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0070006",
+        "doi": null,
+        "quote": "Male 3 years and older: 0.0-7.5 pg/mL; Female 3 years and older: 0.0-5.1 pg/mL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Thyroid C-cell hormone; the principal tumor marker for medullary thyroid carcinoma (MTC) and C-cell hyperplasia (elevated basal, or markedly hyperresponsive to calcium/pentagastrin stimulation), and used to monitor for MTC recurrence.",
+    "frequency": null,
+    "panel": "Tumor markers",
     "unreliableAssay": false
   },
   "Cl": {
@@ -561,6 +659,48 @@
     "panel": "Kidney, electrolytes & minerals",
     "unreliableAssay": false
   },
+  "CRP": {
+    "key": "CRP",
+    "shortName": "CRP",
+    "displayName": "C-reactive protein",
+    "loincComponent": "C reactive protein",
+    "loincs": [
+      {
+        "code": "1988-5",
+        "longName": "C reactive protein [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": null,
+      "max": 5,
+      "unit": "mg/L",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult (not sex-specific)",
+      "note": "Standard (non-high-sensitivity) CRP. ARUP reports <0.5 mg/dL, which equals <5.0 mg/L (1 mg/dL = 10 mg/L); the catalog unit is mg/L per LOINC. CRP is a non-specific acute-phase reactant that rises within hours of inflammation, infection or tissue injury. For cardiovascular risk stratification use the high-sensitivity assay (hsCRP) instead, which resolves the low <10 mg/L range."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "C-Reactive Protein (test 0050180) - Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0050180",
+        "doi": null,
+        "quote": "C-Reactive Protein <0.5 mg/dL (= <5.0 mg/L)."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Non-specific acute-phase reactant; screens for and tracks the intensity of systemic inflammation/infection and monitors response to treatment. Complements ESR (rises and falls faster).",
+    "frequency": null,
+    "panel": "Inflammation & coagulation",
+    "unreliableAssay": false
+  },
   "D-BIL": {
     "key": "D-BIL",
     "shortName": "D-BIL",
@@ -611,6 +751,56 @@
     "why": "Conjugated bilirubin fraction; elevation points to hepatocellular dysfunction or biliary obstruction (cholestasis) rather than hemolysis/Gilbert syndrome.",
     "frequency": null,
     "panel": "Liver & proteins",
+    "unreliableAssay": false
+  },
+  "D-Dimer": {
+    "key": "D-Dimer",
+    "shortName": "D-Dimer",
+    "displayName": "D-dimer",
+    "loincComponent": "Fibrin D-dimer FEU",
+    "loincs": [
+      {
+        "code": "48065-7",
+        "longName": "Fibrin D-dimer FEU [Mass/volume] in Platelet poor plasma",
+        "property": "MCnc",
+        "unit": "ng/mL FEU",
+        "system": "PPP"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": null,
+      "max": 500,
+      "unit": "ng/mL FEU",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "UNIT CAVEAT: D-dimer is reported either in Fibrinogen-Equivalent Units (FEU) or D-Dimer Units (DDU); FEU ~ 2x DDU, so the cutoff must match the reporting unit (LOINC 48065-7 is the FEU code). The <500 ng/mL FEU (= <0.5 mg/L FEU) threshold is the VTE-exclusion cutoff used with a low/moderate clinical pretest probability, NOT a health 'normal range'. Age-adjusted cutoff for patients >50 y = age x 10 ng/mL FEU. ARUP's DIC assay reports 0.0-0.4 ug/mL FEU (= 0-400 ng/mL FEU) on a different platform. Specimen is platelet-poor plasma."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "DIMER - D-Dimer, Plasma (unit code 602174) - Reference Values / Interpretation",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/602174",
+        "doi": null,
+        "quote": "D-dimer values less than or equal to 500 ng/mL fibrinogen-equivalent units (FEU) are normal; a value <=500 ng/mL FEU may be used with clinical pretest probability to exclude DVT and PE."
+      },
+      {
+        "organization": "ARUP Laboratories",
+        "document": "D-Dimer (test 0030057) - Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0030057",
+        "doi": null,
+        "quote": "0.0-0.4 ug/mL (Results are reported in Fibrinogen Equivalent Units; 0.4 ug/mL FEU = 400 ng/mL FEU)."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Fibrin degradation product; a highly sensitive but non-specific marker of active clot breakdown. A value below the (age-adjusted) FEU cutoff, with low/moderate pretest probability, safely excludes DVT/PE; elevation is non-specific (VTE, DIC, infection, malignancy, recent surgery, pregnancy).",
+    "frequency": null,
+    "panel": "Inflammation & coagulation",
     "unreliableAssay": false
   },
   "DHEA-S": {
@@ -877,10 +1067,214 @@
     "panel": "FBC — Leukocytes & differential",
     "unreliableAssay": false
   },
+  "ESR": {
+    "key": "ESR",
+    "shortName": "ESR",
+    "displayName": "Erythrocyte sedimentation rate",
+    "loincComponent": "Erythrocyte sedimentation rate",
+    "loincs": [
+      {
+        "code": "4537-7",
+        "longName": "Erythrocyte [Sedimentation Rate] in Blood by Westergren method",
+        "property": "Vel",
+        "unit": "mm/h",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0,
+      "max": 15,
+      "unit": "mm/hr",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "adult male",
+      "note": "Westergren method. Sex- and age-dependent: adult males <=15 mm/h (females <=20 mm/h). ESR rises physiologically with age; a widely used upper-limit rule of thumb is age/2 for men (and (age+10)/2 for women), so an older man's ceiling is higher (Mayo age-bands men 51+ y up to ~20 mm/h). Non-specific - elevated by inflammation, infection, anemia, pregnancy and paraproteinemia."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape / eMedicine (Tietz-based laboratory reference)",
+        "document": "Erythrocyte Sedimentation Rate: Reference Range (article 2085201)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085201-overview",
+        "doi": null,
+        "quote": "Normal results for the Westergren method are as follows: Males: <=15 mm/h; Females: <=20 mm/h; Children: <=10 mm/h; Newborns: 0-2 mm/h; Older adults: up to 40 mm/h."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Non-specific marker of inflammation (rises/falls slowly); used to screen for and monitor inflammatory/rheumatologic conditions (e.g. polymyalgia rheumatica, giant cell arteritis) and infections, usually alongside CRP.",
+    "frequency": null,
+    "panel": "Inflammation & coagulation",
+    "unreliableAssay": false
+  },
+  "Fe": {
+    "key": "Fe",
+    "shortName": "Fe",
+    "displayName": "Iron (serum)",
+    "loincComponent": "Iron",
+    "loincs": [
+      {
+        "code": "2498-4",
+        "longName": "Iron [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ug/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14798-3",
+        "longName": "Iron [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 55.845,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 23925 (Iron, element), standard atomic weight 55.845 g/mol — https://pubchem.ncbi.nlm.nih.gov/element/26/Iron . Conversion: 1 ug/dL = 0.1791 umol/L.",
+      "year": null,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/element/26/Iron",
+      "doi": null,
+      "quote": null
+    },
+    "refDefault": {
+      "min": 80,
+      "max": 180,
+      "unit": "ug/dL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "adult male",
+      "note": "Adult-male interval; equivalent SI 14-32 umol/L (x0.1791). Serum iron has a marked DIURNAL variation (higher in the morning, lower in the evening) and swings with recent intake, so a single value is interpreted alongside TIBC/transferrin saturation and ferritin, not alone."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine, Tietz-based)",
+        "document": "Iron: Reference Range, Interpretation, Collection and Panels (article 2085704)",
+        "year": 2025,
+        "url": "https://emedicine.medscape.com/article/2085704-overview",
+        "doi": null,
+        "quote": "The serum iron reference ranges are as follows: Males: 80-180 mcg/dL or 14-32 umol/L (SI units); Females: 60-160 mcg/dL or 11-29 umol/L (SI units)."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Circulating iron bound to transferrin; part of the iron-studies panel used with TIBC, transferrin saturation and ferritin to distinguish iron deficiency from iron overload and anemia of chronic disease.",
+    "frequency": "annual",
+    "panel": "Iron studies",
+    "unreliableAssay": false
+  },
+  "Ferritin": {
+    "key": "Ferritin",
+    "shortName": "Ferritin",
+    "displayName": "Ferritin",
+    "loincComponent": "Ferritin",
+    "loincs": [
+      {
+        "code": "2276-4",
+        "longName": "Ferritin [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 12,
+      "max": 300,
+      "unit": "ng/mL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "adult",
+      "note": "Adult-male interval (Medscape/Tietz-based normal adult lab values). Ferritin is a protein (no standard molar unit), so ng/mL = mcg/L numerically and no molar LOINC/conversion applies. WHO defines iron deficiency in apparently healthy adults as serum ferritin <15 mcg/L; ferritin is an acute-phase reactant and rises with inflammation/liver disease, so a 'normal' value does not exclude deficiency when CRP is high."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine, Tietz-based)",
+        "document": "Lab Values, Normal Adult: Laboratory Reference Ranges in Healthy Adults (article 2172316)",
+        "year": 2025,
+        "url": "https://emedicine.medscape.com/article/2172316-overview",
+        "doi": null,
+        "quote": "Ferritin: Females: 10-150 ng/mL or 10-150 mcg/L; males: 12-300 ng/mL or 12-300 mcg/L."
+      },
+      {
+        "organization": "World Health Organization (WHO)",
+        "document": "WHO guideline on use of ferritin concentrations to assess iron status in individuals and populations (Executive summary)",
+        "year": 2020,
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK569877/",
+        "doi": null,
+        "quote": "A single threshold cut-off value of <15 ug/L is recommended to define iron deficiency in otherwise apparently healthy adults (aged >=20 years)."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Primary marker of body iron stores; low ferritin is the most specific indicator of iron-deficiency anemia, while high ferritin flags iron overload (hemochromatosis) or, non-specifically, inflammation/liver injury (acute-phase reactant).",
+    "frequency": "annual",
+    "panel": "Iron studies",
+    "unreliableAssay": false
+  },
+  "Folic Acid": {
+    "key": "Folic Acid",
+    "shortName": "Folic Acid",
+    "displayName": "Folate",
+    "loincComponent": "Folate",
+    "loincs": [
+      {
+        "code": "2284-8",
+        "longName": "Folate [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14732-2",
+        "longName": "Folate [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "nmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 441.4,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 6037 (Folic acid / Vitamin B9), C19H19N7O6, molecular weight 441.4 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/6037 . Conversion: 1 ng/mL = 2.266 nmol/L.",
+      "year": null,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/6037",
+      "doi": null,
+      "quote": null
+    },
+    "refDefault": {
+      "min": 2,
+      "max": 20,
+      "unit": "ng/mL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Serum folate; equivalent SI ~4.5-45.3 nmol/L (x2.266). Serum folate reflects recent intake and is an unreliable index of tissue stores; biochemical deficiency is <3 ng/mL (<6.7 nmol/L). Since US folic-acid food fortification, higher adult reference values (5.8-32.8 ng/mL) have been proposed. RBC folate better reflects body stores."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine, Tietz-based)",
+        "document": "Folate (Folic Acid): Reference Range, Interpretation, Collection and Panels (article 2085523)",
+        "year": 2025,
+        "url": "https://emedicine.medscape.com/article/2085523-overview",
+        "doi": null,
+        "quote": "The reference range of the plasma folate level varies by age, as follows: Adults: 2-20 ng/mL, 2-20 ug/L, or 4.5-45.3 nmol/L."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Folate is required for DNA synthesis and hematopoiesis; deficiency causes macrocytic (megaloblastic) anemia. Measured alongside B12 because the two deficiencies overlap and giving folate alone can mask B12 deficiency while its neuropathy progresses.",
+    "frequency": "annual",
+    "panel": "Vitamins & minerals",
+    "unreliableAssay": false
+  },
   "FSH": {
     "key": "FSH",
     "shortName": "FSH",
-    "displayName": "FSH",
+    "displayName": "Follicle-stimulating hormone (FSH)",
     "loincComponent": "Follitropin",
     "loincs": [
       {
@@ -1246,6 +1640,56 @@
     "panel": "Lipids & glycemic",
     "unreliableAssay": false
   },
+  "HCT": {
+    "key": "HCT",
+    "shortName": "HCT",
+    "displayName": "Haematocrit",
+    "loincComponent": "Hematocrit",
+    "loincs": [
+      {
+        "code": "4544-3",
+        "longName": "Hematocrit [Volume Fraction] of Blood by Automated count",
+        "property": "VFr",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 40,
+      "max": 50,
+      "unit": "%",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "adult",
+      "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021) adult male (16-150 y) interval 40-50 %. StatPearls gives a wider 40-54 % for adult men. Hematocrit is a volume fraction (VFr) reported as % packed red-cell volume."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "University of Michigan / Michigan Medicine (MLabs)",
+        "document": "Complete Blood Count (CBC) - Sysmex XN-9000 Reference Ranges 2021, Michigan Medicine Hematopathology Lab",
+        "year": 2021,
+        "url": "https://mlabs.umich.edu/tests/complete-blood-count-cbc",
+        "doi": null,
+        "quote": "HCT male ... 16-150 yr. 40 - 50 %"
+      },
+      {
+        "organization": "StatPearls / NCBI Bookshelf",
+        "document": "Normal and Abnormal Complete Blood Count With Differential (NBK604207)",
+        "year": 2024,
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK604207/",
+        "doi": null,
+        "quote": "The normal reference interval is usually 40% to 54% in adult men and 36% to 48% in adult women."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Packed red-cell volume fraction; corroborates hemoglobin for anemia vs erythrocytosis and is sensitive to plasma-volume (hydration) shifts.",
+    "frequency": "annual",
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false
+  },
   "HDL-C": {
     "key": "HDL-C",
     "shortName": "HDL-C",
@@ -1306,6 +1750,148 @@
     "panel": "Lipids & glycemic",
     "unreliableAssay": false
   },
+  "HGB": {
+    "key": "HGB",
+    "shortName": "HGB",
+    "displayName": "Hemoglobin",
+    "loincComponent": "Hemoglobin",
+    "loincs": [
+      {
+        "code": "718-7",
+        "longName": "Hemoglobin [Mass/volume] in Blood",
+        "property": "MCnc",
+        "unit": "g/dL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 13.5,
+      "max": 17,
+      "unit": "g/dL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "adult",
+      "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021) adult male (16-150 y) interval 13.5-17.0 g/dL. WHO/StatPearls quote a wider 13-18 g/dL for adult men. Hemoglobin is reported in mass concentration (g/dL; SI g/L, same MCnc property); no clinically used molar conversion for the CBC index."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "University of Michigan / Michigan Medicine (MLabs)",
+        "document": "Complete Blood Count (CBC) - Sysmex XN-9000 Reference Ranges 2021, Michigan Medicine Hematopathology Lab",
+        "year": 2021,
+        "url": "https://mlabs.umich.edu/tests/complete-blood-count-cbc",
+        "doi": null,
+        "quote": "HGB male ... 16-150 yr. 13.5 - 17.0 g/dl"
+      },
+      {
+        "organization": "StatPearls / NCBI Bookshelf",
+        "document": "Normal and Abnormal Complete Blood Count With Differential (NBK604207)",
+        "year": 2024,
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK604207/",
+        "doi": null,
+        "quote": "According to the World Health Organization (WHO), normal references for hemoglobin levels are 13 to 18 g/dL in adult men and 12 to 16 g/dL in adult women who are not pregnant."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Primary measure of blood oxygen-carrying capacity; the defining value for anemia (low) and erythrocytosis/polycythemia (high).",
+    "frequency": "annual",
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false
+  },
+  "hsCRP": {
+    "key": "hsCRP",
+    "shortName": "hsCRP",
+    "displayName": "High-sensitivity C-reactive protein",
+    "loincComponent": "C reactive protein",
+    "loincs": [
+      {
+        "code": "30522-7",
+        "longName": "C reactive protein [Mass/volume] in Serum or Plasma by High sensitivity method",
+        "property": "MCnc",
+        "unit": "mg/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": null,
+      "max": 3,
+      "unit": "mg/L",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult (not sex-specific)",
+      "note": "hsCRP is the SAME analyte as CRP measured with a low-range (high-sensitivity) assay for cardiovascular risk stratification, NOT a distinct molecule. There is no classic 'normal range'; the AHA/CDC (Pearson 2003) risk tiers are used as thresholds: LOW risk <1.0 mg/L, AVERAGE/moderate risk 1.0-3.0 mg/L, HIGH risk >3.0 mg/L. This refDefault encodes the upper (high-risk) threshold >3.0 mg/L (operator lt, max 3). Values >10 mg/L suggest acute inflammation/infection rather than baseline vascular risk and the test should be repeated."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "American Heart Association / U.S. Centers for Disease Control and Prevention (Pearson TA et al.)",
+        "document": "Markers of Inflammation and Cardiovascular Disease: Application to Clinical and Public Health Practice - AHA/CDC Scientific Statement (Circulation)",
+        "year": 2003,
+        "url": "https://www.ahajournals.org/doi/10.1161/01.CIR.0000052939.59093.45",
+        "doi": "10.1161/01.CIR.0000052939.59093.45",
+        "quote": "hs-CRP cut points of <1, 1 to 3, and >3 mg/L correspond to low, average, and high relative risk of cardiovascular events."
+      },
+      {
+        "organization": "US Pharmacist / PMC (review of the AHA/CDC hsCRP thresholds)",
+        "document": "C-Reactive Protein and High-Sensitivity C-Reactive Protein: An Update for Clinicians (PMC2639398)",
+        "year": 2011,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2639398/",
+        "doi": null,
+        "quote": "Some studies stratified patients by hsCRP level-less than 1 mg/l, 1-3 mg/l, and greater than 3 mg/l-and showed that these cutoffs correspond with lower, moderate and higher risk groups, respectively."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Low-range CRP assay used for cardiovascular risk stratification: hsCRP adds prognostic information beyond the standard lipid panel. AHA/CDC tiers (<1 / 1-3 / >3 mg/L) map to low/average/high vascular risk.",
+    "frequency": null,
+    "panel": "Inflammation & coagulation",
+    "unreliableAssay": false
+  },
+  "IgA": {
+    "key": "IgA",
+    "shortName": "IgA",
+    "displayName": "Immunoglobulin A",
+    "loincComponent": "IgA",
+    "loincs": [
+      {
+        "code": "2458-8",
+        "longName": "IgA [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 68,
+      "max": 408,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult, >=19 years (not sex-specific)",
+      "note": "ARUP age-banded adult interval (19 years and older: 68-408 mg/dL). Serum IgA rises through childhood and plateaus in adulthood, so the >=19 y band applies. Low IgA suggests selective IgA deficiency or common variable immunodeficiency; diffuse elevation occurs with chronic infection/inflammation or liver disease, a monoclonal spike with IgA myeloma."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Immunoglobulins (IgG, IgA, IgM), Serum (test 0050630) - Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0050630",
+        "doi": null,
+        "quote": "Immunoglobulin A - 19 years and older: 68-408 mg/dL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Main mucosal-immunity immunoglobulin; measured to work up recurrent infection, suspected immunodeficiency (selective IgA deficiency, CVID) and monoclonal gammopathy/IgA myeloma.",
+    "frequency": null,
+    "panel": "Immunoglobulins",
+    "unreliableAssay": false
+  },
   "IGF-1": {
     "key": "IGF-1",
     "shortName": "IGF-1",
@@ -1346,6 +1932,48 @@
     "why": "GH-dependent hepatic peptide; stable integrated index of growth-hormone status used to screen/monitor acromegaly (high) and adult GH deficiency (low). Must be read against the age/sex-matched band.",
     "frequency": null,
     "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false
+  },
+  "IgG": {
+    "key": "IgG",
+    "shortName": "IgG",
+    "displayName": "Immunoglobulin G",
+    "loincComponent": "IgG",
+    "loincs": [
+      {
+        "code": "2465-3",
+        "longName": "IgG [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 768,
+      "max": 1632,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult, >=19 years (not sex-specific)",
+      "note": "ARUP age-banded adult interval (19 years and older: 768-1632 mg/dL). IgG is the most abundant serum immunoglobulin and the mediator of long-term humoral immunity. Low IgG (hypogammaglobulinemia) points to primary/secondary immunodeficiency or protein loss; polyclonal elevation reflects chronic infection/inflammation/autoimmunity or liver disease, a monoclonal spike IgG myeloma/MGUS."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Immunoglobulins (IgG, IgA, IgM), Serum (test 0050630) - Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0050630",
+        "doi": null,
+        "quote": "Immunoglobulin G - 19 years and older: 768-1632 mg/dL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Principal immunoglobulin of long-term humoral immunity; measured to evaluate recurrent infections, suspected immunodeficiency, and to detect/monitor monoclonal gammopathy (IgG myeloma/MGUS).",
+    "frequency": null,
+    "panel": "Immunoglobulins",
     "unreliableAssay": false
   },
   "Insulin": {
@@ -1629,6 +2257,156 @@
     "panel": "FBC — Leukocytes & differential",
     "unreliableAssay": false
   },
+  "MCH": {
+    "key": "MCH",
+    "shortName": "MCH",
+    "displayName": "Mean Corpuscular Hemoglobin",
+    "loincComponent": "Erythrocyte mean corpuscular hemoglobin",
+    "loincs": [
+      {
+        "code": "785-6",
+        "longName": "MCH [Entitic mass] by Automated count",
+        "property": "EntMass",
+        "unit": "pg",
+        "system": "RBC"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 27,
+      "max": 32,
+      "unit": "pg",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021) adult (16-150 y) interval 27-32 pg, not sex-partitioned; StatPearls concurs (27-32 pg/RBC). Average hemoglobin mass per red cell; tracks MCV."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "University of Michigan / Michigan Medicine (MLabs)",
+        "document": "Complete Blood Count (CBC) - Sysmex XN-9000 Reference Ranges 2021, Michigan Medicine Hematopathology Lab",
+        "year": 2021,
+        "url": "https://mlabs.umich.edu/tests/complete-blood-count-cbc",
+        "doi": null,
+        "quote": "MCH ... 16-150 yr. 27 - 32 pg"
+      },
+      {
+        "organization": "StatPearls / NCBI Bookshelf",
+        "document": "Normal and Abnormal Complete Blood Count With Differential (NBK604207)",
+        "year": 2024,
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK604207/",
+        "doi": null,
+        "quote": "The normal reference interval in adults is usually 27 to 32 pg/RBC."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Average hemoglobin content per red cell; supports MCV in characterizing hypochromic vs normochromic anemia.",
+    "frequency": "annual",
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false
+  },
+  "MCHC": {
+    "key": "MCHC",
+    "shortName": "MCHC",
+    "displayName": "Mean Corpuscular Hemoglobin Concentration",
+    "loincComponent": "Erythrocyte mean corpuscular hemoglobin concentration",
+    "loincs": [
+      {
+        "code": "786-4",
+        "longName": "MCHC [Entitic Mass/volume] in Red Blood Cells by Automated count",
+        "property": "EntMCnc",
+        "unit": "g/dL",
+        "system": "RBC"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 32,
+      "max": 35,
+      "unit": "g/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021) adult (16-150 y) interval 32-35 g/dL, not sex-partitioned. StatPearls describes a normal density of approximately 34% Hb/cell. High values (>36) flag spherocytosis or analytic interference."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "University of Michigan / Michigan Medicine (MLabs)",
+        "document": "Complete Blood Count (CBC) - Sysmex XN-9000 Reference Ranges 2021, Michigan Medicine Hematopathology Lab",
+        "year": 2021,
+        "url": "https://mlabs.umich.edu/tests/complete-blood-count-cbc",
+        "doi": null,
+        "quote": "MCHC ... 16-150 yr. 32 - 35 g/dl"
+      },
+      {
+        "organization": "StatPearls / NCBI Bookshelf",
+        "document": "Normal and Abnormal Complete Blood Count With Differential (NBK604207)",
+        "year": 2024,
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK604207/",
+        "doi": null,
+        "quote": "Red blood cell quantity of Hb is regulated and is normally limited to an optimal density of approximately 34% Hb/cell."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Hemoglobin concentration within red cells; low = hypochromia (iron deficiency), high (>36) suggests spherocytosis or analytic artifact (lipemia, cold agglutinins).",
+    "frequency": "annual",
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false
+  },
+  "MCV": {
+    "key": "MCV",
+    "shortName": "MCV",
+    "displayName": "Mean Corpuscular Volume",
+    "loincComponent": "Erythrocyte mean corpuscular volume",
+    "loincs": [
+      {
+        "code": "787-2",
+        "longName": "MCV [Entitic mean volume] in Red Blood Cells by Automated count",
+        "property": "EntVol",
+        "unit": "fL",
+        "system": "RBC"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 79,
+      "max": 99,
+      "unit": "fL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021) adult (16-150 y) interval 79-99 fL, not sex-partitioned; StatPearls gives 80-100 fL. LOINC property displayed as EntMeanVol (entitic mean volume). Classifies anemia as microcytic/normocytic/macrocytic."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "University of Michigan / Michigan Medicine (MLabs)",
+        "document": "Complete Blood Count (CBC) - Sysmex XN-9000 Reference Ranges 2021, Michigan Medicine Hematopathology Lab",
+        "year": 2021,
+        "url": "https://mlabs.umich.edu/tests/complete-blood-count-cbc",
+        "doi": null,
+        "quote": "MCV fL ... 16-150 yr. 79 - 99"
+      },
+      {
+        "organization": "StatPearls / NCBI Bookshelf",
+        "document": "Normal and Abnormal Complete Blood Count With Differential (NBK604207)",
+        "year": 2024,
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK604207/",
+        "doi": null,
+        "quote": "The normal reference interval in adults is 80 to 100 µm 3."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Average red-cell volume; the primary index for classifying anemia by cell size (micro-/normo-/macrocytic).",
+    "frequency": "annual",
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false
+  },
   "Mg": {
     "key": "Mg",
     "shortName": "Mg",
@@ -1779,6 +2557,48 @@
     "why": "Monocytes mediate chronic inflammation and tissue macrophage supply; percent frames the differential but is derivative of the absolute count.",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "MPV": {
+    "key": "MPV",
+    "shortName": "MPV",
+    "displayName": "Mean Platelet Volume",
+    "loincComponent": "Platelet mean volume",
+    "loincs": [
+      {
+        "code": "32623-1",
+        "longName": "Platelet [Entitic mean volume] in Blood by Automated count",
+        "property": "EntVol",
+        "unit": "fL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 9,
+      "max": 12.2,
+      "unit": "fL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021) adult interval 9-12.2 fL, established locally on the University of Michigan Sysmex analyzers; not sex-partitioned. LOINC property displayed as EntMeanVol. Higher values suggest younger/larger platelets (increased turnover)."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "University of Michigan / Michigan Medicine (MLabs)",
+        "document": "Complete Blood Count (CBC) - Sysmex XN-9000 Reference Ranges 2021, Michigan Medicine Hematopathology Lab",
+        "year": 2021,
+        "url": "https://mlabs.umich.edu/tests/complete-blood-count-cbc",
+        "doi": null,
+        "quote": "MPV * 9 - 12.2 ... fl. * These adult, MPV, and IPF values were established from the University of Michigan Sysmex analyzers."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Average platelet size; elevated MPV points to active platelet production/consumption (peripheral destruction), low MPV to marrow hypoproduction.",
+    "frequency": "annual",
+    "panel": "Complete blood count (CBC)",
     "unreliableAssay": false
   },
   "Na": {
@@ -1967,6 +2787,56 @@
     "panel": "Kidney, electrolytes & minerals",
     "unreliableAssay": false
   },
+  "PLT": {
+    "key": "PLT",
+    "shortName": "PLT",
+    "displayName": "Platelets",
+    "loincComponent": "Platelets",
+    "loincs": [
+      {
+        "code": "777-3",
+        "longName": "Platelets [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*3/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 150,
+      "max": 400,
+      "unit": "x10^3/µL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021) interval 150-400 K/uL (= x10^3/µL), not sex-partitioned; StatPearls concurs (150,000-400,000/µL). LOINC example UCUM is 10*9/L, numerically identical to 10*3/µL."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "University of Michigan / Michigan Medicine (MLabs)",
+        "document": "Complete Blood Count (CBC) - Sysmex XN-9000 Reference Ranges 2021, Michigan Medicine Hematopathology Lab",
+        "year": 2021,
+        "url": "https://mlabs.umich.edu/tests/complete-blood-count-cbc",
+        "doi": null,
+        "quote": "PLT ... 16-150 yr. 150 - 400 K/uL"
+      },
+      {
+        "organization": "StatPearls / NCBI Bookshelf",
+        "document": "Normal and Abnormal Complete Blood Count With Differential (NBK604207)",
+        "year": 2024,
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK604207/",
+        "doi": null,
+        "quote": "The normal reference interval in adults is 150,000 to 400,000/μL or mm 3."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Platelet concentration; screens for thrombocytopenia (bleeding risk) and thrombocytosis (reactive or myeloproliferative).",
+    "frequency": "annual",
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false
+  },
   "PRL": {
     "key": "PRL",
     "shortName": "PRL",
@@ -2027,6 +2897,90 @@
     "panel": "Sex hormones (HPG axis)",
     "unreliableAssay": false
   },
+  "Protein Total": {
+    "key": "Protein Total",
+    "shortName": "Protein Total",
+    "displayName": "Total Protein",
+    "loincComponent": "Protein",
+    "loincs": [
+      {
+        "code": "2885-2",
+        "longName": "Protein [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "g/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 6.4,
+      "max": 8.3,
+      "unit": "g/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Total serum protein (albumin + globulins); g/dL = g/L / 10 (same-property mass conversion, not molar, so no molarMass). Interpreted with albumin and the albumin/globulin ratio: low in liver synthetic failure, protein loss (nephrotic/enteropathy) and malnutrition; high with dehydration or a monoclonal/polyclonal gammopathy."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine, Tietz-based)",
+        "document": "Lab Values, Normal Adult: Laboratory Reference Ranges in Healthy Adults (article 2172316)",
+        "year": 2025,
+        "url": "https://emedicine.medscape.com/article/2172316-overview",
+        "doi": null,
+        "quote": "Total protein: 6.4-8.3 g/dL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Sum of all serum proteins (mainly albumin and globulins); a screen of hepatic synthetic function, nutritional/hydration status and dysproteinemias. A raised total protein with normal albumin (high globulin gap) prompts evaluation for a paraprotein.",
+    "frequency": "annual",
+    "panel": "Liver & protein",
+    "unreliableAssay": false
+  },
+  "PSA": {
+    "key": "PSA",
+    "shortName": "PSA",
+    "displayName": "Prostate-specific antigen (total)",
+    "loincComponent": "Prostate specific Ag",
+    "loincs": [
+      {
+        "code": "2857-1",
+        "longName": "Prostate specific Ag [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": null,
+      "max": 4,
+      "unit": "ng/mL",
+      "operator": "lt",
+      "sex": "male",
+      "ageNote": "adult male",
+      "note": "Total PSA. Traditional single cutoff <4.0 ng/mL (ARUP). PSA is age-dependent, so many labs apply age-specific reference ceilings (Oesterling): 40-49 y <=2.5, 50-59 y <=3.5, 60-69 y <=4.5, 70-79 y <=6.5 ng/mL. 4.0-10.0 ng/mL is a diagnostic 'gray zone' where the free:total PSA ratio helps stratify cancer risk; >10 ng/mL carries high cancer probability. PSA also rises with BPH, prostatitis, recent ejaculation/instrumentation, so it is not specific for cancer."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Prostate-Specific Antigen, Total (test 0070121) - Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0070121",
+        "doi": null,
+        "quote": "0.0-4.0 ng/mL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Prostate-specific glycoprotein; screening and monitoring marker for prostate cancer (and BPH/prostatitis). Rising or elevated total PSA prompts risk assessment (age-specific cutoffs, free:total ratio, PSA velocity) and possible biopsy.",
+    "frequency": null,
+    "panel": "Tumor markers",
+    "unreliableAssay": false
+  },
   "PTH": {
     "key": "PTH",
     "shortName": "PTH",
@@ -2075,6 +3029,148 @@
     "why": "Principal regulator of calcium and phosphate; the master test for distinguishing PTH-dependent (primary/secondary hyperparathyroidism) from PTH-independent causes of calcium disorders and for CKD-MBD monitoring.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false
+  },
+  "RBC": {
+    "key": "RBC",
+    "shortName": "RBC",
+    "displayName": "Red Blood Cells (Erythrocytes)",
+    "loincComponent": "Erythrocytes",
+    "loincs": [
+      {
+        "code": "789-8",
+        "longName": "Erythrocytes [#/volume] in Blood by Automated count",
+        "property": "NCnc",
+        "unit": "10*6/uL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 4.4,
+      "max": 5.7,
+      "unit": "x10^6/µL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "adult",
+      "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021) adult male (16-150 y) interval 4.40-5.70 M/uL (= x10^6/µL). StatPearls gives 4.6-6.2 million cells/µL for adult men. LOINC example UCUM is 10*12/L, numerically identical to 10*6/µL."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "University of Michigan / Michigan Medicine (MLabs)",
+        "document": "Complete Blood Count (CBC) - Sysmex XN-9000 Reference Ranges 2021, Michigan Medicine Hematopathology Lab",
+        "year": 2021,
+        "url": "https://mlabs.umich.edu/tests/complete-blood-count-cbc",
+        "doi": null,
+        "quote": "RBC male ... 16-150 yr. 4.40 - 5.70 M/uL"
+      },
+      {
+        "organization": "StatPearls / NCBI Bookshelf",
+        "document": "Normal and Abnormal Complete Blood Count With Differential (NBK604207)",
+        "year": 2024,
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK604207/",
+        "doi": null,
+        "quote": "The normal reference interval is usually 4.6 to 6.2 million cells/μL in adult men and 4.2 to 5.4 million cells/μL in adult women."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Erythrocyte concentration; denominator for the red-cell indices (MCV, MCH) and part of the anemia/erythrocytosis picture.",
+    "frequency": "annual",
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false
+  },
+  "RDW-CV": {
+    "key": "RDW-CV",
+    "shortName": "RDW-CV",
+    "displayName": "Red Cell Distribution Width (CV)",
+    "loincComponent": "Erythrocyte distribution width",
+    "loincs": [
+      {
+        "code": "788-0",
+        "longName": "Erythrocyte [DistWidth] in Blood by Automated count",
+        "property": "DistWidth",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 11.5,
+      "max": 15,
+      "unit": "%",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Michigan Medicine Hematopathology Lab (Sysmex XN-9000, 2021) adult (16-150 y) interval 11.5-15.0 %, not sex-partitioned; StatPearls gives ~11.5-15%. RDW-CV = SD of red-cell volume / MCV x 100; a percentage measure of anisocytosis. LOINC 788-0 current property is DistWidth (Ratio), UCUM %."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "University of Michigan / Michigan Medicine (MLabs)",
+        "document": "Complete Blood Count (CBC) - Sysmex XN-9000 Reference Ranges 2021, Michigan Medicine Hematopathology Lab",
+        "year": 2021,
+        "url": "https://mlabs.umich.edu/tests/complete-blood-count-cbc",
+        "doi": null,
+        "quote": "RDW ... 16-150 yr. 11.5 - 15.0 %"
+      },
+      {
+        "organization": "StatPearls / NCBI Bookshelf",
+        "document": "Normal and Abnormal Complete Blood Count With Differential (NBK604207)",
+        "year": 2024,
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK604207/",
+        "doi": null,
+        "quote": "The normal reference interval in adults is approximately 11.5% to 15% but varies between laboratories."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Anisocytosis index (coefficient of variation of red-cell size); helps subclassify anemias (iron deficiency raises RDW, thalassemia trait often keeps it normal).",
+    "frequency": "annual",
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false
+  },
+  "RDW-SD": {
+    "key": "RDW-SD",
+    "shortName": "RDW-SD",
+    "displayName": "Red Cell Distribution Width (SD)",
+    "loincComponent": "Erythrocyte distribution width",
+    "loincs": [
+      {
+        "code": "21000-5",
+        "longName": "Erythrocyte distribution width [Entitic volume] by Automated count",
+        "property": "EntVol",
+        "unit": "fL",
+        "system": "RBC"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 39,
+      "max": 46,
+      "unit": "fL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "RDW-SD is analyzer-dependent (Sysmex-derived: width in fL of the red-cell histogram at the 20% height level) and not sex-partitioned. Widely-cited adult reference ~39-46 fL. WEAKER sourcing than the other indices: the Michigan Medicine and StatPearls CBC tables do not list RDW-SD, so this comes from a consumer lab-results reference rather than a primary reference lab; treat exact cutoffs as orientation."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "HealthMatters.io",
+        "document": "RDW-SD (Red Cell Distribution Width) - Lab Results explained",
+        "year": 2025,
+        "url": "https://healthmatters.io/understand-blood-test-results/rdw-sd-red-cell-distribution-width",
+        "doi": null,
+        "quote": "The typical normal range for RDW-SD is approximately 39-46 fL, though this can vary slightly depending on the laboratory."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Direct-measured (volume, fL) anisocytosis index independent of MCV; useful when a normal MCV masks a mixed micro-/macrocytic population that widens the distribution.",
+    "frequency": "annual",
+    "panel": "Complete blood count (CBC)",
     "unreliableAssay": false
   },
   "SHBG": {
@@ -2302,46 +3398,116 @@
     "panel": "Lipids & glycemic",
     "unreliableAssay": false
   },
-  "TP": {
-    "key": "TP",
-    "shortName": null,
-    "displayName": "Protein",
-    "loincComponent": "Protein",
+  "TIBC": {
+    "key": "TIBC",
+    "shortName": "TIBC",
+    "displayName": "Total iron-binding capacity",
+    "loincComponent": "Iron binding capacity",
     "loincs": [
       {
-        "code": "2885-2",
-        "longName": "Protein [Mass/volume] in Serum or Plasma",
+        "code": "2500-7",
+        "longName": "Iron binding capacity [Mass/volume] in Serum or Plasma",
         "property": "MCnc",
-        "unit": "g/dL",
+        "unit": "ug/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14800-7",
+        "longName": "Iron binding capacity [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
         "system": "Ser/Plas"
       }
     ],
-    "molarMass": null,
-    "molarMassRef": null,
+    "molarMass": 55.845,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "TIBC is an iron-carrying CAPACITY, so its molar form (umol/L) is expressed as moles of iron using the iron atomic weight 55.845 g/mol — PubChem CID 23925 (Iron, element), https://pubchem.ncbi.nlm.nih.gov/element/26/Iron . Conversion: 1 ug/dL = 0.1791 umol/L.",
+      "year": null,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/element/26/Iron",
+      "doi": null,
+      "quote": null
+    },
     "refDefault": {
-      "min": 6.3,
-      "max": 7.9,
-      "unit": "g/dL",
+      "min": 250,
+      "max": 460,
+      "unit": "ug/dL",
       "operator": "between",
       "sex": "any",
-      "ageNote": "Adult, ≥1 year (not sex-specific)",
-      "note": "Mayo Clinic Laboratories interval (≥1 year: 6.3-7.9 g/dL). Sum of albumin + globulins; interpret with albumin and the A/G ratio. Note the patient's printed lab range (6.20-8.50) is wider than Mayo's."
+      "ageNote": "adult",
+      "note": "Total iron-binding capacity; equivalent SI 45-82 umol/L (moles of iron, x0.1791). TIBC rises in iron deficiency (up-regulated transferrin) and falls in iron overload and inflammation. Not sex-partitioned in the source. Transferrin saturation = serum iron / TIBC (normal ~20-50%)."
     },
-    "evidenceLevel": "reference-lab",
+    "evidenceLevel": "consensus",
     "references": [
       {
-        "organization": "Mayo Clinic Laboratories",
-        "document": "Protein, Total, Serum (test TP) - Reference Values",
+        "organization": "Medscape (eMedicine Laboratory Medicine, Tietz-based)",
+        "document": "Iron-Binding Capacity: Reference Range, Interpretation, Collection and Panels (article 2085726)",
         "year": 2025,
-        "url": "https://renal.testcatalog.org/show/TP",
+        "url": "https://emedicine.medscape.com/article/2085726-overview",
         "doi": null,
-        "quote": "≥1 year: 6.3-7.9 g/dL. Reference values have not been established for patients <12 months of age."
+        "quote": "The iron-binding capacity reference range is 250-460 ug/dL or 45-82 umol/L (SI units)."
       }
     ],
-    "labPrintedRef": "6.20-8.50 g/dL",
-    "why": "Total of albumin plus globulins; screens for synthetic liver capacity, nutrition, and dysproteinemias. Low total protein with low albumin suggests impaired hepatic synthesis or loss; high globulin fraction raises paraproteinemia/chronic inflammation.",
-    "frequency": null,
-    "panel": "Liver & proteins",
+    "labPrintedRef": null,
+    "why": "Measures the blood's total capacity to bind iron (largely transferrin); combined with serum iron it yields transferrin saturation, the key discriminator between iron deficiency (high TIBC, low saturation) and iron overload (low TIBC, high saturation).",
+    "frequency": "annual",
+    "panel": "Iron studies",
+    "unreliableAssay": false
+  },
+  "TRF": {
+    "key": "TRF",
+    "shortName": "TRF",
+    "displayName": "Transferrin",
+    "loincComponent": "Transferrin",
+    "loincs": [
+      {
+        "code": "3034-6",
+        "longName": "Transferrin [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "22674-6",
+        "longName": "Transferrin [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 79570,
+    "molarMassRef": {
+      "organization": "UniProt / standard clinical unit conversion",
+      "document": "Human serum transferrin (glycoprotein) molecular weight ~79,570 g/mol (UniProt P02787; the value used by standard SI unit-conversion tables). Conversion: 1 mg/dL = 0.1257 umol/L.",
+      "year": null,
+      "url": "https://www.uniprot.org/uniprotkb/P02787/entry",
+      "doi": null,
+      "quote": null
+    },
+    "refDefault": {
+      "min": 215,
+      "max": 365,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Iron-transport glycoprotein; equivalent SI ~27-46 umol/L (x0.1257). Transferrin is a NEGATIVE acute-phase reactant (falls in inflammation, malnutrition, liver disease) and RISES in iron deficiency. Closely tracks TIBC (transferrin carries ~70-80% of iron-binding capacity)."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine, Tietz-based)",
+        "document": "Lab Values, Normal Adult: Laboratory Reference Ranges in Healthy Adults (article 2172316)",
+        "year": 2025,
+        "url": "https://emedicine.medscape.com/article/2172316-overview",
+        "doi": null,
+        "quote": "Transferrin: 215-365 mg/dL or 2.15-3.65 g/L."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "The main iron-transport protein; measured directly (or via TIBC) in the iron-studies workup. High in iron deficiency, low in inflammation/malnutrition/liver disease, and used to compute transferrin saturation.",
+    "frequency": "annual",
+    "panel": "Iron studies",
     "unreliableAssay": false
   },
   "TRIG": {
@@ -2558,6 +3724,70 @@
     "panel": "Kidney, electrolytes & minerals",
     "unreliableAssay": false
   },
+  "Vit D": {
+    "key": "Vit D",
+    "shortName": "Vit D",
+    "displayName": "25-hydroxyvitamin D (25-OH D)",
+    "loincComponent": "25-Hydroxyvitamin D3+25-Hydroxyvitamin D2",
+    "loincs": [
+      {
+        "code": "62292-8",
+        "longName": "25-Hydroxyvitamin D3+25-Hydroxyvitamin D2 [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "68438-1",
+        "longName": "25-Hydroxyvitamin D3+25-Hydroxyvitamin D2 [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "nmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 400.64,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5283731 (Calcifediol / 25-hydroxyvitamin D3), C27H44O2, molecular weight 400.6 g/mol — https://pubchem.ncbi.nlm.nih.gov/compound/5283731 . Conversion: 1 ng/mL = 2.496 nmol/L.",
+      "year": null,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/compound/5283731",
+      "doi": null,
+      "quote": null
+    },
+    "refDefault": {
+      "min": 30,
+      "max": 100,
+      "unit": "ng/mL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Total 25-OH D (D3+D2); equivalent SI ~75-250 nmol/L (x2.496). Endocrine Society (2011) thresholds: deficiency <20 ng/mL, insufficiency 21-29 ng/mL, sufficiency 30-100 ng/mL (a target of 40-60 ng/mL is often preferred). Note: the 2011 Endocrine Society cut-offs are higher than the Institute of Medicine's population reference (>=20 ng/mL adequate for most people); some labs report sufficiency from 20-30 ng/mL."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "Endocrine Society (Holick MF et al.)",
+        "document": "Evaluation, Treatment, and Prevention of Vitamin D Deficiency: an Endocrine Society Clinical Practice Guideline (J Clin Endocrinol Metab 96(7):1911-1930)",
+        "year": 2011,
+        "url": "https://academic.oup.com/jcem/article/96/7/1911/2833671",
+        "doi": "10.1210/jc.2011-0385",
+        "quote": "Vitamin D deficiency is defined as a 25-hydroxyvitamin D below 20 ng/mL (50 nmol/L), insufficiency as 21-29 ng/mL, and sufficiency as 30-100 ng/mL."
+      },
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine, Tietz-based)",
+        "document": "Lab Values, Normal Adult: Laboratory Reference Ranges in Healthy Adults (article 2172316)",
+        "year": 2025,
+        "url": "https://emedicine.medscape.com/article/2172316-overview",
+        "doi": null,
+        "quote": "Vitamin D: ... 25-Hydroxyvitamin D: 30-60 ng/mL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "25-hydroxyvitamin D is the storage form and the standard marker of vitamin D status; screens for deficiency (bone loss, osteomalacia, secondary hyperparathyroidism) and guides supplementation. Relevant given the patient's thyroid/endocrine follow-up.",
+    "frequency": "annual",
+    "panel": "Vitamins & minerals",
+    "unreliableAssay": false
+  },
   "WBC": {
     "key": "WBC",
     "shortName": "WBC",
@@ -2606,6 +3836,62 @@
     "why": "Total circulating leukocyte concentration; screens for infection, inflammation, marrow suppression, leukemia, and treatment/drug effects (e.g., methylphenidate has no expected effect, but is tracked for baseline).",
     "frequency": null,
     "panel": "FBC — Leukocytes & differential",
+    "unreliableAssay": false
+  },
+  "Zn": {
+    "key": "Zn",
+    "shortName": "Zn",
+    "displayName": "Zinc",
+    "loincComponent": "Zinc",
+    "loincs": [
+      {
+        "code": "5763-8",
+        "longName": "Zinc [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ug/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14955-9",
+        "longName": "Zinc [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 65.38,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 23994 (Zinc, element), standard atomic weight 65.38 g/mol — https://pubchem.ncbi.nlm.nih.gov/element/30/Zinc . Conversion: 1 ug/dL = 0.153 umol/L.",
+      "year": null,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/element/30/Zinc",
+      "doi": null,
+      "quote": null
+    },
+    "refDefault": {
+      "min": 75,
+      "max": 140,
+      "unit": "ug/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Serum/plasma zinc; equivalent SI ~11.5-21.4 umol/L (x0.153). Serum zinc is a rough index of status (it falls in inflammation as a negative acute-phase reactant, and with hemodilution); interpret with clinical context. Non-fasting and hemolyzed samples bias results."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine, Tietz-based)",
+        "document": "Lab Values, Normal Adult: Laboratory Reference Ranges in Healthy Adults (article 2172316)",
+        "year": 2025,
+        "url": "https://emedicine.medscape.com/article/2172316-overview",
+        "doi": null,
+        "quote": "Zinc: 75-140 ug/dL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Essential trace mineral cofactor for hundreds of enzymes and immune function; low serum zinc supports a diagnosis of deficiency (impaired wound healing, dermatitis, taste/smell loss, immune impairment), though it is an imperfect marker of total-body zinc.",
+    "frequency": "annual",
+    "panel": "Vitamins & minerals",
     "unreliableAssay": false
   }
 }
