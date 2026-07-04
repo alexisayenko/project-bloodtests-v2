@@ -1,0 +1,62 @@
+<!doctype html>
+<!-- Playwright harness for <lab-explore>: deterministic fixture, real canvas.
+     Serve the ui/ dir over http (ES modules don't load from file://):
+       python3 -m http.server <port> --directory ui
+     then open /harness/explore.html -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>lab-explore harness</title>
+  <style>
+    :root { --fg: #1a1a1a; --bg: #ffffff; --muted: #777; --rule: #ccc; --rule-soft: #e4e4e4; --accent: #2f6f9f; }
+    body { font-family: system-ui, sans-serif; margin: 2rem; background: var(--bg); color: var(--fg); max-width: 960px; }
+  </style>
+</head>
+<body>
+  <h1>lab-explore harness</h1>
+  <lab-explore id="x"></lab-explore>
+  <script type="module">
+    import { exploreFromLabs } from "../dist/index.js";
+
+    // deterministic fixture — T reading 12 in band [8.6, 29] must show 16.7 %
+    const labs = {
+      matrix: { cols: [], rows: [] },
+      panels: [
+        {
+          name: "HPG axis (sex hormones)",
+          rows: [
+            { key: "T", shortName: "T", unit: "nmol/L", refMin: 8.6, refMax: 29, cells: [],
+              series: [
+                { date: "2024-01-10", value: 12 }, { date: "2024-07-10", value: 15 },
+                { date: "2025-01-10", value: 14 }, { date: "2025-07-10", value: 18 },
+              ] },
+            { key: "E2", shortName: "E2", unit: "pmol/L", refMin: 40, refMax: 160, cells: [],
+              series: [
+                { date: "2024-01-10", value: 90 }, { date: "2024-07-10", value: 120 },
+                { date: "2025-01-10", value: 100 }, { date: "2025-07-10", value: 110 },
+              ] },
+          ],
+        },
+        {
+          name: "Lipids",
+          rows: [
+            { key: "HDL", shortName: "HDL-C", unit: "mg/dL", refMin: 40, refMax: null, cells: [],
+              series: [{ date: "2024-02-01", value: 55 }, { date: "2025-02-01", value: 62 }] },
+          ],
+        },
+      ],
+    };
+
+    const model = exploreFromLabs(labs, {
+      defaultPanel: "HPG axis (sex hormones)",
+      overrides: { "HDL-C": { refMin: 40, refMax: 60, goodAbove: 60, goodNote: "optimal · low risk" } },
+      events: [
+        { id: "ovamit", label: "Ova-Mit", color: "rgba(126,87,194,0.18)", text: "#7d3c98",
+          defaultOn: true, periods: [{ start: "2024-06-01", end: null, label: "Ova-Mit 50" }] },
+      ],
+    });
+    document.getElementById("x").model = model;
+    window.__READY = true;
+  </script>
+</body>
+</html>
