@@ -1,93 +1,131 @@
 /**
- * SI-unit normalization for mass→molar analytes.
+ * SI-unit normalization for mass→molar analytes — CATALOG-DRIVEN.
  *
  * A handful of analytes were stored with their `si` UnitValue left equal to `us`
- * (mg/dL) in the source data, so the site's US↔SI toggle showed no conversion.
- * The US↔SI distinction here is the LOINC Property axis: mass concentration
- * (mg/dL, MCnc) vs substance/molar concentration (mmol/L, SCnc) — different
- * LOINC codes — which is why the conversion needs the molar mass. We derive the
- * correct SI value from `us` using the verified molar-mass converters in
- * ./convert.ts (each carries an RS: tag confirmed against PubChem on 2026-07-04).
+ * (the mass value) in the source data, so the site's US↔SI toggle showed the mass
+ * number with only the unit LABEL swapped (e.g. FT4 "1.04 ng/dL" shown as "1.04
+ * pmol/L" instead of ~13.4 pmol/L). The US↔SI distinction here is the LOINC
+ * Property axis: mass concentration (MCnc) vs substance/molar concentration
+ * (SCnc) — different LOINC codes — which is why the conversion needs the molar
+ * mass.
+ *
+ * Previously only 5 analytes (glucose + 4 lipids) were converted, via hardcoded
+ * divisors. This module now derives the conversion for EVERY analyte the
+ * AnalyteCatalog describes with (a) a cited `molarMass` and (b) both a mass
+ * (MCnc) and a molar (SCnc) LOINC carrying units — using the general, unit-aware
+ * `massToMolar` helper (see ./convert.ts). Nothing analyte-specific is hardcoded
+ * here: add a molarMass + SCnc LOINC to the catalog and it converts.
  */
 
 import type { Draw, LabItem, UnitValue } from "./types.js";
-import { glucoseMgdlToMmoll, cholMgdlToMmoll, tgMgdlToMmoll } from "./convert.js";
+import { massToMolar } from "./convert.js";
+import { ANALYTE_CATALOG } from "./catalog/data.js";
+import type { AnalyteCatalog, AnalyteEntry, CatalogLoinc } from "./catalog/schema.js";
 
-type Converter = (x: number) => number;
-
-interface SIRule {
-  /** mg/dL → mmol/L converter, molar-mass driven (see ./convert.ts RS: tags). */
-  convert: Converter;
-  /** Target SI unit. */
+/**
+ * How to render an analyte's mass value in the SI (molar) view. Derived per
+ * analyte from the catalog; carries everything a caller needs to (a) convert the
+ * value and its reference bounds and (b) show the molar LOINC code in the SI view.
+ */
+export interface SIRule {
+  /** Convert one mass value → molar, using the analyte's catalog mass unit as the
+   *  source unit. (deriveSIUnits prefers the item's OWN stored unit when present.) */
+  convert: (x: number) => number;
+  /** Target SI (molar, SCnc) unit, e.g. "mmol/L", "nmol/L", "pmol/L". */
   unit: string;
-  /**
-   * The molar (substance-concentration, SCnc / [Moles/volume]) LOINC that matches
-   * the mmol/L SI value. The rule's own key is the mass-concentration (MCnc,
-   * mg/dL) LOINC; this is its SCnc counterpart, so callers can display the code
-   * appropriate to the active unit system.
-   */
+  /** The molar (SCnc / [Moles/volume]) LOINC — shown in the SI view. */
   siLoinc: string;
+  /** Cited molar mass (g/mol). */
+  molarMass: number;
+  /** The catalog's mass (MCnc) unit, used as the default source unit. */
+  massUnit: string;
+  /** The mass (MCnc / [Mass/volume]) LOINC — shown in the US view. */
+  massLoinc: string | null;
+}
+
+const firstLoincWith = (e: AnalyteEntry, prop: string): CatalogLoinc | undefined =>
+  (e.loincs ?? []).find((l) => l.property === prop);
+
+interface BuiltRules {
+  byLoinc: Record<string, SIRule>;
+  bySymbol: Record<string, SIRule>;
+  siLoincByLoinc: Record<string, string>;
 }
 
 /**
- * Analyte → SI rule, keyed by LOINC (primary) with a symbol fallback. Each maps
- * a mass-concentration (mg/dL) analyte to its molar-mass converter; LDL/HDL are
- * cholesterol measures, so they use the cholesterol factor (÷38.67).
- *
- * `siLoinc` is the SCnc / [Moles/volume] counterpart of each MCnc (mg/dL) key,
- * verified against loinc.org (see SI_LOINC_BY_LOINC below).
+ * Walk the catalog and build the mass→molar rules. An analyte qualifies only if
+ * it has a molar mass AND both a mass (MCnc) and molar (SCnc) LOINC with units —
+ * otherwise it stays label-only (reported in mass/IU/count units with no molar
+ * form), which is correct for peptides/enzymes/cell counts.
  */
-export const SI_RULES_BY_LOINC: Record<string, SIRule> = {
-  "2339-0": { convert: glucoseMgdlToMmoll, unit: "mmol/L", siLoinc: "14749-6" }, // Glucose (÷18.018)
-  "2093-3": { convert: cholMgdlToMmoll, unit: "mmol/L", siLoinc: "14647-2" }, // Total cholesterol (÷38.67)
-  "13457-7": { convert: cholMgdlToMmoll, unit: "mmol/L", siLoinc: "22748-8" }, // LDL cholesterol (÷38.67)
-  "2085-9": { convert: cholMgdlToMmoll, unit: "mmol/L", siLoinc: "14646-4" }, // HDL cholesterol (÷38.67)
-  "2571-8": { convert: tgMgdlToMmoll, unit: "mmol/L", siLoinc: "14927-8" }, // Triglycerides (÷88.57)
-};
+function buildSIRules(catalog: AnalyteCatalog): BuiltRules {
+  const byLoinc: Record<string, SIRule> = {};
+  const bySymbol: Record<string, SIRule> = {};
+  const siLoincByLoinc: Record<string, string> = {};
+
+  for (const e of Object.values(catalog)) {
+    if (e.molarMass == null) continue;
+    const mass = firstLoincWith(e, "MCnc");
+    const molar = firstLoincWith(e, "SCnc");
+    if (!mass?.unit || !mass.code || !molar?.unit || !molar.code) continue;
+
+    const massUnit = mass.unit;
+    const target = molar.unit;
+    const molarMass = e.molarMass;
+    const rule: SIRule = {
+      convert: (x: number) => massToMolar(x, massUnit, target, molarMass) ?? x,
+      unit: target,
+      siLoinc: molar.code,
+      molarMass,
+      massUnit,
+      massLoinc: mass.code,
+    };
+
+    byLoinc[mass.code] = rule;
+    siLoincByLoinc[mass.code] = molar.code;
+    if (e.symbol) bySymbol[e.symbol] = rule;
+    // Also key by the catalog key (= analysis name for symbol-less analytes such
+    // as "Cortisol"), matching the engine's symbol-first / analysis-fallback lookup.
+    if (e.key && e.key !== e.symbol) bySymbol[e.key] = rule;
+  }
+
+  return { byLoinc, bySymbol, siLoincByLoinc };
+}
+
+const RULES = buildSIRules(ANALYTE_CATALOG);
+
+/** Analyte → SI rule, keyed by its mass (MCnc) LOINC. */
+export const SI_RULES_BY_LOINC: Record<string, SIRule> = RULES.byLoinc;
+
+/** Analyte → SI rule, keyed by symbol (and catalog key for symbol-less analytes). */
+export const SI_RULES_BY_SYMBOL: Record<string, SIRule> = RULES.bySymbol;
 
 /**
- * Mass-concentration (MCnc, mg/dL) LOINC → molar substance-concentration
- * (SCnc, [Moles/volume], mmol/L) LOINC, for the five SI-converted analytes.
- * The US (mass) view keeps the key; the SI (molar) view shows the value.
- * All codes/names verified against loinc.org (2026-07):
- *   2339-0  Glucose [Mass/volume]            → 14749-6 Glucose [Moles/volume] in Ser/Plas
- *   2093-3  Cholesterol [Mass/volume]        → 14647-2 Cholesterol [Moles/volume] in Ser/Plas
- *   13457-7 Cholesterol in LDL [Mass/volume] → 22748-8 Cholesterol in LDL [Moles/volume] in Ser/Plas
- *   2085-9  Cholesterol in HDL [Mass/volume] → 14646-4 Cholesterol in HDL [Moles/volume] in Ser/Plas
- *   2571-8  Triglyceride [Mass/volume]       → 14927-8 Triglyceride [Moles/volume] in Ser/Plas
+ * Mass-concentration (MCnc) LOINC → molar substance-concentration (SCnc) LOINC.
+ * The US (mass) view keeps the key; the SI (molar) view shows the value. Derived
+ * from the catalog's mass/molar LOINC pair per analyte; every code verified
+ * against loinc.org (see data/analyte-catalog.json `loincs[]`). Exported so the
+ * homepage's `siLoincs` mapping keeps working unchanged.
  */
-export const SI_LOINC_BY_LOINC: Record<string, string> = {
-  "2339-0": "14749-6",
-  "2093-3": "14647-2",
-  "13457-7": "22748-8",
-  "2085-9": "14646-4",
-  "2571-8": "14927-8",
-};
+export const SI_LOINC_BY_LOINC: Record<string, string> = RULES.siLoincByLoinc;
 
-export const SI_RULES_BY_SYMBOL: Record<string, SIRule> = {
-  GLU: SI_RULES_BY_LOINC["2339-0"]!,
-  TC: SI_RULES_BY_LOINC["2093-3"]!,
-  "LDL-C": SI_RULES_BY_LOINC["13457-7"]!,
-  "HDL-C": SI_RULES_BY_LOINC["2085-9"]!,
-  TRIG: SI_RULES_BY_LOINC["2571-8"]!,
-};
-
-/** Resolve a rule for an item: LOINC first, then symbol fallback. */
+/** Resolve a rule for an item: LOINC first, then symbol, then analysis name. */
 function ruleFor(item: LabItem): SIRule | undefined {
   if (item.loinc != null && SI_RULES_BY_LOINC[item.loinc]) return SI_RULES_BY_LOINC[item.loinc];
   if (item.symbol != null && SI_RULES_BY_SYMBOL[item.symbol]) return SI_RULES_BY_SYMBOL[item.symbol];
+  if (item.analysis != null && SI_RULES_BY_SYMBOL[item.analysis]) return SI_RULES_BY_SYMBOL[item.analysis];
   return undefined;
 }
 
-/** Convert one bound, preserving null/undefined. */
-const conv = (v: number | null | undefined, f: Converter): number | null | undefined =>
-  v != null ? f(v) : v;
-
 /**
- * Replace the `si` UnitValue of every configured analyte with a properly
- * molar-mass-converted value derived from `us`. Purely functional (new objects,
- * input untouched) and idempotent — the result always derives from `us`, never
- * from the current `si`. Analytes not in the config are returned unchanged.
+ * Replace the `si` UnitValue of every catalog-described mass→molar analyte with a
+ * properly molar-mass-converted value derived from `us`. Purely functional (new
+ * objects, input untouched) and idempotent — the result always derives from `us`,
+ * never from the current `si`. The item's OWN stored mass unit is preferred as
+ * the conversion source (so e.g. DHT stored in pg/mL converts correctly even
+ * though the catalog's canonical mass unit is ng/dL); if that unit can't be
+ * parsed as a mass concentration the item is returned unchanged. Analytes not in
+ * the catalog rules are returned unchanged.
  */
 export function deriveSIUnits(draws: Draw[]): Draw[] {
   return draws.map((draw) => ({
@@ -95,12 +133,17 @@ export function deriveSIUnits(draws: Draw[]): Draw[] {
     items: draw.items.map((item) => {
       const rule = ruleFor(item);
       if (!rule || item.us == null || typeof item.us.value !== "number") return item;
+      const srcUnit = item.us.unit ?? rule.massUnit;
+      const value = massToMolar(item.us.value, srcUnit, rule.unit, rule.molarMass);
+      if (value == null) return item; // source unit not a mass concentration — leave as-is
+      const conv = (v: number | null | undefined): number | null | undefined =>
+        v != null ? (massToMolar(v, srcUnit, rule.unit, rule.molarMass) ?? v) : v;
       const si: UnitValue = {
         ...item.si,
-        value: rule.convert(item.us.value),
+        value,
         unit: rule.unit,
-        refMin: conv(item.us.refMin, rule.convert),
-        refMax: conv(item.us.refMax, rule.convert),
+        refMin: conv(item.us.refMin),
+        refMax: conv(item.us.refMax),
       };
       return { ...item, si };
     }),

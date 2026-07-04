@@ -457,6 +457,13 @@
         "property": "MCnc",
         "unit": "ug/dL",
         "system": "Ser/Plas"
+      },
+      {
+        "code": "14675-3",
+        "longName": "Cortisol [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "nmol/L",
+        "system": "Ser/Plas"
       }
     ],
     "molarMass": 362.46,
@@ -566,6 +573,13 @@
         "property": "MCnc",
         "unit": "mg/dL",
         "system": "Ser/Plas"
+      },
+      {
+        "code": "14629-0",
+        "longName": "Bilirubin.direct [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
+        "system": "Ser/Plas"
       }
     ],
     "molarMass": 584.66,
@@ -610,6 +624,13 @@
         "longName": "Dehydroepiandrosterone sulfate [Mass/volume] in Serum or Plasma",
         "property": "MCnc",
         "unit": "ug/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14688-6",
+        "longName": "Dehydroepiandrosterone sulfate (DHEA-S) [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
         "system": "Ser/Plas"
       }
     ],
@@ -658,6 +679,13 @@
     "displayName": "Dihydrotestosterone",
     "loincComponent": "Dihydrotestosterone",
     "loincs": [
+      {
+        "code": "15057-3",
+        "longName": "Androstanolone (Dihydrotestosterone) [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "nmol/L",
+        "system": "Ser/Plas"
+      },
       {
         "code": "26454-9",
         "longName": "Dihydrotestosterone [Mass/volume] in Serum or Plasma",
@@ -708,6 +736,13 @@
         "longName": "Estradiol (E2) [Mass/volume] in Serum or Plasma",
         "property": "MCnc",
         "unit": "pg/mL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14715-7",
+        "longName": "Estradiol (E2) [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "pmol/L",
         "system": "Ser/Plas"
       }
     ],
@@ -899,6 +934,13 @@
         "property": "MCnc",
         "unit": "pg/mL",
         "system": "Ser/Plas"
+      },
+      {
+        "code": "14914-6",
+        "longName": "Testosterone Free [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "pmol/L",
+        "system": "Ser/Plas"
       }
     ],
     "molarMass": 288.42,
@@ -952,6 +994,13 @@
         "property": "MCnc",
         "unit": "pg/mL",
         "system": "Ser/Plas"
+      },
+      {
+        "code": "14928-6",
+        "longName": "Triiodothyronine (T3) Free [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "pmol/L",
+        "system": "Ser/Plas"
       }
     ],
     "molarMass": 650.97,
@@ -1000,6 +1049,13 @@
         "longName": "Thyroxine (T4) free [Mass/volume] in Serum or Plasma",
         "property": "MCnc",
         "unit": "ng/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14920-3",
+        "longName": "Thyroxine (T4) free [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "pmol/L",
         "system": "Ser/Plas"
       }
     ],
@@ -1092,6 +1148,13 @@
         "property": "MCnc",
         "unit": "mg/dL",
         "system": "Bld"
+      },
+      {
+        "code": "14749-6",
+        "longName": "Glucose [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
+        "system": "Ser/Plas"
       }
     ],
     "molarMass": 180.16,
@@ -1194,6 +1257,13 @@
         "longName": "Cholesterol in HDL [Mass/volume] in Serum or Plasma",
         "property": "MCnc",
         "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14646-4",
+        "longName": "Cholesterol in HDL [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
         "system": "Ser/Plas"
       }
     ],
@@ -1373,6 +1443,13 @@
         "longName": "Cholesterol in LDL [Mass/volume] in Serum or Plasma by calculation",
         "property": "MCnc",
         "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "22748-8",
+        "longName": "Cholesterol in LDL [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
         "system": "Ser/Plas"
       }
     ],
@@ -2052,14 +2129,14 @@
     "loincComponent": "Testosterone",
     "loincs": [
       {
-        "code": "14913-8",
+        "code": "2986-8",
         "longName": "Testosterone [Mass/volume] in Serum or Plasma",
         "property": "MCnc",
         "unit": "ng/dL",
         "system": "Ser/Plas"
       },
       {
-        "code": "2986-8",
+        "code": "14913-8",
         "longName": "Testosterone [Moles/volume] in Serum or Plasma",
         "property": "SCnc",
         "unit": "nmol/L",
@@ -2125,6 +2202,13 @@
         "property": "MCnc",
         "unit": "mg/dL",
         "system": "Ser/Plas"
+      },
+      {
+        "code": "14631-6",
+        "longName": "Bilirubin.total [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
+        "system": "Ser/Plas"
       }
     ],
     "molarMass": 584.66,
@@ -2169,6 +2253,13 @@
         "longName": "Cholesterol [Mass/volume] in Serum or Plasma",
         "property": "MCnc",
         "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14647-2",
+        "longName": "Cholesterol [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
         "system": "Ser/Plas"
       }
     ],
@@ -2264,6 +2355,13 @@
         "longName": "Triglyceride [Mass/volume] in Serum or Plasma",
         "property": "MCnc",
         "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14927-8",
+        "longName": "Triglyceride [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
         "system": "Ser/Plas"
       }
     ],

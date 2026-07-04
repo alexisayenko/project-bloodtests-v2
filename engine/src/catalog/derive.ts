@@ -16,20 +16,19 @@
 import type { AnalyteCatalog, AnalyteEntry, RefRange } from "./schema.js";
 import type { MatrixConfig, RefOverride, UnitSystem } from "../matrix.js";
 import { SI_RULES_BY_SYMBOL } from "../units.js";
+import { massToMolar, parseConcUnit } from "../convert.js";
 
 /**
  * Analytes whose reference range is unit-system-specific: mass concentration
- * (mg/dL, the US view) vs molar concentration (mmol/L, the SI view) — different
- * LOINC Property, so the numeric range differs between systems. For these the
- * catalog's single refDefault is only valid in one system; for every other
- * analyte the range is unit-system-agnostic and safe in any view.
+ * (the US view) vs molar/substance concentration (the SI view) — different LOINC
+ * Property, so the numeric range differs between systems. For these the catalog's
+ * single refDefault (stored in mass units) is only literally valid in the US
+ * view; the SI view converts it to the same canonical threshold in molar units.
+ * Every other analyte's range is unit-system-agnostic and safe in any view.
+ *
+ * The rule set is catalog-driven (see units.ts SI_RULES_BY_SYMBOL): any analyte
+ * with a cited molar mass + mass/molar LOINC pair converts, not just the lipids.
  */
-// Molar analytes (mass mg/dL vs molar mmol/L differ by LOINC Property) mapped to
-// their verified mg/dL->mmol/L converter, so a catalog range stored in mg/dL can
-// be shown as the SAME canonical threshold in the SI view (converted), not
-// dropped in favour of a lab-printed fallback.
-const MOLAR_RULE = new Map(Object.entries(SI_RULES_BY_SYMBOL)); // GLU, TC, LDL-C, HDL-C, TRIG
-
 const round2 = (x: number): number => Math.round(x * 100) / 100;
 
 export interface CatalogIndex {
@@ -66,14 +65,19 @@ function boundsForSystem(
   system: UnitSystem,
 ): { refMin: number | null; refMax: number | null } | null {
   if (r.min == null && r.max == null) return null; // nothing to override with
-  const rule = MOLAR_RULE.get(e.symbol ?? e.key);
+  const rule = SI_RULES_BY_SYMBOL[e.symbol ?? e.key];
   if (!rule) return { refMin: r.min, refMax: r.max }; // unit-system-agnostic
-  // Molar analyte: catalog range is mass (mg/dL). US/original keep it; SI converts.
-  const catalogIsMolar = (r.unit ?? "").trim().toLowerCase() === "mmol/l";
+  // Molar analyte: catalog range is stored in mass units. US/original keep it; SI
+  // converts to the analyte's molar unit using its (own refDefault) source unit,
+  // so e.g. DHT stored in pg/mL converts as pg/mL even though the canonical mass
+  // LOINC unit is ng/dL.
+  const catalogIsMolar = parseConcUnit(r.unit)?.base === "mol";
   const wantMolar = system === "si";
   if (wantMolar === catalogIsMolar) return { refMin: r.min, refMax: r.max }; // already in system
   if (wantMolar && !catalogIsMolar) {
-    const c = (v: number | null): number | null => (v == null ? null : round2(rule.convert(v)));
+    const src = r.unit ?? rule.massUnit;
+    const c = (v: number | null): number | null =>
+      v == null ? null : round2(massToMolar(v, src, rule.unit, rule.molarMass) ?? v);
     return { refMin: c(r.min), refMax: c(r.max) };
   }
   return null; // want mass but catalog is molar (not present today) — skip rather than guess
