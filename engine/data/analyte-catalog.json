@@ -4193,7 +4193,7 @@
   "Uric Acid": {
     "key": "Uric Acid",
     "shortName": null,
-    "displayName": "Urate",
+    "displayName": "Uric acid",
     "loincComponent": "Urate",
     "loincs": [
       {
