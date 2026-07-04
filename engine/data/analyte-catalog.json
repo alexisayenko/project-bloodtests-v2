@@ -3468,7 +3468,7 @@
   "RBC": {
     "key": "RBC",
     "shortName": "RBC",
-    "displayName": "Red Blood Cells (Erythrocytes)",
+    "displayName": "Erythrocytes",
     "loincComponent": "Erythrocytes",
     "loincs": [
       {
@@ -4323,7 +4323,7 @@
   "WBC": {
     "key": "WBC",
     "shortName": "WBC",
-    "displayName": "White Blood Cells (Leukocytes)",
+    "displayName": "Leukocytes",
     "loincComponent": "Leukocytes",
     "loincs": [
       {
