@@ -42,7 +42,7 @@ describe("groupByPanel", () => {
     const groups = groupByPanel(rows);
     const lipids = groups.find((x) => x.name === "Lipids")!;
     expect(lipids.rows.map((r) => r.shortName)).toEqual(["TC", "HDL-C"]); // TC before HDL-C per panel key order
-    expect(groups.find((x) => x.name === "HPT axis (thyroid)")!.rows.map((r) => r.shortName)).toEqual(["TSH"]);
+    expect(groups.find((x) => x.name === "Thyroid (HPT axis)")!.rows.map((r) => r.shortName)).toEqual(["TSH"]);
     expect(groups.at(-1)!.name).toBe("Other");
     expect(groups.at(-1)!.rows.map((r) => r.shortName)).toEqual(["ZZZ"]);
   });
