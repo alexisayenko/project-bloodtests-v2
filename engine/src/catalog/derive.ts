@@ -24,12 +24,13 @@ import { SI_RULES_BY_SYMBOL } from "../units.js";
  * catalog's single refDefault is only valid in one system; for every other
  * analyte the range is unit-system-agnostic and safe in any view.
  */
-const MOLAR_SYMBOLS = new Set(Object.keys(SI_RULES_BY_SYMBOL)); // GLU, TC, LDL-C, HDL-C, TRIG
+// Molar analytes (mass mg/dL vs molar mmol/L differ by LOINC Property) mapped to
+// their verified mg/dL->mmol/L converter, so a catalog range stored in mg/dL can
+// be shown as the SAME canonical threshold in the SI view (converted), not
+// dropped in favour of a lab-printed fallback.
+const MOLAR_RULE = new Map(Object.entries(SI_RULES_BY_SYMBOL)); // GLU, TC, LDL-C, HDL-C, TRIG
 
-/** Expected reference-range unit for a molar analyte in the active view. */
-function molarUnitFor(system: UnitSystem): string {
-  return system === "si" ? "mmol/l" : "mg/dl"; // us / original are the mass side
-}
+const round2 = (x: number): number => Math.round(x * 100) / 100;
 
 export interface CatalogIndex {
   /** entries keyed by analyte symbol (present on most entries) */
@@ -53,12 +54,29 @@ export function indexCatalog(catalog: AnalyteCatalog): CatalogIndex {
   return { bySymbol, byKey, byLoinc };
 }
 
-/** True when this entry's refDefault is safe to apply as an override in `system`. */
-function rangeAppliesIn(e: AnalyteEntry, r: RefRange, system: UnitSystem): boolean {
-  if (r.min == null && r.max == null) return false; // nothing to override with
-  const sym = e.symbol ?? e.key;
-  if (!MOLAR_SYMBOLS.has(sym)) return true; // unit-system-agnostic range
-  return (r.unit ?? "").trim().toLowerCase() === molarUnitFor(system);
+/**
+ * The reference bounds to override with, expressed in the ACTIVE unit system,
+ * or null if the range can't be applied. Unit-system-agnostic analytes pass
+ * through unchanged; molar analytes (mg/dL in the catalog) are converted to
+ * mmol/L for the SI view so US and SI show the same canonical threshold.
+ */
+function boundsForSystem(
+  e: AnalyteEntry,
+  r: RefRange,
+  system: UnitSystem,
+): { refMin: number | null; refMax: number | null } | null {
+  if (r.min == null && r.max == null) return null; // nothing to override with
+  const rule = MOLAR_RULE.get(e.symbol ?? e.key);
+  if (!rule) return { refMin: r.min, refMax: r.max }; // unit-system-agnostic
+  // Molar analyte: catalog range is mass (mg/dL). US/original keep it; SI converts.
+  const catalogIsMolar = (r.unit ?? "").trim().toLowerCase() === "mmol/l";
+  const wantMolar = system === "si";
+  if (wantMolar === catalogIsMolar) return { refMin: r.min, refMax: r.max }; // already in system
+  if (wantMolar && !catalogIsMolar) {
+    const c = (v: number | null): number | null => (v == null ? null : round2(rule.convert(v)));
+    return { refMin: c(r.min), refMax: c(r.max) };
+  }
+  return null; // want mass but catalog is molar (not present today) — skip rather than guess
 }
 
 export interface CatalogConfigOptions {
@@ -93,11 +111,13 @@ export function catalogToConfig(
   for (const e of Object.values(catalog)) {
     if (e.displayName) put(nameOverride, e, e.displayName);
     if (e.unreliableAssay) { if (e.symbol) unreliable.add(e.symbol); if (e.key) unreliable.add(e.key); }
-    if (includeRanges && e.refDefault && rangeAppliesIn(e, e.refDefault, system)) {
-      const r = e.refDefault;
-      const ov: RefOverride = { refMin: r.min, refMax: r.max };
-      if (r.note) ov.note = r.note;
-      put(refOverride, e, ov);
+    if (includeRanges && e.refDefault) {
+      const b = boundsForSystem(e, e.refDefault, system);
+      if (b) {
+        const ov: RefOverride = { refMin: b.refMin, refMax: b.refMax };
+        if (e.refDefault.note) ov.note = e.refDefault.note;
+        put(refOverride, e, ov);
+      }
     }
   }
 

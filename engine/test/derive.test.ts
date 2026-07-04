@@ -38,15 +38,16 @@ describe("catalogToConfig", () => {
     );
   });
 
-  it("gates the molar analyte's mg/dL range OUT of the SI system", () => {
-    // Glucose refDefault is mg/dL, so it must not override an SI (mmol/L) view.
+  it("converts the molar analyte's mg/dL range INTO the SI system (same threshold)", () => {
+    // Glucose refDefault is <100 mg/dL; the SI view must show the SAME threshold
+    // converted to mmol/L (100 / 18.018 ≈ 5.55), not a lab-range fallback.
     const us = catalogToConfig(catalog, { system: "us" });
     const si = catalogToConfig(catalog, { system: "si" });
-    expect(us.refOverride!["GLU"]).toBeDefined();
-    expect(si.refOverride!["GLU"]).toBeUndefined();
-    // A unit-agnostic analyte (TSH, mIU/L) is present in BOTH systems.
-    expect(us.refOverride!["TSH"]).toBeDefined();
-    expect(si.refOverride!["TSH"]).toBeDefined();
+    expect(us.refOverride!["GLU"]).toEqual(expect.objectContaining({ refMin: null, refMax: 100 }));
+    expect(si.refOverride!["GLU"]!.refMax).toBeCloseTo(5.55, 1);
+    expect(si.refOverride!["GLU"]!.refMin).toBeNull();
+    // A unit-agnostic analyte (TSH, mIU/L) is identical in BOTH systems.
+    expect(us.refOverride!["TSH"]).toEqual(si.refOverride!["TSH"]);
   });
 
   it("includeRanges:false suppresses all range overrides but keeps names", () => {
