@@ -11,6 +11,7 @@
  */
 
 import type { LabMatrixModel, LabRow, LabPanelGroup } from "./types.js";
+import { STYLES } from "./styles.js";
 
 const esc = (s: unknown): string =>
   String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!));
@@ -75,7 +76,8 @@ export class LabMatrix extends HTMLElement {
       .join("");
 
     root.innerHTML =
-      `<table class="labs matrix"><thead>${head}</thead><tbody>${body}</tbody></table>`;
+      `<style>${STYLES}</style>` +
+      `<div class="labs-scroll"><table class="labs matrix"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
   }
 
   private rowHtml(r: LabRow, nCols: number): string {

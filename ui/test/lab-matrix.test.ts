@@ -47,6 +47,22 @@ describe("<lab-matrix> (phase 0 skeleton)", () => {
     el.remove();
   });
 
+  it("injects the Shadow-DOM stylesheet + scroll wrapper (phase 1)", () => {
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    el.model = MODEL;
+    const sr = el.shadowRoot!;
+    const style = sr.querySelector("style");
+    expect(style).toBeTruthy();
+    expect(style!.textContent).toContain(".labs.matrix");
+    // host-palette indirection present (self-contained theming)
+    expect(style!.textContent).toContain(":host");
+    expect(style!.textContent).toContain("--_bg: var(--bg,");
+    // table is wrapped in the scroll container
+    expect(sr.querySelector(".labs-scroll > table.labs.matrix")).toBeTruthy();
+    el.remove();
+  });
+
   it("clears when the model is nulled", () => {
     const el = document.createElement("lab-matrix") as LabMatrix;
     document.body.appendChild(el);
