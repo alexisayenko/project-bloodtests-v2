@@ -14,7 +14,7 @@ export {
   type AnalyteCatalog, type AnalyteEntry, type Reference, type CatalogLoinc, type RefRange,
 } from "./catalog/schema.js";
 export {
-  catalogToConfig, mergeConfig, indexCatalog,
+  catalogToConfig, mergeConfig, indexCatalog, overrideBoundsForSystem,
   type CatalogIndex, type CatalogConfigOptions,
 } from "./catalog/derive.js";
 export { ANALYTE_CATALOG } from "./catalog/data.js";

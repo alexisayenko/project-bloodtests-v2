@@ -137,6 +137,26 @@ function addUnreliable(unreliable: Set<string>, e: AnalyteEntry): void {
   if (e.key) unreliable.add(e.key);
 }
 
+/**
+ * Convert an EXPLICIT/personal refOverride's bounds — given in the analyte's
+ * conventional (refDefault) unit — into the target unit system, so an override
+ * like DHEA-S 95–530 µg/dL renders correctly in the SI view (→ µmol/L). Molar
+ * analytes convert via molarMass; unit-system-agnostic ones pass through
+ * unchanged. Unknown keys / analytes without a refDefault unit pass through.
+ */
+export function overrideBoundsForSystem(
+  catalog: AnalyteCatalog,
+  keyOrShort: string,
+  bounds: { refMin: number | null; refMax: number | null },
+  system: UnitSystem,
+): { refMin: number | null; refMax: number | null } {
+  const idx = indexCatalog(catalog);
+  const e = idx.byKey.get(keyOrShort) ?? idx.byShortName.get(keyOrShort);
+  if (!e || !e.refDefault) return bounds;
+  const b = boundsForSystem(e, { ...e.refDefault, min: bounds.refMin, max: bounds.refMax }, system);
+  return b ? { refMin: b.refMin, refMax: b.refMax } : bounds;
+}
+
 /** Derive a unit-guarded RefOverride from an entry's cited refDefault, or null if none applies. */
 function refOverrideFor(e: AnalyteEntry, system: UnitSystem): RefOverride | null {
   if (!e.refDefault) return null;

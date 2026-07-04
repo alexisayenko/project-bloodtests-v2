@@ -89,3 +89,27 @@ describe("mergeConfig", () => {
     expect(merged.excludeMarkers!.has("BASO#")).toBe(true);
   });
 });
+
+import { overrideBoundsForSystem } from "../src/catalog/derive.js";
+import { ANALYTE_CATALOG } from "../src/catalog/data.js";
+
+describe("overrideBoundsForSystem", () => {
+  it("converts a molar analyte's personal override to SI (DHEA-S µg/dL → µmol/L)", () => {
+    // 95–530 µg/dL × (10 / 368.49 g/mol) ≈ 2.58–14.38 µmol/L
+    const si = overrideBoundsForSystem(ANALYTE_CATALOG, "DHEA-S", { refMin: 95, refMax: 530 }, "si");
+    expect(si.refMin).toBeGreaterThan(2.4);
+    expect(si.refMin).toBeLessThan(2.7);
+    expect(si.refMax).toBeGreaterThan(14.0);
+    expect(si.refMax).toBeLessThan(14.7);
+  });
+
+  it("leaves the override unchanged for the US system", () => {
+    const us = overrideBoundsForSystem(ANALYTE_CATALOG, "DHEA-S", { refMin: 95, refMax: 530 }, "us");
+    expect(us).toEqual({ refMin: 95, refMax: 530 });
+  });
+
+  it("passes through unknown keys and unit-agnostic analytes", () => {
+    expect(overrideBoundsForSystem(ANALYTE_CATALOG, "NOPE", { refMin: 1, refMax: 2 }, "si"))
+      .toEqual({ refMin: 1, refMax: 2 });
+  });
+});
