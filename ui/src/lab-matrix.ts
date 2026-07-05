@@ -365,8 +365,8 @@ export class LabMatrix extends HTMLElement {
 
     root.innerHTML =
       `<style>${STYLES}${TOOLBAR_CSS}</style>` +
-      toolbar +
       tabsBar +
+      toolbar +
       `<div class="labs-scroll"><table class="labs matrix">` +
       `<thead>${head}</thead>` +
       `<tbody>${panelsHtml}${idxTabs}</tbody>` +
