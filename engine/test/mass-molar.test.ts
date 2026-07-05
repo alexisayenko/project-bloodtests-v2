@@ -127,6 +127,19 @@ describe("deriveSIUnits — catalog-driven mass→molar (the bug fix)", () => {
     expect(d!.items[0]!.si.value).toBeCloseTo(8.74, 1);
     expect(d!.items[0]!.si.unit).toBe("nmol/L");
   });
+
+  it("SI-native source (molar) derives the US/mass view in reverse", () => {
+    // Uric acid stored in µmol/L (SI-native, e.g. a Russian lab). The molar value
+    // stays in the SI slot; the mass (mg/dL) US view is derived so the toggle works.
+    const [d] = deriveSIUnits([draw([massItem("Uric Acid", "14933-6", 418, "µmol/L", 140, 360)])]);
+    const it = d!.items[0]!;
+    expect(it.si.value).toBe(418); // molar unchanged in SI slot
+    expect(it.si.unit).toBe("µmol/L");
+    expect(it.us.value).toBeCloseTo(7.03, 1); // 418 µmol/L ÷ 59.48 = 7.03 mg/dL
+    expect(it.us.unit).toBe("mg/dL");
+    expect(it.us.refMin).toBeCloseTo(2.35, 1); // 140–360 µmol/L ⇒ 2.35–6.05 mg/dL
+    expect(it.us.refMax).toBeCloseTo(6.05, 1);
+  });
 });
 
 describe("SI_LOINC_BY_LOINC — SI view exposes the molar (SCnc) LOINC", () => {

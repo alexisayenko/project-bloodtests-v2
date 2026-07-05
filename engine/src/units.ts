@@ -18,7 +18,7 @@
  */
 
 import type { Draw, LabItem, UnitValue } from "./types.js";
-import { massToMolar } from "./convert.js";
+import { massToMolar, molarToMass, parseConcUnit } from "./convert.js";
 import { ANALYTE_CATALOG } from "./catalog/data.js";
 import type { AnalyteCatalog, AnalyteEntry, CatalogLoinc } from "./catalog/schema.js";
 
@@ -185,6 +185,26 @@ export function deriveSIUnits(draws: Draw[]): Draw[] {
         return { ...item, si };
       }
       const srcUnit = item.us.unit ?? rule.massUnit;
+      // SI-native source: the value stored in `us` is actually MOLAR (e.g. µmol/L
+      // from a Russian lab). Move it to the SI slot and DERIVE the mass value for
+      // the US view — so the US↔SI toggle works for single-unit SI data, not just
+      // US-native data.
+      if (parseConcUnit(srcUnit)?.base === "mol") {
+        const massVal = molarToMass(item.us.value, srcUnit, rule.massUnit, rule.molarMass);
+        if (massVal == null) return item;
+        const toMass = (v: number | null | undefined): number | null | undefined =>
+          v == null ? v : (molarToMass(v, srcUnit, rule.massUnit, rule.molarMass) ?? v);
+        const si: UnitValue = { ...item.us, unit: srcUnit }; // molar source → SI view unchanged
+        const us: UnitValue = {
+          ...item.us,
+          value: massVal,
+          unit: rule.massUnit,
+          refMin: toMass(item.us.refMin),
+          refMax: toMass(item.us.refMax),
+          rawValue: null, // no original mass printout — this is derived
+        };
+        return { ...item, us, si };
+      }
       const value = massToMolar(item.us.value, srcUnit, rule.unit, rule.molarMass);
       if (value == null) return item; // source unit not a mass concentration — leave as-is
       const conv = (v: number | null | undefined): number | null | undefined =>

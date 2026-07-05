@@ -118,3 +118,24 @@ export function massToMolar(
   const molPerL = gramsPerL / molarMassGPerMol;
   return (molPerL * s.volumeL) / s.prefix;
 }
+
+/**
+ * Inverse of {@link massToMolar}: a molar/substance concentration → a mass
+ * concentration, via the analyte's molar mass. For SI-native data (the value is
+ * stored in molar units) this recovers the US/mass view. Null if the units don't
+ * parse as molar→mass or the molar mass is missing.
+ */
+export function molarToMass(
+  value: number,
+  molarUnit: string | null | undefined,
+  massUnit: string | null | undefined,
+  molarMassGPerMol: number | null | undefined,
+): number | null {
+  const s = parseConcUnit(molarUnit);
+  const m = parseConcUnit(massUnit);
+  if (!s || !m || s.base !== "mol" || m.base !== "g") return null;
+  if (molarMassGPerMol == null || molarMassGPerMol <= 0) return null;
+  const molPerL = (value * s.prefix) / s.volumeL;
+  const gramsPerL = molPerL * molarMassGPerMol;
+  return (gramsPerL * m.volumeL) / m.prefix;
+}
