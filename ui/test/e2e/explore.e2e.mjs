@@ -36,11 +36,11 @@ const canvasInfo = await page.evaluate(() => {
 });
 check("chart canvas rendered", !!canvasInfo && canvasInfo.w > 0, JSON.stringify(canvasInfo));
 
-// 2. legend shows the default HPG selection
-const legend = await page.evaluate(() =>
-  Array.from(document.getElementById("x").shadowRoot.querySelectorAll(".u-legend th"))
-    .map((t) => t.textContent.trim()).filter(Boolean));
-check("legend = default selection (T, E2)", legend.join(",") === "T,E2", legend.join(","));
+// 2. selection badges show the default HPG selection (uPlot legend is hidden by design)
+const selected = await page.evaluate(() =>
+  Array.from(document.getElementById("x").shadowRoot.querySelectorAll(".mbadge.on"))
+    .map((t) => t.textContent.trim()).filter(Boolean).sort());
+check("selection = default (T, E2)", selected.join(",") === "E2,T", selected.join(","));
 
 // 3. zoom stepper: label changes, persists
 const label0 = await page.evaluate(() =>
@@ -80,10 +80,10 @@ check("tooltip shows normalized % (16.7%)", tipHtml.includes("(16.7%)"));
 await page.evaluate(() =>
   document.getElementById("x").shadowRoot.querySelector('.mbadge[data-key="HDL"]').click());
 await page.waitForTimeout(200);
-const legend2 = await page.evaluate(() =>
-  Array.from(document.getElementById("x").shadowRoot.querySelectorAll(".u-legend th"))
+const selected2 = await page.evaluate(() =>
+  Array.from(document.getElementById("x").shadowRoot.querySelectorAll(".mbadge.on"))
     .map((t) => t.textContent.trim()).filter(Boolean));
-check("adding HDL-C badge adds its series", legend2.includes("HDL-C"), legend2.join(","));
+check("adding HDL-C badge adds its series", selected2.includes("HDL-C"), selected2.join(","));
 const selLS = await page.evaluate(() => localStorage.getItem("exploreSel"));
 check("selection persisted (exploreSel)", !!selLS && selLS.includes("HDL"), selLS);
 

@@ -464,6 +464,19 @@ describe("marker cell — badge placement + price alignment", () => {
     expect(c.querySelector(".sym-loinc .info-badge")).toBeTruthy();
   });
 
+  it("multi-word name: ⓘ is glued to the name with no whitespace break (wraps with the last word)", () => {
+    // RU "Мочевая кислота" / uric acid: a name-only marker whose ⓘ rides the name
+    // line. happy-dom has no layout, so we assert the STRUCTURAL guarantee of the
+    // wrap fix: no whitespace text node sits between the name and the badge (a
+    // space there would be a line-break opportunity that orphans the ⓘ below).
+    const c = cellFor({ key: "UA", shortName: "Uric Acid", displayName: "Uric Acid",
+      unit: "mg/dL", refText: "3.5–7.2", provenance: prov, cells: [null] });
+    expect(c.querySelector(".sym-loinc")).toBeNull();       // name-only → ⓘ on the name line
+    const name = c.querySelector(".analyte-name")!;
+    const badge = c.querySelector(".info-badge")!;
+    expect(badge.previousSibling).toBe(name);               // glued: name element directly precedes the badge
+  });
+
   it("price is a right-side sibling of the range (no ' · ' prefix)", () => {
     const c = cellFor({ key: "HGB", shortName: "HGB", displayName: "Hemoglobin", displayShortName: "HGB",
       unit: "g/dL", refText: "13.5–17.5", scheduled: true, price: 5, cells: [null] });
@@ -542,9 +555,20 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
       { key: "anemia", label: "Anemia", labelRu: "Анемия" },
     ],
     explainers: {
-      all: { en: "<p>Everything measured.</p>", ru: "" },
-      anemia: { en: "<p>Iron and anemia lens.</p>", ru: "" },
-      explore: { en: "<p>explore prose (should stay hidden)</p>", ru: "" },
+      // "all" has BOTH a common and a personal block; "anemia" has only common
+      // (empty personal → that block must not render); "explore" is never shown.
+      all: {
+        common: { en: "<p>Everything measured.</p>", ru: "" },
+        personal: { en: "<p>Your all-view plan.</p>", ru: "" },
+      },
+      anemia: {
+        common: { en: "<p>Iron and anemia lens.</p>", ru: "" },
+        personal: { en: "", ru: "" },
+      },
+      explore: {
+        common: { en: "<p>explore prose (should stay hidden)</p>", ru: "" },
+        personal: { en: "<p>personal explore (should stay hidden)</p>", ru: "" },
+      },
     },
     panels: [
       {
@@ -598,13 +622,14 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     el.remove();
   });
 
-  it("explore view hides the matrix body, toolbar and lens-note", () => {
+  it("explore view hides the matrix body, toolbar and both lens-note blocks", () => {
     const el = mountExplore();
     const sr = el.shadowRoot!;
     el.view = "explore";
     expect((sr.querySelector(".labs-scroll") as HTMLElement).classList.contains("hidden")).toBe(true);
     expect((sr.querySelector(".labs-toolbar") as HTMLElement).classList.contains("hidden")).toBe(true);
-    expect((sr.querySelector(".lens-note") as HTMLElement).hidden).toBe(true);
+    expect((sr.querySelector(".lens-note-common") as HTMLElement).hidden).toBe(true);
+    expect((sr.querySelector(".lens-note-personal") as HTMLElement).hidden).toBe(true);
     // leaving explore restores the body + toolbar
     el.view = "all";
     expect((sr.querySelector(".labs-scroll") as HTMLElement).classList.contains("hidden")).toBe(false);
@@ -621,35 +646,64 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     el.remove();
   });
 
-  it("renders the model explainer in .lens-note (part=lens-note), hidden on explore", () => {
+  it("renders the two explainer blocks (common + personal); personal empty-hides; both hidden on explore", () => {
     const el = mountExplore();
     const sr = el.shadowRoot!;
-    const note = sr.querySelector(".lens-note") as HTMLElement;
-    expect(note.getAttribute("part")).toBe("lens-note");
-    // default view "all" → its explainer shows
-    expect(note.hidden).toBe(false);
-    expect(note.innerHTML).toContain("Everything measured.");
-    // anemia lens → its explainer
+    const common = sr.querySelector(".lens-note-common") as HTMLDetailsElement;
+    const personal = sr.querySelector(".lens-note-personal") as HTMLDetailsElement;
+    const cbody = () => common.querySelector(".lens-note-body") as HTMLElement;
+    const pbody = () => personal.querySelector(".lens-note-body") as HTMLElement;
+    expect(common.getAttribute("part")).toBe("lens-note");
+    expect(personal.getAttribute("part")).toBe("lens-note-personal");
+    // constant summary labels
+    expect((common.querySelector(".lens-note-sum") as HTMLElement).textContent).toBe("Common knowledge");
+    expect((personal.querySelector(".lens-note-sum") as HTMLElement).textContent).toBe("Your case");
+    // default view "all" → both blocks show (all has common + personal)
+    expect(common.hidden).toBe(false);
+    expect(cbody().innerHTML).toContain("Everything measured.");
+    expect(personal.hidden).toBe(false);
+    expect(pbody().innerHTML).toContain("Your all-view plan.");
+    // anemia lens → common shows, personal is empty → its block is hidden
     el.view = "anemia";
-    expect(note.hidden).toBe(false);
-    expect(note.innerHTML).toContain("Iron and anemia lens.");
-    // explore → hidden even though an explainer exists for it
+    expect(common.hidden).toBe(false);
+    expect(cbody().innerHTML).toContain("Iron and anemia lens.");
+    expect(personal.hidden).toBe(true);
+    // explore → both hidden even though explainers exist for it
     el.view = "explore";
-    expect(note.hidden).toBe(true);
+    expect(common.hidden).toBe(true);
+    expect(personal.hidden).toBe(true);
+    el.remove();
+  });
+
+  it("both notes start collapsed and reset to collapsed on every view change", () => {
+    const el = mountExplore();
+    const sr = el.shadowRoot!;
+    const common = sr.querySelector(".lens-note-common") as HTMLDetailsElement;
+    const personal = sr.querySelector(".lens-note-personal") as HTMLDetailsElement;
+    // default view: neither expanded
+    expect(common.open).toBe(false);
+    expect(personal.open).toBe(false);
+    // user opens both, then switches view → both must collapse again
+    common.open = true;
+    personal.open = true;
+    el.view = "anemia";
+    expect(common.open).toBe(false);
+    expect(personal.open).toBe(false);
     el.remove();
   });
 
   it("lens-note inner nodes carry no data-en/data-ru (applyLang leaves them alone)", () => {
     const el = mountExplore();
     const sr = el.shadowRoot!;
-    const note = sr.querySelector(".lens-note") as HTMLElement;
-    expect(note.querySelector("[data-en]")).toBeNull();
+    for (const note of Array.from(sr.querySelectorAll(".lens-note"))) {
+      expect(note.querySelector("[data-en]")).toBeNull();
+    }
     el.remove();
   });
 });
 
-describe("<lab-matrix> analyte popup — Draw + Why scheduled sections", () => {
-  const provModel = (drawNote?: string, scheduleNote?: string): LabMatrixModel => ({
+describe("<lab-matrix> analyte popup — agnostic Draw section (no personal scheduling)", () => {
+  const provModel = (drawNote?: string): LabMatrixModel => ({
     matrix: { cols: [{ id: "a", date: "2026-01", labName: "L" }], rows: [] },
     panels: [
       {
@@ -668,7 +722,6 @@ describe("<lab-matrix> analyte popup — Draw + Why scheduled sections", () => {
               references: [],
               why: "Adrenal glucocorticoid.",
               drawNote,
-              scheduleNote,
             },
             cells: [null],
           },
@@ -695,20 +748,11 @@ describe("<lab-matrix> analyte popup — Draw + Why scheduled sections", () => {
     el.remove();
   });
 
-  it("renders a Why scheduled section when provenance.scheduleNote is set", () => {
-    const el = mountProv(provModel(undefined, "Paired with morning ACTH."));
-    const pop = el.shadowRoot!.querySelector('tr[data-key="Cortisol"] .analyte-pop')!;
-    const sched = pop.querySelector(".ap-scheduled")!;
-    expect(sched).toBeTruthy();
-    expect(sched.textContent).toContain("Paired with morning ACTH.");
-    expect(sched.querySelector(".ap-lbl")?.getAttribute("data-en")).toBe("Why scheduled");
-    el.remove();
-  });
-
-  it("omits both sections when neither note is present", () => {
+  it("omits the Draw section when no drawNote is present, and never renders a Why-scheduled section", () => {
     const el = mountProv(provModel());
     const pop = el.shadowRoot!.querySelector('tr[data-key="Cortisol"] .analyte-pop')!;
     expect(pop.querySelector(".ap-draw")).toBeNull();
+    // the personal "Why scheduled" section was removed — the popup stays agnostic
     expect(pop.querySelector(".ap-scheduled")).toBeNull();
     el.remove();
   });

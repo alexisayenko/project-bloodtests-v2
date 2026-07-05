@@ -52,7 +52,6 @@ const DEFAULT_I18N: Record<string, string> = {
   "popup.sources": "Sources",
   "popup.why": "Why",
   "popup.draw": "Draw",
-  "popup.scheduled": "Why scheduled",
   "popup.formula": "Formula",
   "popup.meaning": "What it is",
   "popup.consensus": "Interpretation",
@@ -74,6 +73,8 @@ const DEFAULT_I18N: Record<string, string> = {
   "control.langRU": "Язык: RU",
   "control.expandAll": "Expand all",
   "control.collapseAll": "Collapse all",
+  "note.common": "Common knowledge",
+  "note.personal": "Your case",
 };
 
 /** EN/RU helper matching the njk `la` (attributes) / `lt` (span) macros. */
@@ -341,14 +342,25 @@ export class LabMatrix extends HTMLElement {
     const popup =
       `<div id="cell-popup" hidden><button type="button" class="tip-close" aria-label="Close">×</button><div class="tip-body"></div></div>`;
 
-    // per-view explainer prose block (filled by applyView); RU is empty for now
-    // so its inner nodes carry NO data-en/data-ru — applyLang leaves it untouched.
-    const lensNote = `<div class="lens-note" part="lens-note" hidden></div>`;
+    // per-view explainer prose — TWO collapsibles: "Common knowledge" (agnostic
+    // teaching) + "Your case" (Alex's personal interpretation). Both filled by
+    // applyView; RU is empty for now so their inner nodes carry NO data-en/data-ru
+    // (applyLang leaves them untouched). Native collapsibles: the summary labels
+    // are constant, the bodies swap per view; each hides when its content is empty.
+    const lensNotes =
+      `<details class="lens-note lens-note-common" part="lens-note" hidden>` +
+      `<summary class="lens-note-sum">${esc(t.text("note.common", this.ruOn))}</summary>` +
+      `<div class="lens-note-body"></div>` +
+      `</details>` +
+      `<details class="lens-note lens-note-personal" part="lens-note-personal" hidden>` +
+      `<summary class="lens-note-sum">${esc(t.text("note.personal", this.ruOn))}</summary>` +
+      `<div class="lens-note-body"></div>` +
+      `</details>`;
 
     root.innerHTML =
       `<style>${STYLES}${TOOLBAR_CSS}</style>` +
       tabsBar +
-      lensNote +
+      lensNotes +
       toolbar +
       `<div class="labs-scroll"><table class="labs matrix">` +
       `<thead>${head}</thead>` +
@@ -395,20 +407,28 @@ export class LabMatrix extends HTMLElement {
     if (!this.shadowRoot) return;
     const isExplore = key === "explore";
 
-    // Explore mode: hide the whole matrix chrome (body + toolbar + explainer);
+    // Explore mode: hide the whole matrix chrome (body + toolbar + explainers);
     // the host reveals its own explore panel on the `viewchange` event.
     const scroll = this.q(".labs-scroll") as HTMLElement | null;
     const toolbar = this.q(".labs-toolbar") as HTMLElement | null;
-    const note = this.q(".lens-note") as HTMLElement | null;
     if (scroll) scroll.classList.toggle("hidden", isExplore);
     if (toolbar) toolbar.classList.toggle("hidden", isExplore);
 
-    // per-view explainer prose (EN; RU is empty for now → always fall back to EN)
-    const explainer = this._model?.explainers?.[key]?.en ?? "";
-    if (note) {
-      note.innerHTML = explainer;
-      note.hidden = !explainer || isExplore;
-    }
+    // per-view explainer prose — two blocks (agnostic "common" + personal "Your
+    // case"). EN only for now (RU is empty → always fall back to EN). Each block
+    // hides when its content is empty OR the view is explore; both reset to
+    // collapsed on every view change (never carry an open note across tabs).
+    const blocks = this._model?.explainers?.[key];
+    const fillNote = (sel: string, html: string): void => {
+      const note = this.q(sel) as HTMLDetailsElement | null;
+      if (!note) return;
+      const body = note.querySelector(".lens-note-body");
+      if (body) body.innerHTML = html;
+      note.hidden = !html || isExplore;
+      note.open = false;
+    };
+    fillNote(".lens-note-common", blocks?.common?.en ?? "");
+    fillNote(".lens-note-personal", blocks?.personal?.en ?? "");
 
     // reflect active tab (for every view, including explore)
     for (const b of this.qa("[data-lens]")) {
@@ -734,12 +754,16 @@ export class LabMatrix extends HTMLElement {
     const warn = r.unreliable
       ? `<button type="button" class="warn-badge" data-warn aria-label="Why this measurement is unreliable">⚠</button>`
       : "";
+    // NB: no leading whitespace before the ⓘ button — a space would be a line-break
+    // opportunity, orphaning the badge onto its own line when a multi-word name
+    // (e.g. "Мочевая кислота") wraps. Glued directly to the name, the badge rides
+    // the last word wherever it lands; its visual gap comes from CSS margin-left.
     const info = r.provenance
-      ? ` <button type="button" class="info-badge" data-analyte-info aria-label="Reference-range source for ${esc(
+      ? `<button type="button" class="info-badge" data-analyte-info aria-label="Reference-range source for ${esc(
           name,
         )}">ⓘ</button>${this.analytePopup(r.provenance, t)}`
       : "";
-    const nameBadges = showSym ? "" : `${warn ? " " + warn : ""}${info}`;
+    const nameBadges = showSym ? "" : `${warn ? warn : ""}${info}`;
 
     // ---- symbol + (hidden) LOINC-codes line — only when there's a code or LOINC to carry
     let symLoinc = "";
@@ -892,18 +916,13 @@ export class LabMatrix extends HTMLElement {
         )}>${esc(p.why)}</span></div>`
       : "";
 
-    // Draw — universal draw-physiology note (timing/prep). Mirrors the why/note blocks.
+    // Draw — universal draw-physiology note (timing/prep). Agnostic; mirrors the
+    // why/note blocks. (The former personal "Why scheduled" section was removed —
+    // the ⓘ popup stays patient-agnostic; scheduling lives in the personal note.)
     const draw = p.drawNote
       ? `<div class="ap-sec ap-draw"><span class="ap-lbl"${t.attr("popup.draw")}>Draw</span> <span>${esc(
           p.drawNote,
         )}</span></div>`
-      : "";
-
-    // Why scheduled — reason this analyte is ordered for a given draw.
-    const scheduled = p.scheduleNote
-      ? `<div class="ap-sec ap-scheduled"><span class="ap-lbl"${t.attr(
-          "popup.scheduled",
-        )}>Why scheduled</span> <span>${esc(p.scheduleNote)}</span></div>`
       : "";
 
     return (
@@ -914,7 +933,6 @@ export class LabMatrix extends HTMLElement {
       refs +
       why +
       draw +
-      scheduled +
       `</div></div>`
     );
   }

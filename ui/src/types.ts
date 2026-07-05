@@ -57,8 +57,6 @@ export interface LabProvenance {
   molarMassRef?: { cite?: string; url?: string } | null;
   /** universal draw-physiology note (timing/prep) — shown in the popup "Draw" section. */
   drawNote?: string | null;
-  /** why this analyte is scheduled for a given draw — shown in the popup "Why scheduled" section. */
-  scheduleNote?: string | null;
 }
 
 /** A scheduled-draw prescription badge (which doctor can order the marker). */
@@ -172,8 +170,13 @@ export interface LabMatrixModel {
   keyViews?: Record<string, string[]>;
   /** optional in-component lens tab bar; when absent the host drives `.view`. */
   lensTabs?: LabLensTab[];
-  /** per-view explainer prose (view key → {en, ru}); rendered in the .lens-note block. RU is "" for now. */
-  explainers?: Record<string, { en: string; ru?: string }>;
+  /**
+   * Per-view explainer prose, split into two collapsibles: `common` = agnostic
+   * clinical teaching, `personal` = Alex's own case. Rendered in the two
+   * .lens-note blocks. RU is "" for now (falls back to EN); an empty `personal`
+   * block is not rendered.
+   */
+  explainers?: Record<string, { common: { en: string; ru?: string }; personal: { en: string; ru?: string } }>;
   drawCount?: number;
   markerCount?: number;
   ok?: boolean;

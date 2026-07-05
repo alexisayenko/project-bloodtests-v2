@@ -478,7 +478,7 @@ export class LabExplore extends HTMLElement {
           xAxis(th),
           { scale: "pct", stroke: th.axis, grid: { stroke: th.grid, width: 0.5 } },
         ],
-        legend: { show: true, live: false },
+        legend: { show: false },
         cursor: { drag: { x: false, y: false } },
         hooks: {
           drawClear: [drawBand, drawEvents],

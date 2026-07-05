@@ -37,8 +37,8 @@ export const STYLES = `
 }
 /* explore mode / toggled-off chrome */
 .hidden { display: none !important; }
-/* per-view explainer prose (rendered right after the lens tab bar). Inherits the
-   shadow-root font-size (no font-size here on purpose) for a readable prose block. */
+/* per-view explainer prose (rendered right after the lens tab bar). Sized down to
+   match the matrix table (0.82rem) rather than inheriting the larger shadow size. */
 .lens-note {
   max-width: 60ch;
   margin: 0.3rem 0 0.6rem;
@@ -46,8 +46,14 @@ export const STYLES = `
   border-left: 3px solid var(--_rule);
   color: var(--_muted);
   line-height: 1.5;
+  font-size: 0.82rem;
 }
+.lens-note-sum { cursor: pointer; font-weight: 600; font-size: 0.82rem; padding: 2px 0; }
+.lens-note-body { line-height: 1.5; }
 .lens-note[hidden] { display: none; }
+/* the two stacked blocks (Common knowledge + Your case) — a little breathing room
+   between them when both are shown */
+.lens-note + .lens-note { margin-top: 0.5rem; }
 .labs.matrix {
   border-collapse: collapse;
   font-size: 0.82rem;

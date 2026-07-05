@@ -20,6 +20,9 @@ export const EXPLORE_STYLES = `
   display: block;
   color: var(--_fg);
 }
+/* [hidden] must win over the :host{display:block} above, or <lab-explore hidden>
+   stays visible and the chart leaks under every non-explore tab. */
+:host([hidden]) { display: none !important; }
 @media (prefers-color-scheme: dark) {
   :host {
     --_fg: var(--fg, #d6d6d6);
