@@ -28,19 +28,22 @@ import type { AnalyteCatalog, AnalyteEntry, CatalogLoinc } from "./catalog/schem
  * value and its reference bounds and (b) show the molar LOINC code in the SI view.
  */
 export interface SIRule {
-  /** Convert one mass value → molar, using the analyte's catalog mass unit as the
-   *  source unit. (deriveSIUnits prefers the item's OWN stored unit when present.) */
+  /** Convert one US/conventional value → SI, using the analyte's catalog source
+   *  unit. (deriveSIUnits prefers the item's OWN stored unit when present.) */
   convert: (x: number) => number;
-  /** Target SI (molar, SCnc) unit, e.g. "mmol/L", "nmol/L", "pmol/L". */
+  /** Target SI unit, e.g. "mmol/L", "nmol/L", "pmol/L" (molar) or "mIU/L" (IU). */
   unit: string;
-  /** The molar (SCnc / [Moles/volume]) LOINC — shown in the SI view. */
+  /** The SI-view LOINC (molar SCnc, or IU ACnc/SCnc) — shown in the SI view. */
   siLoinc: string;
-  /** Cited molar mass (g/mol). */
-  molarMass: number;
-  /** The catalog's mass (MCnc) unit, used as the default source unit. */
-  massUnit: string;
-  /** The mass (MCnc / [Mass/volume]) LOINC — shown in the US view. */
+  /** The mass/US-view LOINC — shown in the US view. */
   massLoinc: string | null;
+  /** Cited molar mass (g/mol) — present ONLY for mass↔molar analytes. */
+  molarMass?: number;
+  /** The catalog's mass (MCnc) unit — present ONLY for mass↔molar analytes. */
+  massUnit?: string;
+  /** Linear SI conversion factor — present ONLY for non-molar IU analytes
+   *  (siConversion): the SI value is the US value × factor. */
+  factor?: number;
 }
 
 const firstLoincWith = (e: AnalyteEntry, prop: string): CatalogLoinc | undefined =>
@@ -63,30 +66,54 @@ function buildSIRules(catalog: AnalyteCatalog): BuiltRules {
   const byShortName: Record<string, SIRule> = {};
   const siLoincByLoinc: Record<string, string> = {};
 
-  for (const e of Object.values(catalog)) {
-    if (e.molarMass == null) continue;
-    const mass = firstLoincWith(e, "MCnc");
-    const molar = firstLoincWith(e, "SCnc");
-    if (!mass?.unit || !mass.code || !molar?.unit || !molar.code) continue;
-
-    const massUnit = mass.unit;
-    const target = molar.unit;
-    const molarMass = e.molarMass;
-    const rule: SIRule = {
-      convert: (x: number) => massToMolar(x, massUnit, target, molarMass) ?? x,
-      unit: target,
-      siLoinc: molar.code,
-      molarMass,
-      massUnit,
-      massLoinc: mass.code,
-    };
-
-    byLoinc[mass.code] = rule;
-    siLoincByLoinc[mass.code] = molar.code;
+  const register = (e: AnalyteEntry, rule: SIRule, massCode: string | null, siCode: string | null): void => {
+    if (massCode) {
+      byLoinc[massCode] = rule;
+      if (siCode) siLoincByLoinc[massCode] = siCode;
+    }
     if (e.shortName) byShortName[e.shortName] = rule;
     // Also key by the catalog key (= analysis name for short-name-less analytes such
     // as "Cortisol"), matching the engine's short-name-first / analysis-fallback lookup.
     if (e.key && e.key !== e.shortName) byShortName[e.key] = rule;
+  };
+
+  for (const e of Object.values(catalog)) {
+    // Mass↔molar analytes: qualify only with molarMass + mass (MCnc) & molar (SCnc)
+    // LOINC pair with units. Otherwise fall through to the linear-IU path.
+    if (e.molarMass != null) {
+      const mass = firstLoincWith(e, "MCnc");
+      const molar = firstLoincWith(e, "SCnc");
+      if (!mass?.unit || !mass.code || !molar?.unit || !molar.code) continue;
+
+      const massUnit = mass.unit;
+      const target = molar.unit;
+      const molarMass = e.molarMass;
+      register(e, {
+        convert: (x: number) => massToMolar(x, massUnit, target, molarMass) ?? x,
+        unit: target,
+        siLoinc: molar.code,
+        massLoinc: mass.code,
+        molarMass,
+        massUnit,
+      }, mass.code, molar.code);
+      continue;
+    }
+
+    // Non-molar LINEAR IU analytes (e.g. prolactin ng/mL → mIU/L): the SI value is
+    // the US value × factor. The SI-view LOINC is the analyte's ACnc/SCnc code (IU),
+    // the US-view LOINC its MCnc (mass) code, when present.
+    if (e.siConversion) {
+      const { factor, unit } = e.siConversion;
+      const mass = firstLoincWith(e, "MCnc");
+      const si = firstLoincWith(e, "ACnc") ?? firstLoincWith(e, "SCnc");
+      register(e, {
+        convert: (x: number) => x * factor,
+        unit,
+        siLoinc: si?.code ?? "",
+        massLoinc: mass?.code ?? null,
+        factor,
+      }, mass?.code ?? null, si?.code ?? null);
+    }
   }
 
   return { byLoinc, byShortName, siLoincByLoinc };
@@ -133,6 +160,20 @@ export function deriveSIUnits(draws: Draw[]): Draw[] {
     items: draw.items.map((item) => {
       const rule = ruleFor(item);
       if (!rule || item.us == null || typeof item.us.value !== "number") return item;
+      // Linear IU conversion (non-molar): SI value = US value × factor.
+      if (rule.factor != null) {
+        const factor = rule.factor;
+        const conv = (v: number | null | undefined): number | null | undefined =>
+          v == null ? v : v * factor;
+        const si: UnitValue = {
+          ...item.si,
+          value: item.us.value * factor,
+          unit: rule.unit,
+          refMin: conv(item.us.refMin),
+          refMax: conv(item.us.refMax),
+        };
+        return { ...item, si };
+      }
       const srcUnit = item.us.unit ?? rule.massUnit;
       const value = massToMolar(item.us.value, srcUnit, rule.unit, rule.molarMass);
       if (value == null) return item; // source unit not a mass concentration — leave as-is

@@ -78,6 +78,17 @@ export const AnalyteEntrySchema = z.object({
   loincs: z.array(CatalogLoincSchema).default([]),
   molarMass: z.number().nullable().optional(),     // g/mol — only for analytes with a mass↔molar conversion
   molarMassRef: ReferenceSchema.nullable().optional(),
+  /**
+   * Non-molar LINEAR SI conversion for analytes reported in International Units
+   * (IU) rather than mass↔molar (e.g. prolactin ng/mL → mIU/L). The SI value is
+   * the conventional/US value × `factor`; `unit` is the SI unit label. Used when
+   * no `molarMass` applies. The factor is standard/assay-dependent — cite it.
+   */
+  siConversion: z.object({
+    factor: z.number(),                            // multiply US/conventional value by this to get the SI value
+    unit: z.string(),                              // SI unit label, e.g. "mIU/L"
+    ref: ReferenceSchema.nullable().optional(),    // citation for the factor
+  }).nullable().optional(),
   refDefault: RefRangeSchema.nullable().optional(),// the CITED recommended range (null if uncited)
   evidenceLevel: EvidenceLevel.default("uncited"),
   references: z.array(ReferenceSchema).default([]),

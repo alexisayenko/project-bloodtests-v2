@@ -67,6 +67,14 @@ function boundsForSystem(
   if (r.min == null && r.max == null) return null; // nothing to override with
   const rule = SI_RULES_BY_SHORTNAME[e.shortName ?? e.key];
   if (!rule) return { refMin: r.min, refMax: r.max }; // unit-system-agnostic
+  // Non-molar LINEAR IU analyte (e.g. prolactin ng/mL → mIU/L): the catalog range
+  // is stored in the US/conventional unit. US/original keep it; SI multiplies by
+  // the cited factor so the SI range matches the SI-converted cell values.
+  if (rule.factor != null) {
+    if (system !== "si") return { refMin: r.min, refMax: r.max };
+    const c = (v: number | null): number | null => (v == null ? null : round2(v * rule.factor!));
+    return { refMin: c(r.min), refMax: c(r.max) };
+  }
   // Molar analyte: catalog range is stored in mass units. US/original keep it; SI
   // converts to the analyte's molar unit using its (own refDefault) source unit,
   // so e.g. DHT stored in pg/mL converts as pg/mL even though the canonical mass

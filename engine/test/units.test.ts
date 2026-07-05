@@ -64,16 +64,33 @@ describe("deriveSIUnits — mass→molar SI conversion", () => {
   });
 
   it("leaves non-configured analytes' si byte-identical and does not mutate input", () => {
-    const prlSi = { value: 190.8, unit: "mIU/L", refMin: 86, refMax: 324 };
+    // TSH is reported in mIU/L with no molar mass and no siConversion → no SI rule.
+    const tshSi = { value: 1.5, unit: "mIU/L", refMin: 0.4, refMax: 4.0 };
     const input = [
-      draw([{ shortName: "PRL", analysis: "Prolactin", loinc: "2842-3",
-        original: { value: 9, unit: "ng/mL" }, us: { value: 9, unit: "ng/mL" }, si: prlSi }]),
+      draw([{ shortName: "TSH", analysis: "Thyrotropin", loinc: "11580-8",
+        original: { value: 1.5, unit: "mIU/L" }, us: { value: 1.5, unit: "mIU/L" }, si: tshSi }]),
     ];
     const out = deriveSIUnits(input);
     // si returned unchanged (same reference passed through, deep-equal)
-    expect(out[0]!.items[0]!.si).toEqual(prlSi);
+    expect(out[0]!.items[0]!.si).toEqual(tshSi);
     expect(out[0]!.items[0]!.si).toBe(input[0]!.items[0]!.si);
     // input untouched
-    expect(input[0]!.items[0]!.si).toEqual(prlSi);
+    expect(input[0]!.items[0]!.si).toEqual(tshSi);
+  });
+});
+
+describe("deriveSIUnits — linear IU conversion (prolactin ng/mL → mIU/L)", () => {
+  it("converts PRL 9 ng/mL → 190.8 mIU/L and scales its reference range ×21.2", () => {
+    const [d] = deriveSIUnits([
+      draw([item("PRL", "2842-3", u(9, "ng/mL", 2.5, 17))]),
+    ]);
+    const prl = d!.items[0]!;
+    expect(prl.si.value).toBeCloseTo(190.8, 4);
+    expect(prl.si.unit).toBe("mIU/L");
+    expect(prl.si.refMin).toBeCloseTo(53, 4);   // 2.5 × 21.2
+    expect(prl.si.refMax).toBeCloseTo(360.4, 4); // 17 × 21.2
+    // 190.8 sits inside the converted 53–360.4 range → no false HIGH flag
+    expect(prl.si.value!).toBeGreaterThan(prl.si.refMin!);
+    expect(prl.si.value!).toBeLessThan(prl.si.refMax!);
   });
 });

@@ -3269,6 +3269,17 @@
       "organization": "PubChem",
       "document": "Prolactin is a single-chain polypeptide hormone (~23 kDa); reported in ng/mL (mass) or mIU/L (IU vs WHO standard). Conversion used here: 1 ng/mL ~ 21.2 mIU/L (WHO 3rd IS 84/500). No small-molecule molar mass applies."
     },
+    "siConversion": {
+      "factor": 21.2,
+      "unit": "mIU/L",
+      "ref": {
+        "organization": "WHO (World Health Organization)",
+        "document": "WHO International Standard, Prolactin, human (3rd IS, code 84/500)",
+        "url": "https://www.nibsc.org/documents/ifu/84-500.pdf",
+        "year": 1988,
+        "quote": "1 ng/mL prolactin ≈ 21.2 mIU/L (WHO 3rd IS 84/500); conversion is standard/assay-dependent."
+      }
+    },
     "refDefault": {
       "min": 2.5,
       "max": 17,

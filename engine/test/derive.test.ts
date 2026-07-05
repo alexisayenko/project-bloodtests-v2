@@ -50,6 +50,17 @@ describe("catalogToConfig", () => {
     expect(us.refOverride!["TSH"]).toEqual(si.refOverride!["TSH"]);
   });
 
+  it("converts the linear-IU analyte's ng/mL range INTO the SI system (PRL ×21.2)", () => {
+    // Prolactin has no molar mass; siConversion {factor: 21.2, unit: mIU/L}. The US
+    // view keeps 2.5–17 ng/mL; the SI view multiplies by 21.2 → 53–360.4 mIU/L, so
+    // the SI range matches the SI-converted cells (a 190.8 mIU/L value stays normal).
+    const us = catalogToConfig(catalog, { system: "us" });
+    const si = catalogToConfig(catalog, { system: "si" });
+    expect(us.refOverride!["PRL"]).toEqual(expect.objectContaining({ refMin: 2.5, refMax: 17 }));
+    expect(si.refOverride!["PRL"]!.refMin).toBeCloseTo(53, 4);
+    expect(si.refOverride!["PRL"]!.refMax).toBeCloseTo(360.4, 4);
+  });
+
   it("includeRanges:false suppresses all range overrides but keeps names", () => {
     const cfg = catalogToConfig(catalog, { includeRanges: false });
     expect(Object.keys(cfg.refOverride!)).toHaveLength(0);
@@ -111,5 +122,13 @@ describe("overrideBoundsForSystem", () => {
   it("passes through unknown keys and unit-agnostic analytes", () => {
     expect(overrideBoundsForSystem(ANALYTE_CATALOG, "NOPE", { refMin: 1, refMax: 2 }, "si"))
       .toEqual({ refMin: 1, refMax: 2 });
+  });
+
+  it("converts a linear-IU analyte's personal override to SI (PRL ng/mL → mIU/L ×21.2)", () => {
+    const si = overrideBoundsForSystem(ANALYTE_CATALOG, "PRL", { refMin: 2.5, refMax: 17 }, "si");
+    expect(si.refMin).toBeCloseTo(53, 4);
+    expect(si.refMax).toBeCloseTo(360.4, 4);
+    const us = overrideBoundsForSystem(ANALYTE_CATALOG, "PRL", { refMin: 2.5, refMax: 17 }, "us");
+    expect(us).toEqual({ refMin: 2.5, refMax: 17 });
   });
 });
