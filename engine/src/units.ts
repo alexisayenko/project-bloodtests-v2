@@ -30,7 +30,7 @@ import type { AnalyteCatalog, AnalyteEntry, CatalogLoinc } from "./catalog/schem
  * declared token BEFORE the formula runs, so a formula never guesses the unit
  * system. Extend only as new unit-dependent indices need it; no free strings.
  */
-export type Unit = "mg/dL" | "mmol/L" | "µmol/L" | "µIU/mL" | "%" | "U/L";
+export type Unit = "mg/dL" | "mmol/L" | "µmol/L" | "pmol/L" | "pg/mL" | "ng/dL" | "µIU/mL" | "%" | "U/L";
 
 /**
  * How to render an analyte's mass value in the SI (molar) view. Derived per

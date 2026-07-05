@@ -28,6 +28,10 @@ const TO_MMOLL: Record<string, (x: number) => number> = {
   TC: cholMgdlToMmoll, "HDL-C": cholMgdlToMmoll, "LDL-C": cholMgdlToMmoll,
   TRIG: tgMgdlToMmoll, GLU: glucoseMgdlToMmoll,
 };
+/** Free thyroid hormones: fixture US unit (FT3 pg/mL, FT4 ng/dL) → pmol/L. */
+const TO_PMOLL: Record<string, (x: number) => number> = {
+  FT3: (x) => x * 1.536, FT4: (x) => x * 12.87,
+};
 
 /**
  * Convert the mg/dL fixture into an index's declared `inputUnits` — the same
@@ -38,8 +42,9 @@ const TO_MMOLL: Record<string, (x: number) => number> = {
 function inputFor(def: IndexDef): Markers {
   const m: Markers = { ...M };
   for (const [marker, unit] of Object.entries(def.inputUnits ?? {})) {
-    const conv = TO_MMOLL[marker];
-    if (unit === "mmol/L" && conv && M[marker] != null) m[marker] = conv(M[marker]!);
+    if (unit === "mmol/L" && TO_MMOLL[marker] && M[marker] != null) m[marker] = TO_MMOLL[marker]!(M[marker]!);
+    else if (unit === "pmol/L" && TO_PMOLL[marker] && M[marker] != null) m[marker] = TO_PMOLL[marker]!(M[marker]!);
+    // mg/dL (CREAT) / µIU/mL (Insulin) etc.: the fixture is already in that unit → passthrough
   }
   return m;
 }

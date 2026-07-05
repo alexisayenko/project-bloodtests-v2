@@ -305,7 +305,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Популярно в функциональной / интегративной медицине; слабая поддержка в классической эндокринологии и нет согласованного порога — рассматривайте как исследовательский, а не диагностический.",
     } },
     fn: (m) => has(m, "Cortisol", "DHEA-S") ? (m["Cortisol"]! * 27.59) / (m["DHEA-S"]! * 27.14) : null }, // RS [fixed 2026-07-04] — BOTH sides in nmol/L: cortisol µg/dL→nmol/L ×27.59 (MW 362.46); DHEA-S µg/dL→nmol/L ×27.14 (MW 368.5; =×0.02714 µmol/L ×1000). Prior code divided by DHEA-S in µmol/L (1000× off) → healthy ~59 vs the [12,20] cut, so everything flagged catabolic. Now ratio ~0.03–0.10 healthy, cut [0.1,0.2].
-  { key: "ft3ft4", name: "FT3 / FT4 ratio", itab: "hypothyroidism", formula: "FT3 / FT4 (molar)", cut: [0.3, 0.2], hi: true, needs: ["FT3", "FT4"], level: "heuristic",
+  { key: "ft3ft4", name: "FT3 / FT4 ratio", itab: "hypothyroidism", formula: "FT3 / FT4 (molar)", cut: [0.3, 0.2], hi: true, needs: ["FT3", "FT4"], inputUnits: { FT3: "pmol/L", FT4: "pmol/L" }, level: "heuristic",
     meaning: "Peripheral T4→T3 conversion (deiodinase activity), using the free hormones so it's independent of binding-protein swings. A low ratio means poor conversion — seen in low-T3 / euthyroid-sick syndrome, chronic stress, illness, low selenium or caloric restriction. Guide: >0.30 good · 0.20–0.30 low-normal · <0.20 poor conversion.",
     consensus: "Used as an orientation for conversion problems; no formal diagnostic cutoff. Free-hormone ratio is preferred over total T3/T4 (which are distorted by binding globulin).",
     evidenceLevel: "heuristic",
@@ -317,7 +317,9 @@ export const INDEX_DEFS: IndexDef[] = [
       meaning: "Периферическая конверсия Т4→Т3 (активность дейодиназы), с использованием свободных гормонов, поэтому не зависит от колебаний связывающих белков. Низкое отношение означает плохую конверсию — наблюдается при синдроме низкого Т3 / эутиреоидной патологии, хроническом стрессе, болезни, дефиците селена или ограничении калорий. Ориентир: >0,30 хорошо · 0,20–0,30 низконормальный · <0,20 плохая конверсия.",
       consensus: "Используется как ориентир при проблемах конверсии; формального диагностического порога нет. Отношение свободных гормонов предпочтительнее общих Т3/Т4 (которые искажаются связывающим глобулином).",
     } },
-    fn: (m) => has(m, "FT3", "FT4") ? (m["FT3"]! * 1.536) / (m["FT4"]! * 12.87) : null }, // RS [verified 2026-07-04] — FT3 pg/mL→pmol/L ×1.536 (T3 MW 650.98); FT4 ng/dL→pmol/L ×12.87 (T4 MW 776.87). Standard SI conversions (UNITSLAB).
+    // Inputs arrive already in pmol/L (declared via inputUnits, normalized by buildIndices from
+    // pg/mL ×1.536 / ng/dL ×12.87, or passed through when already SI) — plain molar ratio.
+    fn: (m) => has(m, "FT3", "FT4") ? m["FT3"]! / m["FT4"]! : null },
   { key: "deritis", name: "De Ritis ratio (AST/ALT)", itab: ["liver", "nafld"], formula: "AST / ALT", cut: [1.3, 2], needs: ["AST", "ALT"], level: "consensus",
     loinc: "1916-6", // LOINC 1916-6 — Aspartate aminotransferase/Alanine aminotransferase [Enzymatic activity ratio] in Serum or Plasma (AST/ALT direction; the inverse ALT/AST is 16325-3)
     meaning: "Pattern of liver injury. <1 typical of fatty liver; >1 alcoholic/cirrhotic or muscle source; >2 especially concerning.",

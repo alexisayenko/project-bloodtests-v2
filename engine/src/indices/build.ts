@@ -86,6 +86,17 @@ function toUnit(value: number, marker: string, from: string | null | undefined, 
     if (from === "mg/dL" && to === "µmol/L") return value * CREAT_MGDL_PER_UMOLL;
     return value;
   }
+  // Free thyroid hormones: US mass units ↔ SI molar (pmol/L), per-marker molar mass.
+  if (marker === "FT3") { // T3 MW 650.98 ⇒ 1 pg/mL = 1.536 pmol/L
+    if (from === "pg/mL" && to === "pmol/L") return value * 1.536;
+    if (from === "pmol/L" && to === "pg/mL") return value / 1.536;
+    return value;
+  }
+  if (marker === "FT4") { // T4 MW 776.87 ⇒ 1 ng/dL = 12.87 pmol/L
+    if (from === "ng/dL" && to === "pmol/L") return value * 12.87;
+    if (from === "pmol/L" && to === "ng/dL") return value / 12.87;
+    return value;
+  }
   const f = MGDL_TO_MMOLL[marker];
   if (!f) return value; // no known conversion for this marker — leave as-is
   if (from === "mg/dL" && to === "mmol/L") return f(value);
