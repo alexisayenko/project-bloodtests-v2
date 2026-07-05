@@ -10,30 +10,45 @@
  */
 
 import type { PanelGroup } from "./panels.js";
+import { LENS_COMMON } from "./lens-common.js";
+
+/** Agnostic "common knowledge" explainer HTML for a lens ({ en, ru }). */
+export interface LensCommon {
+  en: string;
+  ru?: string;
+}
 
 export interface LensDef {
   key: string;
   label: string;
   keys?: string[];
   panels?: string[];
+  /**
+   * Agnostic "common knowledge": what makes this lens's markers one
+   * physiological system, patient-agnostic. Lens-associated domain content;
+   * the personal ("your case") counterpart belongs to the consumer, not here.
+   */
+  common?: LensCommon;
 }
 
 export const DEFAULT_LENSES: LensDef[] = [
-  { key: "hypogonadism", label: "Hypogonadism", keys: ["T", "FT", "SHBG", "ALB", "LH", "FSH", "E2", "PRL", "DHT", "Ferritin", "TSH", "Zn", "Vit D", "HbA1c"] },
-  { key: "hypothyroidism", label: "Hypothyroidism", keys: ["TSH", "FT4", "FT3", "Anti-TPO", "Anti-Tg", "Vit D"] },
-  { key: "adrenal", label: "Adrenal", panels: ["Adrenal (HPA axis)"] },
-  { key: "ir", label: "Insulin resistance", keys: ["GLU", "Insulin", "HbA1c", "TRIG", "HDL-C"] },
+  { key: "hypogonadism", label: "Hypogonadism", keys: ["T", "FT", "SHBG", "ALB", "LH", "FSH", "E2", "PRL", "DHT", "Ferritin", "TSH", "Zn", "Vit D", "HbA1c"], common: LENS_COMMON.hypogonadism },
+  { key: "hypothyroidism", label: "Hypothyroidism", keys: ["TSH", "FT4", "FT3", "Anti-TPO", "Anti-Tg", "Vit D"], common: LENS_COMMON.hypothyroidism },
+  { key: "adrenal", label: "Adrenal", panels: ["Adrenal (HPA axis)"], common: LENS_COMMON.adrenal },
+  { key: "ir", label: "Insulin resistance", keys: ["GLU", "Insulin", "HbA1c", "TRIG", "HDL-C"], common: LENS_COMMON.ir },
   { key: "cardio", label: "Cardiovascular risk", keys: ["TC", "LDL-C", "HDL-C", "TRIG", "ApoB", "ApoA1", "Lp(a)", "hsCRP", "Homocysteine"] },
-  { key: "nafld", label: "Fatty liver", keys: ["ALT", "AST", "GGT", "PLT", "TRIG", "HbA1c", "GLU"] },
-  { key: "kidney", label: "Kidney", keys: ["CREAT", "Cystatin C", "Urea", "Uric Acid", "ACR", "Na", "K", "Cl", "Ca", "P", "ALB", "GLU"] },
-  { key: "anemia", label: "Anemia", keys: ["HGB", "HCT", "RBC", "MCV", "MCH", "MCHC", "RDW-CV", "Ferritin", "Fe", "TIBC", "TRF", "B12", "Folic Acid"] },
-  { key: "bone", label: "Bone-mineral", keys: ["Ca", "P", "Mg", "ALP", "PTH", "Vit D", "ALB"] },
+  { key: "nafld", label: "Fatty liver", keys: ["ALT", "AST", "GGT", "PLT", "TRIG", "HbA1c", "GLU"], common: LENS_COMMON.nafld },
+  { key: "kidney", label: "Kidney", keys: ["CREAT", "Cystatin C", "Urea", "Uric Acid", "ACR", "Na", "K", "Cl", "Ca", "P", "ALB", "GLU"], common: LENS_COMMON.kidney },
+  { key: "anemia", label: "Anemia", keys: ["HGB", "HCT", "RBC", "MCV", "MCH", "MCHC", "RDW-CV", "Ferritin", "Fe", "TIBC", "TRF", "B12", "Folic Acid"], common: LENS_COMMON.anemia },
+  { key: "bone", label: "Bone-mineral", keys: ["Ca", "P", "Mg", "ALP", "PTH", "Vit D", "ALB"], common: LENS_COMMON.bone },
 ];
 
 export interface ResolvedLens {
   key: string;
   label: string;
   keys: string[];
+  /** Lens-associated agnostic explainer ({ en, ru }), when the lens has one. */
+  common?: LensCommon;
 }
 
 /**
@@ -54,5 +69,6 @@ export function resolveLenses<
     key: lens.key,
     label: lens.label,
     keys: lens.keys ?? panelKeys(lens.panels ?? []),
+    ...(lens.common ? { common: lens.common } : {}),
   }));
 }

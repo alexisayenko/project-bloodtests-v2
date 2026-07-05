@@ -22,6 +22,15 @@ describe("DEFAULT_LENSES", () => {
     expect(adrenal.panels).toEqual(["Adrenal (HPA axis)"]);
     expect(adrenal.keys).toBeUndefined();
   });
+
+  it("carries agnostic common-knowledge (en+ru) on lenses that have it; cardio has none", () => {
+    const ir = DEFAULT_LENSES.find((l) => l.key === "ir")!;
+    expect(ir.common?.en).toMatch(/insulin/i);
+    expect(ir.common?.ru?.length).toBeGreaterThan(0);
+    expect(/[Ѐ-ӿ]/.test(ir.common!.ru!)).toBe(true); // real Cyrillic RU
+    const cardio = DEFAULT_LENSES.find((l) => l.key === "cardio")!;
+    expect(cardio.common).toBeUndefined();
+  });
 });
 
 describe("resolveLenses", () => {
@@ -43,6 +52,12 @@ describe("resolveLenses", () => {
     expect(cardio.keys).toEqual([
       "TC", "LDL-C", "HDL-C", "TRIG", "ApoB", "ApoA1", "Lp(a)", "hsCRP", "Homocysteine",
     ]);
+  });
+
+  it("propagates lens-associated common knowledge to the resolved lens", () => {
+    const resolved = resolveLenses(panelGroups);
+    expect(resolved.find((l) => l.key === "ir")!.common?.en).toMatch(/insulin/i);
+    expect(resolved.find((l) => l.key === "cardio")!.common).toBeUndefined();
   });
 
   it("every resolved lens has a non-empty label and a keys array", () => {

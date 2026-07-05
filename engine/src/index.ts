@@ -43,8 +43,10 @@ export { applyPlan, type LabPlan, type NextAssayItem, type ScheduleDraw, type Pl
 // Reference-range provenance (ADR-0007) — render-ready ⓘ-popup data
 export { buildProvenance, type LabProvenance } from "./catalog/provenance.js";
 
-// Clinical-lens catalog (which markers make up each diagnostic lens)
-export { DEFAULT_LENSES, resolveLenses, type LensDef, type ResolvedLens } from "./lenses.js";
+// Clinical-lens catalog (which markers make up each diagnostic lens + its
+// agnostic "common knowledge" explainer)
+export { DEFAULT_LENSES, resolveLenses, type LensDef, type ResolvedLens, type LensCommon } from "./lenses.js";
+export { LENS_COMMON } from "./lens-common.js";
 
 // Dual-unit row enrichment (US+SI join + latest/trend/recent for the results table)
 export { enrichRows, type EnrichedRow, type EnrichedCell, type EnrichAdds, type EnrichOptions } from "./enrich.js";
