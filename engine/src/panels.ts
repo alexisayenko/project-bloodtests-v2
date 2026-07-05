@@ -28,7 +28,7 @@ export const PANELS: Panel[] = [
   { name: "Lipids", keys: ["TC", "LDL-C", "HDL-C", "TRIG", "ApoB", "ApoA1", "Lp(a)"], loincPanel: "57698-3" }, // Lipid panel
   { name: "Glycemic control", keys: ["GLU", "Insulin", "HbA1c"] }, // app grouping — no single standard panel
   { name: "LFT (liver)", keys: ["AST", "ALT", "GGT", "ALP", "T-BIL", "D-BIL", "I-BIL", "Protein Total", "ALB", "GLOB"] }, // app grouping
-  { name: "Kidney", keys: ["Urea", "CREAT", "Uric Acid", "Cystatin C", "ACR"], loincPanel: "24362-6" }, // Renal function panel
+  { name: "Kidney", keys: ["Urea", "CREAT", "Uric Acid", "Cystatin C", "ACR"] }, // thematic group, not the standard Renal Function battery (LOINC 24362-6)
   // Electrolytes + macro-minerals + trace elements + vitamins united into one
   // app grouping (spans multiple standard batteries, so no single loincPanel).
   { name: "Electrolytes, minerals & vitamins", keys: ["Na", "K", "Cl", "Ca", "P", "Mg", "PTH", "Fe", "Zn", "Cu", "Se", "Vit D", "B12", "Folic Acid"] },
