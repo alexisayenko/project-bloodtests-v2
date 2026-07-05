@@ -284,7 +284,13 @@ export class LabMatrix extends HTMLElement {
         )}>Derived indices</span></th></tr>`;
         const rows = (grp.items ?? [])
           .filter((ix) => !ix.anchor)
-          .map((ix) => this.idxRow({ ...ix, itab: ix.itab ?? grp.itab }, "idx-row", scheduleCols.length, t))
+          // Tag each bottom index row with THIS group's lens (grp.itab), never the
+          // item's own `itab`: a multi-lens index (e.g. AIP → ir + cardio) is the
+          // SAME object emitted once per group, and labsV2 collapses its `itab` to
+          // itabs[0]. Using ix.itab would stamp every copy with the first lens, so
+          // one lens shows it twice and the other not at all. grp.itab keeps each
+          // copy in exactly its own lens → at most one visible row per view.
+          .map((ix) => this.idxRow({ ...ix, itab: grp.itab }, "idx-row", scheduleCols.length, t))
           .join("");
         return sep + rows;
       })
@@ -359,14 +365,14 @@ export class LabMatrix extends HTMLElement {
 
     root.innerHTML =
       `<style>${STYLES}${TOOLBAR_CSS}</style>` +
-      tabsBar +
-      lensNotes +
       toolbar +
+      tabsBar +
       `<div class="labs-scroll"><table class="labs matrix">` +
       `<thead>${head}</thead>` +
       `<tbody>${panelsHtml}${idxTabs}</tbody>` +
       `<tfoot>${foot}</tfoot>` +
       `</table></div>` +
+      lensNotes +
       popup;
 
     this.applyState();
@@ -413,6 +419,15 @@ export class LabMatrix extends HTMLElement {
     const toolbar = this.q(".labs-toolbar") as HTMLElement | null;
     if (scroll) scroll.classList.toggle("hidden", isExplore);
     if (toolbar) toolbar.classList.toggle("hidden", isExplore);
+
+    // "Collapse all" only makes sense on All — the only view with collapsible panel
+    // groups (lens views hide panel headers). Hide the button and its separator on
+    // every other view.
+    const collapseBtn = this.q('[data-act="collapse-toggle"]') as HTMLElement | null;
+    const collapseSep = collapseBtn?.nextElementSibling as HTMLElement | null;
+    const showCollapse = key === "all";
+    if (collapseBtn) collapseBtn.classList.toggle("hidden", !showCollapse);
+    if (collapseSep?.classList.contains("lm-sep")) collapseSep.classList.toggle("hidden", !showCollapse);
 
     // per-view explainer prose — two blocks (agnostic "common" + personal "Your
     // case"). EN only for now (RU is empty → always fall back to EN). Each block
