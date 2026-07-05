@@ -430,20 +430,10 @@ export class LabMatrix extends HTMLElement {
     if (collapseSep?.classList.contains("lm-sep")) collapseSep.classList.toggle("hidden", !showCollapse);
 
     // per-view explainer prose — two blocks (agnostic "common" + personal "Your
-    // case"). EN only for now (RU is empty → always fall back to EN). Each block
-    // hides when its content is empty OR the view is explore; both reset to
+    // case"). Rendered in the active language (RU when a RU string exists, else EN;
+    // personal RU is intentionally deferred so it always shows EN). Reset to
     // collapsed on every view change (never carry an open note across tabs).
-    const blocks = this._model?.explainers?.[key];
-    const fillNote = (sel: string, html: string): void => {
-      const note = this.q(sel) as HTMLDetailsElement | null;
-      if (!note) return;
-      const body = note.querySelector(".lens-note-body");
-      if (body) body.innerHTML = html;
-      note.hidden = !html || isExplore;
-      note.open = false;
-    };
-    fillNote(".lens-note-common", blocks?.common?.en ?? "");
-    fillNote(".lens-note-personal", blocks?.personal?.en ?? "");
+    this.applyNotes(key, true);
 
     // reflect active tab (for every view, including explore)
     for (const b of this.qa("[data-lens]")) {
@@ -570,6 +560,33 @@ export class LabMatrix extends HTMLElement {
     this.applyUnits(this.siOn);
     this.applyDetail(this.minOn);
     this.applyCollapseToggleLabel();
+    // explainer bodies are innerHTML (not data-en/-ru nodes) → re-fill in the new
+    // language, preserving the current open/closed state (don't reset on a swap).
+    this.applyNotes(this._view, false);
+  }
+
+  /**
+   * Fill both explainer notes for `key` in the active language: RU when a RU
+   * string exists, else EN (personal RU is deferred, so it always shows EN). A
+   * block hides when its content is empty or the view is explore. `resetOpen`
+   * collapses the note (true on a view change; false on a language swap so an
+   * open note stays open).
+   */
+  private applyNotes(key: string, resetOpen: boolean): void {
+    const blocks = this._model?.explainers?.[key];
+    const isExplore = key === "explore";
+    const pick = (b?: { en?: string; ru?: string }): string =>
+      (this.ruOn && b?.ru ? b.ru : b?.en) ?? "";
+    const fill = (sel: string, html: string): void => {
+      const note = this.q(sel) as HTMLDetailsElement | null;
+      if (!note) return;
+      const body = note.querySelector(".lens-note-body");
+      if (body) body.innerHTML = html;
+      note.hidden = !html || isExplore;
+      if (resetOpen) note.open = false;
+    };
+    fill(".lens-note-common", pick(blocks?.common));
+    fill(".lens-note-personal", pick(blocks?.personal));
   }
 
   /** Label the single collapse/expand toggle by current state (all-collapsed → offer Expand). */
