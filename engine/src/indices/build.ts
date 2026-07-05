@@ -11,6 +11,9 @@
 import type { Draw } from "../types.js";
 import { zone, type Zone } from "../flag.js";
 import { INDEX_DEFS, type Markers } from "./definitions.js";
+import type { Reference, EvidenceLevel } from "../catalog/schema.js";
+import { citeOf } from "../cite.js";
+import { fmtNum } from "../format.js";
 
 export interface IndexBuildConfig {
   /** Patient age in years at a given draw date (for eGFR, FIB-4). */
@@ -20,11 +23,13 @@ export interface IndexBuildConfig {
 }
 
 export interface IndexCol { id: string; date: string; labName: string }
-export interface IndexValue { v: number; z: Zone }
+export interface IndexValue { v: string; z: Zone }
 export interface IndexItem {
   key: string;
   name: string;
   itabs: string[];
+  /** First of `itabs` — the primary clinical tab (singular convenience field). */
+  itab: string;
   anchor: string | null;
   formula: string;
   level: "consensus" | "heuristic";
@@ -33,6 +38,14 @@ export interface IndexItem {
   needs: string[];
   hasData: boolean;
   cells: (IndexValue | null)[];
+  /** Localized (ru) text with English fallback. */
+  nameRu: string;
+  meaningRu: string;
+  consensusRu: string;
+  /** ADR-0007 clinical provenance carried through from the IndexDef. */
+  evidenceLevel: EvidenceLevel | null;
+  loinc: string | null;
+  references: (Reference & { cite: string })[];
 }
 export interface IndexMatrix {
   cols: IndexCol[];
@@ -69,16 +82,30 @@ export function buildIndices(draws: Draw[], config: IndexBuildConfig = {}): Inde
       const ctx = { ageYears: config.ageYearsForDraw?.(c.date), sex: config.sex };
       const v = d.fn(drawMap[c.id]!, ctx);
       if (v != null && Number.isFinite(v)) {
-        values[c.id] = { v: Math.round(v * 100) / 100, z: zone(v, d.cut[0], d.cut[1], d.hi) };
+        // Round to 2 decimals first, THEN apply magnitude-adaptive precision —
+        // matches the historical display (e.g. AIP 0.4475 → 0.45 → "0.45", not
+        // "0.448"): the raw value is quantised to 2dp before fmtNum trims it.
+        values[c.id] = { v: fmtNum(Math.round(v * 100) / 100), z: zone(v, d.cut[0], d.cut[1], d.hi) };
         n++;
       }
     }
+    const itabs = Array.isArray(d.itab) ? d.itab : [d.itab];
+    const ru = d.lang?.ru ?? {};
+    const references = (d.references || [])
+      .filter((c) => c && (c.organization || c.document || c.url || c.doi))
+      .map((c) => ({ ...c, cite: citeOf(c) }));
     return {
       key: d.key, name: d.name,
-      itabs: Array.isArray(d.itab) ? d.itab : [d.itab],
+      itabs, itab: itabs[0]!,
       anchor: d.anchor ?? null, formula: d.formula, level: d.level,
       meaning: d.meaning, consensus: d.consensus, needs: d.needs,
       hasData: n > 0, cells: cols.map((c) => values[c.id] ?? null),
+      nameRu: ru.name || d.name,
+      meaningRu: ru.meaning || d.meaning,
+      consensusRu: ru.consensus || d.consensus,
+      evidenceLevel: d.evidenceLevel || null,
+      loinc: d.loinc || null,
+      references,
     };
   });
 

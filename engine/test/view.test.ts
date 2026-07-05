@@ -32,7 +32,7 @@ describe("buildLabView — end-to-end", () => {
 
   it("computes indices (TC/HDL = 4)", () => {
     const tchdl = view.indices.tabs.flatMap((t) => t.items).find((i) => i.key === "tchdl")!;
-    expect(tchdl.cells[0]).toEqual({ v: 4, z: "z-warn" });
+    expect(tchdl.cells[0]).toEqual({ v: "4", z: "z-warn" });
   });
 
   it("throws on invalid data (bad date) when validating", () => {

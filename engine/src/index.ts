@@ -7,6 +7,7 @@ export { parseDraws, safeParseDraws, DrawSchema, DrawsSchema, LabItemSchema, Uni
 // Primitives
 export { zone, flagOf, CLIN_ZONE, type Zone, type ClinBand } from "./flag.js";
 export { fmtNum } from "./format.js";
+export { citeOf, shortOrg, type CiteInput } from "./cite.js";
 export { cholMgdlToMmoll, tgMgdlToMmoll, glucoseMgdlToMmoll, massToMolar, parseConcUnit, type ConcUnit } from "./convert.js";
 export { deriveSIUnits, SI_RULES_BY_LOINC, SI_RULES_BY_SHORTNAME, SI_LOINC_BY_LOINC, type SIRule } from "./units.js";
 export {
@@ -38,6 +39,15 @@ export { buildIndices, type IndexMatrix, type IndexItem, type IndexCol, type Ind
 
 // Plan overlay (personal)
 export { applyPlan, type LabPlan, type NextAssayItem, type ScheduleDraw, type PlanRow, type PlanMatrix, type RxBadge, type RxMap, type PlanOverlayConfig } from "./plan.js";
+
+// Reference-range provenance (ADR-0007) — render-ready ⓘ-popup data
+export { buildProvenance, type LabProvenance } from "./catalog/provenance.js";
+
+// Clinical-lens catalog (which markers make up each diagnostic lens)
+export { DEFAULT_LENSES, resolveLenses, type LensDef, type ResolvedLens } from "./lenses.js";
+
+// Dual-unit row enrichment (US+SI join + latest/trend/recent for the results table)
+export { enrichRows, type EnrichedRow, type EnrichedCell, type EnrichAdds, type EnrichOptions } from "./enrich.js";
 
 // One-call view builder
 export { buildLabView, type LabView, type LabViewConfig } from "./view.js";
