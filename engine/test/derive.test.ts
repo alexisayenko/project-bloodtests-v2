@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { parseCatalog } from "../src/catalog/schema.js";
-import { catalogToConfig, mergeConfig, indexCatalog } from "../src/catalog/derive.js";
+import { catalogToConfig, mergeConfig, indexCatalog, resolveEntry } from "../src/catalog/derive.js";
 import type { AnalyteCatalog } from "../src/catalog/schema.js";
 
 const catalog: AnalyteCatalog = parseCatalog(
@@ -15,6 +15,48 @@ describe("indexCatalog", () => {
     expect(idx.byKey.get("GLU")?.shortName).toBe("GLU");
     // Glucose carries its mass LOINC 2339-0
     expect(idx.byLoinc.get("2339-0")?.shortName).toBe("GLU");
+  });
+});
+
+describe("indexCatalog — aliases", () => {
+  const idx = indexCatalog(catalog);
+
+  it("resolves Russian-abbreviation aliases to the right analyte", () => {
+    // existing analytes given RU aliases
+    expect(idx.byAlias.get("ТТГ")?.shortName).toBe("TSH");
+    expect(idx.byAlias.get("ЛПНП")?.shortName).toBe("LDL-C");
+    expect(idx.byAlias.get("СОЭ")?.shortName).toBe("ESR");
+    expect(idx.byAlias.get("Витамин B12")?.shortName).toBe("B12");
+    // newly added analytes
+    expect(idx.byAlias.get("Гомоцистеин")?.shortName).toBe("Homocysteine");
+    expect(idx.byAlias.get("КФК")?.shortName).toBe("CK");
+    expect(idx.byAlias.get("Кальций ионизированный")?.shortName).toBe("Ca-ion");
+    expect(idx.byAlias.get("МНО")?.shortName).toBe("INR");
+    expect(idx.byAlias.get("Антитела к ТПО")?.shortName).toBe("Anti-TPO");
+  });
+
+  it("resolveEntry prefers a real key/shortName over any alias", () => {
+    // "Ca" is a real shortName (total calcium); it must NOT be shadowed by the
+    // "Кальций" alias family — real key wins in the precedence chain.
+    expect(resolveEntry(idx, "Ca")?.shortName).toBe("Ca");
+    expect(resolveEntry(idx, "TSH")?.shortName).toBe("TSH");
+    // an alias still resolves through resolveEntry when it is not a real key
+    expect(resolveEntry(idx, "ТТГ")?.shortName).toBe("TSH");
+    expect(resolveEntry(idx, "Гомоцистеин")?.shortName).toBe("Homocysteine");
+  });
+
+  it("an alias never clobbers a real shortName/key (real markers win)", () => {
+    // Build a catalog where entry B lists an alias equal to entry A's real key.
+    const mini: AnalyteCatalog = {
+      GLU: { key: "GLU", shortName: "GLU", displayName: "Glucose", aliases: [], loincs: [], evidenceLevel: "uncited", references: [], unreliableAssay: false },
+      Sugar: { key: "Sugar", shortName: "Sugar", displayName: "Blood sugar", aliases: ["GLU"], loincs: [], evidenceLevel: "uncited", references: [], unreliableAssay: false },
+    };
+    const i = indexCatalog(mini);
+    // real key/shortName GLU still points at the glucose entry, not "Sugar"
+    expect(i.byKey.get("GLU")?.displayName).toBe("Glucose");
+    expect(resolveEntry(i, "GLU")?.displayName).toBe("Glucose");
+    // the colliding alias was skipped, so byAlias has no "GLU"
+    expect(i.byAlias.has("GLU")).toBe(false);
   });
 });
 

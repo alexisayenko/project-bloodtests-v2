@@ -74,6 +74,14 @@ export const AnalyteEntrySchema = z.object({
   key: z.string(),                                 // catalog key (short name, else analysis name)
   shortName: z.string().nullable().optional(),
   displayName: z.string(),                         // curated human name (LOINC Component-derived)
+  /**
+   * Alternate labels that resolve to this analyte — foreign-language abbreviations
+   * (e.g. Russian "ТТГ" → TSH) and common synonyms a lab report may print instead
+   * of the catalog's canonical shortName/displayName. Used to match a second user's
+   * markers against the standard. Aliases NEVER override a real shortName/key on
+   * lookup — real keys always win (see indexCatalog / byAlias).
+   */
+  aliases: z.array(z.string()).default([]),
   loincComponent: z.string().nullable().optional(),// LOINC axis-1 Component ("Glucose", "Cholesterol in HDL"…)
   loincs: z.array(CatalogLoincSchema).default([]),
   molarMass: z.number().nullable().optional(),     // g/mol — only for analytes with a mass↔molar conversion

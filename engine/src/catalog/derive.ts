@@ -38,19 +38,43 @@ export interface CatalogIndex {
   byKey: Map<string, AnalyteEntry>;
   /** entries keyed by every LOINC code they carry */
   byLoinc: Map<string, AnalyteEntry>;
+  /**
+   * entries keyed by every alias (alternate/foreign-language label). A real
+   * shortName or key ALWAYS wins: an alias that collides with one is skipped, so
+   * it can never shadow a canonical marker. Among aliases, the first wins.
+   */
+  byAlias: Map<string, AnalyteEntry>;
 }
 
-/** Build short-name/key/LOINC lookup maps over a catalog (last entry wins on collision). */
+/** Build short-name/key/LOINC/alias lookup maps over a catalog (last entry wins on collision). */
 export function indexCatalog(catalog: AnalyteCatalog): CatalogIndex {
   const byShortName = new Map<string, AnalyteEntry>();
   const byKey = new Map<string, AnalyteEntry>();
   const byLoinc = new Map<string, AnalyteEntry>();
+  const byAlias = new Map<string, AnalyteEntry>();
   for (const [key, e] of Object.entries(catalog)) {
     byKey.set(key, e);
     if (e.shortName) byShortName.set(e.shortName, e);
     for (const l of e.loincs ?? []) if (l.code) byLoinc.set(l.code, e);
   }
-  return { byShortName, byKey, byLoinc };
+  // Index aliases only AFTER all real keys/shortNames exist, so a real marker
+  // always wins and an alias never clobbers one (nor an earlier alias).
+  for (const e of Object.values(catalog)) {
+    for (const a of e.aliases ?? []) {
+      if (!a || byKey.has(a) || byShortName.has(a) || byAlias.has(a)) continue;
+      byAlias.set(a, e);
+    }
+  }
+  return { byShortName, byKey, byLoinc, byAlias };
+}
+
+/**
+ * Resolve a label to its catalog entry using the full precedence chain:
+ * real key → real shortName → LOINC code → alias. Real markers always beat
+ * aliases. Returns undefined if nothing matches.
+ */
+export function resolveEntry(idx: CatalogIndex, label: string): AnalyteEntry | undefined {
+  return idx.byKey.get(label) ?? idx.byShortName.get(label) ?? idx.byLoinc.get(label) ?? idx.byAlias.get(label);
 }
 
 /**

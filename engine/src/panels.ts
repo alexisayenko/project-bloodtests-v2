@@ -24,20 +24,20 @@ export interface Panel { name: string; keys: string[]; loincPanel?: string }
 export const PANELS: Panel[] = [
   // Complete Blood Count — one standard battery (LOINC 58410-2): red cells,
   // white cells + differential, platelets, in that clinical reading order.
-  { name: "Complete blood count (CBC)", keys: ["RBC", "HGB", "HCT", "MCV", "MCH", "MCHC", "RDW-CV", "RDW-SD", "WBC", "NEUT%", "NEUT#", "LYMPH%", "LYMPH#", "MONO%", "MONO#", "EO%", "EO#", "BASO%", "BASO#", "PLT", "MPV", "PDW", "P-LCR", "PCT"], loincPanel: "58410-2" },
-  { name: "Lipids", keys: ["TC", "LDL-C", "HDL-C", "TRIG", "ApoB", "ApoA1", "Lp(a)"], loincPanel: "57698-3" }, // Lipid panel
-  { name: "Glycemic control", keys: ["GLU", "Insulin", "HbA1c"] }, // app grouping — no single standard panel
-  { name: "LFT (liver)", keys: ["AST", "ALT", "GGT", "ALP", "T-BIL", "D-BIL", "I-BIL", "Protein Total", "ALB", "GLOB"] }, // app grouping
+  { name: "Complete blood count (CBC)", keys: ["RBC", "HGB", "HCT", "MCV", "MCH", "MCHC", "RDW-CV", "RDW-SD", "WBC", "NEUT%", "NEUT#", "LYMPH%", "LYMPH#", "MONO%", "MONO#", "EO%", "EO#", "BASO%", "BASO#", "PLT", "MPV", "PDW", "P-LCR", "P-LCC", "PCT"], loincPanel: "58410-2" },
+  { name: "Lipids", keys: ["TC", "LDL-C", "HDL-C", "TRIG", "VLDL", "ApoB", "ApoA1", "Lp(a)"], loincPanel: "57698-3" }, // Lipid panel
+  { name: "Glycemic control", keys: ["GLU", "Insulin", "C-peptide", "HbA1c"] }, // app grouping — no single standard panel
+  { name: "LFT (liver)", keys: ["AST", "ALT", "GGT", "ALP", "T-BIL", "D-BIL", "I-BIL", "Protein Total", "ALB", "GLOB", "CK"] }, // app grouping (CK is a muscle enzyme placed with enzymes as least-bad fit — no dedicated muscle panel)
   { name: "Kidney", keys: ["Urea", "CREAT", "Uric Acid", "Cystatin C", "ACR"] }, // thematic group, not the standard Renal Function battery (LOINC 24362-6)
   // Electrolytes + macro-minerals + trace elements + vitamins united into one
   // app grouping (spans multiple standard batteries, so no single loincPanel).
-  { name: "Electrolytes, minerals & vitamins", keys: ["Na", "K", "Cl", "Ca", "P", "Mg", "PTH", "Fe", "Zn", "Cu", "Se", "Vit D", "B12", "Folic Acid"] },
+  { name: "Electrolytes, minerals & vitamins", keys: ["Na", "K", "Cl", "Ca", "Ca-ion", "P", "Mg", "PTH", "Fe", "Zn", "Cu", "Se", "Vit D", "B12", "Folic Acid"] },
   { name: "Iron studies", keys: ["TIBC", "TRF", "Ferritin"] }, // app grouping
   { name: "Thyroid (HPT axis)", keys: ["TSH", "FT4", "FT3", "Anti-TPO", "Anti-Tg"] }, // app axis lens — not a standard panel
   { name: "Sex hormones (HPG axis)", keys: ["T", "FT", "DHT", "SHBG", "E2", "FSH", "LH", "PRL"] }, // app axis lens
   { name: "Adrenal (HPA axis)", keys: ["Cortisol", "ACTH", "DHEA-S"] }, // app axis lens
   { name: "GH / IGF-1 axis", keys: ["IGF-1"] }, // app axis lens
-  { name: "Inflammation & coagulation", keys: ["ESR", "CRP", "hsCRP", "Homocysteine", "D-Dimer"] }, // app grouping
+  { name: "Inflammation & coagulation", keys: ["ESR", "CRP", "hsCRP", "Homocysteine", "D-Dimer", "Fibrinogen", "PT", "INR", "PTI", "TT"] }, // app grouping
   { name: "Immunoglobulins", keys: ["IgA", "IgG", "IgM"] }, // app grouping
   { name: "Tumor markers", keys: ["PSA", "Calcitonin"] }, // app grouping
 ];

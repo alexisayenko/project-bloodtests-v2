@@ -101,6 +101,9 @@
     "key": "ALP",
     "shortName": "ALP",
     "displayName": "Alkaline phosphatase",
+    "aliases": [
+      "ЩФ"
+    ],
     "loincComponent": "Alkaline phosphatase",
     "loincs": [
       {
@@ -150,6 +153,9 @@
     "key": "ALT",
     "shortName": "ALT",
     "displayName": "Alanine aminotransferase",
+    "aliases": [
+      "АЛТ"
+    ],
     "loincComponent": "Alanine aminotransferase",
     "loincs": [
       {
@@ -248,6 +254,9 @@
     "key": "AST",
     "shortName": "AST",
     "displayName": "Aspartate aminotransferase",
+    "aliases": [
+      "АСТ"
+    ],
     "loincComponent": "Aspartate aminotransferase",
     "loincs": [
       {
@@ -297,6 +306,10 @@
     "key": "B12",
     "shortName": "B12",
     "displayName": "Vitamin B12 (cobalamin)",
+    "aliases": [
+      "Витамин B12",
+      "Витамин В12"
+    ],
     "loincComponent": "Cobalamin (Vitamin B12)",
     "loincs": [
       {
@@ -466,6 +479,10 @@
     "key": "Ca",
     "shortName": "Ca",
     "displayName": "Calcium",
+    "aliases": [
+      "Кальций общий",
+      "Кальций"
+    ],
     "loincComponent": "Calcium",
     "loincs": [
       {
@@ -582,6 +599,10 @@
     "key": "Cl",
     "shortName": "Cl",
     "displayName": "Chloride",
+    "aliases": [
+      "Хлор",
+      "Хлориды"
+    ],
     "loincComponent": "Chloride",
     "loincs": [
       {
@@ -1227,6 +1248,9 @@
     "key": "ESR",
     "shortName": "ESR",
     "displayName": "Erythrocyte sedimentation rate",
+    "aliases": [
+      "СОЭ"
+    ],
     "loincComponent": "Erythrocyte sedimentation rate",
     "loincs": [
       {
@@ -1396,6 +1420,11 @@
     "key": "Folic Acid",
     "shortName": "Folic Acid",
     "displayName": "Folate",
+    "aliases": [
+      "Фолиевая кислота (B9)",
+      "Фолиевая кислота",
+      "Фолаты"
+    ],
     "loincComponent": "Folate",
     "loincs": [
       {
@@ -1704,6 +1733,9 @@
     "key": "GGT",
     "shortName": "GGT",
     "displayName": "Gamma glutamyl transferase",
+    "aliases": [
+      "ГГТ"
+    ],
     "loincComponent": "Gamma glutamyl transferase",
     "loincs": [
       {
@@ -1934,6 +1966,10 @@
     "key": "HDL-C",
     "shortName": "HDL-C",
     "displayName": "Cholesterol in HDL",
+    "aliases": [
+      "ЛПВП",
+      "ХС ЛПВП"
+    ],
     "loincComponent": "Cholesterol in HDL",
     "loincs": [
       {
@@ -2058,6 +2094,10 @@
     "key": "hsCRP",
     "shortName": "hsCRP",
     "displayName": "High-sensitivity C-reactive protein",
+    "aliases": [
+      "CRP (вч)",
+      "СРБ высокочувствительный"
+    ],
     "loincComponent": "C reactive protein",
     "loincs": [
       {
@@ -2360,6 +2400,10 @@
     "key": "LDL-C",
     "shortName": "LDL-C",
     "displayName": "Cholesterol in LDL",
+    "aliases": [
+      "ЛПНП",
+      "ХС ЛПНП"
+    ],
     "loincComponent": "Cholesterol in LDL",
     "loincs": [
       {
@@ -3133,6 +3177,10 @@
     "key": "P",
     "shortName": "P",
     "displayName": "Phosphate",
+    "aliases": [
+      "Фосфор",
+      "Фосфор неорганический"
+    ],
     "loincComponent": "Phosphate",
     "loincs": [
       {
@@ -4093,6 +4141,9 @@
     "key": "TSH",
     "shortName": "TSH",
     "displayName": "Thyrotropin",
+    "aliases": [
+      "ТТГ"
+    ],
     "loincComponent": "Thyrotropin",
     "loincs": [
       {
@@ -4268,6 +4319,10 @@
     "key": "Vit D",
     "shortName": "Vit D",
     "displayName": "25-hydroxyvitamin D (25-OH D)",
+    "aliases": [
+      "Витамин D",
+      "Витамин D (25-OH)"
+    ],
     "loincComponent": "25-Hydroxyvitamin D3+25-Hydroxyvitamin D2",
     "loincs": [
       {
@@ -4453,6 +4508,981 @@
         "displayName": "Цинк",
         "why": "Незаменимый микроэлемент-кофактор для сотен ферментов и иммунной функции; низкий сывороточный цинк поддерживает диагноз дефицита (нарушение заживления ран, дерматит, потеря вкуса/обоняния, иммунные нарушения), хотя и является несовершенным маркёром общего цинка организма.",
         "note": "Сывороточный/плазменный цинк; эквивалент СИ ~11.5-21.4 umol/L (x0.153). Сывороточный цинк — грубый показатель статуса (снижается при воспалении как негативный белок острой фазы и при гемодилюции); интерпретировать с учётом клинического контекста. Образцы не натощак и гемолизированные искажают результаты."
+      }
+    }
+  },
+  "ApoB": {
+    "key": "ApoB",
+    "shortName": "ApoB",
+    "displayName": "Apolipoprotein B",
+    "aliases": [
+      "Аполипопротеин B",
+      "Апо B",
+      "Апо-B",
+      "ApoB"
+    ],
+    "loincComponent": "Apolipoprotein B",
+    "loincs": [
+      {
+        "code": "1884-6",
+        "longName": "Apolipoprotein B [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 55,
+      "max": 140,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Population reference interval (NHANES-derived; men ~55-140, women ~55-125 mg/dL). Lipidology risk TARGETS are lower than the population range: ApoB <90 mg/dL (moderate CV risk), <80 mg/dL (high risk / secondary prevention); >130 mg/dL high risk. ApoB counts atherogenic (LDL+VLDL+Lp(a)) particle number and captures residual risk beyond LDL-C."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Apolipoprotein B (apoB): Reference Range (article 2087335)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2087335-overview",
+        "doi": null,
+        "quote": "Reference ranges for apoB concentrations are 55-140 and 55-125 mg/dL for men and women, respectively (NHANES)."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Atherogenic-particle count (one ApoB per LDL/VLDL/Lp(a) particle); better residual-risk marker than LDL-C. Referenced by the cardiovascular-risk lens.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Аполипопротеин B",
+        "why": "Число атерогенных частиц (по одному ApoB на каждую частицу ЛПНП/ЛПОНП/Lp(a)); маркёр остаточного риска точнее, чем ХС ЛПНП. Используется в панели сердечно-сосудистого риска.",
+        "note": "Популяционный референс (по NHANES: мужчины ~55-140, женщины ~55-125 mg/dL). Клинические целевые уровни ниже: ApoB <90 mg/dL (умеренный риск), <80 mg/dL (высокий риск/вторичная профилактика); >130 mg/dL — высокий риск."
+      }
+    }
+  },
+  "ApoA1": {
+    "key": "ApoA1",
+    "shortName": "ApoA1",
+    "displayName": "Apolipoprotein A-I",
+    "aliases": [
+      "Аполипопротеин A1",
+      "Аполипопротеин A-I",
+      "Апо A1",
+      "ApoA1"
+    ],
+    "loincComponent": "Apolipoprotein A-I",
+    "loincs": [
+      {
+        "code": "1869-7",
+        "longName": "Apolipoprotein A-I [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 94,
+      "max": 198,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Sex-specific (men ~94-178, women ~101-199 mg/dL; assay-dependent). Apo A-I is the principal HDL apolipoprotein — like HDL-C, HIGHER is generally favorable; low Apo A-I marks atherogenic risk. The refDefault spans both sexes; read against the reporting lab's own interval."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Apolipoprotein A-I: Reference Range (article 2087313)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2087313-overview",
+        "doi": null,
+        "quote": "Adult male Apo A-I ~94-178 mg/dL; adult female ~101-199 mg/dL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Main HDL apolipoprotein; inverse (protective) CV-risk marker paired with ApoB (ApoB/ApoA1 ratio). Referenced by the cardiovascular-risk lens.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Аполипопротеин A1",
+        "why": "Основной аполипопротеин ЛПВП; обратный (защитный) маркёр сердечно-сосудистого риска в паре с ApoB (соотношение ApoB/ApoA1).",
+        "note": "Зависит от пола (мужчины ~94-178, женщины ~101-199 mg/dL; зависит от метода). Как и ЛПВП — выше обычно лучше; низкий Апо A-I указывает на атерогенный риск."
+      }
+    }
+  },
+  "Lp(a)": {
+    "key": "Lp(a)",
+    "shortName": "Lp(a)",
+    "displayName": "Lipoprotein(a)",
+    "aliases": [
+      "Липопротеин(а)",
+      "Липопротеин (а)",
+      "ЛП(а)",
+      "Lp(a)"
+    ],
+    "loincComponent": "Lipoprotein a",
+    "loincs": [
+      {
+        "code": "10835-7",
+        "longName": "Lipoprotein a [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": null,
+      "max": 30,
+      "unit": "mg/dL",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "EAS 2022 consensus: <30 mg/dL (<75 nmol/L) rules OUT Lp(a)-related risk; 30-50 mg/dL (75-125 nmol/L) grey zone; >=50 mg/dL (>=125 nmol/L) raised ASCVD / aortic-stenosis risk. Genetically set — ~1 lifetime measurement suffices. Mass (mg/dL) and molar (nmol/L) are NOT interchangeable by a fixed factor (isoform/particle-size dependent); nmol/L assays are preferred."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Lipoprotein (a): Reference Range (article 2088118)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2088118-overview",
+        "doi": null,
+        "quote": "Desirable lipoprotein(a) is generally <30 mg/dL; higher levels are associated with increased cardiovascular risk."
+      },
+      {
+        "organization": "American College of Cardiology (Kronenberg et al., EAS 2022 consensus)",
+        "document": "An Update on Lipoprotein(a): Testing, Treatment, and Guideline Recommendations",
+        "year": 2023,
+        "url": "https://www.acc.org/latest-in-cardiology/articles/2023/09/19/10/54/an-update-on-lipoprotein-a",
+        "doi": null,
+        "quote": "EAS proposed <30 mg/dL (<75 nmol/L) to rule out and >=50 mg/dL (>=125 nmol/L) to rule in cardiovascular risk."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Genetically determined, independent atherogenic + prothrombotic lipoprotein; a high Lp(a) raises lifetime ASCVD and aortic-stenosis risk. Referenced by the cardiovascular-risk lens.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Липопротеин(а)",
+        "why": "Генетически детерминированный, независимый атерогенный и протромботический липопротеин; высокий Lp(a) повышает пожизненный риск атеросклероза и аортального стеноза.",
+        "note": "Консенсус EAS 2022: <30 mg/dL (<75 nmol/L) — риск исключён; 30-50 mg/dL — серая зона; >=50 mg/dL (>=125 nmol/L) — повышенный риск. Определяется генетически, достаточно ~1 измерения за жизнь. mg/dL и nmol/L не пересчитываются фиксированным коэффициентом; предпочтительны методы в nmol/L."
+      }
+    }
+  },
+  "VLDL": {
+    "key": "VLDL",
+    "shortName": "VLDL",
+    "displayName": "VLDL cholesterol",
+    "aliases": [
+      "ЛПОНП",
+      "Холестерин ЛПОНП",
+      "ХС ЛПОНП",
+      "VLDL"
+    ],
+    "loincComponent": "Cholesterol in VLDL",
+    "loincs": [
+      {
+        "code": "13458-5",
+        "longName": "Cholesterol in VLDL [Mass/volume] in Serum or Plasma by calculation",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 2,
+      "max": 30,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "VLDL-C is not measured directly — most labs estimate it as triglycerides/5 (Friedewald), which is invalid when TG >400 mg/dL or non-fasting. Typical normal 2-30 mg/dL; >30 mg/dL adds atherogenic (triglyceride-rich lipoprotein) risk."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "UCSF Health",
+        "document": "VLDL test - Medical Tests",
+        "year": 2024,
+        "url": "https://www.ucsfhealth.org/care/medical-tests/vldl-test",
+        "doi": null,
+        "quote": "Normal VLDL cholesterol level is between 2 and 30 mg/dL."
+      },
+      {
+        "organization": "Testing.com",
+        "document": "VLDL Cholesterol Test: What the Result Means",
+        "year": 2024,
+        "url": "https://www.testing.com/tests/vldl-cholesterol/",
+        "doi": null,
+        "quote": "Normal VLDL cholesterol is typically between 2 and 30 mg/dL; it is estimated as about one-fifth of the triglyceride level."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Triglyceride-rich lipoprotein cholesterol, usually calculated as TG/5; complements the standard lipid panel for atherogenic remnant burden.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Холестерин ЛПОНП",
+        "why": "Холестерин богатых триглицеридами липопротеинов, обычно рассчитывается как ТГ/5; дополняет липидную панель по остаточному атерогенному риску."
+      }
+    }
+  },
+  "Homocysteine": {
+    "key": "Homocysteine",
+    "shortName": "Homocysteine",
+    "displayName": "Homocysteine",
+    "aliases": [
+      "Гомоцистеин",
+      "Гцис"
+    ],
+    "loincComponent": "Homocysteine",
+    "loincs": [
+      {
+        "code": "13965-9",
+        "longName": "Homocysteine [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "2428-1",
+        "longName": "Homocysteine [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": null,
+      "max": 15,
+      "unit": "umol/L",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Normal <15 umol/L; mild hyperhomocysteinemia 15-30, moderate 30-100, severe >100 umol/L. Optimal/low-risk is often cited as <10 umol/L. Raised by B12/folate/B6 deficiency, renal impairment and MTHFR variants; an independent vascular-risk marker and (with B12) a functional-deficiency marker."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "MedlinePlus (U.S. National Library of Medicine)",
+        "document": "Homocysteine Test",
+        "year": 2023,
+        "url": "https://medlineplus.gov/lab-tests/homocysteine-test/",
+        "doi": null,
+        "quote": "A normal homocysteine level is below 15 micromoles per liter (mcmol/L); higher levels may mean you have a vitamin deficiency or increased risk of heart disease."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Sulfur amino acid that rises with B-vitamin (B12/folate/B6) deficiency and independently flags vascular risk. Referenced by the cardiovascular-risk lens.",
+    "frequency": null,
+    "panel": "Inflammation & coagulation",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Гомоцистеин",
+        "why": "Серосодержащая аминокислота, повышается при дефиците витаминов группы B (B12/фолат/B6) и независимо указывает на сосудистый риск. Используется в панели сердечно-сосудистого риска.",
+        "note": "Норма <15 umol/L; лёгкая гипергомоцистеинемия 15-30, умеренная 30-100, тяжёлая >100 umol/L. Оптимальный/низкий риск часто <10 umol/L. Повышается при дефиците B12/фолата/B6, почечной недостаточности, вариантах MTHFR."
+      }
+    }
+  },
+  "C-peptide": {
+    "key": "C-peptide",
+    "shortName": "C-peptide",
+    "displayName": "C-peptide",
+    "aliases": [
+      "C-пептид",
+      "С-пептид",
+      "C-peptide"
+    ],
+    "loincComponent": "C peptide",
+    "loincs": [
+      {
+        "code": "1986-9",
+        "longName": "C peptide [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 1.1,
+      "max": 4.4,
+      "unit": "ng/mL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "fasting adult",
+      "note": "Mayo fasting serum reference 1.1-4.4 ng/mL (SI x0.331 = 0.36-1.46 nmol/L). Co-secreted with insulin in equimolar amounts and not cleared by the liver, so it indexes endogenous beta-cell output even during exogenous-insulin therapy: low = insulin-deficient (type 1), high = insulin resistance / insulinoma. Interpret against concurrent glucose."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "CPR - Overview: C-Peptide, Serum (unit code 8804)",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/8804",
+        "doi": null,
+        "quote": "Fasting C-peptide reference values 1.1-4.4 ng/mL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Marker of endogenous insulin secretion (one C-peptide per insulin molecule); distinguishes insulin-deficient from insulin-resistant states even on exogenous insulin.",
+    "frequency": null,
+    "panel": "Lipids & glycemic",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "C-пептид",
+        "why": "Маркёр эндогенной секреции инсулина (по одному C-пептиду на молекулу инсулина); различает инсулинодефицитные и инсулинорезистентные состояния даже на фоне экзогенного инсулина.",
+        "note": "Референс натощак (Mayo) 1.1-4.4 ng/mL (СИ x0.331 = 0.36-1.46 nmol/L). Секретируется эквимолярно инсулину и не метаболизируется печенью, поэтому отражает собственную функцию бета-клеток. Интерпретировать вместе с глюкозой."
+      }
+    }
+  },
+  "Anti-TPO": {
+    "key": "Anti-TPO",
+    "shortName": "Anti-TPO",
+    "displayName": "Thyroid peroxidase antibody (anti-TPO)",
+    "aliases": [
+      "Антитела к ТПО",
+      "Анти-ТПО",
+      "АТ-ТПО",
+      "АТ к ТПО",
+      "Anti-TPO"
+    ],
+    "loincComponent": "Thyroperoxidase Ab",
+    "loincs": [
+      {
+        "code": "8099-4",
+        "longName": "Thyroperoxidase Ab [Units/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "IU/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": null,
+      "max": 34,
+      "unit": "IU/mL",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "STRONGLY assay-dependent negative cutoff — commonly <35 IU/mL (LabCorp <34), while Mayo/Quest use <9 IU/mL. Positive anti-TPO marks autoimmune thyroid disease (Hashimoto/Graves) and predicts progression of subclinical hypothyroidism; titre magnitude is not proportional to severity, so read as positive/negative against the reporting lab's own cutoff."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Antithyroid Antibody: Reference Range (article 2086819)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2086819-overview",
+        "doi": null,
+        "quote": "Thyroid peroxidase antibody negative reference is typically <35 IU/mL, though it varies by laboratory/assay."
+      },
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "TPO - Thyroperoxidase Antibodies, Serum",
+        "year": 2025,
+        "url": "https://endocrinology.testcatalog.org/show/TPO",
+        "doi": null,
+        "quote": "Values >9.0 IU/mL are generally associated with autoimmune thyroiditis."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Marker of autoimmune (Hashimoto/Graves) thyroiditis, the commonest cause of hypothyroidism; predicts subclinical->overt progression. Referenced by the hypothyroidism lens.",
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Антитела к тиреопероксидазе (анти-ТПО)",
+        "why": "Маркёр аутоиммунного тиреоидита (Хашимото/Грейвса) — самой частой причины гипотиреоза; предсказывает переход субклинического гипотиреоза в манифестный. Используется в панели гипотиреоза.",
+        "note": "Порог негативности СИЛЬНО зависит от метода — обычно <35 IU/mL (LabCorp <34), у Mayo/Quest <9 IU/mL. Положительный результат указывает на аутоиммунный процесс; величина титра не пропорциональна тяжести — оценивать как «положительно/отрицательно» по порогу своей лаборатории."
+      }
+    }
+  },
+  "INR": {
+    "key": "INR",
+    "shortName": "INR",
+    "displayName": "International normalized ratio (INR)",
+    "aliases": [
+      "МНО",
+      "INR"
+    ],
+    "loincComponent": "INR",
+    "loincs": [
+      {
+        "code": "6301-6",
+        "longName": "INR in Platelet poor plasma by Coagulation assay",
+        "property": "RelTime",
+        "unit": "{INR}",
+        "system": "PPP"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.8,
+      "max": 1.1,
+      "unit": "{INR}",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult, not anticoagulated",
+      "note": "Normal (non-anticoagulated) 0.8-1.1. On warfarin the therapeutic target is usually 2.0-3.0 (2.5-3.5 for mechanical mitral valves). The INR standardizes PT across thromboplastin reagents via the ISI; it is not validated for DOAC monitoring or for staging liver-disease coagulopathy."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Lab Values, Normal Adult: Laboratory Reference Ranges (article 2172316)",
+        "year": 2025,
+        "url": "https://emedicine.medscape.com/article/2172316-overview",
+        "doi": null,
+        "quote": "International normalized ratio (INR): 0.8-1.1 (normal, non-anticoagulated)."
+      },
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Prothrombin Time: Reference Range (article 2086058)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2086058-overview",
+        "doi": null,
+        "quote": "The normal range for the INR is 0.8-1.2; therapeutic anticoagulation targets an INR of 2.0-3.0."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Standardized prothrombin-time ratio; screens the extrinsic/common coagulation pathway and titrates warfarin.",
+    "frequency": null,
+    "panel": "Inflammation & coagulation",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Международное нормализованное отношение (МНО)",
+        "why": "Стандартизованное отношение протромбинового времени; оценивает внешний/общий путь свёртывания и используется для подбора дозы варфарина.",
+        "note": "Норма (без антикоагуляции) 0.8-1.1. На варфарине целевой диапазон обычно 2.0-3.0 (2.5-3.5 для механических митральных протезов). МНО не валидировано для контроля ПОАК."
+      }
+    }
+  },
+  "Fibrinogen": {
+    "key": "Fibrinogen",
+    "shortName": "Fibrinogen",
+    "displayName": "Fibrinogen",
+    "aliases": [
+      "Фибриноген"
+    ],
+    "loincComponent": "Fibrinogen",
+    "loincs": [
+      {
+        "code": "3255-7",
+        "longName": "Fibrinogen [Mass/volume] in Platelet poor plasma by Coagulation assay",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "PPP"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 200,
+      "max": 400,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Clauss functional fibrinogen 200-400 mg/dL (= SI 2-4 g/L; this catalog stores mg/dL). Acute-phase reactant — rises with inflammation/infection/pregnancy; low in DIC, severe liver disease, congenital dys-/afibrinogenemia, or fibrinolytic therapy."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Fibrinogen: Reference Range (article 2085501)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2085501-overview",
+        "doi": null,
+        "quote": "The reference range of fibrinogen is 200-400 mg/dL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Clotting factor I and acute-phase reactant; low levels bleed (DIC, liver failure), high levels mark inflammation/thrombotic risk.",
+    "frequency": null,
+    "panel": "Inflammation & coagulation",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Фибриноген",
+        "why": "Фактор свёртывания I и белок острой фазы; низкий уровень — риск кровотечения (ДВС, печёночная недостаточность), высокий — воспаление/протромботический риск.",
+        "note": "Функциональный фибриноген по Клауссу 200-400 mg/dL (= 2-4 g/L). Белок острой фазы: повышается при воспалении/инфекции/беременности; снижается при ДВС, тяжёлой болезни печени, дис-/афибриногенемии."
+      }
+    }
+  },
+  "PT": {
+    "key": "PT",
+    "shortName": "PT",
+    "displayName": "Prothrombin time (PT)",
+    "aliases": [
+      "Протромбиновое время",
+      "ПВ"
+    ],
+    "loincComponent": "Prothrombin time",
+    "loincs": [
+      {
+        "code": "5902-2",
+        "longName": "Prothrombin time (PT)",
+        "property": "Time",
+        "unit": "s",
+        "system": "PPP"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 11,
+      "max": 13.5,
+      "unit": "s",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Prothrombin time ~11-13.5 s but STRONGLY reagent/instrument-dependent (each lab sets its own interval); the INR exists to standardize across reagents. Prolonged by deficiency of factor VII/X/V/II or fibrinogen, warfarin, vitamin K deficiency, liver disease, or DIC."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Prothrombin Time: Reference Range (article 2086058)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2086058-overview",
+        "doi": null,
+        "quote": "The reference range for prothrombin time is usually around 11-13.5 seconds (varies by laboratory)."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Extrinsic/common-pathway screen; the raw seconds behind the INR, prolonged by warfarin, vitamin K deficiency and hepatic synthetic failure.",
+    "frequency": null,
+    "panel": "Inflammation & coagulation",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Протромбиновое время",
+        "why": "Скрининг внешнего/общего пути свёртывания; исходные секунды, лежащие в основе МНО. Удлиняется при варфарине, дефиците витамина K, печёночной недостаточности.",
+        "note": "ПВ ~11-13.5 с, но сильно зависит от реагента/прибора (каждая лаборатория задаёт свой интервал); для стандартизации существует МНО."
+      }
+    }
+  },
+  "PTI": {
+    "key": "PTI",
+    "shortName": "PTI",
+    "displayName": "Prothrombin index (PTI)",
+    "aliases": [
+      "Протромбиновый индекс",
+      "ПТИ"
+    ],
+    "loincComponent": "Prothrombin index",
+    "loincs": [],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 70,
+      "max": 130,
+      "unit": "%",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "UNVERIFIED range/code. Prothrombin index (протромбиновый индекс) = control PT / patient PT expressed as % — a Russian / former-USSR reporting convention with NO distinct US LOINC (closest concepts: PT actual/normal ratio LOINC 5894-1, or the European Quick value %). Typically reported normal ~70-130%, but reagent- and method-dependent and largely superseded by the INR. Left uncited — verify against the issuing lab."
+    },
+    "evidenceLevel": "uncited",
+    "references": [],
+    "labPrintedRef": null,
+    "why": "Russian/European % expression of prothrombin activity (inverse of a prolonged PT); reports the same coagulation status as PT/INR. No standard LOINC — flagged for human review.",
+    "frequency": null,
+    "panel": "Inflammation & coagulation",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Протромбиновый индекс (ПТИ)",
+        "why": "Процентное выражение протромбиновой активности (обратно удлинению ПВ); отражает то же состояние свёртывания, что и ПВ/МНО. Стандартного кода LOINC нет.",
+        "note": "НЕ ВЕРИФИЦИРОВАНО. ПТИ = ПВ контроля / ПВ пациента в %, принятое в РФ/СНГ; отдельного LOINC нет (ближайшее — отношение ПВ 5894-1 или европейский Quick %). Обычно норма ~70-130%, зависит от реагента; вытеснен МНО."
+      }
+    }
+  },
+  "TT": {
+    "key": "TT",
+    "shortName": "TT",
+    "displayName": "Thrombin time (TT)",
+    "aliases": [
+      "Тромбиновое время",
+      "ТВ"
+    ],
+    "loincComponent": "Thrombin time",
+    "loincs": [
+      {
+        "code": "3243-3",
+        "longName": "Thrombin time",
+        "property": "Time",
+        "unit": "s",
+        "system": "PPP"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 14,
+      "max": 21,
+      "unit": "s",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Thrombin time ~14-21 s, reagent-dependent (some labs report ~17-23 s). Assesses the final fibrinogen->fibrin conversion; prolonged by heparin, direct thrombin inhibitors, hypo-/dysfibrinogenemia, DIC, high fibrin-degradation products, and paraproteins."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Thrombin Time: Reference Range (article 2086278)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2086278-overview",
+        "doi": null,
+        "quote": "The reference range of thrombin time is approximately 14-21 seconds (varies by reagent)."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Isolates the fibrinogen->fibrin step; a targeted screen for heparin/thrombin-inhibitor effect and fibrinogen defects when PT/aPTT are abnormal.",
+    "frequency": null,
+    "panel": "Inflammation & coagulation",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Тромбиновое время",
+        "why": "Изолирует конечный этап превращения фибриногена в фибрин; прицельный тест на действие гепарина/ингибиторов тромбина и дефекты фибриногена при отклонениях ПВ/АЧТВ.",
+        "note": "ТВ ~14-21 с, зависит от реагента (в части лабораторий ~17-23 с). Удлиняется при гепарине, прямых ингибиторах тромбина, гипо-/дисфибриногенемии, ДВС, высоких ПДФ."
+      }
+    }
+  },
+  "PDW": {
+    "key": "PDW",
+    "shortName": "PDW",
+    "displayName": "Platelet distribution width (PDW)",
+    "aliases": [
+      "Ширина распределения тромбоцитов",
+      "PDW"
+    ],
+    "loincComponent": "Platelet distribution width",
+    "loincs": [
+      {
+        "code": "32207-3",
+        "longName": "Platelet distribution width [Entitic volume] in Blood by Automated count",
+        "property": "EntVol",
+        "unit": "fL",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 9.3,
+      "max": 17.3,
+      "unit": "fL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Platelet-size heterogeneity. Analyzer-dependent; Sysmex XN-10 (UK) reference ~9.3-17.3 fL, with no sex difference. Raised PDW with an altered MPV suggests platelet activation/anisocytosis; interpret alongside PLT and MPV, not alone. Some analyzers report PDW as a % (LOINC 51631-0) instead of fL."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Hematology, Transfusion and Cell Therapy / ScienceDirect (Kaya et al.)",
+        "document": "Sex-divided reference intervals for platelet indices using the Sysmex XN-10 in a UK population",
+        "year": 2019,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6517618/",
+        "doi": null,
+        "quote": "PDW showed no sex-based difference, with a reference interval of 9.3-17.3 fL for all individuals."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Platelet anisocytosis index from the CBC; complements MPV in characterizing platelet production/activation.",
+    "frequency": null,
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Ширина распределения тромбоцитов (PDW)",
+        "why": "Индекс анизоцитоза тромбоцитов из общего анализа крови; дополняет MPV при оценке продукции/активации тромбоцитов.",
+        "note": "Гетерогенность размера тромбоцитов. Зависит от анализатора; референс Sysmex XN-10 (UK) ~9.3-17.3 fL, без различий по полу. Оценивать вместе с PLT и MPV. Часть анализаторов сообщает PDW в % (LOINC 51631-0)."
+      }
+    }
+  },
+  "P-LCR": {
+    "key": "P-LCR",
+    "shortName": "P-LCR",
+    "displayName": "Platelet-large-cell ratio (P-LCR)",
+    "aliases": [
+      "Доля крупных тромбоцитов",
+      "P-LCR"
+    ],
+    "loincComponent": "Platelets Large/Platelets",
+    "loincs": [
+      {
+        "code": "48386-7",
+        "longName": "Platelets Large/Platelets in Blood by Automated count",
+        "property": "NFr",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 17,
+      "max": 47,
+      "unit": "%",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Fraction of platelets larger than 12 fL. Analyzer/sex-dependent; Sysmex XN-10 (UK) reference ~17.6-47.0% (men), 17.8-47.8% (women). Tracks MPV (proportion of large/young platelets) and rises with increased platelet turnover. The refDefault spans both sexes."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Hematology, Transfusion and Cell Therapy / ScienceDirect (Kaya et al.)",
+        "document": "Sex-divided reference intervals for platelet indices using the Sysmex XN-10 in a UK population",
+        "year": 2019,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6517618/",
+        "doi": null,
+        "quote": "P-LCR reference intervals were 17.6-47.0% (males) and 17.8-47.8% (females)."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Proportion of large (young/reticulated) platelets; a turnover index paralleling MPV.",
+    "frequency": null,
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Доля крупных тромбоцитов (P-LCR)",
+        "why": "Доля крупных (молодых/ретикулярных) тромбоцитов; индекс обновления тромбоцитов, параллельный MPV.",
+        "note": "Доля тромбоцитов крупнее 12 fL. Зависит от анализатора и пола; референс Sysmex XN-10 (UK) ~17.6-47.0% (мужчины), 17.8-47.8% (женщины). Повышается при усиленном обновлении тромбоцитов."
+      }
+    }
+  },
+  "P-LCC": {
+    "key": "P-LCC",
+    "shortName": "P-LCC",
+    "displayName": "Platelet-large-cell count (P-LCC)",
+    "aliases": [
+      "Количество крупных тромбоцитов",
+      "P-LCC"
+    ],
+    "loincComponent": "Platelets Large",
+    "loincs": [],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": null,
+    "evidenceLevel": "uncited",
+    "references": [],
+    "labPrintedRef": null,
+    "why": "Absolute count of large platelets (>12 fL), reported by some analyzers as an experimental index. UNVERIFIED: no distinct LOINC and no established reference interval were found (LOINC carries only the large-platelet RATIO 48386-7 and presence 34167-7). Flagged for human review.",
+    "frequency": null,
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Количество крупных тромбоцитов (P-LCC)",
+        "why": "Абсолютное число крупных тромбоцитов (>12 fL), экспериментальный индекс отдельных анализаторов. НЕ ВЕРИФИЦИРОВАНО: отдельного LOINC и устоявшегося референса не найдено. Передано на проверку человеку."
+      }
+    }
+  },
+  "PCT": {
+    "key": "PCT",
+    "shortName": "PCT",
+    "displayName": "Plateletcrit (PCT)",
+    "aliases": [
+      "Тромбокрит",
+      "PCT"
+    ],
+    "loincComponent": "Plateletcrit",
+    "loincs": [
+      {
+        "code": "51637-7",
+        "longName": "Plateletcrit [Volume Fraction] in Blood",
+        "property": "VFr",
+        "unit": "%",
+        "system": "Bld"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.16,
+      "max": 0.37,
+      "unit": "%",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Plateletcrit = PLT x MPV / 10000; the volume fraction of blood occupied by platelets (the platelet analogue of hematocrit). Analyzer/sex-dependent; Sysmex XN-10 (UK) reference ~0.16-0.35% (men), 0.18-0.37% (women). Low with thrombocytopenia, high with thrombocytosis."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Hematology, Transfusion and Cell Therapy / ScienceDirect (Kaya et al.)",
+        "document": "Sex-divided reference intervals for platelet indices using the Sysmex XN-10 in a UK population",
+        "year": 2019,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6517618/",
+        "doi": null,
+        "quote": "PCT reference intervals were 0.16-0.35% (males) and 0.18-0.37% (females)."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Total platelet mass as a volume fraction (platelet 'hematocrit'); integrates count and size.",
+    "frequency": null,
+    "panel": "Complete blood count (CBC)",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Тромбокрит",
+        "why": "Суммарная масса тромбоцитов как объёмная доля (тромбоцитарный «гематокрит»); объединяет число и размер тромбоцитов.",
+        "note": "Тромбокрит = PLT x MPV / 10000; объёмная доля крови, занятая тромбоцитами. Зависит от анализатора и пола; референс Sysmex XN-10 (UK) ~0.16-0.35% (мужчины), 0.18-0.37% (женщины). Снижен при тромбоцитопении, повышен при тромбоцитозе."
+      }
+    }
+  },
+  "CK": {
+    "key": "CK",
+    "shortName": "CK",
+    "displayName": "Creatine kinase (CK)",
+    "aliases": [
+      "КФК",
+      "Креатинкиназа",
+      "Креатинфосфокиназа",
+      "КК",
+      "CK",
+      "CPK"
+    ],
+    "loincComponent": "Creatine kinase",
+    "loincs": [
+      {
+        "code": "2157-6",
+        "longName": "Creatine kinase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 30,
+      "max": 200,
+      "unit": "U/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Total creatine kinase; STRONGLY sex-/muscle-mass-/ancestry-dependent. Representative adult intervals: men ~39-308 U/L, women ~26-192 U/L; higher in Black individuals, athletes, and transiently after exercise/IM injection/statins. Marked elevation signals skeletal- or cardiac-muscle injury (rhabdomyolysis, myositis, MI). The refDefault is an orientation range — read against the reporting lab's own interval."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Lab Values, Normal Adult: Laboratory Reference Ranges (article 2172316)",
+        "year": 2025,
+        "url": "https://emedicine.medscape.com/article/2172316-overview",
+        "doi": null,
+        "quote": "Creatine kinase adult reference roughly 30-200 U/L (sex- and method-dependent)."
+      },
+      {
+        "organization": "Sports Medicine / PMC (Mougios; systematic review)",
+        "document": "What are the normal serum creatine kinase values? A worldwide systematic review (PMC12163646)",
+        "year": 2024,
+        "url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12163646/",
+        "doi": null,
+        "quote": "Upper reference limits for CK differ by sex and ancestry (e.g. Caucasian/Asian men 227-440 U/L; Black men higher)."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Muscle-injury enzyme; screens for rhabdomyolysis, myopathy and (with troponin/CK-MB) cardiac injury. NOTE: no dedicated muscle/enzymes display panel exists — provisionally grouped with the enzyme (liver) panel; flag for a better home.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Креатинкиназа (КФК)",
+        "why": "Фермент повреждения мышц; выявляет рабдомиолиз, миопатии и (вместе с тропонином/КФК-МВ) повреждение миокарда.",
+        "note": "Общая КФК; сильно зависит от пола, мышечной массы и этнической принадлежности. Ориентировочно: мужчины ~39-308 U/L, женщины ~26-192 U/L; выше у темнокожих, спортсменов и после нагрузки/в/м инъекций/статинов. Выраженное повышение — повреждение скелетных или сердечной мышцы."
+      }
+    }
+  },
+  "Ca-ion": {
+    "key": "Ca-ion",
+    "shortName": "Ca-ion",
+    "displayName": "Calcium, ionized",
+    "aliases": [
+      "Кальций ионизированный",
+      "Ионизированный кальций",
+      "Ca ионизированный",
+      "Ca-ion",
+      "Ca++"
+    ],
+    "loincComponent": "Calcium.ionized",
+    "loincs": [
+      {
+        "code": "1995-0",
+        "longName": "Calcium.ionized [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "mmol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 1.12,
+      "max": 1.32,
+      "unit": "mmol/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Ionized (free, physiologically active) calcium ~1.12-1.32 mmol/L (= ~4.5-5.3 mg/dL). Independent of albumin, so it is the accurate calcium in hypo-/hyperalbuminemia and critical illness; pH-sensitive (acidosis raises it) and requires anaerobic handling. Whole-blood analyzers use a separate LOINC (1994-3)."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Calcium, Ionized: Reference Range (article 2087469)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2087469-overview",
+        "doi": null,
+        "quote": "The reference range for ionized calcium is 4.5-5.6 mg/dL (1.05-1.30 mmol/L) in adults."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Free, physiologically active calcium; the accurate calcium when albumin or pH is deranged (avoids albumin-correction guesswork on total Ca).",
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Кальций ионизированный",
+        "why": "Свободный, физиологически активный кальций; точная оценка кальция при нарушениях альбумина или pH (без поправки на альбумин, нужной для общего кальция).",
+        "note": "Ионизированный (свободный, активный) кальций ~1.12-1.32 mmol/L (= ~4.5-5.3 mg/dL). Не зависит от альбумина — точен при гипо-/гиперальбуминемии и в критических состояниях; чувствителен к pH (ацидоз повышает), требует анаэробного забора. Для цельной крови используется отдельный LOINC (1994-3)."
       }
     }
   }
