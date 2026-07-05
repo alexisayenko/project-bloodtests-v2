@@ -361,7 +361,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Стандартная часть панели железа; интерпретируется вместе с ферритином.",
     } },
     fn: (m) => has(m, "Fe", "TIBC") ? (m["Fe"]! / m["TIBC"]!) * 100 : null },
-  { key: "egfr", name: "eGFR (CKD-EPI 2021)", itab: "kidney", formula: "CKD-EPI 2021 from creatinine, age, sex", cut: [90, 60], hi: true, needs: ["CREAT"], level: "consensus",
+  { key: "egfr", name: "eGFR (CKD-EPI 2021)", itab: "kidney", formula: "CKD-EPI 2021 from creatinine, age, sex", cut: [90, 60], hi: true, needs: ["CREAT"], inputUnits: { CREAT: "mg/dL" }, level: "consensus",
     loinc: "98979-8", // LOINC 98979-8 — Glomerular filtration rate [Volume Rate/Area] ... by Creatinine-based formula (CKD-EPI 2021)/1.73 sq M
     meaning: "Estimated glomerular filtration rate — overall kidney function, in mL/min/1.73m². Higher is better. Stages: ≥90 normal (G1) · 60–89 mildly reduced (G2) · 45–59 (G3a) · 30–44 (G3b) · <30 advanced. Computed from your creatinine, age and sex; a creatinine at the top of its range can already mean an eGFR in the 60s.",
     consensus: "CKD-EPI 2021 (race-free) is the recommended GFR estimate. Note creatinine-based eGFR is affected by muscle mass; cystatin C is the confirmatory cross-check.",
@@ -391,7 +391,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "CKD-EPI цистатин C — рекомендуемая независимая от мышц оценка СКФ; предпочтительна, когда креатинин ненадёжен (высокая мышечная масса, спортсмены, люди после ампутации).",
     } },
     fn: (m, ctx) => { if (!has(m, "Cystatin C") || ctx.ageYears == null) { return null; } const female = ctx.sex === "female"; const s = m["Cystatin C"]! / 0.8; return 133 * Math.pow(Math.min(s, 1), -0.499) * Math.pow(Math.max(s, 1), -1.328) * Math.pow(0.996, ctx.ageYears) * (female ? 0.932 : 1); } },
-  { key: "egfrcrcys", name: "eGFR — creatinine + cystatin C", itab: "kidney", formula: "CKD-EPI cr-cys (2021)", cut: [90, 60], hi: true, needs: ["CREAT", "Cystatin C"], level: "consensus",
+  { key: "egfrcrcys", name: "eGFR — creatinine + cystatin C", itab: "kidney", formula: "CKD-EPI cr-cys (2021)", cut: [90, 60], hi: true, needs: ["CREAT", "Cystatin C"], inputUnits: { CREAT: "mg/dL" }, level: "consensus",
     loinc: "98980-6", // LOINC 98980-6 — Glomerular filtration rate ... by Creatinine and Cystatin C-based formula (CKD-EPI 2021)/1.73 sq M
     meaning: "The combined estimate from both markers — the most accurate GFR, averaging out creatinine's muscle bias and cystatin C's own quirks. For you (high muscle mass) this is the number to trust over the creatinine-only eGFR. Same stages: ≥90 normal · 60–89 mild · <60 reduced.",
     consensus: "CKD-EPI 2021 creatinine-cystatin C is guideline-preferred as the confirmatory GFR when a creatinine-only eGFR is borderline or muscle mass is atypical.",

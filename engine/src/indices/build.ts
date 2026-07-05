@@ -77,8 +77,15 @@ const MGDL_TO_MMOLL: Record<string, (x: number) => number> = {
  * markers above; any other marker/unit pair (Insulin µIU/mL, %, U/L, unknown) is
  * left unchanged.
  */
+const CREAT_MGDL_PER_UMOLL = 88.4; // creatinine: 1 mg/dL = 88.4 µmol/L
 function toUnit(value: number, marker: string, from: string | null | undefined, to: Unit): number {
   if (from == null || from === to) return value;
+  // Creatinine µmol/L ↔ mg/dL (CKD-EPI eGFR expects mg/dL; SI labs report µmol/L).
+  if (marker === "CREAT") {
+    if (from === "µmol/L" && to === "mg/dL") return value / CREAT_MGDL_PER_UMOLL;
+    if (from === "mg/dL" && to === "µmol/L") return value * CREAT_MGDL_PER_UMOLL;
+    return value;
+  }
   const f = MGDL_TO_MMOLL[marker];
   if (!f) return value; // no known conversion for this marker — leave as-is
   if (from === "mg/dL" && to === "mmol/L") return f(value);

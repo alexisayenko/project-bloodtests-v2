@@ -103,4 +103,19 @@ describe("buildIndices — unit-aware normalization (US mg/dL vs SI mmol/L)", ()
     expect(idxIn(buildIndices(si), "homair").cells[0]).toEqual({ v: "1.87", z: "z-ok" }); // <2 → ok band
     expect(idxIn(buildIndices(us), "homair").cells[0]).toEqual({ v: "1.87", z: "z-ok" });
   });
+
+  it("eGFR (CKD-EPI 2021) computes from SI creatinine (µmol/L→mg/dL) + age + sex", () => {
+    const draw: Draw[] = [{ date: "2024-11-01", labName: "SI", items: [u("CREAT", 82.4, "µmol/L")] }];
+    const egfr = idxIn(buildIndices(draw, { ageYearsForDraw: () => 76, sex: "female" }), "egfr");
+    expect(egfr.hasData).toBe(true);
+    const v = parseFloat(egfr.cells[0]!.v); // 82.4 µmol/L = 0.932 mg/dL → ~63.5 mL/min for a 76yo woman
+    expect(v).toBeGreaterThan(60);
+    expect(v).toBeLessThan(67);
+    expect(egfr.cells[0]!.z).toBe("z-warn"); // 60–89 → mildly reduced (G2)
+  });
+
+  it("eGFR is null without age — engine holds no DOB; the consumer supplies age/sex", () => {
+    const draw: Draw[] = [{ date: "2024-11-01", labName: "x", items: [u("CREAT", 82.4, "µmol/L")] }];
+    expect(idxIn(buildIndices(draw), "egfr").hasData).toBe(false); // no ageYearsForDraw → null
+  });
 });
