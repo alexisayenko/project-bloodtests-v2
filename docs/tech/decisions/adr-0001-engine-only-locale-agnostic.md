@@ -19,8 +19,12 @@ folder (`react/`), added when the service needs it — not now.
 
 ## Consequences
 
-- Eleventy sites keep rendering with njk; they stop *computing*
-  and import the engine instead.
+- Eleventy sites keep owning the render; they stop *computing* and
+  import the engine instead. (The `/health/labs` surface has since
+  moved from njk to client-side `ui` web components — ADR-0010 — but
+  the boundary is unchanged: the engine computes, the consumer
+  renders. Phase 5 (ADR-0011) pushed the *full* render-ready model
+  assembly into the engine too.)
 - Adding a new language or a new UI never touches engine logic.
 - The service, when built, writes its own React render over the
   same engine.

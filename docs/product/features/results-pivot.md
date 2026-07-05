@@ -22,10 +22,14 @@ Turn a pile of dated blood draws into a single marker×date matrix — one row p
 
 `buildLabView` runs `withDerived` (`engine/src/derived.ts:38`) before the pivot, so computed analytes (indirect bilirubin, globulin) appear as ordinary rows.
 
+## Render-ready enrichment (Phase 5, ADR-0011)
+
+A dual-unit consumer builds the matrix twice — once per unit system — and joins them with `enrichRows` (`engine/src/enrich.ts:61`), which adds `siRaw` per cell plus `latest`, `trend`, `recent`, `measured`, the SI unit/ref/LOINCs, the RU display name, and the ADR-0007 provenance object (RU name and provenance are *injected* via `opts`, keeping the module catalog-agnostic). The result is the per-row model the UI consumes verbatim — the pivot no longer stops at a raw matrix the template finishes assembling. The homepage `/health/labs` page renders this model client-side via the `<lab-matrix>` web component (ADR-0010), not server-side njk.
+
 ## Coverage
 
-`engine/test/matrix.test.ts`, `engine/test/view.test.ts`.
+`engine/test/matrix.test.ts`, `engine/test/view.test.ts`, `engine/test/enrich.test.ts`.
 
 ## Related
 
-[`range-flag.md`](range-flag.md) · [`indices-derive.md`](indices-derive.md) · [`plan-overlay.md`](plan-overlay.md) · [`../concepts/data-layers.md`](../concepts/data-layers.md) · ADR-0001 ([engine-only, locale-agnostic](../../tech/decisions/adr-0001-engine-only-locale-agnostic.md)).
+[`range-flag.md`](range-flag.md) · [`indices-derive.md`](indices-derive.md) · [`plan-overlay.md`](plan-overlay.md) · [`../concepts/data-layers.md`](../concepts/data-layers.md) · ADR-0001 ([engine-only, locale-agnostic](../../tech/decisions/adr-0001-engine-only-locale-agnostic.md)) · ADR-0011 ([engine owns model assembly](../../tech/decisions/adr-0011-engine-owns-model-assembly.md)).

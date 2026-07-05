@@ -89,6 +89,9 @@ Architecture decision records live in
 - [ADR-0006](decisions/adr-0006-zod-schema-first.md) — Zod schema-first
 - [ADR-0007](decisions/adr-0007-clinical-provenance.md) — clinical provenance as stored references
 - [ADR-0008](decisions/adr-0008-price-catalog-per-lab.md) — price catalog per lab, current-only
+- [ADR-0009](decisions/adr-0009-loinc-terminology.md) — LOINC terminology alignment
+- [ADR-0010](decisions/adr-0010-chart-kit-and-lab-explore.md) — chart-kit package + `<lab-explore>` component
+- [ADR-0011](decisions/adr-0011-engine-owns-model-assembly.md) — engine owns the render-ready model assembly (Phase 5)
 
 ## Open questions
 
