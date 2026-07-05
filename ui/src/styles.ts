@@ -176,7 +176,8 @@ export const STYLES = `
 /* analyte-level reference-range provenance (ⓘ badge → reuses the #cell-popup) */
 .labs.matrix .info-badge { border: 0; background: none; padding: 0; margin: 0 0 0 0.35em; cursor: pointer; color: var(--_muted); font-size: 0.9em; line-height: 1; vertical-align: baseline; }
 .labs.matrix .info-badge:hover { color: var(--_accent); }
-.labs.matrix .analyte-pop { display: none; }
+.labs.matrix .analyte-pop, .labs.matrix .index-pop { display: none; }
+#cell-popup .ap-formula-txt { font-variant-numeric: tabular-nums; }
 #cell-popup .ap-root { white-space: normal; }
 #cell-popup .ap-root > strong { font-size: 0.86rem; }
 #cell-popup .ap-short { color: var(--_muted); font-weight: 600; }

@@ -119,6 +119,13 @@ export interface LabIndexItem {
   hasData?: boolean;
   anchor?: string | boolean | null;
   cells: (LabIndexCell | null)[];
+  /** ADR-0007 clinical provenance for the index ⓘ popup (IndexCatalog). */
+  meaning?: string;
+  meaningRu?: string;
+  consensus?: string;
+  consensusRu?: string;
+  evidenceLevel?: string | null;
+  references?: LabReference[];
 }
 
 export interface LabIndicesModel {

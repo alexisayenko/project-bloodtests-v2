@@ -51,6 +51,9 @@ const DEFAULT_I18N: Record<string, string> = {
   "popup.catalogCitations": "Catalog citations",
   "popup.sources": "Sources",
   "popup.why": "Why",
+  "popup.formula": "Formula",
+  "popup.meaning": "What it is",
+  "popup.consensus": "Interpretation",
   "popup.molarMass": "Molar mass",
   "popup.molarMassUnit": "g/mol",
   "popup.tagPersonal": "personal reference range — not the catalog default",
@@ -603,12 +606,16 @@ export class LabMatrix extends HTMLElement {
 
     const warn = match("[data-warn]");
     const info = match("[data-analyte-info]");
+    const idxInfo = match("[data-index-info]");
     const cell = match("td.num.has-tip");
     const panel = match("tr.panel-row.collapsible");
     if (warn && sr.contains(warn)) this.openPopup(warn, WARN_HTML);
     else if (info && sr.contains(info)) {
       const src = info.parentNode ? (info.parentNode as Element).querySelector(".analyte-pop") : null;
       this.openPopup(info, src ? src.innerHTML : "");
+    } else if (idxInfo && sr.contains(idxInfo)) {
+      const src = idxInfo.parentNode ? (idxInfo.parentNode as Element).querySelector(".index-pop") : null;
+      this.openPopup(idxInfo, src ? src.innerHTML : "");
     } else if (cell && sr.contains(cell)) this.openPopup(cell);
     else if (panel && sr.contains(panel)) { this.togglePanel(panel); this.closePopup(); }
     else this.closePopup();
@@ -728,10 +735,18 @@ export class LabMatrix extends HTMLElement {
 
   /** A derived-index row (anchored inline, or under the per-lens separator). */
   private idxRow(ix: LabIndexItem, rowClass: string, nSched: number, t: I18n): string {
+    // ⓘ provenance badge — only when the index carries something to source
+    // (cited references, or a plain-language meaning / interpretation note).
+    const hasProv = !!((ix.references && ix.references.length) || ix.meaning || ix.consensus);
+    const info = hasProv
+      ? ` <button type="button" class="info-badge" data-index-info aria-label="What ${esc(
+          ix.name,
+        )} means and its sources">ⓘ</button>${this.indexPopup(ix, t)}`
+      : "";
     const marker =
       `<td class="marker-col"><span class="analyte-name"${biAttr(ix.name, ix.nameRu)}>${esc(
         ix.name,
-      )}</span><span class="meta muted">${esc(ix.formula)}${
+      )}</span>${info}<span class="meta muted">${esc(ix.formula)}${
         ix.hasData ? "" : ` · <span class="idx-plan"${t.attr("meta.planned")}>planned</span>`
       }</span></td>`;
     const cells = (ix.cells ?? [])
@@ -835,6 +850,66 @@ export class LabMatrix extends HTMLElement {
       range +
       refs +
       why +
+      `</div></div>`
+    );
+  }
+
+  /**
+   * The hidden `.index-pop` provenance block for a derived-index row — mirrors
+   * `analytePopup`: index name + evidence-level badge, its formula, the meaning
+   * ("what it is") and consensus (interpretation) as bilingual blocks, and the
+   * cited references rendered exactly like the analyte popup. Reuses the `.ap-*`
+   * classes + the `#cell-popup` mechanism so styling / open-close / EN-RU all work.
+   */
+  private indexPopup(ix: LabIndexItem, t: I18n): string {
+    const badge = (lvl?: string | null): string =>
+      lvl ? ` <span class="ap-badge ap-lvl-${esc(lvl)}"${t.attr("badge." + lvl)}>${esc(lvl)}</span>` : "";
+
+    const formula = ix.formula
+      ? `<div class="ap-sec ap-formula"><span class="ap-lbl"${t.attr(
+          "popup.formula",
+        )}>Formula</span> <span class="ap-formula-txt">${esc(ix.formula)}</span></div>`
+      : "";
+
+    const meaning = ix.meaning
+      ? `<div class="ap-sec ap-meaning"><span class="ap-lbl"${t.attr(
+          "popup.meaning",
+        )}>What it is</span> <span${biAttr(ix.meaning, ix.meaningRu)}>${esc(ix.meaning)}</span></div>`
+      : "";
+
+    const consensus = ix.consensus
+      ? `<div class="ap-sec ap-consensus"><span class="ap-lbl"${t.attr(
+          "popup.consensus",
+        )}>Interpretation</span> <span${biAttr(ix.consensus, ix.consensusRu)}>${esc(ix.consensus)}</span></div>`
+      : "";
+
+    let refs = "";
+    if (ix.references && ix.references.length) {
+      const label = `<span class="ap-lbl"${t.attr("popup.sources")}>Sources</span>`;
+      const items = ix.references
+        .map((c) => {
+          const href = c.url ? c.url : c.doi ? `https://doi.org/${c.doi}` : "";
+          const quote = c.quote
+            ? `<span class="ap-quote">“${esc(c.quote)}”</span>${
+                c.cite ? `<span class="ap-quote"> — </span>` : ""
+              }`
+            : "";
+          const cite = href
+            ? `<a class="ap-cite" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(c.cite)}</a>`
+            : `<span class="ap-cite">${esc(c.cite)}</span>`;
+          return `<div class="ap-ref">${quote}${cite}</div>`;
+        })
+        .join("");
+      refs = `<div class="ap-sec ap-refs">${label}${items}</div>`;
+    }
+
+    return (
+      `<div class="index-pop" hidden><div class="ap-root">` +
+      `<strong${biAttr(ix.name, ix.nameRu)}>${esc(ix.name)}</strong>${badge(ix.evidenceLevel)}` +
+      formula +
+      meaning +
+      consensus +
+      refs +
       `</div></div>`
     );
   }

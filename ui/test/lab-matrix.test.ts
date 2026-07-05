@@ -105,6 +105,14 @@ const MODEL: LabMatrixModel = {
             nameRu: "HOMA-IR",
             formula: "Glu × Ins / 22.5",
             hasData: false,
+            meaning: "Fasting insulin-resistance estimate.",
+            meaningRu: "Оценка инсулинорезистентности натощак.",
+            consensus: "Standard IR screening index.",
+            consensusRu: "Стандартный скрининговый индекс ИР.",
+            evidenceLevel: "consensus",
+            references: [
+              { cite: "Matthews, 1985", url: "https://pubmed.ncbi.nlm.nih.gov/3899825/", quote: "HOMA-IR = fasting glucose × insulin / 22.5" },
+            ],
             cells: [null, null],
           },
         ],
@@ -464,5 +472,58 @@ describe("marker cell — badge placement + price alignment", () => {
     expect(meta.querySelector(".meta-price .mprice").textContent).toBe("€5");
     expect(meta.querySelector(".meta-ref .meta-price")).toBeNull(); // price is outside the range group
     expect(meta.textContent).not.toContain("· €"); // separator dropped
+  });
+});
+
+describe("<lab-matrix> derived-index provenance (ⓘ popup)", () => {
+  const click = (n: Element) => n.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, cancelable: true }));
+  const fresh = (): LabMatrix => {
+    try { localStorage.clear(); } catch { /* ignore */ }
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    el.model = MODEL;
+    return el;
+  };
+
+  it("an index with provenance renders a data-index-info badge + hidden index-pop", () => {
+    const el = fresh();
+    const sr = el.shadowRoot!;
+    const homa = sr.querySelector('tr.idx-row[data-itab="ir"]')!;
+    expect(homa.querySelector(".info-badge[data-index-info]")).toBeTruthy();
+    const pop = homa.querySelector(".index-pop")!;
+    expect(pop.hasAttribute("hidden")).toBe(true);
+    // evidence-level badge + formula + meaning + consensus present in the block
+    expect(pop.querySelector(".ap-badge.ap-lvl-consensus")).toBeTruthy();
+    expect(pop.querySelector(".ap-formula .ap-formula-txt")?.textContent).toBe("Glu × Ins / 22.5");
+    expect(pop.querySelector(".ap-meaning span:not(.ap-lbl)")?.getAttribute("data-ru")).toBe("Оценка инсулинорезистентности натощак.");
+    el.remove();
+  });
+
+  it("an index without provenance shows no ⓘ badge", () => {
+    const el = fresh();
+    const sr = el.shadowRoot!;
+    const mchc = sr.querySelector("tr.idx-row.idx-inline")!; // MCHC — no meaning/consensus/refs
+    expect(mchc.querySelector(".info-badge[data-index-info]")).toBeNull();
+    el.remove();
+  });
+
+  it("clicking the index ⓘ opens #cell-popup with meaning, a cited source (cite+quote+url) and the evidence badge", () => {
+    const el = fresh();
+    const sr = el.shadowRoot!;
+    const pop = sr.getElementById("cell-popup") as HTMLElement;
+    click(sr.querySelector('tr.idx-row[data-itab="ir"] .info-badge[data-index-info]')!);
+    expect(pop.hidden).toBe(false);
+    const body = pop.querySelector(".tip-body")!;
+    // header + evidence-level badge
+    expect(body.querySelector(".ap-root strong")!.textContent).toBe("HOMA-IR");
+    expect(body.querySelector(".ap-badge.ap-lvl-consensus")).toBeTruthy();
+    // meaning
+    expect(body.querySelector(".ap-meaning")!.textContent).toContain("Fasting insulin-resistance estimate.");
+    // cited source: quote + cite text + url
+    expect(body.querySelector(".ap-refs .ap-quote")!.textContent).toContain("HOMA-IR = fasting glucose × insulin / 22.5");
+    const cite = body.querySelector(".ap-refs a.ap-cite")!;
+    expect(cite.textContent).toBe("Matthews, 1985");
+    expect(cite.getAttribute("href")).toBe("https://pubmed.ncbi.nlm.nih.gov/3899825/");
+    el.remove();
   });
 });
