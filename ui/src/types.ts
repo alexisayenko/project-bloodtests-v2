@@ -128,6 +128,8 @@ export interface LabIndexItem {
   consensusRu?: string;
   evidenceLevel?: string | null;
   references?: LabReference[];
+  /** Verified LOINC code for the derived quantity, when one exists (IndexCatalog). */
+  loinc?: string | null;
 }
 
 export interface LabIndicesModel {

@@ -981,6 +981,14 @@ export class LabMatrix extends HTMLElement {
         )}>Interpretation</span> <span${biAttr(ix.consensus, ix.consensusRu)}>${esc(ix.consensus)}</span></div>`
       : "";
 
+    const loinc = ix.loinc
+      ? `<div class="ap-sec ap-loincs"><span class="ap-lbl"${t.attr(
+          "popup.loinc",
+        )}>LOINC</span><span class="ap-loinc"><a href="https://loinc.org/${esc(
+          ix.loinc,
+        )}/" target="_blank" rel="noopener noreferrer">${esc(ix.loinc)}</a></span></div>`
+      : "";
+
     let refs = "";
     if (ix.references && ix.references.length) {
       const label = `<span class="ap-lbl"${t.attr("popup.sources")}>Sources</span>`;
@@ -1007,6 +1015,7 @@ export class LabMatrix extends HTMLElement {
       formula +
       meaning +
       consensus +
+      loinc +
       refs +
       `</div></div>`
     );

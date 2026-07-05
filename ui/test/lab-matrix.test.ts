@@ -541,6 +541,103 @@ describe("<lab-matrix> derived-index provenance (ⓘ popup)", () => {
   });
 });
 
+describe("<lab-matrix> derived-index LOINC (ⓘ popup)", () => {
+  // A model with two derived indices: one carrying a verified LOINC, one without.
+  const LOINC_MODEL: LabMatrixModel = {
+    matrix: { cols: [{ id: "c", date: "2026-01", labName: "Lab" }], rows: [] },
+    panels: [{ name: "Lipids", rows: [{ key: "TC", shortName: "TC", displayName: "Total cholesterol", cells: [{ raw: "200" }] }] }],
+    indices: {
+      tabs: [
+        {
+          itab: "cardio",
+          items: [
+            { itab: "cardio", name: "TC / HDL ratio", formula: "TC / HDL", hasData: true,
+              meaning: "CV-risk ratio.", evidenceLevel: "consensus", loinc: "9830-1", cells: [{ z: "z-ok", v: "3.1" }] },
+            { itab: "cardio", name: "Atherogenic coefficient", formula: "(TC − HDL) / HDL", hasData: true,
+              meaning: "Post-Soviet ratio.", evidenceLevel: "heuristic", loinc: null, cells: [{ z: "z-ok", v: "2.1" }] },
+          ],
+        },
+      ],
+    },
+  };
+  const mount = (): LabMatrix => {
+    try { localStorage.clear(); } catch { /* ignore */ }
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    el.model = LOINC_MODEL;
+    return el;
+  };
+
+  it("renders a LOINC section (link to loinc.org) only for indices that carry a code", () => {
+    const el = mount();
+    const sr = el.shadowRoot!;
+    const rows = sr.querySelectorAll("tr.idx-row");
+    const withLoinc = rows[0].querySelector(".index-pop")!;
+    const withoutLoinc = rows[1].querySelector(".index-pop")!;
+    const link = withLoinc.querySelector(".ap-loincs a") as HTMLAnchorElement;
+    expect(link).toBeTruthy();
+    expect(link.getAttribute("href")).toBe("https://loinc.org/9830-1/");
+    expect(link.textContent).toBe("9830-1");
+    expect(withoutLoinc.querySelector(".ap-loincs")).toBeNull(); // no code → no section
+    el.remove();
+  });
+});
+
+describe("<lab-matrix> multi-lens derived index — no duplication (AIP-style)", () => {
+  // Regression: AIP belongs to two lenses (ir + cardio). labsV2 collapses the
+  // shared item's `itab` to itabs[0] ("ir"), and the SAME object appears in both
+  // tab groups. The component must stamp each rendered copy with ITS group's itab
+  // (grp.itab), so exactly one row is visible per lens — not two on "ir", none on
+  // "cardio".
+  const shared = { itab: "ir", name: "AIP", formula: "log10(TG/HDL)", hasData: true,
+    meaning: "Atherogenic index.", evidenceLevel: "consensus", cells: [{ z: "z-ok", v: "0.1" }] };
+  const DUP_MODEL: LabMatrixModel = {
+    matrix: { cols: [{ id: "c", date: "2026-01", labName: "Lab" }], rows: [] },
+    keyViews: { ir: ["TRIG"], cardio: ["TRIG"] },
+    panels: [{ name: "Lipids", rows: [{ key: "TRIG", shortName: "TRIG", displayName: "Triglycerides", cells: [{ raw: "150" }] }] }],
+    lensTabs: [
+      { key: "all", label: "All" },
+      { key: "ir", label: "Insulin resistance" },
+      { key: "cardio", label: "Cardiovascular" },
+    ],
+    indices: {
+      tabs: [
+        { itab: "ir", items: [shared] },        // same object reference in both groups
+        { itab: "cardio", items: [shared] },
+      ],
+    },
+  };
+  const mount = (): LabMatrix => {
+    try { localStorage.clear(); } catch { /* ignore */ }
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    el.model = DUP_MODEL;
+    return el;
+  };
+
+  it("renders one copy per lens (each stamped with its own itab)", () => {
+    const el = mount();
+    const sr = el.shadowRoot!;
+    expect(sr.querySelectorAll('tr.idx-row[data-itab="ir"]').length).toBe(1);
+    expect(sr.querySelectorAll('tr.idx-row[data-itab="cardio"]').length).toBe(1);
+    el.remove();
+  });
+
+  it("shows AIP exactly once on the ir view and once on the cardio view", () => {
+    const el = mount();
+    const sr = el.shadowRoot!;
+    const visibleIdx = () =>
+      Array.from(sr.querySelectorAll("tr.idx-row")).filter((r) => !(r as HTMLElement).hidden);
+    el.view = "ir";
+    expect(visibleIdx().length).toBe(1);
+    expect(visibleIdx()[0].getAttribute("data-itab")).toBe("ir");
+    el.view = "cardio";
+    expect(visibleIdx().length).toBe(1);
+    expect(visibleIdx()[0].getAttribute("data-itab")).toBe("cardio");
+    el.remove();
+  });
+});
+
 describe("<lab-matrix> explore view + per-view explainer + viewchange event", () => {
   const click = (n: Element) =>
     n.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, cancelable: true }));
