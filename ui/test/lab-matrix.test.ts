@@ -527,3 +527,189 @@ describe("<lab-matrix> derived-index provenance (ⓘ popup)", () => {
     el.remove();
   });
 });
+
+describe("<lab-matrix> explore view + per-view explainer + viewchange event", () => {
+  const click = (n: Element) =>
+    n.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, cancelable: true }));
+
+  const EXPLORE_MODEL: LabMatrixModel = {
+    matrix: { cols: [{ id: "c", date: "2026-01", labName: "Lab" }], rows: [] },
+    keyViews: { anemia: ["HGB"] },
+    // host prepends {key:"explore"} as element 0 of lensTabs (frozen contract)
+    lensTabs: [
+      { key: "explore", label: "Explore", labelRu: "Обзор" },
+      { key: "all", label: "All" },
+      { key: "anemia", label: "Anemia", labelRu: "Анемия" },
+    ],
+    explainers: {
+      all: { en: "<p>Everything measured.</p>", ru: "" },
+      anemia: { en: "<p>Iron and anemia lens.</p>", ru: "" },
+      explore: { en: "<p>explore prose (should stay hidden)</p>", ru: "" },
+    },
+    panels: [
+      {
+        name: "CBC",
+        rows: [
+          { key: "HGB", shortName: "HGB", displayName: "Hemoglobin", cells: [{ raw: "15" }] },
+          { key: "PLT", shortName: "PLT", displayName: "Platelets", cells: [{ raw: "250" }] },
+        ],
+      },
+    ],
+  };
+
+  const mountExplore = (): LabMatrix => {
+    try { localStorage.clear(); } catch { /* ignore */ }
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    el.model = EXPLORE_MODEL;
+    return el;
+  };
+
+  it("dispatches a viewchange event once on initial mount (bubbles + composed)", () => {
+    try { localStorage.clear(); } catch { /* ignore */ }
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    const seen: { view: string; isExplore: boolean }[] = [];
+    el.addEventListener("viewchange", (e) => seen.push((e as CustomEvent).detail));
+    document.body.appendChild(el); // no model yet → render returns early, no dispatch
+    el.model = EXPLORE_MODEL; // first real render → one dispatch
+    expect(seen.length).toBe(1);
+    expect(seen[0]).toEqual({ view: "all", isExplore: false });
+    el.remove();
+  });
+
+  it("dispatches viewchange with the right detail when a lens tab is clicked", () => {
+    const el = mountExplore();
+    const sr = el.shadowRoot!;
+    const seen: { view: string; isExplore: boolean }[] = [];
+    el.addEventListener("viewchange", (e) => seen.push((e as CustomEvent).detail));
+    click(sr.querySelector('[data-lens="anemia"]')!);
+    click(sr.querySelector('[data-lens="explore"]')!);
+    expect(seen).toContainEqual({ view: "anemia", isExplore: false });
+    expect(seen).toContainEqual({ view: "explore", isExplore: true });
+    el.remove();
+  });
+
+  it("viewchange also fires when the host drives the .view property", () => {
+    const el = mountExplore();
+    const seen: { view: string; isExplore: boolean }[] = [];
+    el.addEventListener("viewchange", (e) => seen.push((e as CustomEvent).detail));
+    el.view = "explore";
+    expect(seen).toContainEqual({ view: "explore", isExplore: true });
+    el.remove();
+  });
+
+  it("explore view hides the matrix body, toolbar and lens-note", () => {
+    const el = mountExplore();
+    const sr = el.shadowRoot!;
+    el.view = "explore";
+    expect((sr.querySelector(".labs-scroll") as HTMLElement).classList.contains("hidden")).toBe(true);
+    expect((sr.querySelector(".labs-toolbar") as HTMLElement).classList.contains("hidden")).toBe(true);
+    expect((sr.querySelector(".lens-note") as HTMLElement).hidden).toBe(true);
+    // leaving explore restores the body + toolbar
+    el.view = "all";
+    expect((sr.querySelector(".labs-scroll") as HTMLElement).classList.contains("hidden")).toBe(false);
+    expect((sr.querySelector(".labs-toolbar") as HTMLElement).classList.contains("hidden")).toBe(false);
+    el.remove();
+  });
+
+  it("does not treat explore as show-all-markers", () => {
+    const el = mountExplore();
+    const sr = el.shadowRoot!;
+    el.view = "anemia"; // filters PLT out
+    el.view = "explore"; // must NOT re-show every marker via the isAll branch
+    expect((sr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(true);
+    el.remove();
+  });
+
+  it("renders the model explainer in .lens-note (part=lens-note), hidden on explore", () => {
+    const el = mountExplore();
+    const sr = el.shadowRoot!;
+    const note = sr.querySelector(".lens-note") as HTMLElement;
+    expect(note.getAttribute("part")).toBe("lens-note");
+    // default view "all" → its explainer shows
+    expect(note.hidden).toBe(false);
+    expect(note.innerHTML).toContain("Everything measured.");
+    // anemia lens → its explainer
+    el.view = "anemia";
+    expect(note.hidden).toBe(false);
+    expect(note.innerHTML).toContain("Iron and anemia lens.");
+    // explore → hidden even though an explainer exists for it
+    el.view = "explore";
+    expect(note.hidden).toBe(true);
+    el.remove();
+  });
+
+  it("lens-note inner nodes carry no data-en/data-ru (applyLang leaves them alone)", () => {
+    const el = mountExplore();
+    const sr = el.shadowRoot!;
+    const note = sr.querySelector(".lens-note") as HTMLElement;
+    expect(note.querySelector("[data-en]")).toBeNull();
+    el.remove();
+  });
+});
+
+describe("<lab-matrix> analyte popup — Draw + Why scheduled sections", () => {
+  const provModel = (drawNote?: string, scheduleNote?: string): LabMatrixModel => ({
+    matrix: { cols: [{ id: "a", date: "2026-01", labName: "L" }], rows: [] },
+    panels: [
+      {
+        name: "P",
+        rows: [
+          {
+            key: "CORT",
+            shortName: "Cortisol",
+            displayName: "Cortisol",
+            provenance: {
+              hasCatalog: true,
+              personal: false,
+              displayName: "Cortisol",
+              shownRange: "6–18.4 µg/dL",
+              loincs: [],
+              references: [],
+              why: "Adrenal glucocorticoid.",
+              drawNote,
+              scheduleNote,
+            },
+            cells: [null],
+          },
+        ],
+      },
+    ],
+  });
+
+  const mountProv = (m: LabMatrixModel): LabMatrix => {
+    try { localStorage.clear(); } catch { /* ignore */ }
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    el.model = m;
+    return el;
+  };
+
+  it("renders a Draw section when provenance.drawNote is set", () => {
+    const el = mountProv(provModel("Draw at 08:00 — diurnal rhythm."));
+    const pop = el.shadowRoot!.querySelector('tr[data-key="Cortisol"] .analyte-pop')!;
+    const draw = pop.querySelector(".ap-draw")!;
+    expect(draw).toBeTruthy();
+    expect(draw.textContent).toContain("Draw at 08:00 — diurnal rhythm.");
+    expect(draw.querySelector(".ap-lbl")?.getAttribute("data-en")).toBe("Draw");
+    el.remove();
+  });
+
+  it("renders a Why scheduled section when provenance.scheduleNote is set", () => {
+    const el = mountProv(provModel(undefined, "Paired with morning ACTH."));
+    const pop = el.shadowRoot!.querySelector('tr[data-key="Cortisol"] .analyte-pop')!;
+    const sched = pop.querySelector(".ap-scheduled")!;
+    expect(sched).toBeTruthy();
+    expect(sched.textContent).toContain("Paired with morning ACTH.");
+    expect(sched.querySelector(".ap-lbl")?.getAttribute("data-en")).toBe("Why scheduled");
+    el.remove();
+  });
+
+  it("omits both sections when neither note is present", () => {
+    const el = mountProv(provModel());
+    const pop = el.shadowRoot!.querySelector('tr[data-key="Cortisol"] .analyte-pop')!;
+    expect(pop.querySelector(".ap-draw")).toBeNull();
+    expect(pop.querySelector(".ap-scheduled")).toBeNull();
+    el.remove();
+  });
+});

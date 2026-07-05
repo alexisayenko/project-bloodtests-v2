@@ -94,6 +94,7 @@ export const AnalyteEntrySchema = z.object({
   references: z.array(ReferenceSchema).default([]),
   labPrintedRef: z.string().nullable().optional(), // provenance: the lab PDF's printed range (fallback only)
   why: z.string().nullable().optional(),           // one-line clinical rationale
+  drawNote: z.string().nullable().optional(),      // universal draw-physiology note (timing/prep), analyte-inherent — not schedule-specific
   frequency: z.string().nullable().optional(),
   panel: z.string().nullable().optional(),         // panel / group membership
   unreliableAssay: z.boolean().default(false),     // e.g. direct free-T immunoassay

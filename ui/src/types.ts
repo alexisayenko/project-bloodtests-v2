@@ -55,6 +55,10 @@ export interface LabProvenance {
   whyRu?: string | null;
   molarMass?: number | string | null;
   molarMassRef?: { cite?: string; url?: string } | null;
+  /** universal draw-physiology note (timing/prep) — shown in the popup "Draw" section. */
+  drawNote?: string | null;
+  /** why this analyte is scheduled for a given draw — shown in the popup "Why scheduled" section. */
+  scheduleNote?: string | null;
 }
 
 /** A scheduled-draw prescription badge (which doctor can order the marker). */
@@ -168,6 +172,8 @@ export interface LabMatrixModel {
   keyViews?: Record<string, string[]>;
   /** optional in-component lens tab bar; when absent the host drives `.view`. */
   lensTabs?: LabLensTab[];
+  /** per-view explainer prose (view key → {en, ru}); rendered in the .lens-note block. RU is "" for now. */
+  explainers?: Record<string, { en: string; ru?: string }>;
   drawCount?: number;
   markerCount?: number;
   ok?: boolean;

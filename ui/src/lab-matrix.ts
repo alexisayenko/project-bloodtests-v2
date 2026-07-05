@@ -51,6 +51,8 @@ const DEFAULT_I18N: Record<string, string> = {
   "popup.catalogCitations": "Catalog citations",
   "popup.sources": "Sources",
   "popup.why": "Why",
+  "popup.draw": "Draw",
+  "popup.scheduled": "Why scheduled",
   "popup.formula": "Formula",
   "popup.meaning": "What it is",
   "popup.consensus": "Interpretation",
@@ -165,6 +167,7 @@ export class LabMatrix extends HTMLElement {
   set view(k: string) {
     this._view = k || "all";
     this.applyView(this._view);
+    this.dispatchViewChange();
   }
   get view(): string {
     return this._view;
@@ -338,9 +341,14 @@ export class LabMatrix extends HTMLElement {
     const popup =
       `<div id="cell-popup" hidden><button type="button" class="tip-close" aria-label="Close">×</button><div class="tip-body"></div></div>`;
 
+    // per-view explainer prose block (filled by applyView); RU is empty for now
+    // so its inner nodes carry NO data-en/data-ru — applyLang leaves it untouched.
+    const lensNote = `<div class="lens-note" part="lens-note" hidden></div>`;
+
     root.innerHTML =
       `<style>${STYLES}${TOOLBAR_CSS}</style>` +
       tabsBar +
+      lensNote +
       toolbar +
       `<div class="labs-scroll"><table class="labs matrix">` +
       `<thead>${head}</thead>` +
@@ -373,6 +381,8 @@ export class LabMatrix extends HTMLElement {
     this.applyDetail(this.minOn);
     this.applyCollapse();
     this.applyView(this._view);
+    // initial mount: let the host initialize (e.g. reveal its explore panel)
+    this.dispatchViewChange();
   }
 
   /**
@@ -383,6 +393,32 @@ export class LabMatrix extends HTMLElement {
    */
   private applyView(key: string): void {
     if (!this.shadowRoot) return;
+    const isExplore = key === "explore";
+
+    // Explore mode: hide the whole matrix chrome (body + toolbar + explainer);
+    // the host reveals its own explore panel on the `viewchange` event.
+    const scroll = this.q(".labs-scroll") as HTMLElement | null;
+    const toolbar = this.q(".labs-toolbar") as HTMLElement | null;
+    const note = this.q(".lens-note") as HTMLElement | null;
+    if (scroll) scroll.classList.toggle("hidden", isExplore);
+    if (toolbar) toolbar.classList.toggle("hidden", isExplore);
+
+    // per-view explainer prose (EN; RU is empty for now → always fall back to EN)
+    const explainer = this._model?.explainers?.[key]?.en ?? "";
+    if (note) {
+      note.innerHTML = explainer;
+      note.hidden = !explainer || isExplore;
+    }
+
+    // reflect active tab (for every view, including explore)
+    for (const b of this.qa("[data-lens]")) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-lens") === key));
+    }
+
+    // explore hides the matrix body, so there is nothing to filter — and "explore"
+    // must NOT fall through to the isAll (show-all-markers) branch below.
+    if (isExplore) return;
+
     const isAll = key === "all" || !this._keyViews[key];
     const keyList = this._keyViews[key];
     const markerRows = this.qa("tbody tr[data-panel]:not(.panel-row)") as HTMLElement[];
@@ -409,15 +445,28 @@ export class LabMatrix extends HTMLElement {
       if (on && !tr.classList.contains("idx-inline")) anyBottomIdx = true;
     }
     for (const s of idxSeps) s.hidden = !(s.dataset["itab"] === key && anyBottomIdx);
-    // reflect active tab
-    for (const b of this.qa("[data-lens]")) {
-      b.setAttribute("aria-pressed", String(b.getAttribute("data-lens") === key));
-    }
+  }
+
+  /**
+   * Notify the host of a view change (frozen contract): a `viewchange`
+   * CustomEvent that bubbles + crosses the shadow boundary, carrying the new
+   * view key and whether it is the explore view. Fired on every view change and
+   * once on initial mount.
+   */
+  private dispatchViewChange(): void {
+    this.dispatchEvent(
+      new CustomEvent("viewchange", {
+        detail: { view: this._view, isExplore: this._view === "explore" },
+        bubbles: true,
+        composed: true,
+      }),
+    );
   }
 
   private setView(key: string): void {
     this._view = key || "all";
     this.applyView(this._view);
+    this.dispatchViewChange();
   }
 
   private q<T extends Element = Element>(sel: string): T | null {
@@ -843,6 +892,20 @@ export class LabMatrix extends HTMLElement {
         )}>${esc(p.why)}</span></div>`
       : "";
 
+    // Draw — universal draw-physiology note (timing/prep). Mirrors the why/note blocks.
+    const draw = p.drawNote
+      ? `<div class="ap-sec ap-draw"><span class="ap-lbl"${t.attr("popup.draw")}>Draw</span> <span>${esc(
+          p.drawNote,
+        )}</span></div>`
+      : "";
+
+    // Why scheduled — reason this analyte is ordered for a given draw.
+    const scheduled = p.scheduleNote
+      ? `<div class="ap-sec ap-scheduled"><span class="ap-lbl"${t.attr(
+          "popup.scheduled",
+        )}>Why scheduled</span> <span>${esc(p.scheduleNote)}</span></div>`
+      : "";
+
     return (
       `<div class="analyte-pop" hidden><div class="ap-root">` +
       `<strong${biAttr(p.displayName, p.displayNameRu)}>${esc(p.displayName)}</strong>${short}` +
@@ -850,6 +913,8 @@ export class LabMatrix extends HTMLElement {
       range +
       refs +
       why +
+      draw +
+      scheduled +
       `</div></div>`
     );
   }

@@ -686,6 +686,7 @@
       }
     ],
     "labPrintedRef": "4.30-22.40 ug/dL (morning draw)",
+    "drawNote": "Draw at 08:00 — cortisol has a strong diurnal rhythm (high AM, near-zero at night); a value without a known draw time is hard to read. Avoid acute stress/illness at the draw.",
     "why": "Primary adrenal glucocorticoid under HPA/ACTH control; morning value screens for adrenal insufficiency (low) and Cushing syndrome (high). Must be interpreted against collection time due to diurnal rhythm.",
     "frequency": null,
     "panel": "Thyroid, pituitary & growth axis",
@@ -745,6 +746,7 @@
       }
     ],
     "labPrintedRef": "0.74-1.40 mg/dL",
+    "drawNote": "Dehydration falsely raises creatinine — hydrate normally before the draw.",
     "why": "Muscle-derived waste filtered by the glomerulus and minimally reabsorbed; the primary endogenous marker of GFR and the basis of eGFR estimation.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
@@ -2279,7 +2281,7 @@
       "operator": "between",
       "sex": "any",
       "ageNote": "adult, fasting",
-      "note": "No formal guideline diagnostic threshold. Reference-lab fasting interval (Labcorp) 2.6-24.9 µIU/mL. Many metabolic clinicians consider <5-9 µIU/mL metabolically optimal (heuristic, not guideline)."
+      "note": "No formal guideline diagnostic threshold. Reference-lab fasting interval (Labcorp) 2.6-24.9 µIU/mL. Many metabolic clinicians consider fasting insulin <10 µIU/mL optimal, whereas ~10-25 µIU/mL suggests early/compensatory hyperinsulinemia (insulin resistance) even when fasting glucose is still normal — a heuristic optimum, not a guideline cutoff."
     },
     "evidenceLevel": "reference-lab",
     "references": [
@@ -3309,6 +3311,7 @@
       }
     ],
     "labPrintedRef": "53-360 mIU/L (= ~2.5-17.0 ng/mL)",
+    "drawNote": "Draw morning, rested — stress and even the venipuncture transiently raise prolactin.",
     "why": "Anterior-pituitary hormone; hyperprolactinemia (prolactinoma, dopamine-blocking drugs, hypothyroidism) suppresses GnRH/LH/FSH and causes secondary hypogonadism, low libido and infertility. Included to work up any low-testosterone finding. Relevant given this patient's stimulant (Concerta) and thyroid context.",
     "frequency": null,
     "panel": "Sex hormones (HPG axis)",
@@ -3724,7 +3727,7 @@
       "operator": "between",
       "sex": "male",
       "ageNote": "Harmonized, CDC-standardized reference range derived from healthy non-obese men aged 19-39y; applied to healthy adult men. Levels decline with age/adiposity.",
-      "note": "264-916 ng/dL = 9.2-31.8 nmol/L (matches patient lab-printed 9.20-31.80 nmol/L). Hypogonadism is commonly diagnosed below ~300 ng/dL (Endocrine Society / AUA). Draw morning, fasting; confirm low values on a repeat morning sample."
+      "note": "264-916 ng/dL = 9.2-31.8 nmol/L (matches patient lab-printed 9.20-31.80 nmol/L). ~300 ng/dL is the diagnostic floor for hypogonadism (Endocrine Society / AUA); mid-normal 500+ ng/dL is the usual target. Higher-is-better within range, so the optimality scale is inverted relative to most markers. Draw morning, fasting; confirm low values on a repeat morning sample."
     },
     "evidenceLevel": "reference-lab",
     "references": [
@@ -3754,6 +3757,7 @@
       }
     ],
     "labPrintedRef": "9.20-31.80 nmol/L (= 264-916 ng/dL)",
+    "drawNote": "Draw morning & fasting — testosterone falls 20–25% by afternoon.",
     "why": "Primary readout of Leydig-cell androgen output and the core analyte of the HPG axis; screens for hypogonadism (low libido, fatigue, low mood, relevant to a ~43y male). Total T is the recommended first-line test; interpret with SHBG when binding is abnormal.",
     "frequency": null,
     "panel": "Sex hormones (HPG axis)",
@@ -4319,6 +4323,7 @@
       }
     ],
     "labPrintedRef": null,
+    "drawNote": "Seasonal — lowest in late winter; a March draw catches the true nadir.",
     "why": "25-hydroxyvitamin D is the storage form and the standard marker of vitamin D status; screens for deficiency (bone loss, osteomalacia, secondary hyperparathyroidism) and guides supplementation. Relevant given the patient's thyroid/endocrine follow-up.",
     "frequency": "annual",
     "panel": "Vitamins & minerals",
