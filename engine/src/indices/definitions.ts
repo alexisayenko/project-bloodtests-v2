@@ -11,9 +11,9 @@
  * localized index text (ru/uk) is a future i18n addition to this catalog.
  */
 
-import { cholMgdlToMmoll, tgMgdlToMmoll, glucoseMgdlToMmoll } from "../convert.js";
 import { calculatedFreeTestosterone } from "./free-testosterone.js";
 import type { Reference, EvidenceLevel } from "../catalog/schema.js";
+import type { Unit } from "../units.js";
 
 /** Marker values for one draw, keyed by short name (e.g. `{ "TC": 200 }`). */
 export type Markers = Record<string, number | undefined>;
@@ -36,6 +36,16 @@ export interface IndexDef {
   /** true = higher-is-better. */
   hi?: boolean;
   needs: string[];
+  /**
+   * Unit each input marker's FORMULA expects, keyed by input marker shortName.
+   * The index normalizer (buildIndices) converts every observation from its
+   * stored unit to the declared token BEFORE `fn` runs, so the formula is
+   * unit-system-agnostic (works whether the source data is US mg/dL or SI
+   * mmol/L). Declare it on every index whose math is unit-dependent (lipid /
+   * glucose absolute values). PURE RATIOS (e.g. TC/HDL, LDL/HDL, ApoB/ApoA1)
+   * are unit-independent and MUST be left undeclared — no normalization needed.
+   */
+  inputUnits?: Partial<Record<string, Unit>>;
   level: "consensus" | "heuristic";
   /** Plain-language interpretation shown to the user. */
   meaning: string;
@@ -116,7 +126,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Давно используется и интуитивно понятно, но современные рекомендации считают ApoB / не-ЛПВП более точными.",
     } },
     fn: (m) => has(m, "LDL-C", "HDL-C") ? m["LDL-C"]! / m["HDL-C"]! : null },
-  { key: "aip", name: "AIP (atherogenic index of plasma)", itab: ["ir", "cardio"], formula: "log₁₀(TG / HDL), molar", cut: [0.11, 0.21], needs: ["TRIG", "HDL-C"], level: "consensus",
+  { key: "aip", name: "AIP (atherogenic index of plasma)", itab: ["ir", "cardio"], formula: "log₁₀(TG / HDL), molar", cut: [0.11, 0.21], needs: ["TRIG", "HDL-C"], inputUnits: { TRIG: "mmol/L", "HDL-C": "mmol/L" }, level: "consensus",
     meaning: "Reflects LDL particle size and insulin resistance. Scale: <0.11 low risk, 0.11–0.21 medium, >0.21 high.",
     consensus: "Growing evidence as a CV-risk predictor, especially with high triglycerides / metabolic syndrome.",
     evidenceLevel: "consensus",
@@ -128,8 +138,9 @@ export const INDEX_DEFS: IndexDef[] = [
       meaning: "Отражает размер частиц ЛПНП и инсулинорезистентность. Шкала: <0,11 низкий риск, 0,11–0,21 средний, >0,21 высокий.",
       consensus: "Растущая доказательная база как предиктора СС-риска, особенно при высоких триглицеридах / метаболическом синдроме.",
     } },
-    fn: (m) => has(m, "TRIG", "HDL-C") ? Math.log10(tgMgdlToMmoll(m["TRIG"]!) / cholMgdlToMmoll(m["HDL-C"]!)) : null },
-  { key: "nonhdl", name: "Non-HDL cholesterol", itab: ["cardio"], formula: "TC − HDL (mg/dL)", cut: [130, 160], needs: ["TC", "HDL-C"], level: "consensus",
+    // Inputs arrive already in mmol/L (declared via inputUnits, normalized by buildIndices) — molar log ratio, no internal conversion.
+    fn: (m) => has(m, "TRIG", "HDL-C") ? Math.log10(m["TRIG"]! / m["HDL-C"]!) : null },
+  { key: "nonhdl", name: "Non-HDL cholesterol", itab: ["cardio"], formula: "TC − HDL (mg/dL)", cut: [130, 160], needs: ["TC", "HDL-C"], inputUnits: { TC: "mg/dL", "HDL-C": "mg/dL" }, level: "consensus",
     loinc: "43396-1", // LOINC 43396-1 — Cholesterol non HDL [Mass/volume] in Serum or Plasma
     meaning: "All atherogenic cholesterol (LDL + VLDL + remnants). Reflects risk better than LDL alone, especially with high TG. Target <130 mg/dL (high risk <100).",
     consensus: "Recommended by ESC/AHA guidelines as a secondary treatment target; more reliable than isolated LDL.",
@@ -144,7 +155,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Рекомендован рекомендациями ESC/AHA как вторичная цель лечения; надёжнее изолированного ЛПНП.",
     } },
     fn: (m) => has(m, "TC", "HDL-C") ? m["TC"]! - m["HDL-C"]! : null },
-  { key: "remnant", name: "Remnant cholesterol", itab: ["cardio"], formula: "TC − HDL − LDL (mg/dL)", cut: [24, 30], needs: ["TC", "HDL-C", "LDL-C"], level: "consensus",
+  { key: "remnant", name: "Remnant cholesterol", itab: ["cardio"], formula: "TC − HDL − LDL (mg/dL)", cut: [24, 30], needs: ["TC", "HDL-C", "LDL-C"], inputUnits: { TC: "mg/dL", "HDL-C": "mg/dL", "LDL-C": "mg/dL" }, level: "consensus",
     meaning: "Cholesterol in triglyceride-rich lipoproteins (VLDL and remnants). Independent CV-risk and vascular-inflammation factor. Target <24 mg/dL (~0.6 mmol/L).",
     consensus: "Accumulating evidence as a causal driver of atherosclerosis; increasingly used.",
     evidenceLevel: "consensus",
@@ -157,7 +168,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Накапливаются данные о причинной роли в атеросклерозе; применяется всё чаще.",
     } },
     fn: (m) => has(m, "TC", "HDL-C", "LDL-C") ? m["TC"]! - m["HDL-C"]! - m["LDL-C"]! : null },
-  { key: "vldl", name: "VLDL cholesterol", itab: ["cardio"], formula: "TG / 5 (mg/dL)", cut: [30, 40], needs: ["TRIG"], level: "heuristic",
+  { key: "vldl", name: "VLDL cholesterol", itab: ["cardio"], formula: "TG / 5 (mg/dL)", cut: [30, 40], needs: ["TRIG"], inputUnits: { TRIG: "mg/dL" }, level: "heuristic",
     loinc: "13458-5", // LOINC 13458-5 — Cholesterol in VLDL [Mass/volume] in Serum or Plasma by calculation
     meaning: "Cholesterol carried by triglyceride-rich VLDL ('pre-beta' lipoprotein), estimated as triglycerides ÷ 5 (Friedewald — valid when TG <400 mg/dL). Tracks triglyceride load; overlaps with the Remnant-cholesterol index (VLDL is the bulk of remnants). Guide: <30 normal · 30–40 borderline · >40 high.",
     consensus: "Standard Friedewald estimate; a rough surrogate, not a directly measured fraction. Remnant-C is the more modern read of the same triglyceride-rich pool.",
@@ -186,7 +197,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Сильный предиктор в крупных исследованиях (INTERHEART). Требует ApoB и ApoA1 из одного забора — пока не измерены.",
     } },
     fn: (m) => has(m, "ApoB", "ApoA1") ? m["ApoB"]! / m["ApoA1"]! : null },
-  { key: "tyg", name: "TyG index", itab: "ir", formula: "ln(TG[mg/dL] × glucose[mg/dL] / 2)", cut: [8.5, 9], needs: ["TRIG", "GLU"], level: "consensus",
+  { key: "tyg", name: "TyG index", itab: "ir", formula: "ln(TG[mg/dL] × glucose[mg/dL] / 2)", cut: [8.5, 9], needs: ["TRIG", "GLU"], inputUnits: { TRIG: "mg/dL", GLU: "mg/dL" }, level: "consensus",
     meaning: "Surrogate of insulin resistance from triglycerides and glucose — no insulin needed. Guide: <8.5 normal, >9 marked IR.",
     consensus: "Well-validated IR / metabolic-risk marker; convenient (no insulin assay). Needs fasting TG and glucose from one draw.",
     evidenceLevel: "consensus",
@@ -199,7 +210,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Хорошо валидированный маркер ИР / метаболического риска; удобен (не нужен анализ на инсулин). Требует ТГ и глюкозу натощак из одного забора.",
     } },
     fn: (m) => has(m, "TRIG", "GLU") ? Math.log(m["TRIG"]! * m["GLU"]! / 2) : null },
-  { key: "gi", name: "Glucose / insulin ratio", itab: "ir", formula: "glucose(mg/dL) / insulin(µIU/mL)", cut: [7, 4.5], hi: true, needs: ["GLU", "Insulin"], level: "heuristic",
+  { key: "gi", name: "Glucose / insulin ratio", itab: "ir", formula: "glucose(mg/dL) / insulin(µIU/mL)", cut: [7, 4.5], hi: true, needs: ["GLU", "Insulin"], inputUnits: { GLU: "mg/dL", Insulin: "µIU/mL" }, level: "heuristic",
     loinc: "62418-9", // LOINC 62418-9 — Glucose/Insulin [Ratio] in Serum or Plasma (matches glucose/insulin direction)
     meaning: "An older fasting insulin-resistance surrogate: glucose ÷ insulin. Higher = more insulin-sensitive; a low ratio means high fasting insulin (insulin resistance). Cutoffs vary widely by population and assay — your lab printed >10 as normal, while the FGIR literature often uses <4.5 for IR — so read it as orientation only. Guide here: >7 sensitive · 4.5–7 borderline · <4.5 resistant.",
     consensus: "Crude, non-standardized IR proxy, superseded by HOMA-IR (built from the same two values). Kept mainly because the lab reported it; prefer HOMA-IR.",
@@ -213,7 +224,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Грубый, нестандартизованный суррогат ИР, вытеснен HOMA-IR (построен из тех же двух значений). Оставлен в основном потому, что лаборатория его сообщила; предпочтительнее HOMA-IR.",
     } },
     fn: (m) => has(m, "GLU", "Insulin") ? m["GLU"]! / m["Insulin"]! : null },
-  { key: "homair", name: "HOMA-IR", itab: "ir", formula: "glucose(mmol/L) × insulin(µIU/mL) / 22.5", cut: [2, 2.9], needs: ["GLU", "Insulin"], level: "consensus",
+  { key: "homair", name: "HOMA-IR", itab: "ir", formula: "glucose(mmol/L) × insulin(µIU/mL) / 22.5", cut: [2, 2.9], needs: ["GLU", "Insulin"], inputUnits: { GLU: "mmol/L", Insulin: "µIU/mL" }, level: "consensus",
     meaning: "Fasting insulin-resistance estimate. Guide: <2 normal · 2–2.9 borderline / early insulin resistance · ≥2.9 insulin resistance.",
     consensus: "Standard IR screening index. Requires fasting glucose AND insulin from one draw — insulin not yet measured.",
     evidenceLevel: "consensus",
@@ -225,7 +236,8 @@ export const INDEX_DEFS: IndexDef[] = [
       meaning: "Оценка инсулинорезистентности натощак. Ориентир: <2 норма · 2–2,9 пограничная / ранняя инсулинорезистентность · ≥2,9 инсулинорезистентность.",
       consensus: "Стандартный скрининговый индекс ИР. Требует глюкозу И инсулин натощак из одного забора — инсулин пока не измерен.",
     } },
-    fn: (m) => has(m, "GLU", "Insulin") ? (glucoseMgdlToMmoll(m["GLU"]!) * m["Insulin"]!) / 22.5 : null }, // RS [verified 2026-07-04] — HOMA-IR = glucose(mmol/L)×insulin(µU/mL)/22.5. Matthews DR et al. Diabetologia 1985;28(7):412-419.
+    // GLU arrives already in mmol/L (declared via inputUnits, normalized by buildIndices) — no internal conversion.
+    fn: (m) => has(m, "GLU", "Insulin") ? (m["GLU"]! * m["Insulin"]!) / 22.5 : null }, // RS [verified 2026-07-04] — HOMA-IR = glucose(mmol/L)×insulin(µU/mL)/22.5. Matthews DR et al. Diabetologia 1985;28(7):412-419.
   { key: "cft", name: "Free testosterone (calculated)", itab: "hypogonadism", anchor: "FT", formula: "Vermeulen (T, SHBG, albumin)", cut: [100, 65], hi: true, needs: ["T", "SHBG"], level: "consensus",
     loinc: "103227-5", // LOINC 103227-5 — Testosterone Free [Mass/volume] in Serum or Plasma by Calculation (matches our pg/mL calculated free T; the Moles/volume calculated variant is 96559-0)
     meaning: "Bioavailable testosterone estimated from total T, SHBG and albumin (Vermeulen equation), in pg/mL. Assay-independent — compare it with the measured Free Testosterone row, whose direct immunoassay is unreliable and uses incompatible reference ranges across labs. Higher is better; guide: >100 good · 65–100 low-normal · <65 low (~6.5 ng/dL floor). Albumin defaults to 4.3 g/dL when not measured. The equation solves the binding equilibrium of testosterone to SHBG (high affinity, Ks≈1×10⁹ L/mol) and albumin (low affinity, Ka≈3.6×10⁴ L/mol) as a quadratic: free T = [−b+√(b²−4ac)]/2a, with a=N·Ks, b=N+Ks(SHBG−T), c=−T and N=1+Ka·albumin (all in mol/L).",

@@ -23,6 +23,16 @@ import { ANALYTE_CATALOG } from "./catalog/data.js";
 import type { AnalyteCatalog, AnalyteEntry, CatalogLoinc } from "./catalog/schema.js";
 
 /**
+ * Canonical unit tokens the derived-index layer consumes. This is the
+ * enum-style token set an `IndexDef.inputUnits` may name — the unit each
+ * index's FORMULA expects its inputs in. The index normalizer (see
+ * ./indices/build.ts) converts each observation from its stored unit to this
+ * declared token BEFORE the formula runs, so a formula never guesses the unit
+ * system. Extend only as new unit-dependent indices need it; no free strings.
+ */
+export type Unit = "mg/dL" | "mmol/L" | "µIU/mL" | "%" | "U/L";
+
+/**
  * How to render an analyte's mass value in the SI (molar) view. Derived per
  * analyte from the catalog; carries everything a caller needs to (a) convert the
  * value and its reference bounds and (b) show the molar LOINC code in the SI view.

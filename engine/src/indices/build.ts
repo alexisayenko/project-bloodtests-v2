@@ -10,10 +10,12 @@
 
 import type { Draw } from "../types.js";
 import { zone, type Zone } from "../flag.js";
-import { INDEX_DEFS, type Markers } from "./definitions.js";
+import { INDEX_DEFS, type IndexDef, type Markers } from "./definitions.js";
 import type { Reference, EvidenceLevel } from "../catalog/schema.js";
 import { citeOf } from "../cite.js";
 import { fmtNum } from "../format.js";
+import { cholMgdlToMmoll, tgMgdlToMmoll, glucoseMgdlToMmoll } from "../convert.js";
+import type { Unit } from "../units.js";
 
 export interface IndexBuildConfig {
   /** Patient age in years at a given draw date (for eGFR, FIB-4). */
@@ -55,14 +57,60 @@ export interface IndexMatrix {
 
 const idOf = (d: Draw) => `${d.date}|${d.labName}`;
 
-function markersOf(d: Draw): Markers {
-  const m: Markers = {};
+/** One observation's numeric value plus the unit it was stored in (may be absent). */
+interface RawMarker { value: number; unit: string | null | undefined }
+
+/**
+ * Per-marker mg/dL → mmol/L converters (the only conversions the index layer
+ * needs). Reuses the cited convert.ts factors; the inverse (mmol/L → mg/dL) is
+ * derived from each function as `x / f(1)` so no divisor is duplicated.
+ */
+const MGDL_TO_MMOLL: Record<string, (x: number) => number> = {
+  TC: cholMgdlToMmoll, "HDL-C": cholMgdlToMmoll, "LDL-C": cholMgdlToMmoll,
+  TRIG: tgMgdlToMmoll, GLU: glucoseMgdlToMmoll,
+};
+
+/**
+ * Convert one marker value from its stored unit to the unit an index's formula
+ * expects. Same unit (or unknown/missing `from`, treated as already-in-target)
+ * → passthrough. Only mg/dL↔mmol/L is defined, and only for the lipid/glucose
+ * markers above; any other marker/unit pair (Insulin µIU/mL, %, U/L, unknown) is
+ * left unchanged.
+ */
+function toUnit(value: number, marker: string, from: string | null | undefined, to: Unit): number {
+  if (from == null || from === to) return value;
+  const f = MGDL_TO_MMOLL[marker];
+  if (!f) return value; // no known conversion for this marker — leave as-is
+  if (from === "mg/dL" && to === "mmol/L") return f(value);
+  if (from === "mmol/L" && to === "mg/dL") return value / f(1); // f(1) = 1/divisor ⇒ x / f(1) = x × divisor
+  return value; // unrecognized unit pair — leave as-is
+}
+
+/** Collect a draw's observations as value+unit pairs, keyed by short name (analysis fallback). */
+function markersOf(d: Draw): Record<string, RawMarker> {
+  const m: Record<string, RawMarker> = {};
   for (const it of d.items || []) {
     const us = it.us ?? it.original;
     if (us?.value != null) {
       const key = it.shortName ?? it.analysis;
-      if (key != null) m[key] = us.value;
+      if (key != null) m[key] = { value: us.value, unit: us.unit };
     }
+  }
+  return m;
+}
+
+/**
+ * Build the marker map for ONE index: each marker the index declares in
+ * `inputUnits` is converted from its stored unit to the declared unit;
+ * undeclared markers (pure-ratio inputs, hormones, etc.) pass through raw.
+ * Per-index because different indices want the same marker in different units
+ * (AIP: TG in mmol/L; TyG: TG in mg/dL).
+ */
+function markersForDef(raw: Record<string, RawMarker>, def: IndexDef): Markers {
+  const m: Markers = {};
+  for (const [key, rm] of Object.entries(raw)) {
+    const target = def.inputUnits?.[key];
+    m[key] = target != null ? toUnit(rm.value, key, rm.unit, target) : rm.value;
   }
   return m;
 }
@@ -72,7 +120,7 @@ export function buildIndices(draws: Draw[], config: IndexBuildConfig = {}): Inde
     .sort((a, b) => a.date.localeCompare(b.date) || a.labName.localeCompare(b.labName))
     .map((d) => ({ id: idOf(d), date: d.date, labName: d.labName }));
 
-  const drawMap: Record<string, Markers> = {};
+  const drawMap: Record<string, Record<string, RawMarker>> = {};
   for (const d of draws) drawMap[idOf(d)] = markersOf(d);
 
   const items: IndexItem[] = INDEX_DEFS.map((d) => {
@@ -80,7 +128,8 @@ export function buildIndices(draws: Draw[], config: IndexBuildConfig = {}): Inde
     let n = 0;
     for (const c of cols) {
       const ctx = { ageYears: config.ageYearsForDraw?.(c.date), sex: config.sex };
-      const v = d.fn(drawMap[c.id]!, ctx);
+      // Normalize this draw's markers into the units THIS index's formula expects.
+      const v = d.fn(markersForDef(drawMap[c.id]!, d), ctx);
       if (v != null && Number.isFinite(v)) {
         // Round to 2 decimals first, THEN apply magnitude-adaptive precision —
         // matches the historical display (e.g. AIP 0.4475 → 0.45 → "0.45", not

@@ -68,3 +68,39 @@ describe("buildIndices — golden vs live orchestration", () => {
     expect(noAge.tabs.flatMap((t) => t.items).find((i) => i.key === "egfr")!.hasData).toBe(false);
   });
 });
+
+/**
+ * Unit-awareness: index formulas must compute correctly whether the source
+ * observations are in US (mg/dL) or SI (mmol/L). Each index declares the unit
+ * its formula expects (inputUnits); buildIndices normalizes to it. This proves
+ * the double-conversion bug is fixed — an SI draw no longer gets converted a
+ * second time inside the formula.
+ */
+describe("buildIndices — unit-aware normalization (US mg/dL vs SI mmol/L)", () => {
+  // item carrying an explicit unit (the field the normalizer reads on it.us.unit).
+  const u = (shortName: string, value: number, unit: string) =>
+    ({ shortName, analysis: shortName, original: { value, unit }, us: { value, unit }, si: { value, unit } });
+  const idxIn = (m: ReturnType<typeof buildIndices>, k: string) =>
+    m.tabs.flatMap((t) => t.items).find((i) => i.key === k)!;
+
+  it("AIP from an SI (mmol/L) draw ≈ +0.16 = log10(2.13/1.46) — no double conversion", () => {
+    const si: Draw[] = [{ date: "2026-01-01", labName: "SI", items: [u("TRIG", 2.13, "mmol/L"), u("HDL-C", 1.46, "mmol/L")] }];
+    const aip = idxIn(buildIndices(si), "aip");
+    expect(aip.hasData).toBe(true);
+    expect(aip.cells[0]).toEqual({ v: "0.16", z: "z-warn" }); // log10(2.13/1.46)=0.1641; cut [0.11,0.21] → warn band
+  });
+
+  it("AIP from a US (mg/dL) draw still gives the historical value (mg/dL→mmol/L normalized once)", () => {
+    // TRIG 150 mg/dL, HDL-C 50 mg/dL → 1.6936/1.2930 mmol/L → log10 = 0.1172 → displays 0.12 (golden unchanged).
+    const us: Draw[] = [{ date: "2026-01-01", labName: "US", items: [u("TRIG", 150, "mg/dL"), u("HDL-C", 50, "mg/dL")] }];
+    const aip = idxIn(buildIndices(us), "aip");
+    expect(aip.cells[0]).toEqual({ v: "0.12", z: "z-warn" }); // 0.117 in [0.11,0.21] → warn band; matches the golden-master fixture
+  });
+
+  it("HOMA-IR agrees whether glucose is given in mmol/L or mg/dL (≈1.87)", () => {
+    const si: Draw[] = [{ date: "2026-01-01", labName: "SI", items: [u("GLU", 5.27, "mmol/L"), u("Insulin", 8, "µIU/mL")] }];
+    const us: Draw[] = [{ date: "2026-01-01", labName: "US", items: [u("GLU", 95, "mg/dL"), u("Insulin", 8, "µIU/mL")] }];
+    expect(idxIn(buildIndices(si), "homair").cells[0]).toEqual({ v: "1.87", z: "z-ok" }); // <2 → ok band
+    expect(idxIn(buildIndices(us), "homair").cells[0]).toEqual({ v: "1.87", z: "z-ok" });
+  });
+});
