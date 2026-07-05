@@ -296,21 +296,24 @@ export class LabMatrix extends HTMLElement {
       })
       .join("");
 
-    // ---- tfoot: estimated-cost row (marker+data span, then a total per scheduled draw)
-    const foot =
-      `<tr class="cost-row">` +
-      `<th class="marker-col cost-label" colspan="${cols.length + 1}"${t.attr(
-        "foot.estCost",
-      )}>Est. cost — Cyprus private (€)</th>` +
-      scheduleCosts
-        .map(
-          (s) =>
-            `<td class="sched cost-total" title="Estimated private-lab cost of the ${esc(
-              s.col,
-            )} draw (from Alex's price sheet)">€${esc(s.total)}</td>`,
-        )
-        .join("") +
-      `</tr>`;
+    // ---- tfoot: estimated-cost row (marker+data span, then a total per scheduled
+    // draw). Only rendered when there ARE scheduled-draw costs — a consumer with no
+    // price data (e.g. a different user) shows no empty cost footer.
+    const foot = scheduleCosts.length
+      ? `<tr class="cost-row">` +
+        `<th class="marker-col cost-label" colspan="${cols.length + 1}"${t.attr(
+          "foot.estCost",
+        )}>Est. cost — Cyprus private (€)</th>` +
+        scheduleCosts
+          .map(
+            (s) =>
+              `<td class="sched cost-total" title="Estimated private-lab cost of the ${esc(
+                s.col,
+              )} draw (from Alex's price sheet)">€${esc(s.total)}</td>`,
+          )
+          .join("") +
+        `</tr>`
+      : "";
 
     // optional in-component lens tab bar (host page can also drive `.view` directly)
     const tabsBar = (m.lensTabs ?? []).length

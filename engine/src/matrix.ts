@@ -28,6 +28,14 @@ export interface MatrixConfig {
   excludeMarkers?: Set<string>; // public field (homepage-consumed); LOINC term for the measured quantity is "analyte"
   nameOverride?: Record<string, string>;
   shortNameOverride?: Record<string, string>;
+  /**
+   * Apply the built-in clinical cut-point bands (CLIN_ZONE: GLU/HbA1c/Insulin/…).
+   * Default true. Those thresholds are hardcoded in US units (e.g. glucose mg/dL),
+   * so a consumer whose values are in other units (e.g. mmol/L) should set this
+   * false to flag against each row's own reference range instead — avoiding a
+   * unit-mismatched verdict (7.9 mmol/L glucose judged as 7.9 mg/dL).
+   */
+  clinicalBands?: boolean;
 }
 
 export interface MatrixCol { id: string; date: string; labName: string }
@@ -177,14 +185,18 @@ function resolveRefs(m: Acc, ov: RefOverride | null): { refMin?: number | null; 
 }
 
 /** Build one matrix cell, colored against its own printed range (fallback: the row range; override always wins). */
-function buildCell(cell: CellData, ov: RefOverride | null, rowRefMin: number | null | undefined, rowRefMax: number | null | undefined, isUnreliable: boolean, shortName?: string, analysis?: string): MatrixCell {
+function buildCell(cell: CellData, ov: RefOverride | null, rowRefMin: number | null | undefined, rowRefMax: number | null | undefined, isUnreliable: boolean, clinicalBands: boolean, shortName?: string, analysis?: string): MatrixCell {
   const rMin = ov ? ov.refMin : (cell.refMin ?? rowRefMin);
   const rMax = ov ? ov.refMax : (cell.refMax ?? rowRefMax);
-  return { raw: cell.raw, value: cell.value, flag: isUnreliable ? "" as const : flagOf(cell.value, rMin, rMax, shortName, analysis), title: cell.tip };
+  // clinicalBands off → pass no key so flagOf falls back to the row's own range
+  const flag = isUnreliable
+    ? ("" as const)
+    : flagOf(cell.value, rMin, rMax, clinicalBands ? shortName : undefined, clinicalBands ? analysis : undefined);
+  return { raw: cell.raw, value: cell.value, flag, title: cell.tip };
 }
 
 /** Assemble one analyte row: refs, cells, sparkline series and display names. */
-function buildRow(m: Acc, cols: MatrixCol[], refOverride: Record<string, RefOverride>, unreliable: Set<string>, nameOverride: Record<string, string>, shortNameOverride: Record<string, string>): MatrixRow {
+function buildRow(m: Acc, cols: MatrixCol[], refOverride: Record<string, RefOverride>, unreliable: Set<string>, nameOverride: Record<string, string>, shortNameOverride: Record<string, string>, clinicalBands: boolean): MatrixRow {
   const loincs = Array.from(m.loincs).sort((a, b) => a.localeCompare(b));
   const isUnreliable = (m.shortName != null && unreliable.has(m.shortName)) || (m.analysis != null && unreliable.has(m.analysis));
   const ov = byShortNameOrAnalysis((key) => refOverride[key], m.shortName, m.analysis) ?? null;
@@ -192,7 +204,7 @@ function buildRow(m: Acc, cols: MatrixCol[], refOverride: Record<string, RefOver
   const refText = refTextOf(refMin, refMax);
   const cells = cols.map((c) => {
     const cell = m.byId[c.id];
-    return cell ? buildCell(cell, ov, refMin, refMax, isUnreliable, m.shortName, m.analysis) : null;
+    return cell ? buildCell(cell, ov, refMin, refMax, isUnreliable, clinicalBands, m.shortName, m.analysis) : null;
   });
   const series = cells.map((cell, i) => cell ? { date: cols[i]!.date, value: cell.value } : null).filter((x): x is { date: string; value: number } => x != null);
   const { displayName, displayShortName } = displayNames(m.shortName, m.analysis, nameOverride, shortNameOverride);
@@ -206,6 +218,7 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
   const excludeAnalytes = config.excludeMarkers ?? new Set<string>();
   const nameOverride = config.nameOverride ?? {};
   const shortNameOverride = config.shortNameOverride ?? {};
+  const clinicalBands = config.clinicalBands !== false;
 
   const cols: MatrixCol[] = [...draws]
     .sort((a, b) => a.date.localeCompare(b.date) || a.labName.localeCompare(b.labName))
@@ -219,7 +232,7 @@ export function buildMatrix(draws: Draw[], config: MatrixConfig = {}): Matrix {
   // refMin/refMax shown in the marker column), so labs that printed no range don't leave
   // uncolored cells. An override still wins for every cell.
   const rows: MatrixRow[] = order.map((k) =>
-    buildRow(byKey.get(k)!, cols, refOverride, unreliable, nameOverride, shortNameOverride),
+    buildRow(byKey.get(k)!, cols, refOverride, unreliable, nameOverride, shortNameOverride, clinicalBands),
   );
 
   rows.sort((a, b) => (a.analysis || "").localeCompare(b.analysis || ""));

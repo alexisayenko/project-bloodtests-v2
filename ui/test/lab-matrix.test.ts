@@ -265,6 +265,15 @@ describe("<lab-matrix> (phase 2 markup port)", () => {
     el.remove();
   });
 
+  it("omits the cost footer entirely when there are no scheduled costs (price-less consumer)", () => {
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    el.model = { ...MODEL, scheduleCosts: [], scheduleCols: [] };
+    const sr = el.shadowRoot!;
+    expect(sr.querySelector("tfoot .cost-row")).toBeNull();
+    el.remove();
+  });
+
   it("injects the Shadow-DOM stylesheet (phase 1)", () => {
     const el = mount();
     const sr = el.shadowRoot!;

@@ -52,6 +52,17 @@ describe("buildMatrix — golden-master vs live labMatrix core", () => {
     expect(r.cells[0]!.flag).toBe("");
   });
 
+  it("clinicalBands:false flags GLU by its own range, not the mg/dL cut-points (SI-unit fix)", () => {
+    // A mmol/L glucose of 7.9 (diabetic) with a mmol/L range 3.3–5.5. With clinical
+    // bands ON, the hardcoded mg/dL band (g:100) reads 7.9 as <100 → z-ok (WRONG).
+    // With bands OFF it flags against the row range: 7.9 > 5.5 (×1.44) → z-bad.
+    const si: Draw[] = [{ date: "2025-01-01", labName: "L", items: [
+      { shortName: "GLU", analysis: "Glucose", original: uv(7.9, "mmol/L", 3.3, 5.5), us: uv(7.9, "mmol/L", 3.3, 5.5), si: uv(7.9, "mmol/L") },
+    ] }];
+    expect(buildMatrix(si).rows[0]!.cells[0]!.flag).toBe("z-ok");                       // bands on → wrong-unit "ok"
+    expect(buildMatrix(si, { clinicalBands: false }).rows[0]!.cells[0]!.flag).toBe("z-bad"); // bands off → correct
+  });
+
   it("clinical flagging over two draws (GLU 90 ok, 130 bad)", () => {
     const r = row("GLU");
     expect(r.cells[0]!.flag).toBe("z-ok");
