@@ -436,6 +436,27 @@ describe("<lab-matrix> lens views (phase 3b)", () => {
     expect((sr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(false);
     el.remove();
   });
+
+  it("lens view strips panel-collapse from curated markers (a collapsed source panel must not hide them)", () => {
+    // Regression: panels default to all-collapsed; collapse hides rows via the
+    // `.panel-collapsed` class (display:none) — SEPARATE from the `hidden` filter.
+    // On a lens view the curated markers must not stay collapsed, or the lens shows
+    // only its derived indices (markers invisible). happy-dom has no CSS, so assert
+    // the class contract the e2e checks as computed display.
+    const el = mountLens();
+    const sr = el.shadowRoot!;
+    const hgb = () => sr.querySelector('tr[data-key="HGB"]') as HTMLElement;
+    // default view is All with everything collapsed → HGB carries panel-collapsed
+    expect(hgb().classList.contains("panel-collapsed")).toBe(true);
+    // switching to its lens must clear it (and keep it shown via hidden=false)
+    el.view = "anemia";
+    expect(hgb().hidden).toBe(false);
+    expect(hgb().classList.contains("panel-collapsed")).toBe(false);
+    // returning to All restores the collapsed state
+    el.view = "all";
+    expect(hgb().classList.contains("panel-collapsed")).toBe(true);
+    el.remove();
+  });
 });
 
 describe("marker cell — badge placement + price alignment", () => {

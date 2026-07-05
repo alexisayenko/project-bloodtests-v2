@@ -460,9 +460,15 @@ export class LabMatrix extends HTMLElement {
     const panelHeaders = this.qa("tbody tr.panel-row[data-panel]") as HTMLElement[];
     const idxRows = this.qa("tbody tr.idx-row") as HTMLElement[];
     const idxSeps = this.qa("tbody tr.idx-sep") as HTMLElement[];
-    // 1. marker rows — curated key-subset, or all
+    // 1. marker rows — curated key-subset, or all. Panel-collapse is an All-view
+    //    affordance (that view keeps its panel headers); a lens view is a flat
+    //    curated list with no headers, so a collapsed source panel must NOT hide
+    //    its lens markers. Reconcile the `.panel-collapsed` class here — keep it on
+    //    All (per the collapsed set), strip it on any lens — so it can't win over
+    //    the `hidden` filter via display:none.
     for (const tr of markerRows) {
       tr.hidden = isAll ? false : !(keyList && keyList.indexOf(tr.dataset["key"] || "") !== -1);
+      tr.classList.toggle("panel-collapsed", isAll && this.collapsed.has(tr.dataset["panel"] || ""));
     }
     // 2. panel separators — in "all", visible only if heading ≥1 visible marker;
     //    in any lens (curated cross-panel set) the source-panel headers are noise,
