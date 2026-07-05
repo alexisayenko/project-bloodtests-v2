@@ -38,7 +38,11 @@ engine modules:
 - **`buildIndices`** now threads each index's own clinical provenance
   (`references` + `cite`, `evidenceLevel`, `loinc`), localized text, a
   singular `itab` convenience field, and `fmtNum`-formatted cells — so
-  the consumer attaches nothing to the index model.
+  the consumer attaches nothing to the index model. Index inputs are
+  additionally **unit-declared** (`IndexDef.inputUnits`) and normalized
+  per-index before each formula runs, so the emitted model is correct
+  whether the source data is US mg/dL or SI mmol/L (see
+  [`indices-derive`](../../product/features/indices-derive.md)).
 - **`lenses.ts` — `DEFAULT_LENSES` + `resolveLenses`** — the
   clinical-lens catalog (which markers make up each diagnostic lens)
   as shared domain data, alongside `PANELS` and `INDEX_DEFS`.
