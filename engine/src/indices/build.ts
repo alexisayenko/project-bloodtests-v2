@@ -99,38 +99,43 @@ const MGDL_TO_MMOLL: Record<string, (x: number) => number> = {
   TRIG: tgMgdlToMmoll, GLU: glucoseMgdlToMmoll,
 };
 
+const CREAT_MGDL_PER_UMOLL = 88.4; // creatinine: 1 mg/dL = 88.4 µmol/L
+
+/** One directional unit conversion for a specific marker. */
+interface UnitConv { marker: string; from: string; to: string; conv: (x: number) => number }
+
+/**
+ * Every supported directional conversion as a flat lookup table. Bidirectional
+ * pairs are listed both ways, so `toUnit` is a single find + apply with no
+ * per-marker branching. Anything not listed passes through unchanged.
+ */
+const UNIT_CONVERSIONS: UnitConv[] = [
+  // Creatinine µmol/L ↔ mg/dL (CKD-EPI eGFR expects mg/dL; SI labs report µmol/L).
+  { marker: "CREAT", from: "µmol/L", to: "mg/dL", conv: (x) => x / CREAT_MGDL_PER_UMOLL },
+  { marker: "CREAT", from: "mg/dL", to: "µmol/L", conv: (x) => x * CREAT_MGDL_PER_UMOLL },
+  // Free T3: T3 MW 650.98 ⇒ 1 pg/mL = 1.536 pmol/L.
+  { marker: "FT3", from: "pg/mL", to: "pmol/L", conv: (x) => x * 1.536 },
+  { marker: "FT3", from: "pmol/L", to: "pg/mL", conv: (x) => x / 1.536 },
+  // Free T4: T4 MW 776.87 ⇒ 1 ng/dL = 12.87 pmol/L.
+  { marker: "FT4", from: "ng/dL", to: "pmol/L", conv: (x) => x * 12.87 },
+  { marker: "FT4", from: "pmol/L", to: "ng/dL", conv: (x) => x / 12.87 },
+  // Lipids/glucose mg/dL ↔ mmol/L via each marker's divisor in MGDL_TO_MMOLL.
+  // f(1) = 1/divisor ⇒ x / f(1) = x × divisor for the reverse direction.
+  ...Object.entries(MGDL_TO_MMOLL).flatMap(([marker, f]): UnitConv[] => [
+    { marker, from: "mg/dL", to: "mmol/L", conv: f },
+    { marker, from: "mmol/L", to: "mg/dL", conv: (x) => x / f(1) },
+  ]),
+];
+
 /**
  * Convert one marker value from its stored unit to the unit an index's formula
- * expects. Same unit (or unknown/missing `from`, treated as already-in-target)
- * → passthrough. Only mg/dL↔mmol/L is defined, and only for the lipid/glucose
- * markers above; any other marker/unit pair (Insulin µIU/mL, %, U/L, unknown) is
- * left unchanged.
+ * expects. Same unit (or unknown/missing `from`) → passthrough. Only the pairs
+ * in UNIT_CONVERSIONS are defined; any other marker/unit pair is left unchanged.
  */
-const CREAT_MGDL_PER_UMOLL = 88.4; // creatinine: 1 mg/dL = 88.4 µmol/L
 function toUnit(value: number, marker: string, from: string | null | undefined, to: Unit): number {
   if (from == null || from === to) return value;
-  // Creatinine µmol/L ↔ mg/dL (CKD-EPI eGFR expects mg/dL; SI labs report µmol/L).
-  if (marker === "CREAT") {
-    if (from === "µmol/L" && to === "mg/dL") return value / CREAT_MGDL_PER_UMOLL;
-    if (from === "mg/dL" && to === "µmol/L") return value * CREAT_MGDL_PER_UMOLL;
-    return value;
-  }
-  // Free thyroid hormones: US mass units ↔ SI molar (pmol/L), per-marker molar mass.
-  if (marker === "FT3") { // T3 MW 650.98 ⇒ 1 pg/mL = 1.536 pmol/L
-    if (from === "pg/mL" && to === "pmol/L") return value * 1.536;
-    if (from === "pmol/L" && to === "pg/mL") return value / 1.536;
-    return value;
-  }
-  if (marker === "FT4") { // T4 MW 776.87 ⇒ 1 ng/dL = 12.87 pmol/L
-    if (from === "ng/dL" && to === "pmol/L") return value * 12.87;
-    if (from === "pmol/L" && to === "ng/dL") return value / 12.87;
-    return value;
-  }
-  const f = MGDL_TO_MMOLL[marker];
-  if (!f) return value; // no known conversion for this marker — leave as-is
-  if (from === "mg/dL" && to === "mmol/L") return f(value);
-  if (from === "mmol/L" && to === "mg/dL") return value / f(1); // f(1) = 1/divisor ⇒ x / f(1) = x × divisor
-  return value; // unrecognized unit pair — leave as-is
+  const rule = UNIT_CONVERSIONS.find((r) => r.marker === marker && r.from === from && r.to === to);
+  return rule ? rule.conv(value) : value;
 }
 
 /** Collect a draw's observations as value+unit pairs, keyed by short name (analysis fallback). */
