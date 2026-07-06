@@ -89,59 +89,54 @@ function fmtRange(
 /** The matrix row plus the plan-overlay `planned` flag (added by PlanRow). */
 export type ProvenanceRow = MatrixRow & { planned?: boolean };
 
-/** Look a value up by shortName, then key, then analysis (first defined key wins). */
-function lookup<T>(map: Record<string, T> | undefined, row: ProvenanceRow): T | null {
-  if (!map) return null;
-  return (
-    (row.shortName != null ? map[row.shortName] : undefined) ??
-    map[row.key] ??
-    (row.analysis != null ? map[row.analysis] : undefined) ??
-    null
-  );
+/** The "shown range" label under a row: its printed refText plus unit, or just the unit. */
+function shownRangeOf(row: ProvenanceRow): string {
+  if (!row.refText) return row.unit || "";
+  const unitSuffix = row.unit ? " " + row.unit : "";
+  return `${row.refText}${unitSuffix}`;
 }
 
 /**
- * Build the ADR-0007 provenance object for a matrix row, or null when there is
- * nothing to source (a planned/not-measured row, or a bare row with no catalog
- * entry, no LOINCs and no shown range).
+ * Provenance for a row with NO catalog entry: a bare LOINC/range card, or null
+ * when there is nothing at all to source (planned row, or no LOINCs and no range).
  */
-export function buildProvenance(row: ProvenanceRow, opts: BuildProvenanceOpts): LabProvenance | null {
-  const entry: AnalyteEntry | null = lookup(opts.catalog, row);
-  const planOv: RefOverrideEntry | null = lookup(opts.refOverride, row);
-  const shownRange = row.refText
-    ? `${row.refText}${row.unit ? " " + row.unit : ""}`
-    : (row.unit || "");
+function buildBareProvenance(row: ProvenanceRow, shownRange: string): LabProvenance | null {
+  if (row.planned) return null; // planned/not-measured rows: nothing to source
+  const loincs: ProvenanceLoinc[] = (row.loincs || []).map((c) => ({
+    code: c,
+    longName: null,
+    unit: row.unit || null,
+  }));
+  if (!loincs.length && !shownRange) return null;
+  return {
+    hasCatalog: false,
+    personal: false,
+    displayName: row.displayName || row.analysis || "",
+    shortName: row.displayShortName || row.shortName || null,
+    displayNameRu: row.displayName || row.analysis || "",
+    whyRu: null,
+    catalogNoteRu: null,
+    loincs,
+    shownRange,
+    references: [],
+    why: null,
+    molarMass: null,
+    molarMassRef: null,
+    evidenceLevel: null,
+    catalogRange: null,
+    catalogNote: null,
+    personalNote: null,
+    drawNote: null,
+  };
+}
 
-  if (!entry) {
-    if (row.planned) return null; // planned/not-measured rows: nothing to source
-    const loincs: ProvenanceLoinc[] = (row.loincs || []).map((c) => ({
-      code: c,
-      longName: null,
-      unit: row.unit || null,
-    }));
-    if (!loincs.length && !shownRange) return null;
-    return {
-      hasCatalog: false,
-      personal: false,
-      displayName: row.displayName || row.analysis || "",
-      shortName: row.displayShortName || row.shortName || null,
-      displayNameRu: row.displayName || row.analysis || "",
-      whyRu: null,
-      catalogNoteRu: null,
-      loincs,
-      shownRange,
-      references: [],
-      why: null,
-      molarMass: null,
-      molarMassRef: null,
-      evidenceLevel: null,
-      catalogRange: null,
-      catalogNote: null,
-      personalNote: null,
-      drawNote: null,
-    };
-  }
-
+/** Provenance for a row backed by a catalog entry (with any plan override applied). */
+function buildCatalogProvenance(
+  row: ProvenanceRow,
+  entry: AnalyteEntry,
+  planOv: RefOverrideEntry | null,
+  shownRange: string,
+): LabProvenance {
   const rd = entry.refDefault || null;
   const catMatches = rd ? nearNum(row.refMin, rd.min) && nearNum(row.refMax, rd.max) : false;
   const personal = !!planOv || (rd ? !catMatches : false);
@@ -159,7 +154,7 @@ export function buildProvenance(row: ProvenanceRow, opts: BuildProvenanceOpts): 
         cite: citeOf(entry.molarMassRef),
       }
     : null;
-  const ru: LocaleText = (entry.lang && entry.lang.ru) || {};
+  const ru: LocaleText = entry.lang?.ru ?? {};
 
   return {
     hasCatalog: true,
@@ -181,8 +176,33 @@ export function buildProvenance(row: ProvenanceRow, opts: BuildProvenanceOpts): 
       .map((c) => ({ ...c, cite: citeOf(c) })),
     why: entry.why || null,
     whyRu: ru.why || entry.why || null,
-    molarMass: entry.molarMass != null ? entry.molarMass : null,
+    molarMass: entry.molarMass ?? null,
     molarMassRef: mmRef,
-    drawNote: entry.drawNote != null ? entry.drawNote : null,
+    drawNote: entry.drawNote ?? null,
   };
+}
+
+/** Look a value up by shortName, then key, then analysis (first defined key wins). */
+function lookup<T>(map: Record<string, T> | undefined, row: ProvenanceRow): T | null {
+  if (!map) return null;
+  return (
+    (row.shortName != null ? map[row.shortName] : undefined) ??
+    map[row.key] ??
+    (row.analysis != null ? map[row.analysis] : undefined) ??
+    null
+  );
+}
+
+/**
+ * Build the ADR-0007 provenance object for a matrix row, or null when there is
+ * nothing to source (a planned/not-measured row, or a bare row with no catalog
+ * entry, no LOINCs and no shown range).
+ */
+export function buildProvenance(row: ProvenanceRow, opts: BuildProvenanceOpts): LabProvenance | null {
+  const entry: AnalyteEntry | null = lookup(opts.catalog, row);
+  const planOv: RefOverrideEntry | null = lookup(opts.refOverride, row);
+  const shownRange = shownRangeOf(row);
+
+  if (!entry) return buildBareProvenance(row, shownRange);
+  return buildCatalogProvenance(row, entry, planOv, shownRange);
 }

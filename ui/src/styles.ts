@@ -35,87 +35,6 @@ export const STYLES = `
   border: 1px solid var(--_rule-soft);
   border-radius: 3px;
 }
-@media (max-width: 640px) {
-  /* Phone: drop the inner 82vh vertical scroll-box so the table flows down the
-     page — with no vertical overflow, a downward swipe scrolls the PAGE (no
-     trapped region), while a sideways swipe still pans the wide date columns.
-     NB: do NOT add touch-action: pan-x here — under touch it makes the browser
-     treat a tap as the start of a horizontal pan and swallows the cell-popup
-     click. max-height:none alone defeats the scroll trap. Desktop keeps its box. */
-  .labs-scroll { max-height: none; overscroll-behavior-x: contain; }
-
-  /* Compact by default on phones (the detail toggle is hidden here): mirror the
-     "compact" (.min-details) level — hide the lab-source line in the date header
-     and the long analyte name when an abbreviation already carries the row. */
-  .labs.matrix thead .lab { display: none; }
-  .labs.matrix .marker-col.has-sym .analyte-name { display: none; }
-  .labs.matrix .marker-col .meta-price,
-  .labs.matrix .marker-col .meta-planned { display: none; }
-
-  /* Reclaim pixels: tighter cell padding and a narrower marker column (short RU
-     names leave a lot of slack next to it) give the data columns more room.
-     Cap the marker column at 25vw. With table-layout:auto, max-width is ignored
-     when a cell's min-content width exceeds it — and a single long unbreakable
-     name (e.g. "β-липопротеиды") floors the column to that word's width. The
-     inner .marker-scroll (below) is a per-cell horizontal scroller, so long
-     single-line content pans within the narrow column instead of wrapping or
-     breaking mid-word. */
-  .labs.matrix th, .labs.matrix td { padding: 0.25rem 0.5rem; }
-  /* In table-layout:auto a column's width = its widest cell's MIN-content. To let
-     the column actually reach 25vw, two things must contribute ~0 min-content:
-     (a) the cell wrapper .marker-scroll needs min-width:0 (a scroll container only
-     yields near-zero min-content when explicitly allowed to shrink); (b) the
-     header word "Показатель" is one unbreakable token, so it's shrunk (below) to
-     fit within 25vw. Without these, the reference line / header floor the column
-     wider than 25vw. Drop the 3rem floor and pin width to 25vw here. */
-  /* Specificity note: the desktop base rule .labs.matrix .marker-col (min-width
-     8rem / max-width 13rem) is defined LATER in this stylesheet with EQUAL
-     specificity, so a plain .labs.matrix .marker-col here loses the cascade for
-     min-width/max-width (only width, unset by the base, survived — which is why
-     earlier 25vw attempts left the column at ~8rem). Qualify with td/th to raise
-     specificity above the base and let the mobile caps actually apply. box-sizing
-     border-box makes the whole column (incl. padding) equal 25vw, not 25vw+pad. */
-  .labs.matrix td.marker-col, .labs.matrix th.marker-col { box-sizing: border-box; width: 25vw; max-width: 25vw; min-width: 0; line-height: 1.15; }
-  /* Narrow 25vw marker column: each cell's content stays on one line and scrolls
-     HORIZONTALLY (swipe) within the cell — long analyte names / ref lines pan
-     instead of wrapping. Scrollbar hidden; vertical page scroll + sticky column
-     are unaffected (no touch-action — it swallowed cell taps before). */
-  .labs.matrix .marker-col .marker-scroll { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; min-width: 0; width: 100%; }
-  .labs.matrix .marker-col .marker-scroll::-webkit-scrollbar { display: none; }
-  .labs.matrix .marker-col .analyte-name,
-  .labs.matrix .marker-col .sym-loinc,
-  .labs.matrix .marker-col .meta { white-space: nowrap; }
-  /* ⓘ leads its line inline ("ⓘ ApoA1") — sizing lives in the base
-     .marker-col .info-badge rule, so no pinned-icon or text-gutter rules here. */
-  .labs.matrix .marker-col .meta { font-size: 0.72em; }
-  /* Header "Показатель" is a single unbreakable word not inside a .marker-scroll,
-     so its intrinsic text width would floor the column wider than 25vw. Shrink the
-     header font so the word fits within 25vw and stops dictating column width. */
-  .labs.matrix thead .marker-col { font-size: 0.62rem; }
-
-  /* The ⓘ badge is a crisp inline SVG (info-ico) scaled to the button's
-     font-size (width/height:1em). Align it on the text line and make it
-     click-transparent so taps always resolve to the button (composedPath
-     matches [data-analyte-info]/[data-index-info] on the BUTTON). */
-  .labs.matrix .info-ico { display: inline-block; vertical-align: -0.15em; pointer-events: none; }
-
-  /* Let a long panel-group header (e.g. "ЭЛЕКТРОЛИТЫ, МИНЕРАЛЫ И ВИТАМИНЫ") wrap
-     instead of forcing a single line wider than the screen. The base rule sets
-     th/td { white-space: nowrap }, which kept the panel <th> on one line; on a
-     narrow phone that overflow means the sticky-left pin can't hold when the
-     table is scrolled to the far right and the header slides off-screen. Capping
-     the sticky span's max-width to the viewport (minus page gutters) lets the
-     name wrap onto ~2 lines and stay pinned/readable within the viewport. */
-  .labs.matrix .panel-row th { white-space: normal; }
-  .labs.matrix .panel-head .panel-sticky { white-space: normal; max-width: calc(100vw - 2rem); }
-
-  /* Phone-only vertical column dividers so the grid reads as a grid (desktop keeps
-     just the horizontal row rules). Skip the sticky marker column — it already
-     draws its own right-side divider via an inset box-shadow — so :not(.marker-col)
-     starts the dividers on the data columns; kept subtle with --_rule-soft. */
-  .labs.matrix td:not(.marker-col),
-  .labs.matrix thead th:not(.marker-col) { border-left: 1px solid var(--_rule-soft); }
-}
 /* explore mode / toggled-off chrome */
 .hidden { display: none !important; }
 /* per-view explainer prose (rendered right after the lens tab bar). Sized down to
@@ -188,6 +107,9 @@ export const STYLES = `
 .labs.matrix thead .marker-col { z-index: 3; box-shadow: inset -2px 0 0 0 var(--_muted), inset 0 -1px 0 var(--_rule); }
 .labs.matrix .marker-col .analyte-name { font-weight: 500; display: inline; }
 .labs.matrix .marker-col .sym-loinc { display: block; font-size: 0.85em; }
+/* index short name — hidden in the full view (long name shows); revealed only in
+   the compact / mobile view (mirrors the analyte-name↔sym-loinc swap). */
+.labs.matrix .marker-col .idx-name-compact { display: none; font-weight: 500; }
 /* range (+status) on the left, price pushed to the right edge of the cell */
 .labs.matrix .marker-col .meta { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; font-size: 0.78em; }
 .labs.matrix .marker-col .meta-price { white-space: nowrap; }
@@ -238,6 +160,8 @@ export const STYLES = `
 /* compact (min-details) view: drop lab names + the long analyte name, narrowing columns */
 .labs.matrix.min-details thead .lab { display: none; }
 .labs.matrix.min-details .marker-col.has-sym .analyte-name { display: none; }
+/* index rows: compact view swaps the long name for the short nameCompact */
+.labs.matrix.min-details .marker-col.has-sym .idx-name-compact { display: inline; }
 /* compact: hide LOINC codes (they remain in the ⓘ provenance popup) */
 /* LOINC lives in the ⓘ provenance popup (code + long name + unit + loinc.org
    link); keep it out of the inline marker column in both detail modes */
@@ -347,5 +271,102 @@ export const STYLES = `
 .rx-planned.rx-K { color: #8f8672; } .rx-planned.rx-D { color: #6e7883; } .rx-planned.rx-S { color: #837985; } .rx-planned.rx-G { color: #717c69; }
 @media (prefers-color-scheme: dark) {
   .rx-planned.rx-K { color: #a89f8a; } .rx-planned.rx-D { color: #8b95a0; } .rx-planned.rx-S { color: #9c92a0; } .rx-planned.rx-G { color: #90a08a; }
+}
+
+/* ============================================================================
+   PHONE OVERRIDES — kept at the very END of the stylesheet so every rule wins
+   by SOURCE ORDER within its media query over the equal-specificity desktop
+   base rules above (no per-rule specificity hacks needed). Do not move earlier.
+   ============================================================================ */
+@media (max-width: 640px) {
+  /* Phone: drop the inner 82vh vertical scroll-box so the table flows down the
+     page — with no vertical overflow, a downward swipe scrolls the PAGE (no
+     trapped region), while a sideways swipe still pans the wide date columns.
+     NB: do NOT add touch-action: pan-x here — under touch it makes the browser
+     treat a tap as the start of a horizontal pan and swallows the cell-popup
+     click. max-height:none alone defeats the scroll trap. Desktop keeps its box. */
+  .labs-scroll { max-height: none; overscroll-behavior-x: contain; }
+
+  /* Compact by default on phones (the detail toggle is hidden here): mirror the
+     "compact" (.min-details) level — hide the lab-source line in the date header
+     and the long analyte name when an abbreviation already carries the row. */
+  .labs.matrix thead .lab { display: none; }
+  .labs.matrix .marker-col.has-sym .analyte-name { display: none; }
+  .labs.matrix .marker-col.has-sym .idx-name-compact { display: inline; }
+  .labs.matrix .marker-col .meta-price,
+  .labs.matrix .marker-col .meta-planned { display: none; }
+
+  /* Reclaim pixels: tighter cell padding and a narrower marker column (short RU
+     names leave a lot of slack next to it) give the data columns more room.
+     Cap the marker column at 25vw. With table-layout:auto, max-width is ignored
+     when a cell's min-content width exceeds it — and a single long unbreakable
+     name (e.g. "β-липопротеиды") floors the column to that word's width. The
+     inner .marker-scroll (below) is a per-cell horizontal scroller, so long
+     single-line content pans within the narrow column instead of wrapping or
+     breaking mid-word. */
+  /* Halved horizontal padding (0.5rem -> 0.25rem) narrows the auto-sized date
+     columns so more fit on screen; vertical stays 0.25rem. Marker col is
+     border-box width:25vw so its total is unchanged — only gains inner room. */
+  .labs.matrix th, .labs.matrix td { padding: 0.25rem 0.25rem; }
+  /* In table-layout:auto a column's width = its widest cell's MIN-content. To let
+     the column actually reach 25vw, two things must contribute ~0 min-content:
+     (a) the cell wrapper .marker-scroll needs min-width:0 (a scroll container only
+     yields near-zero min-content when explicitly allowed to shrink); (b) the
+     header word "Показатель" is one unbreakable token, so it's shrunk (below) to
+     fit within 25vw. Without these, the reference line / header floor the column
+     wider than 25vw. Drop the 3rem floor and pin width to 25vw here. */
+  /* Specificity note: the desktop base rule .labs.matrix .marker-col (min-width
+     8rem / max-width 13rem) is defined LATER in this stylesheet with EQUAL
+     specificity, so a plain .labs.matrix .marker-col here loses the cascade for
+     min-width/max-width (only width, unset by the base, survived — which is why
+     earlier 25vw attempts left the column at ~8rem). Qualify with td/th to raise
+     specificity above the base and let the mobile caps actually apply. box-sizing
+     border-box makes the whole column (incl. padding) equal 25vw, not 25vw+pad. */
+  .labs.matrix td.marker-col, .labs.matrix th.marker-col { box-sizing: border-box; width: 25vw; max-width: 25vw; min-width: 0; line-height: 1.15; }
+  /* Narrow 25vw marker column: each cell's content stays on one line and scrolls
+     HORIZONTALLY (swipe) within the cell — long analyte names / ref lines pan
+     instead of wrapping. Scrollbar hidden; vertical page scroll + sticky column
+     are unaffected (no touch-action — it swallowed cell taps before). */
+  .labs.matrix .marker-col .marker-scroll { overflow-x: auto; overflow-y: hidden; scrollbar-width: none; min-width: 0; width: 100%; white-space: nowrap; }
+  .labs.matrix .marker-col .marker-scroll::-webkit-scrollbar { display: none; }
+  .labs.matrix .marker-col .analyte-name,
+  .labs.matrix .marker-col .idx-name-compact,
+  .labs.matrix .marker-col .sym-loinc,
+  .labs.matrix .marker-col .meta { white-space: nowrap; }
+  /* Keep the visible name inline right after the inline-block ⓘ (same line);
+     .analyte-name is already inline. .sym-loinc/.idx-name-compact are display:block
+     at desktop base — override to inline here so they don't drop below the badge. */
+  .labs.matrix .marker-col .sym-loinc,
+  .labs.matrix .marker-col .idx-name-compact { display: inline; }
+  /* ⓘ leads its line inline ("ⓘ ApoA1") — sizing lives in the base
+     .marker-col .info-badge rule, so no pinned-icon or text-gutter rules here. */
+  .labs.matrix .marker-col .meta { font-size: 0.72em; }
+  /* Header "Показатель" is a single unbreakable word not inside a .marker-scroll,
+     so its intrinsic text width would floor the column wider than 25vw. Shrink the
+     header font so the word fits within 25vw and stops dictating column width. */
+  .labs.matrix thead .marker-col { font-size: 0.62rem; }
+
+  /* The ⓘ badge is a crisp inline SVG (info-ico) scaled to the button's
+     font-size (width/height:1em). Align it on the text line and make it
+     click-transparent so taps always resolve to the button (composedPath
+     matches [data-analyte-info]/[data-index-info] on the BUTTON). */
+  .labs.matrix .info-ico { display: inline-block; vertical-align: -0.15em; pointer-events: none; }
+
+  /* Let a long panel-group header (e.g. "ЭЛЕКТРОЛИТЫ, МИНЕРАЛЫ И ВИТАМИНЫ") wrap
+     instead of forcing a single line wider than the screen. The base rule sets
+     th/td { white-space: nowrap }, which kept the panel <th> on one line; on a
+     narrow phone that overflow means the sticky-left pin can't hold when the
+     table is scrolled to the far right and the header slides off-screen. Capping
+     the sticky span's max-width to the viewport (minus page gutters) lets the
+     name wrap onto ~2 lines and stay pinned/readable within the viewport. */
+  .labs.matrix .panel-row th { white-space: normal; }
+  .labs.matrix .panel-head .panel-sticky { white-space: normal; max-width: calc(100vw - 2rem); }
+
+  /* Phone-only vertical column dividers so the grid reads as a grid (desktop keeps
+     just the horizontal row rules). Skip the sticky marker column — it already
+     draws its own right-side divider via an inset box-shadow — so :not(.marker-col)
+     starts the dividers on the data columns; kept subtle with --_rule-soft. */
+  .labs.matrix td:not(.marker-col),
+  .labs.matrix thead th:not(.marker-col) { border-left: 1px solid var(--_rule-soft); }
 }
 `;

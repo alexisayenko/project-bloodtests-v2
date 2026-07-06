@@ -60,6 +60,22 @@ describe("buildIndices — golden vs live orchestration", () => {
     expect(m.anchored["FT"]?.some((i) => i.key === "cft")).toBe(true);
   });
 
+  it("derives greenRange from cut-points + direction, consistent with the green zone", () => {
+    // lower-is-better (no hi): green = "< cut0"; unit appended when present
+    expect(idx("aip").greenRange).toBe("< 0.11"); // matches Dobiásová AIP low-risk band
+    expect(idx("tchdl").greenRange).toBe("< 3.5");
+    expect(idx("nonhdl").greenRange).toBe("< 130 mg/dL"); // unit-bearing concentration
+    expect(idx("dhtt").greenRange).toBe("< 12 %");
+    // higher-is-better (hi:true): green = "> cut0"
+    expect(idx("cft").greenRange).toBe("> 100 pg/mL");
+    expect(idx("tsat").greenRange).toBe("> 20 %");
+    expect(idx("egfr").greenRange).toBe("> 90 mL/min/1.73m²");
+    expect(idx("ft3ft4").greenRange).toBe("> 0.3");
+    // unitless ratios carry no unit suffix
+    expect(idx("tlh").greenRange).toBe("> 100");
+    expect(idx("deritis").greenRange).toBe("< 1.3");
+  });
+
   it("passes age to eGFR when provided", () => {
     const kidney: Draw[] = [{ date: "2026-01-01", labName: "A", items: [item("CREAT", 1.0)] }];
     const withAge = buildIndices(kidney, { ageYearsForDraw: () => 43 });

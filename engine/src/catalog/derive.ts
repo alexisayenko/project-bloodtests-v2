@@ -184,7 +184,7 @@ export function overrideBoundsForSystem(
 ): { refMin: number | null; refMax: number | null } {
   const idx = indexCatalog(catalog);
   const e = idx.byKey.get(keyOrShort) ?? idx.byShortName.get(keyOrShort);
-  if (!e || !e.refDefault) return bounds;
+  if (!e?.refDefault) return bounds;
   const b = boundsForSystem(e, { ...e.refDefault, min: bounds.refMin, max: bounds.refMax }, system);
   return b ? { refMin: b.refMin, refMax: b.refMax } : bounds;
 }

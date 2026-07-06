@@ -9,12 +9,11 @@
  */
 
 import type { MatrixRow, MatrixCell } from "./matrix.js";
-import type { PlanRow } from "./plan.js";
 import { fmtNum } from "./format.js";
 import { SI_LOINC_BY_LOINC } from "./units.js";
 
 // Re-export the plan row type so `EnrichedRow<PlanRow>` reads naturally at call sites.
-export type { PlanRow };
+export type { PlanRow } from "./plan.js";
 
 /** A matrix cell carrying both the US and SI display strings. `raw` is
  *  overwritten with `fmtNum(value)`; `siRaw` is the SI-row value (or the US
@@ -38,6 +37,13 @@ export interface EnrichAdds {
 }
 
 export type EnrichedRow<R extends MatrixRow> = R & EnrichAdds;
+
+/** Sparkline trend arrow from first vs. last value: ↑ rising, ↓ falling, → flat. */
+function trendArrow(first: number, last: number): string {
+  if (last > first) return "↑";
+  if (last < first) return "↓";
+  return "→";
+}
 
 export interface EnrichOptions<R extends MatrixRow> {
   /** Builds the ⓘ provenance object for a row (INJECTED — caller wires the
@@ -77,13 +83,12 @@ export function enrichRows<R extends MatrixRow & { planned?: boolean }>(
 
     const vals = r.series.map((p) => p.value);
     const last = vals.at(-1)!;
-    const trend =
-      vals.length >= 2 ? (last > vals[0]! ? "↑" : last < vals[0]! ? "↓" : "→") : "";
+    const trend = vals.length >= 2 ? trendArrow(vals[0]!, last) : "";
 
     const si = siByKey.get(r.key);
     const cells: (EnrichedCell | null)[] = r.cells.map((c, i) => {
       if (!c) return null;
-      const sc = si && si.cells[i];
+      const sc = si?.cells[i];
       return { ...c, raw: fmtNum(c.value), siRaw: fmtNum(sc ? sc.value : c.value) };
     });
 

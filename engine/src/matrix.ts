@@ -184,14 +184,27 @@ function resolveRefs(m: Acc, ov: RefOverride | null): { refMin?: number | null; 
   return { refMin: m.refMin, refMax: m.refMax };
 }
 
+/** Inputs for {@link buildCell} (bundled into one object to keep the arg count sane). */
+interface BuildCellArgs {
+  cell: CellData;
+  ov: RefOverride | null;
+  rowRefMin: number | null | undefined;
+  rowRefMax: number | null | undefined;
+  isUnreliable: boolean;
+  clinicalBands: boolean;
+  shortName?: string;
+  analysis?: string;
+}
+
 /** Build one matrix cell, colored against its own printed range (fallback: the row range; override always wins). */
-function buildCell(cell: CellData, ov: RefOverride | null, rowRefMin: number | null | undefined, rowRefMax: number | null | undefined, isUnreliable: boolean, clinicalBands: boolean, shortName?: string, analysis?: string): MatrixCell {
+function buildCell(args: BuildCellArgs): MatrixCell {
+  const { cell, ov, rowRefMin, rowRefMax, isUnreliable, clinicalBands, shortName, analysis } = args;
   const rMin = ov ? ov.refMin : (cell.refMin ?? rowRefMin);
   const rMax = ov ? ov.refMax : (cell.refMax ?? rowRefMax);
   // clinicalBands off → pass no key so flagOf falls back to the row's own range
-  const flag = isUnreliable
-    ? ("" as const)
-    : flagOf(cell.value, rMin, rMax, clinicalBands ? shortName : undefined, clinicalBands ? analysis : undefined);
+  const bandShort = clinicalBands ? shortName : undefined;
+  const bandAnalysis = clinicalBands ? analysis : undefined;
+  const flag = isUnreliable ? ("" as const) : flagOf(cell.value, rMin, rMax, bandShort, bandAnalysis);
   return { raw: cell.raw, value: cell.value, flag, title: cell.tip };
 }
 
@@ -204,7 +217,9 @@ function buildRow(m: Acc, cols: MatrixCol[], refOverride: Record<string, RefOver
   const refText = refTextOf(refMin, refMax);
   const cells = cols.map((c) => {
     const cell = m.byId[c.id];
-    return cell ? buildCell(cell, ov, refMin, refMax, isUnreliable, clinicalBands, m.shortName, m.analysis) : null;
+    return cell
+      ? buildCell({ cell, ov, rowRefMin: refMin, rowRefMax: refMax, isUnreliable, clinicalBands, shortName: m.shortName, analysis: m.analysis })
+      : null;
   });
   const series = cells.map((cell, i) => cell ? { date: cols[i]!.date, value: cell.value } : null).filter((x): x is { date: string; value: number } => x != null);
   const { displayName, displayShortName } = displayNames(m.shortName, m.analysis, nameOverride, shortNameOverride);

@@ -116,8 +116,17 @@ export interface LabIndexCell {
 export interface LabIndexItem {
   itab?: string;
   name: string;
+  /** Short abbreviation shown in the compact (mobile) marker column; falls back to `name`. */
+  nameCompact?: string;
   nameRu?: string;
   formula?: string;
+  /**
+   * Reference-range string for the index's GREEN (optimal) zone, e.g. "< 0.11",
+   * "> 90 mL/min/1.73m²". Rendered as the inline sub-label under the index name
+   * (mirroring the analyte reference-range line). Falls back to `formula` when
+   * absent. The formula itself stays available in the ⓘ popup.
+   */
+  greenRange?: string;
   hasData?: boolean;
   anchor?: string | boolean | null;
   cells: (LabIndexCell | null)[];

@@ -160,6 +160,7 @@ const LS = {
   details: "labsV2.details",
   lang: "labsV2.lang",
   collapsed: "labsV2.collapsedPanels",
+  scrollX: "labsV2.scrollX",
 };
 const lsGet = (k: string): string | null => {
   try {
@@ -187,6 +188,7 @@ export class LabMatrix extends HTMLElement {
   private popupTarget: HTMLElement | null = null;
   private _view = "all";
   private _keyViews: Record<string, string[]> = {};
+  private scrollSaveTimer = 0;
 
   /** Active clinical-lens view ("all" or a lens key). Filters the table. */
   set view(k: string) {
@@ -235,6 +237,11 @@ export class LabMatrix extends HTMLElement {
     const root = this.shadowRoot;
     if (!root) return;
     const m = this._model;
+    // Capture the horizontal scroll BEFORE we overwrite innerHTML below (which
+    // recreates `.labs-scroll` and resets its scrollLeft to 0). Restored after the
+    // new DOM is in place so an in-session re-render (e.g. `.model` reset) doesn't
+    // bounce the user back to the earliest date column.
+    const prevScrollX = (this.q<HTMLElement>(".labs-scroll"))?.scrollLeft;
     this.popupTarget = null; // the previous popup's target node is about to be replaced
     if (!m || !m.matrix) {
       root.innerHTML = "";
@@ -403,6 +410,41 @@ export class LabMatrix extends HTMLElement {
       popup;
 
     this.applyState();
+    // restore horizontal scroll: prefer the in-session value captured above, else
+    // the persisted one (page reload). Runs after applyState so the table is laid out.
+    this.restoreScrollX(prevScrollX);
+  }
+
+  /**
+   * Restore the `.labs-scroll` horizontal position after a render. `prev` is the
+   * scrollLeft captured before the innerHTML rebuild (in-session re-render); on a
+   * fresh page load it's undefined, so we fall back to the persisted localStorage
+   * value. Applied over two rAFs because the table's full width (hence max
+   * scrollLeft) isn't final until layout settles.
+   */
+  private restoreScrollX(prev?: number): void {
+    const stored = Number(lsGet(LS.scrollX));
+    const x = prev != null && prev > 0 ? prev : Number.isFinite(stored) ? stored : 0;
+    if (!x) return;
+    requestAnimationFrame(() => {
+      const el = this.q<HTMLElement>(".labs-scroll");
+      if (!el) return;
+      el.scrollLeft = x;
+      requestAnimationFrame(() => {
+        const el2 = this.q<HTMLElement>(".labs-scroll");
+        if (el2) el2.scrollLeft = x;
+      });
+    });
+  }
+
+  /** Persist the horizontal scroll position (throttled), guarded like other LS use. */
+  private onLabsScroll(): void {
+    if (this.scrollSaveTimer) return;
+    this.scrollSaveTimer = window.setTimeout(() => {
+      this.scrollSaveTimer = 0;
+      const el = this.q<HTMLElement>(".labs-scroll");
+      if (el) lsSet(LS.scrollX, String(Math.round(el.scrollLeft)));
+    }, 150);
   }
 
   // ---- behaviours (phase 3) — all scoped to the shadow root -----------------
@@ -426,6 +468,9 @@ export class LabMatrix extends HTMLElement {
     this.applyDetail(this.minOn);
     this.applyCollapse();
     this.applyView(this._view);
+    // wire the horizontal-scroll persistence (fresh `.labs-scroll` each render)
+    const labsScroll = this.q(".labs-scroll") as HTMLElement | null;
+    if (labsScroll) labsScroll.addEventListener("scroll", () => this.onLabsScroll(), { passive: true });
     // wire the tab-strip scroll → edge-chevron visibility (fresh element each render)
     const tabs = this.q(".lab-tabs") as HTMLElement | null;
     if (tabs) {
@@ -900,15 +945,27 @@ export class LabMatrix extends HTMLElement {
     // ⓘ provenance badge — only when the index carries something to source
     // (cited references, or a plain-language meaning / interpretation note).
     const hasProv = !!((ix.references && ix.references.length) || ix.meaning || ix.consensus);
+    // ⓘ LEADS the name line (mirrors markerCell): the `info` unit bundles the
+    // button AND its adjacent hidden `.index-pop` so they stay siblings (the click
+    // handler reads idxInfo.parentNode's `.index-pop`). No leading space — the gap
+    // before the name comes from CSS `.marker-col .info-badge { margin: 0 0.35em 0 0 }`.
     const info = hasProv
-      ? ` <button type="button" class="info-badge" data-index-info aria-label="What ${esc(
+      ? `<button type="button" class="info-badge" data-index-info aria-label="What ${esc(
           ix.name,
         )} means and its sources"><svg class="info-ico" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="4.4" r="1.05" fill="currentColor"/><rect x="7.05" y="6.6" width="1.9" height="5.3" rx="0.95" fill="currentColor"/></svg></button>${this.indexPopup(ix, t)}`
       : "";
+    // COMPACT view: like markerCell, hide the long `.analyte-name` and show the
+    // short `.idx-name-compact` instead. `has-sym` drives the same hide rule the
+    // analyte rows use; the compact span is rendered only when nameCompact exists
+    // (otherwise the full name stays — no breakage).
+    const hasCompact = !!ix.nameCompact;
+    const compactName = hasCompact
+      ? `<span class="idx-name-compact">${esc(ix.nameCompact!)}</span>`
+      : "";
     const marker =
-      `<td class="marker-col"><div class="marker-scroll"><span class="analyte-name"${biAttr(ix.name, ix.nameRu)}>${esc(
+      `<td class="marker-col${hasCompact ? " has-sym" : ""}"><div class="marker-scroll">${info}<span class="analyte-name"${biAttr(ix.name, ix.nameRu)}>${esc(
         ix.name,
-      )}</span>${info}<span class="meta muted">${esc(ix.formula)}${
+      )}</span>${compactName}<span class="meta muted">${esc(ix.greenRange ?? ix.formula)}${
         ix.hasData ? "" : ` · <span class="idx-plan"${t.attr("meta.planned")}>planned</span>`
       }</span></div></td>`;
     const cells = (ix.cells ?? [])

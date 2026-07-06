@@ -617,6 +617,53 @@ describe("<lab-matrix> derived-index LOINC (ⓘ popup)", () => {
   });
 });
 
+describe("<lab-matrix> derived-index sub-label = green reference range (not formula)", () => {
+  const MODEL: LabMatrixModel = {
+    matrix: { cols: [{ id: "c", date: "2026-01", labName: "Lab" }], rows: [] },
+    indices: {
+      tabs: [
+        {
+          itab: "cardio",
+          items: [
+            // greenRange present → shown under the name; formula only in the ⓘ popup
+            { itab: "cardio", name: "AIP", formula: "log₁₀(TG / HDL)", greenRange: "< 0.11",
+              hasData: true, meaning: "m", cells: [{ z: "z-ok", v: "0.1" }] },
+            // no greenRange → falls back to the formula text (no regression)
+            { itab: "cardio", name: "Legacy", formula: "A / B", hasData: true, cells: [{ z: "z-ok", v: "1" }] },
+          ],
+        },
+      ],
+    },
+  };
+  const mount = (): LabMatrix => {
+    try { localStorage.clear(); } catch { /* ignore */ }
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    el.model = MODEL;
+    return el;
+  };
+
+  it("shows greenRange in the .meta sub-label and keeps the formula in the ⓘ popup", () => {
+    const el = mount();
+    const sr = el.shadowRoot!;
+    const rows = sr.querySelectorAll("tr.idx-row");
+    const meta = rows[0].querySelector(".meta") as HTMLElement;
+    expect(meta.textContent).toContain("< 0.11"); // range, not formula
+    expect(meta.textContent).not.toContain("log₁₀"); // formula is NOT in the sub-label
+    // formula stays available in the popup
+    expect(rows[0].querySelector(".index-pop .ap-formula-txt")?.textContent).toBe("log₁₀(TG / HDL)");
+    el.remove();
+  });
+
+  it("falls back to the formula when an index has no greenRange", () => {
+    const el = mount();
+    const sr = el.shadowRoot!;
+    const meta = sr.querySelectorAll("tr.idx-row")[1].querySelector(".meta") as HTMLElement;
+    expect(meta.textContent).toContain("A / B");
+    el.remove();
+  });
+});
+
 describe("<lab-matrix> multi-lens derived index — no duplication (AIP-style)", () => {
   // Regression: AIP belongs to two lenses (ir + cardio). labsV2 collapses the
   // shared item's `itab` to itabs[0] ("ir"), and the SAME object appears in both
