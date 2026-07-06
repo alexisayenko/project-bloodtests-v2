@@ -121,6 +121,30 @@ export const TOOLBAR_CSS = `
 .lab-tabs .lab-tab { font-size: 0.78rem; padding: 0.25rem 0.8rem; border: 1px solid var(--_rule); border-radius: 999px; background: var(--_bg); color: var(--_muted); cursor: pointer; }
 .lab-tabs .lab-tab:hover { color: var(--_fg); border-color: var(--_fg); }
 .lab-tabs .lab-tab[aria-pressed="true"] { color: var(--_bg); background: var(--_accent); border-color: var(--_accent); }
+@media (max-width: 640px) {
+  /* Phone: the 9-tab wrap-wall becomes a single horizontal swipe strip. A soft
+     right-edge fade hints there's more to slide to; scrollbar hidden for calm. */
+  .lab-tabs { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .lab-tabs::-webkit-scrollbar { display: none; }
+  .lab-tabs .lab-tab { flex: 0 0 auto; }
+  /* "‹" / "›" chevrons over a soft fade, pinned (sticky) to the strip's edges — an
+     explicit hint that the tab strip scrolls sideways. JS toggles .at-start /
+     .at-end / .no-scroll on .lab-tabs from scrollLeft so each chevron disappears
+     once you've reached that end (and both hide when nothing overflows). */
+  .lab-tabs::before, .lab-tabs::after { position: sticky; flex: 0 0 auto; align-self: stretch; display: flex; align-items: center; font-size: 1.15rem; font-weight: 600; color: var(--_muted); pointer-events: none; }
+  .lab-tabs::before { content: "\\2039"; left: 0; padding: 0 1.4rem 0 0.3rem; background: linear-gradient(to left, transparent, var(--_bg) 60%); display: none; }
+  .lab-tabs::after { content: "\\203A"; right: 0; padding: 0 0.3rem 0 1.4rem; background: linear-gradient(to right, transparent, var(--_bg) 60%); }
+  .lab-tabs:not(.at-start):not(.no-scroll)::before { display: flex; }
+  .lab-tabs.at-end::after, .lab-tabs.no-scroll::after { display: none; }
+  /* Toolbar: keep only what a phone user actually taps — collapse-all + units.
+     Detail (kept at "full") and language (set once) are hidden here, not removed. */
+  .labs-toolbar .lm-btn[data-act="detail"], .labs-toolbar .lm-btn[data-act="lang"] { display: none; }
+  /* "Units" leads and stays put; "Collapse all" (shown only on the All tab) trails,
+     so switching to a lens tab drops it from the END without shoving Units sideways.
+     Drop the divider on mobile — with two controls it just adds noise. */
+  .labs-toolbar .lm-btn[data-act="units"] { order: -1; }
+  .labs-toolbar .lm-sep { display: none; }
+}
 `;
 
 /** Static explainer for the ⚠ unreliable-assay badge (direct free-T). */
@@ -390,7 +414,7 @@ export class LabMatrix extends HTMLElement {
     // click delegation via composedPath() so it works across the shadow boundary
     document.addEventListener("click", (e) => this.onDocClick(e));
     document.addEventListener("keydown", (e) => this.onKeydown(e));
-    window.addEventListener("resize", () => this.closePopup());
+    window.addEventListener("resize", () => { this.closePopup(); this.updateTabEdges(); });
     // reposition the popup on any scroll (capture catches the inner .labs-scroll too)
     window.addEventListener("scroll", () => { if (this.popupTarget) this.placePopup(this.popupTarget); }, true);
   }
@@ -402,8 +426,26 @@ export class LabMatrix extends HTMLElement {
     this.applyDetail(this.minOn);
     this.applyCollapse();
     this.applyView(this._view);
+    // wire the tab-strip scroll → edge-chevron visibility (fresh element each render)
+    const tabs = this.q(".lab-tabs") as HTMLElement | null;
+    if (tabs) {
+      tabs.addEventListener("scroll", () => this.updateTabEdges(), { passive: true });
+      this.updateTabEdges();
+    }
     // initial mount: let the host initialize (e.g. reveal its explore panel)
     this.dispatchViewChange();
+  }
+
+  /** Toggle .at-start / .at-end / .no-scroll on the tab strip so the edge chevrons
+   *  each hide once that end is reached (and both hide when nothing overflows). */
+  private updateTabEdges(): void {
+    const tabs = this.q(".lab-tabs") as HTMLElement | null;
+    if (!tabs) return;
+    const max = tabs.scrollWidth - tabs.clientWidth;
+    const x = tabs.scrollLeft;
+    tabs.classList.toggle("no-scroll", max <= 1);
+    tabs.classList.toggle("at-start", x <= 1);
+    tabs.classList.toggle("at-end", x >= max - 1);
   }
 
   /**
@@ -692,7 +734,10 @@ export class LabMatrix extends HTMLElement {
     pop.hidden = false; // must be visible to measure
     const pw = pop.offsetWidth, ph = pop.offsetHeight;
     const gap = 6, vw = window.innerWidth, vh = window.innerHeight;
-    const left = Math.min(Math.max(8, r.left), vw - pw - 8);
+    // Clamp the RIGHT edge first, then re-floor to 8: a popup wider than the
+    // viewport (large font on a narrow phone) must never slide its LEFT edge off
+    // screen — keeping the left visible matters more than avoiding right overflow.
+    const left = Math.max(8, Math.min(r.left, vw - pw - 8));
     let top = r.bottom + gap;
     if (top + ph > vh - 8) top = Math.max(8, r.top - ph - gap);
     pop.style.left = `${left}px`;
@@ -789,22 +834,24 @@ export class LabMatrix extends HTMLElement {
     const showSym = !!r.displayShortName && r.displayShortName !== (r.displayName || r.analysis);
     const hasLoinc = loincs.length > 0;
 
-    // ⚠ unreliable + ⓘ provenance badges. They sit on the code line when there
-    // IS a visible short-name; for single-name markers (no code line) they move
-    // up onto the name line so the ⓘ is never orphaned on its own row.
+    // ⚠ unreliable + ⓘ provenance badges. The ⓘ is a LEADING inline badge: it
+    // opens the line it belongs to, reading "ⓘ ApoA1" (code line when there IS a
+    // visible short-name; otherwise the name line), with the reference range below.
     const warn = r.unreliable
       ? `<button type="button" class="warn-badge" data-warn aria-label="Why this measurement is unreliable">⚠</button>`
       : "";
-    // NB: no leading whitespace before the ⓘ button — a space would be a line-break
-    // opportunity, orphaning the badge onto its own line when a multi-word name
-    // (e.g. "Мочевая кислота") wraps. Glued directly to the name, the badge rides
-    // the last word wherever it lands; its visual gap comes from CSS margin-left.
+    // NB: no trailing whitespace after the ⓘ button — the visual gap before the
+    // following text comes from CSS margin-right on `.marker-col .info-badge`, not a
+    // space (a space would be a line-break opportunity that could orphan the badge).
+    // `info` bundles the button AND its adjacent hidden `.analyte-pop` popup so the
+    // two stay siblings (the click handler reads info.parentNode's `.analyte-pop`).
     const info = r.provenance
       ? `<button type="button" class="info-badge" data-analyte-info aria-label="Reference-range source for ${esc(
           name,
-        )}">ⓘ</button>${this.analytePopup(r.provenance, t)}`
+        )}"><svg class="info-ico" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="4.4" r="1.05" fill="currentColor"/><rect x="7.05" y="6.6" width="1.9" height="5.3" rx="0.95" fill="currentColor"/></svg></button>${this.analytePopup(r.provenance, t)}`
       : "";
-    const nameBadges = showSym ? "" : `${warn ? warn : ""}${info}`;
+    // single-name markers (no code line): ⓘ leads, then ⚠, then the name follows
+    const nameBadges = showSym ? "" : `${info}${warn}`;
 
     // ---- symbol + (hidden) LOINC-codes line — only when there's a code or LOINC to carry
     let symLoinc = "";
@@ -823,7 +870,8 @@ export class LabMatrix extends HTMLElement {
         loincHtml = `<span class="loinc-codes">${showSym ? " · " : ""}${links}</span>`;
       }
       // visible code → badges live here; otherwise the line carries only the (hidden) LOINC
-      symLoinc = `<span class="sym-loinc muted">${showSym ? `${warn}${symText}${loincHtml}${info}` : loincHtml}</span>`;
+      // ⓘ leads the code line, then ⚠, then the abbreviation, then hidden LOINC codes
+      symLoinc = `<span class="sym-loinc muted">${showSym ? `${info}${warn}${symText}${loincHtml}` : loincHtml}</span>`;
     }
 
     // ---- reference-range meta (US/SI): range (+ "not measured yet") left, price right
@@ -839,11 +887,11 @@ export class LabMatrix extends HTMLElement {
     )}" data-si="${esc(siRef)}">${esc(usRef)}</span>${planned}</span>${price}</span>`;
 
     return (
-      `<td class="marker-col${showSym ? " has-sym" : ""}">` +
-      `<span class="analyte-name"${biAttr(name, nameRu)}>${esc(name)}</span>${nameBadges}` +
+      `<td class="marker-col${showSym ? " has-sym" : ""}"><div class="marker-scroll">` +
+      `${nameBadges}<span class="analyte-name"${biAttr(name, nameRu)}>${esc(name)}</span>` +
       symLoinc +
       meta +
-      `</td>`
+      `</div></td>`
     );
   }
 
@@ -855,14 +903,14 @@ export class LabMatrix extends HTMLElement {
     const info = hasProv
       ? ` <button type="button" class="info-badge" data-index-info aria-label="What ${esc(
           ix.name,
-        )} means and its sources">ⓘ</button>${this.indexPopup(ix, t)}`
+        )} means and its sources"><svg class="info-ico" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="4.4" r="1.05" fill="currentColor"/><rect x="7.05" y="6.6" width="1.9" height="5.3" rx="0.95" fill="currentColor"/></svg></button>${this.indexPopup(ix, t)}`
       : "";
     const marker =
-      `<td class="marker-col"><span class="analyte-name"${biAttr(ix.name, ix.nameRu)}>${esc(
+      `<td class="marker-col"><div class="marker-scroll"><span class="analyte-name"${biAttr(ix.name, ix.nameRu)}>${esc(
         ix.name,
       )}</span>${info}<span class="meta muted">${esc(ix.formula)}${
         ix.hasData ? "" : ` · <span class="idx-plan"${t.attr("meta.planned")}>planned</span>`
-      }</span></td>`;
+      }</span></div></td>`;
     const cells = (ix.cells ?? [])
       .map((c) =>
         c

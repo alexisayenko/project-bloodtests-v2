@@ -494,17 +494,21 @@ describe("marker cell — badge placement + price alignment", () => {
     expect(c.querySelector(".sym-loinc .info-badge")).toBeTruthy();
   });
 
-  it("multi-word name: ⓘ is glued to the name with no whitespace break (wraps with the last word)", () => {
-    // RU "Мочевая кислота" / uric acid: a name-only marker whose ⓘ rides the name
-    // line. happy-dom has no layout, so we assert the STRUCTURAL guarantee of the
-    // wrap fix: no whitespace text node sits between the name and the badge (a
-    // space there would be a line-break opportunity that orphans the ⓘ below).
+  it("multi-word name: ⓘ leads the name with no whitespace break (badge can't orphan above the wrap)", () => {
+    // RU "Мочевая кислота" / uric acid: a name-only marker whose ⓘ LEADS the name
+    // line ("ⓘ Uric Acid"). happy-dom has no layout, so we assert the STRUCTURAL
+    // guarantee: the badge is the cell's first child and no whitespace text node
+    // sits between it and the name (a space there would be a line-break opportunity
+    // that orphans the leading ⓘ above a wrapped name).
     const c = cellFor({ key: "UA", shortName: "Uric Acid", displayName: "Uric Acid",
       unit: "mg/dL", refText: "3.5–7.2", provenance: prov, cells: [null] });
     expect(c.querySelector(".sym-loinc")).toBeNull();       // name-only → ⓘ on the name line
     const name = c.querySelector(".analyte-name")!;
     const badge = c.querySelector(".info-badge")!;
-    expect(badge.previousSibling).toBe(name);               // glued: name element directly precedes the badge
+    const scroll = c.querySelector(".marker-scroll")!;      // per-cell horizontal scroller
+    expect(scroll.firstChild).toBe(badge);                  // ⓘ leads the cell content
+    // only the hidden .analyte-pop popup sits between badge and name — no whitespace
+    expect(name.previousSibling).toBe(c.querySelector(".analyte-pop"));
   });
 
   it("price is a right-side sibling of the range (no ' · ' prefix)", () => {
