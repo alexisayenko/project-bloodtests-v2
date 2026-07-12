@@ -11,7 +11,14 @@ export interface LabCell {
   siRaw?: string;
   value?: number;
   flag?: string; // clinical zone / colour class ("" = none)
-  title?: string; // hover/tap tooltip text
+  title?: string; // hover/tap tooltip text (EN — the engine's canonical rendering)
+  /**
+   * The same popup text, localized. The engine is EN-canonical, so a consumer
+   * with a dictionary renders the cell's structured `tip` lines itself and passes
+   * the result here (natalga.com does; see build-labs.mjs). Absent → `title` is
+   * used, which is what isayenko.org relies on.
+   */
+  titleRu?: string;
 }
 
 /** One reference-range citation (ADR-0007 clinical provenance). */
@@ -47,6 +54,11 @@ export interface LabProvenance {
   shownRange: string;
   evidenceLevel?: string | null;
   catalogRange?: string | null;
+  /** `catalogRange` in SI units — the popup swaps to it under the SI toggle (same
+   *  data-us/data-si mechanism as the row's reference line). Absent for analytes
+   *  with no SI form; the US string is then kept in both modes. The row's *shown*
+   *  range needs no twin here — it is already on the row (siRefText/siUnit). */
+  siCatalogRange?: string | null;
   catalogNote?: string | null;
   catalogNoteRu?: string | null;
   personalNote?: string | null;
@@ -188,6 +200,23 @@ export interface LabMatrixModel {
    * block is not rendered.
    */
   explainers?: Record<string, { common: { en: string; ru?: string }; personal: { en: string; ru?: string } }>;
+  /**
+   * "Tap-anything" mode (natalga.com). Setting it flips ONE coherent feature:
+   *
+   *   - the ⓘ `.info-badge` is no longer rendered in the marker column (marker
+   *     rows AND derived-index rows) — on a 25vw phone column it cost ~34px of a
+   *     97.5px cell, and since practically everything on the page is tappable a
+   *     per-row "you can tap this" glyph carries no information;
+   *   - this hint line is rendered above the table instead, saying it once in words;
+   *   - the marker cell gets `tabindex` so the whole cell is a keyboard target.
+   *
+   * The whole-marker-cell CLICK target is unconditional (see onDocClick) — where
+   * the ⓘ is still drawn (isayenko.org, which leaves `tapHint` unset) it simply
+   * becomes an indicator inside an already-tappable cell, exactly like the ▸/▾
+   * triangle on a panel row. Leaving `tapHint` unset therefore renders byte-identical
+   * HTML to before.
+   */
+  tapHint?: { en: string; ru: string };
   drawCount?: number;
   markerCount?: number;
   ok?: boolean;

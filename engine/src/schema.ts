@@ -27,6 +27,26 @@ export const UnitValueSchema = z.object({
   rawValue: z.string().nullable().optional(),
 });
 
+/**
+ * ADR-0012 — the engine's OWN derivation of a quantity the report also carries
+ * (indirect bilirubin = total − direct; globulin = total protein − albumin).
+ *
+ * It is stored ALONGSIDE the reported value and never substituted for it: the
+ * report is what the patient holds on paper, so the report is what we display.
+ * Keeping our number next to it is what lets the two be compared — a wrong
+ * catalog unit or a wrong formula then surfaces instead of passing as a plausible
+ * wrong number. (The `!` divergence marker of ADR-0012 §3–4 is a later task; this
+ * shape is what it will read.)
+ */
+export const CalculatedValueSchema = z.object({
+  value: z.number(),
+  unit: z.string().nullable().optional(),
+  /** Human-readable formula, e.g. "T-BIL − D-BIL". */
+  formula: z.string(),
+  /** The inputs it was computed from, for showing the arithmetic in the popup. */
+  inputs: z.array(z.object({ key: z.string(), value: z.number() })).default([]),
+});
+
 export const LabItemObjectSchema = z.object({
   shortName: z.string().nullable().optional(),
   analysis: z.string().nullable().optional(),
@@ -37,6 +57,7 @@ export const LabItemObjectSchema = z.object({
   original: UnitValueSchema,
   us: UnitValueSchema,
   si: UnitValueSchema,
+  calculated: CalculatedValueSchema.nullable().optional(),
 }).refine((it) => it.shortName != null || it.analysis != null || it.loinc != null, {
   message: "item needs at least one of shortName / analysis / loinc",
 });
@@ -68,6 +89,7 @@ export const DrawsSchema = z.array(DrawSchema);
 
 // Inferred types — the single source of truth for these shapes.
 export type UnitValue = z.infer<typeof UnitValueSchema>;
+export type CalculatedValue = z.infer<typeof CalculatedValueSchema>;
 export type LabItem = z.infer<typeof LabItemSchema>;
 export type Draw = z.infer<typeof DrawSchema>;
 

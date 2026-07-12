@@ -9,14 +9,32 @@
 
 export const UPLOT_CSS = `.uplot, .uplot *, .uplot *::before, .uplot *::after {box-sizing: border-box;}.uplot {font-family: inherit;line-height: 1.5;width: min-content;}.u-title {text-align: center;font-size: 18px;font-weight: bold;}.u-wrap {position: relative;user-select: none;}.u-over, .u-under {position: absolute;}.u-under {overflow: hidden;}.uplot canvas {display: block;position: relative;width: 100%;height: 100%;}.u-axis {position: absolute;}.u-legend {font-size: 14px;margin: auto;text-align: center;}.u-inline {display: block;}.u-inline * {display: inline-block;}.u-inline tr {margin-right: 16px;}.u-legend th {font-weight: 600;}.u-legend th > * {vertical-align: middle;display: inline-block;}.u-legend .u-marker {width: 1em;height: 1em;margin-right: 4px;background-clip: padding-box !important;}.u-inline.u-live th::after {content: ":";vertical-align: middle;}.u-inline:not(.u-live) .u-value {display: none;}.u-series > * {padding: 4px;}.u-series th {cursor: pointer;}.u-legend .u-off > * {opacity: 0.3;}.u-select {background: rgba(0,0,0,0.07);position: absolute;pointer-events: none;}.u-cursor-x, .u-cursor-y {position: absolute;left: 0;top: 0;pointer-events: none;will-change: transform;}.u-hz .u-cursor-x, .u-vt .u-cursor-y {height: 100%;border-right: 1px dashed #607D8B;}.u-hz .u-cursor-y, .u-vt .u-cursor-x {width: 100%;border-bottom: 1px dashed #607D8B;}.u-cursor-pt {position: absolute;top: 0;left: 0;border-radius: 50%;border: 0 solid;pointer-events: none;will-change: transform;background-clip: padding-box !important;}.u-axis.u-off, .u-select.u-off, .u-cursor-x.u-off, .u-cursor-y.u-off, .u-cursor-pt.u-off {display: none;}`;
 
-export const EXPLORE_STYLES = `
-:host {
+/* COLOUR SCHEME — same three-way resolution as lab-matrix (see styles.ts header):
+   :host = light, @media dark = follow the OS, :host([data-scheme=…]) = pinned by a
+   host page that hard-codes one palette (natalga.com's labs page). Pages that never
+   set the attribute (isayenko.org) keep following the visitor's colour scheme. */
+const SCHEME_LIGHT = `
   --_fg: var(--fg, #1a1a1a);
   --_bg: var(--bg, #ffffff);
   --_muted: var(--muted, #777777);
   --_rule: var(--rule, #cccccc);
   --_rule-soft: var(--rule-soft, #e4e4e4);
   --_accent: var(--accent, #2f6f9f);
+  --_tip-ok: #1e8449;
+`;
+const SCHEME_DARK = `
+  --_fg: var(--fg, #d6d6d6);
+  --_bg: var(--bg, #121212);
+  --_muted: var(--muted, #9a9a9a);
+  --_rule: var(--rule, #3a3a3a);
+  --_rule-soft: var(--rule-soft, #2c2c2c);
+  --_accent: var(--accent, #6fa8d4);
+  --_tip-ok: #58d68d;
+`;
+
+export const EXPLORE_STYLES = `
+:host {
+  ${SCHEME_LIGHT}
   display: block;
   color: var(--_fg);
 }
@@ -25,13 +43,14 @@ export const EXPLORE_STYLES = `
 :host([hidden]) { display: none !important; }
 @media (prefers-color-scheme: dark) {
   :host {
-    --_fg: var(--fg, #d6d6d6);
-    --_bg: var(--bg, #121212);
-    --_muted: var(--muted, #9a9a9a);
-    --_rule: var(--rule, #3a3a3a);
-    --_rule-soft: var(--rule-soft, #2c2c2c);
-    --_accent: var(--accent, #6fa8d4);
+    ${SCHEME_DARK}
   }
+}
+:host([data-scheme="light"]) {
+  ${SCHEME_LIGHT}
+}
+:host([data-scheme="dark"]) {
+  ${SCHEME_DARK}
 }
 .muted { color: var(--_muted); }
 .hpg-note { font-size: 0.82rem; margin: 0 0 0.4rem; }
@@ -78,8 +97,7 @@ export const EXPLORE_STYLES = `
 .u-tip-date { font-weight: 600; margin-bottom: 0.15rem; }
 .u-tip-row { display: flex; align-items: center; gap: 0.35rem; }
 .u-tip-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-.u-tip-ok { color: #1e8449; font-weight: 600; }
-@media (prefers-color-scheme: dark) { .u-tip-ok { color: #58d68d; } }
+.u-tip-ok { color: var(--_tip-ok); font-weight: 600; }
 
 .uplot, .u-legend { font-family: inherit; color: var(--_fg); }
 .u-legend { font-size: 0.78rem; }

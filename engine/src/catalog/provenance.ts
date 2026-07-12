@@ -9,6 +9,7 @@ import type { MatrixRow } from "../matrix.js";
 import type { AnalyteCatalog, AnalyteEntry, LocaleText, Reference } from "./schema.js";
 import { citeOf } from "../cite.js";
 import { fmtNum } from "../format.js";
+import { SI_RULES_BY_LOINC, SI_RULES_BY_SHORTNAME, type SIRule } from "../units.js";
 
 export { citeOf };
 
@@ -42,6 +43,21 @@ export interface LabProvenance {
   shownRange: string;
   evidenceLevel: string | null;
   catalogRange: string | null;
+  /**
+   * `catalogRange` in SI (molar/IU) units, so the ⓘ card can follow the US/SI
+   * toggle instead of freezing at conventional units while the table reads SI.
+   *
+   * Only the CATALOG range gets an SI twin here, and that is deliberate: its bounds
+   * are quoted in the catalog's own unit, which is exactly the basis `SIRule.convert`
+   * assumes. The row's *shown* range is NOT converted here — its bounds are in the
+   * source lab's unit, which may differ from the catalog's (Zn in mg/L, FT4 in
+   * pmol/L…), so pushing it through the same rule silently produces a wrong number.
+   * The shown range already exists in SI on the row itself (siRefText/siUnit, from
+   * the SI matrix); the renderer takes it from there.
+   *
+   * Null when the analyte has no SI form — the caller then keeps the US text.
+   */
+  siCatalogRange: string | null;
   catalogNote: string | null;
   catalogNoteRu: string | null;
   personalNote: string | null;
@@ -89,6 +105,36 @@ function fmtRange(
 /** The matrix row plus the plan-overlay `planned` flag (added by PlanRow). */
 export type ProvenanceRow = MatrixRow & { planned?: boolean };
 
+/**
+ * The analyte's SI (molar/IU) conversion rule — by shortName first, then by any of
+ * its LOINCs. Null for analytes with no molar form (peptides, enzymes, cell counts),
+ * which is exactly when the popup should keep showing the conventional units.
+ */
+function siRuleFor(row: ProvenanceRow): SIRule | null {
+  const byShort = row.shortName != null ? SI_RULES_BY_SHORTNAME[row.shortName] : undefined;
+  if (byShort) return byShort;
+  for (const lc of row.loincs || []) {
+    const byLoinc = SI_RULES_BY_LOINC[lc];
+    if (byLoinc) return byLoinc;
+  }
+  return null;
+}
+
+/**
+ * `fmtRange` in SI: convert both bounds with the analyte's rule, then label with the
+ * rule's SI unit. The bounds arrive in the analyte's conventional (mass/US) unit —
+ * `buildProvenance` is fed the US matrix row, and the SI matrix is a separate row set.
+ */
+function siRangeOf(
+  min: number | null | undefined,
+  max: number | null | undefined,
+  rule: SIRule | null,
+): string | null {
+  if (!rule) return null;
+  const cv = (x: number | null | undefined): number | null => (x == null ? null : rule.convert(x));
+  return fmtRange(cv(min), cv(max), rule.unit);
+}
+
 /** The "shown range" label under a row: its printed refText plus unit, or just the unit. */
 function shownRangeOf(row: ProvenanceRow): string {
   if (!row.refText) return row.unit || "";
@@ -124,6 +170,7 @@ function buildBareProvenance(row: ProvenanceRow, shownRange: string): LabProvena
     molarMassRef: null,
     evidenceLevel: null,
     catalogRange: null,
+    siCatalogRange: null,
     catalogNote: null,
     personalNote: null,
     drawNote: null,
@@ -155,6 +202,9 @@ function buildCatalogProvenance(
       }
     : null;
   const ru: LocaleText = entry.lang?.ru ?? {};
+  // One rule drives BOTH SI strings, so the "range shown" and the "catalog default"
+  // can never disagree about units inside the same card.
+  const siRule = siRuleFor(row);
 
   return {
     hasCatalog: true,
@@ -168,6 +218,7 @@ function buildCatalogProvenance(
     shownRange,
     evidenceLevel: entry.evidenceLevel || null,
     catalogRange: rd ? fmtRange(rd.min, rd.max, rd.unit) : null,
+    siCatalogRange: rd ? siRangeOf(rd.min, rd.max, siRule) : null,
     catalogNote: rd ? (rd.note || null) : null,
     catalogNoteRu: ru.note || (rd ? (rd.note || null) : null),
     personalNote: planOv ? (planOv.note || null) : null,

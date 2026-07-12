@@ -101,7 +101,7 @@ export interface IndexDef {
 const has = (m: Markers, ...k: string[]): boolean => k.every((x) => m[x] != null);
 
 export const INDEX_DEFS: IndexDef[] = [
-  { key: "ka", name: "Atherogenic coefficient", nameCompact: "Атерогенность (коэффициент)", itab: ["cardio"], formula: "(TC − HDL) / HDL", cut: [3, 4], needs: ["TC", "HDL-C"], level: "heuristic",
+  { key: "ka", name: "Atherogenic coefficient", nameCompact: "КА", itab: ["cardio"], formula: "(TC − HDL) / HDL", cut: [3, 4], needs: ["TC", "HDL-C"], level: "heuristic",
     meaning: "Share of atherogenic cholesterol relative to protective HDL. Higher = more atherogenic blood. Rough guide: <3 good, 3–4 borderline, >4 high.",
     consensus: "Common in post-Soviet labs; in international guidelines superseded by ApoB and direct ratios. Fine as a rough orientation.",
     evidenceLevel: "heuristic",
@@ -114,7 +114,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Распространён в постсоветских лабораториях; в международных рекомендациях вытеснен ApoB и прямыми отношениями. Годится как грубый ориентир.",
     } },
     fn: (m) => has(m, "TC", "HDL-C") ? (m["TC"]! - m["HDL-C"]!) / m["HDL-C"]! : null },
-  { key: "tchdl", name: "TC / HDL ratio", nameCompact: "TC / HDL (отношение)", itab: ["cardio"], formula: "TC / HDL", cut: [3.5, 5], needs: ["TC", "HDL-C"], level: "consensus",
+  { key: "tchdl", name: "TC / HDL ratio", nameCompact: "TC / HDL", itab: ["cardio"], formula: "TC / HDL", cut: [3.5, 5], needs: ["TC", "HDL-C"], level: "consensus",
     loinc: "9830-1", // LOINC 9830-1 — Cholesterol.total/Cholesterol in HDL [Mass Ratio] in Serum or Plasma (matches TC/HDL direction)
     meaning: "Total cholesterol per unit of protective HDL. Simple, robust cardiovascular-risk marker. Target usually <3.5–4.",
     consensus: "Well-established CV-risk marker, used in risk calculators (e.g. Framingham). Good evidence base.",
@@ -142,7 +142,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Давно используется и интуитивно понятно, но современные рекомендации считают ApoB / не-ЛПВП более точными.",
     } },
     fn: (m) => has(m, "LDL-C", "HDL-C") ? m["LDL-C"]! / m["HDL-C"]! : null },
-  { key: "aip", name: "AIP (atherogenic index of plasma)", nameCompact: "AIP (индекс)", itab: ["ir", "cardio"], formula: "log₁₀(TG / HDL), molar", cut: [0.11, 0.21], needs: ["TRIG", "HDL-C"], inputUnits: { TRIG: "mmol/L", "HDL-C": "mmol/L" }, level: "consensus",
+  { key: "aip", name: "AIP (atherogenic index of plasma)", nameCompact: "AIP", itab: ["ir", "cardio"], formula: "log₁₀(TG / HDL), molar", cut: [0.11, 0.21], needs: ["TRIG", "HDL-C"], inputUnits: { TRIG: "mmol/L", "HDL-C": "mmol/L" }, level: "consensus",
     meaning: "Reflects LDL particle size and insulin resistance. Scale: <0.11 low risk, 0.11–0.21 medium, >0.21 high.",
     consensus: "Growing evidence as a CV-risk predictor, especially with high triglycerides / metabolic syndrome.",
     evidenceLevel: "consensus",
@@ -171,7 +171,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Рекомендован рекомендациями ESC/AHA как вторичная цель лечения; надёжнее изолированного ЛПНП.",
     } },
     fn: (m) => has(m, "TC", "HDL-C") ? m["TC"]! - m["HDL-C"]! : null },
-  { key: "remnant", name: "Remnant cholesterol", nameCompact: "Ремнантный холестерин", itab: ["cardio"], formula: "TC − HDL − LDL (mg/dL)", cut: [24, 30], unit: "mg/dL", needs: ["TC", "HDL-C", "LDL-C"], inputUnits: { TC: "mg/dL", "HDL-C": "mg/dL", "LDL-C": "mg/dL" }, level: "consensus",
+  { key: "remnant", name: "Remnant cholesterol", nameCompact: "Remnant-C", itab: ["cardio"], formula: "TC − HDL − LDL (mg/dL)", cut: [24, 30], unit: "mg/dL", needs: ["TC", "HDL-C", "LDL-C"], inputUnits: { TC: "mg/dL", "HDL-C": "mg/dL", "LDL-C": "mg/dL" }, level: "consensus",
     meaning: "Cholesterol in triglyceride-rich lipoproteins (VLDL and remnants). Independent CV-risk and vascular-inflammation factor. Target <24 mg/dL (~0.6 mmol/L).",
     consensus: "Accumulating evidence as a causal driver of atherosclerosis; increasingly used.",
     evidenceLevel: "consensus",
@@ -198,7 +198,7 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Стандартная оценка по Фридвальду; грубый суррогат, а не напрямую измеряемая фракция. Ремнантный холестерин — более современное прочтение того же богатого триглицеридами пула.",
     } },
     fn: (m) => has(m, "TRIG") ? m["TRIG"]! / 5 : null }, // RS [verified 2026-07-04] — Friedewald VLDL = TG/5 (mg/dL, valid TG<400). Friedewald WT, Levy RI, Fredrickson DS. Clin Chem 1972;18(6):499-502.
-  { key: "apobapoa", name: "ApoB / ApoA1", nameCompact: "ApoB / ApoA", itab: ["cardio"], formula: "ApoB / ApoA1", cut: [0.7, 0.9], needs: ["ApoB", "ApoA1"], level: "consensus",
+  { key: "apobapoa", name: "ApoB / ApoA1", nameCompact: "ApoB/ApoA", itab: ["cardio"], formula: "ApoB / ApoA1", cut: [0.7, 0.9], needs: ["ApoB", "ApoA1"], level: "consensus",
     loinc: "1874-7", // LOINC 1874-7 — Apolipoprotein B/Apolipoprotein A-I [Mass Ratio] in Serum or Plasma (matches ApoB/ApoA1 direction)
     meaning: "Atherogenic particles (ApoB) per protective particle (ApoA1) — essentially 'bad' particles per 'good'. One of the strongest lipid predictors of MI. Men: <0.7 low, 0.7–0.9 moderate, >0.9 high.",
     consensus: "Strong predictor in large studies (INTERHEART). Needs ApoB and ApoA1 from the same draw — not yet measured.",
@@ -381,17 +381,45 @@ export const INDEX_DEFS: IndexDef[] = [
     fn: (m) => has(m, "Fe", "TIBC") ? (m["Fe"]! / m["TIBC"]!) * 100 : null },
   { key: "egfr", name: "eGFR (CKD-EPI 2021)", nameCompact: "eGFR", itab: "kidney", formula: "CKD-EPI 2021 from creatinine, age, sex", cut: [90, 60], unit: "mL/min/1.73m²", hi: true, needs: ["CREAT"], inputUnits: { CREAT: "mg/dL" }, level: "consensus",
     loinc: "98979-8", // LOINC 98979-8 — Glomerular filtration rate [Volume Rate/Area] ... by Creatinine-based formula (CKD-EPI 2021)/1.73 sq M
-    meaning: "Estimated glomerular filtration rate — overall kidney function, in mL/min/1.73m². Higher is better. Stages: ≥90 normal (G1) · 60–89 mildly reduced (G2) · 45–59 (G3a) · 30–44 (G3b) · <30 advanced. Computed from your creatinine, age and sex; a creatinine at the top of its range can already mean an eGFR in the 60s.",
-    consensus: "CKD-EPI 2021 (race-free) is the recommended GFR estimate. Note creatinine-based eGFR is affected by muscle mass; cystatin C is the confirmatory cross-check.",
+    meaning: "Estimated filtration rate — kidney function, computed from creatinine, age and sex. The subtlety that trips people up: age is an input to the formula, but NOT to the thresholds. The ≥90 cut-off is the young-adult level and is identical at every age. Yet filtration declines with age anyway — roughly 0.7–0.9 mL/min/1.73m² per year in healthy adults — so an amber 60–89 (G2) in an older person more often reflects age than disease. Per KDIGO, G2 alone, with no other marker of kidney damage, does not meet the criteria for CKD: significant reduction is <60, sustained over a minimum of 3 months.",
+    consensus: "Stages: ≥90 (G1) · 60–89 mildly reduced (G2) · 45–59 (G3a) · 30–44 (G3b) · <30 advanced. A single reading is not a diagnosis — <60 has to persist. Individual spread is wide: KDIGO notes not everyone declines with age. [disputed] The fixed 60 threshold in the elderly is itself contested — Delanaye et al. propose age-adapted cut-offs (45 mL/min/1.73m² above 65), arguing the fixed one overdiagnoses CKD in older adults; Levey/Inker/Coresh counter that the risk is real at any age and that management, not the definition, should be age-adapted. KDIGO retained the fixed threshold in 2024. Note too that creatinine-based eGFR tracks muscle mass; cystatin C is the confirmatory cross-check.",
     evidenceLevel: "guideline",
     references: [
       { organization: "New England Journal of Medicine (Inker LA et al.)", document: "New Creatinine- and Cystatin C-Based Equations to Estimate GFR without Race (CKD-EPI 2021)", year: 2021, url: "https://pubmed.ncbi.nlm.nih.gov/34554658/", doi: "10.1056/NEJMoa2102953", quote: "Race-free CKD-EPI 2021 creatinine equation (male coeffs: 142, κ=0.9, α=−0.302, exponent −1.200, age factor 0.9938); GFR stages ≥90/60–89/… define the bands used here." },
+      // The staging table is age-independent — the cut-points carry no age term, and KDIGO's own
+      // footnote pins them to the YOUNG-ADULT level. This is the citation for the whole "amber at 78
+      // is not automatically disease" note. (KDIGO 2024, Table 2, p. S137 + Table 1 definition.)
+      { organization: "KDIGO (Kidney Disease: Improving Global Outcomes) CKD Work Group", document: "KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease, Kidney Int 105(4S):S117–S314 — Table 2 (GFR categories) and Table 1 (criteria for CKD)", year: 2024, url: "https://pubmed.ncbi.nlm.nih.gov/38490803/", doi: "10.1016/j.kint.2023.10.018", quote: "G1 ≥90 Normal or high · G2 60–89 Mildly decreased[a] · G3a 45–59 · G3b 30–44 · G4 15–29 · G5 <15 Kidney failure. [a] Relative to the young adult level. In the absence of evidence of kidney damage, neither G1 nor G2 fulfills the criteria for CKD. … Criteria for chronic kidney disease (either of the following present for a minimum of 3 months): … Decreased GFR — GFR <60 ml/min per 1.73 m² (GFR categories G3a–G5)." },
+      // Guideline-grade support for BOTH halves of the age claim: there IS an average age-related
+      // decline, AND the spread is wide enough that it is not universal. Preferred over asserting
+      // Lindeman's contested "one third show no decline" as fact in the prose.
+      { organization: "KDIGO CKD Work Group", document: "KDIGO 2024 CKD Guideline — Introduction (age and the fixed thresholds)", year: 2024, url: "https://kdigo.org/wp-content/uploads/2024/03/KDIGO-2024-CKD-Guideline.pdf", doi: "10.1016/j.kint.2023.10.018", quote: "We recognize that there is an average age-associated GFR decline observed in longitudinal and cross-sectional studies, but with substantial variation among individuals within the population, such that not all individuals will have a significant GFR decline with age." },
+      // The rate quoted in the note (0.7–0.9 mL/min/1.73m²/yr). Measured (iohexol) GFR, properly
+      // indexed to 1.73m² — which is why this, and not Lindeman, is the source for the number.
+      { organization: "Journal of the American Society of Nephrology (Eriksen BO, Palsson R, Ebert N, et al.)", document: "GFR in Healthy Aging: an Individual Participant Data Meta-Analysis of Iohexol Clearance in European Population-Based Cohorts, JASN 31(7):1602–1615", year: 2020, url: "https://pubmed.ncbi.nlm.nih.gov/32499396/", doi: "10.1681/ASN.2020020151", quote: "The mean GFR was lower in older age by −0.72 ml/min per 1.73 m2 per year (95% CI, −0.96 to −0.48) for men who were healthy … and by −0.92 ml/min per 1.73 m2 per year (95% CI, −1.14 to −0.70) for women who were healthy." },
+      // The classic longitudinal source, kept for provenance. NOTE its unit: creatinine clearance in
+      // mL/min/year, NOT indexed to 1.73m² — so its 0.75 is not directly the number in the note.
+      // Its "one third had no decline" finding is explicitly challenged by Eriksen 2020 (above).
+      { organization: "Journal of the American Geriatrics Society (Lindeman RD, Tobin J, Shock NW) — Baltimore Longitudinal Study of Aging", document: "Longitudinal studies on the rate of decline in renal function with age, J Am Geriatr Soc 33(4):278–285", year: 1985, url: "https://pubmed.ncbi.nlm.nih.gov/3989190/", doi: "10.1111/j.1532-5415.1985.tb07117.x", quote: "…leaving a group of 254 \"normal\" subjects, the mean decrease in creatinine clearance was 0.75 ml/min/year. … One third of all subjects followed had no absolute decrease in renal function (positive slope of creatinine clearance vs. time)." },
+      // [disputed] — side 1: the fixed threshold overdiagnoses CKD in the elderly.
+      { organization: "Journal of the American Society of Nephrology (Delanaye P, Jager KJ, Bökenkamp A, et al.)", document: "CKD: A Call for an Age-Adapted Definition, JASN 30(10):1785–1805 — [disputed] the case FOR age-adapted thresholds", year: 2019, url: "https://pubmed.ncbi.nlm.nih.gov/31506289/", doi: "10.1681/ASN.2019030238", quote: "The current fixed GFR threshold of 60 ml/min per 1.73 m² not only results in overdiagnosis of CKD in the older adults, it may also lead to missed diagnoses of CKD in younger individuals… We suggest GFR cut-offs of 75 ml/min per 1.73 m² for the youngest group, 60 ml/min per 1.73 m² for individuals aged 40–65 years, and 45 ml/min per 1.73 m² for those older than 65 years." },
+      // [disputed] — side 2: the counterpoint, published back-to-back with the "YES" piece in the
+      // same Kidney Int issue (pp. 34–37 vs 37–40). Paywalled: the TITLE carries the thesis and is
+      // quoted verbatim; no body quote is asserted, because none could be verified.
+      { organization: "Kidney International (Levey AS, Inker LA, Coresh J)", document: "Kidney Int 97(1):37–40 — [disputed] the case AGAINST age-adapted thresholds (the formal Con to Glassock/Delanaye/Rule's Pro, Kidney Int 97(1):34–37)", year: 2020, url: "https://pubmed.ncbi.nlm.nih.gov/31901355/", doi: "10.1016/j.kint.2019.08.032", quote: "\"Should the definition of CKD be changed to include age-adapted GFR criteria?\": Con: the evaluation and management of CKD, not the definition, should be age-adapted. [title verbatim; the body is paywalled and is not quoted here]" },
+      // [disputed] — the standing adjudication: KDIGO looked at the proposal and declined it.
+      { organization: "KDIGO CKD Work Group", document: "KDIGO 2024 CKD Guideline, p. S147 — KDIGO's response to the age-adaptation proposal", year: 2024, url: "https://kdigo.org/wp-content/uploads/2024/03/KDIGO-2024-CKD-Guideline.pdf", doi: "10.1016/j.kint.2023.10.018", quote: "Some authors have suggested that the GFR threshold for CKD of 60 ml/min per 1.73 m² should be raised to 75 ml/min per 1.73 m² for younger adults and lowered to 45 ml/min per 1.73 m² for older adults. … Based upon the risk relationships of eGFRcr-cys and ACR categories with all complications, the existing CKD staging is appropriate among both younger and older adults." },
     ],
     // RS [verified 2026-07-04] — CKD-EPI 2021 creatinine (race-free). Inker LA et al. NEJM 2021;385:1737-1749. MALE: 142, κ=0.9, α=-0.302, exp -1.200, age 0.9938. FEMALE: κ=0.7, α=-0.241, ×1.012. sex defaults to male.
+    // RS [verified 2026-07-12] — the age-vs-threshold note. Sourced above. Two things deliberately NOT
+    // said, because no source supports them: (1) "decline starts after ~40" — absent from Lindeman 1985
+    // and Rowe 1976; (2) "a third of healthy people show no decline" — Lindeman says it, but Eriksen 2020
+    // rebuts it directly ("may have been biased by the use of creatinine clearance"), so the prose uses
+    // KDIGO's uncontested "substantial variation … not all individuals will have a significant decline".
     lang: { ru: {
       name: "рСКФ (CKD-EPI 2021)",
-      meaning: "Расчётная скорость клубочковой фильтрации — общая функция почек, в мл/мин/1,73м². Выше — лучше. Стадии: ≥90 норма (G1) · 60–89 незначительно снижена (G2) · 45–59 (G3a) · 30–44 (G3b) · <30 выраженно снижена. Рассчитывается из вашего креатинина, возраста и пола; креатинин на верхней границе диапазона уже может означать рСКФ в районе 60.",
-      consensus: "CKD-EPI 2021 (без учёта расы) — рекомендуемая оценка СКФ. Учтите, что рСКФ по креатинину зависит от мышечной массы; цистатин C — подтверждающая перекрёстная проверка.",
+      meaning: "Расчётная скорость фильтрации — работа почек, вычисляемая из креатинина, возраста и пола. Тонкость, которая сбивает с толку: возраст входит в формулу, но НЕ в границы стадий. Порог ≥90 — это уровень молодого взрослого, и он одинаков в любом возрасте. При этом фильтрация с годами закономерно снижается — у здоровых примерно на 0,7–0,9 мл/мин/1,73 м² в год, — поэтому жёлтая зона 60–89 (G2) у пожилого человека чаще отражает возраст, а не болезнь. По KDIGO сама по себе G2, без других признаков поражения почек, критериям хронической болезни почек не соответствует: значимым считается снижение <60, устойчиво держащееся не менее 3 месяцев.",
+      consensus: "Стадии: ≥90 (G1) · 60–89 незначительно снижена (G2) · 45–59 (G3a) · 30–44 (G3b) · <30 выраженно снижена. Однократный замер — не диагноз: снижение <60 должно быть устойчивым. Индивидуальный разброс велик: KDIGO отмечает, что снижение с возрастом происходит не у всех. [спорно] Сам фиксированный порог 60 для пожилых остаётся предметом спора: Delanaye и соавт. предлагают возрастные границы (45 мл/мин/1,73 м² после 65 лет), считая, что единый порог ведёт к гипердиагностике у пожилых; Levey, Inker и Coresh возражают, что риск реален в любом возрасте и подстраивать под возраст следует тактику ведения, а не определение болезни. KDIGO в 2024 году сохранил единый порог. Учтите также, что рСКФ по креатинину зависит от мышечной массы; цистатин C — подтверждающая перекрёстная проверка.",
     } },
     fn: (m, ctx) => { if (!has(m, "CREAT") || ctx.ageYears == null) { return null; } const female = ctx.sex === "female"; const k = female ? 0.7 : 0.9, a = female ? -0.241 : -0.302, scr = m["CREAT"]! / k; return 142 * Math.pow(Math.min(scr, 1), a) * Math.pow(Math.max(scr, 1), -1.2) * Math.pow(0.9938, ctx.ageYears) * (female ? 1.012 : 1); } },
   { key: "egfrcys", name: "eGFR — cystatin C", nameCompact: "eGFR cys", itab: "kidney", formula: "CKD-EPI cystatin-C (2012)", cut: [90, 60], unit: "mL/min/1.73m²", hi: true, needs: ["Cystatin C"], level: "consensus",

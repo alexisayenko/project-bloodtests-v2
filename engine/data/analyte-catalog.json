@@ -888,6 +888,73 @@
       }
     }
   },
+  "I-BIL": {
+    "key": "I-BIL",
+    "shortName": "I-BIL",
+    "displayName": "Bilirubin indirect",
+    "loincComponent": "Bilirubin.indirect",
+    "loincs": [
+      {
+        "code": "1971-1",
+        "longName": "Bilirubin.indirect [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14630-8",
+        "longName": "Bilirubin.indirect [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 584.66,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem CID 5280352 (Bilirubin), C33H36N4O6, molecular weight 584.7 g/mol (584.66214). Molar (SI) form reported in µmol/L; conversion mg/dL × 17.1 = µmol/L. https://pubchem.ncbi.nlm.nih.gov/compound/Bilirubin"
+    },
+    "refDefault": {
+      "min": 0.2,
+      "max": 1.2,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "Adult, >=20 years (Quest's own age band; not sex-specific). Neonatal/paediatric bands are far higher (<=1 day: <=5.1 mg/dL) and are deliberately NOT used here.",
+      "note": "Quest Diagnostics adult interval (>=20 years: 0.2-1.2 mg/dL). Equivalent SI ~3.4-20.5 umol/L (x17.104). Indirect (unconjugated) bilirubin is CALCULATED, not assayed: labs measure total and direct and report the difference (T-BIL - D-BIL), which is why Quest annotates every band '(calc)' and why some reference labs publish no interval for it at all (ARUP's fractionation panel reports Bilirubin, Direct + Total only, reference interval 'By report'). Published calculated intervals therefore vary by lab (e.g. Hunterdon Medical Center Laboratory, on the Mayo Clinic Laboratories catalog platform, publishes 0.1-0.9 mg/dL for the same LOINC 1971-1). This entry is only a FALLBACK: where the report prints its own interval, that interval is used instead (ADR-0012: the report wins) - her Polyclinic report prints <16 umol/L. Isolated raised unconjugated bilirubin with normal enzymes is most often Gilbert syndrome."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Quest Diagnostics",
+        "document": "Bilirubin, Fractionated (Test Code 7286) - Reference Range(s), Bilirubin, Indirect",
+        "year": 2026,
+        "url": "https://testdirectory.questdiagnostics.com/test/test-detail/7286/bilirubin-fractionated?cc=MASTER",
+        "doi": null,
+        "quote": "Bilirubin, Indirect: ... 14 Days - 9 Years 0.2-0.8 mg/dL (calc); 10-19 Years 0.2-1.1 mg/dL (calc); >=20 Years 0.2-1.2 mg/dL (calc). Includes: Bilirubin, Total; Bilirubin, Direct; Bilirubin, Indirect (calculated). Methodology: Spectrophotometry (SP)."
+      },
+      {
+        "organization": "Hunterdon Medical Center Laboratory",
+        "document": "Indirect Bilirubin (Unconjugated Bilirubin), test BILI2 - Reference Values / Methodology (published on the Mayo Clinic Laboratories test-catalog platform; performing laboratory is Hunterdon's own, NOT Mayo)",
+        "year": 2026,
+        "url": "https://hmc.testcatalog.org/show/BILI2",
+        "doi": null,
+        "quote": "Reference Values: 0.1 - 0.9 mg/dL. Methodology: Calculation derived from the Total and Direct Bilirubin. Loinc Code: 1971-1. Test Algorithm: Indirect Bilirubin is a non-orderable component of a Liver Profile. It is a calculation derived from the Total and Direct Bilirubin results. -- SECONDARY: corroborates that the analyte is calculated, not measured, and documents that published intervals differ between labs. The refDefault number above is Quest's, not this one."
+      }
+    ],
+    "labPrintedRef": "<16 umol/L (Polyclinic report, 2024-11 / 2025-03)",
+    "why": "The unconjugated fraction: bilirubin freed from haem but not yet conjugated by the liver. Raised in isolation (normal ALT/AST/GGT/ALP, normal direct fraction) it points to Gilbert syndrome or haemolysis rather than to liver damage - which is why the total is fractionated at all.",
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Билирубин непрямой",
+        "why": "Неконъюгированная («непрямая») фракция: билирубин уже освобождён из гема, но печень ещё не связала его. Изолированное повышение при нормальных ферментах (АЛТ, АСТ, ГГТ, ЩФ) и нормальной прямой фракции говорит скорее о синдроме Жильбера или гемолизе, чем о поражении печени, — ради этого различия общий билирубин и разделяют на фракции.",
+        "note": "Интервал Quest Diagnostics для взрослых (≥20 лет: 0.2–1.2 мг/дл; эквивалент СИ ≈ 3.4–20.5 мкмоль/л, ×17.104). Непрямой билирубин не измеряют — его вычисляют: лаборатория определяет общий и прямой, а непрямой получается вычитанием (T-BIL − D-BIL); поэтому Quest помечает каждую строку «(calc)», а часть референс-лабораторий (например ARUP) вовсе не публикует для него интервал. Из-за этого опубликованные интервалы у разных лабораторий расходятся. Это лишь запасной вариант: если в бланке напечатан свой интервал (в её бланке — <16 мкмоль/л), используется он."
+      }
+    }
+  },
   "D-Dimer": {
     "key": "D-Dimer",
     "shortName": "D-Dimer",

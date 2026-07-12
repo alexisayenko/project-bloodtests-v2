@@ -40,11 +40,28 @@ export interface MatrixConfig {
 
 export interface MatrixCol { id: string; date: string; labName: string }
 
+/**
+ * One line of a value cell's popup, kept STRUCTURED so the consumer can localize
+ * it. `labelKey` is an i18n key (`tip.reported`, `tip.us`, `tip.si`,
+ * `tip.calculated`, `tip.note`); lines without one are plain text (the date/lab
+ * header, the analyte name, the source row).
+ *
+ * The engine stays EN-canonical: `title` below is the EN rendering of exactly
+ * these lines. A consumer with a dictionary (natalga.com passes RU) re-renders
+ * them in its own language — the same split the model already uses for tapHint.
+ */
+export interface TipLine {
+  labelKey?: string;
+  text: string;
+}
+
 export interface MatrixCell {
   raw: string;
   value: number;
   flag: Zone | "";
   title: string;
+  /** The same content as `title`, before EN labels were applied. */
+  tip?: TipLine[];
 }
 
 export interface MatrixRow {
@@ -77,40 +94,91 @@ function rng(o?: UnitValue): string {
   return ` (${lo}–${hi})`;
 }
 
-/** The US/SI value line(s) for a tooltip: both systems when they differ, one
- *  "Value:" line when they match but differ from the report, else none. */
-function valueLinesOf(it: LabItem): string[] {
+/**
+ * The US/SI value line(s): both systems when they differ, one "Value:" line when
+ * they match but differ from the report, else none.
+ *
+ * An analyte only HAS an SI view when the catalog gives it a mass↔molar rule.
+ * Cell counts, haemoglobin in g/L, ratios and the like have none, so `si.value`
+ * stays null — and the old `fmtNum(us) !== fmtNum(si)` test read that null as
+ * "they differ" and emitted a bare, empty `SI:` line on every such row. Requiring
+ * a real SI value is the fix: no SI view, no SI line.
+ */
+function valueLinesOf(it: LabItem): TipLine[] {
+  const hasSi = it.si != null && typeof it.si.value === "number";
   const differ =
-    fmtNum(it.us.value) !== fmtNum(it.si.value) ||
-    (it.us.unit || "") !== (it.si.unit || "");
+    hasSi &&
+    (fmtNum(it.us.value) !== fmtNum(it.si.value) || (it.us.unit || "") !== (it.si.unit || ""));
   if (differ) {
     return [
-      `US: ${fmtNum(it.us.value)} ${it.us.unit || ""}${rng(it.us)}`.trimEnd(),
-      `SI: ${fmtNum(it.si.value)} ${it.si.unit || ""}${rng(it.si)}`.trimEnd(),
+      { labelKey: "tip.us", text: `${fmtNum(it.us.value)} ${it.us.unit || ""}${rng(it.us)}`.trimEnd() },
+      { labelKey: "tip.si", text: `${fmtNum(it.si.value)} ${it.si.unit || ""}${rng(it.si)}`.trimEnd() },
     ];
   }
   const valueMatchesReport =
     fmtNum(it.us.value) === fmtNum(it.original.value) &&
     (it.us.unit || "") === (it.original.unit || "");
   if (valueMatchesReport) return [];
-  return [`Value: ${fmtNum(it.us.value)} ${it.us.unit || ""}`.trimEnd()];
+  return [{ labelKey: "tip.value", text: `${fmtNum(it.us.value)} ${it.us.unit || ""}`.trimEnd() }];
 }
 
-/** Multi-line hover tooltip for one measured cell (US/SI/report views). */
-function tipOf(d: Draw, it: LabItem): string {
+/**
+ * The «Расчёт» / Calculated block (ADR-0012 §5): our own derivation of the same
+ * quantity, with the formula and the numbers it came from — shown NEXT TO the
+ * reported value, never instead of it. Omitted when the row IS the computed one
+ * (the value would just restate itself).
+ */
+function calcLineOf(it: LabItem): TipLine[] {
+  const c = it.calculated;
+  if (!c || it.note === "computed") return [];
+  const inputs = (c.inputs ?? []).map((i) => fmtNum(i.value)).join(" − ");
+  const workings = inputs ? ` (${c.formula} = ${inputs})` : ` (${c.formula})`;
+  return [{ labelKey: "tip.calculated", text: `${fmtNum(c.value)} ${c.unit || ""}${workings}`.trimEnd() }];
+}
+
+/**
+ * The popup for one measured cell, as STRUCTURED lines (see TipLine).
+ *
+ * ADR-0012 §5: the «По отчёту» block is the value exactly as the laboratory
+ * printed it — original number, original unit, no conversion, no re-rounding.
+ * That block is the reconciliation surface against the paper form she is holding;
+ * converting it destroys its only purpose. `original.rawValue` is the printed
+ * string, and it is preferred over the parsed number for exactly that reason.
+ */
+function tipLinesOf(d: Draw, it: LabItem): TipLine[] {
   const report = it.original.rawValue ?? fmtNum(it.original.value);
-  const valueLines = valueLinesOf(it);
-  const reportLine = `Reported: ${report} ${it.original.unit || ""}`.trimEnd() +
+  const reportText = `${report} ${it.original.unit || ""}`.trimEnd() +
     (it.original.refText ? ` (${it.original.refText})` : "") +
     (it.method ? ` · ${it.method}` : "");
   return [
-    `${d.date} · ${d.labName}`,
-    `${it.analysis || ""}${it.shortName ? " (" + it.shortName + ")" : ""}`.trimEnd(),
-    reportLine,
-    ...valueLines,
-  ]
-    .concat(it.note ? [`Note: ${it.note}`] : [])
-    .concat(it.sourceRow ? [it.sourceRow] : [])
+    { text: `${d.date} · ${d.labName}` },
+    { text: `${it.analysis || ""}${it.shortName ? " (" + it.shortName + ")" : ""}`.trimEnd() },
+    { labelKey: "tip.reported", text: reportText },
+    ...valueLinesOf(it),
+    ...calcLineOf(it),
+    ...(it.note ? [{ labelKey: "tip.note", text: it.note }] : []),
+    ...(it.sourceRow ? [{ text: it.sourceRow }] : []),
+  ];
+}
+
+/**
+ * Canonical EN labels — the same strings the i18n dictionary carries under these
+ * keys, kept here so the engine can render `title` without a dictionary. A
+ * consumer that HAS a dictionary re-renders `tip` instead and never reads these.
+ */
+const EN_TIP_LABELS: Record<string, string> = {
+  "tip.reported": "Reported:",
+  "tip.value": "Value:",
+  "tip.us": "US:",
+  "tip.si": "SI:",
+  "tip.calculated": "Calculated:",
+  "tip.note": "Note:",
+};
+
+/** Render tip lines in English — the engine's canonical `title` string. */
+export function renderTip(lines: TipLine[], labels: Record<string, string> = EN_TIP_LABELS): string {
+  return lines
+    .map((l) => (l.labelKey ? `${labels[l.labelKey] ?? EN_TIP_LABELS[l.labelKey] ?? ""} ${l.text}`.trim() : l.text))
     .join("\n");
 }
 
@@ -136,7 +204,7 @@ export function displayNames(
   return { displayName: nm, displayShortName };
 }
 
-interface CellData { raw: string; value: number; refMin?: number | null; refMax?: number | null; tip: string }
+interface CellData { raw: string; value: number; refMin?: number | null; refMax?: number | null; tip: TipLine[] }
 
 interface Acc {
   key: string; shortName?: string; analysis?: string; loinc?: string | null;
@@ -163,7 +231,7 @@ function accumulateItem(byKey: Map<string, Acc>, order: string[], d: Draw, it: L
   if (it.shortName) m.shortName = it.shortName;
   const converted = it.original && v.value !== it.original.value;
   const raw = converted ? fmtNum(v.value) : (it.original?.rawValue ?? fmtNum(v.value));
-  m.byId[idOf(d)] = { raw, value: v.value, refMin: v.refMin, refMax: v.refMax, tip: tipOf(d, it) };
+  m.byId[idOf(d)] = { raw, value: v.value, refMin: v.refMin, refMax: v.refMax, tip: tipLinesOf(d, it) };
 }
 
 /** Fold draws (ascending) into per-analyte accumulators, preserving first-seen order. */
@@ -205,7 +273,9 @@ function buildCell(args: BuildCellArgs): MatrixCell {
   const bandShort = clinicalBands ? shortName : undefined;
   const bandAnalysis = clinicalBands ? analysis : undefined;
   const flag = isUnreliable ? ("" as const) : flagOf(cell.value, rMin, rMax, bandShort, bandAnalysis);
-  return { raw: cell.raw, value: cell.value, flag, title: cell.tip };
+  // `title` = the EN rendering (what every consumer without a dictionary reads);
+  // `tip` = the same lines unrendered, for a consumer that localizes them.
+  return { raw: cell.raw, value: cell.value, flag, title: renderTip(cell.tip), tip: cell.tip };
 }
 
 /** Assemble one analyte row: refs, cells, sparkline series and display names. */

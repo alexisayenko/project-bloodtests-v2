@@ -4,4 +4,4 @@
  * re-exports the types so the rest of the engine has a framework-free import.
  */
 
-export type { UnitValue, LabItem, Draw } from "./schema.js";
+export type { UnitValue, LabItem, Draw, CalculatedValue } from "./schema.js";

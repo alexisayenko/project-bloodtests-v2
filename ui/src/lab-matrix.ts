@@ -57,6 +57,14 @@ const DEFAULT_I18N: Record<string, string> = {
   "popup.consensus": "Interpretation",
   "popup.molarMass": "Molar mass",
   "popup.molarMassUnit": "g/mol",
+  /* Summary label of the collapsed technical layer (LOINC / evidence badge /
+     citations / draw note). The card's first screenful is the patient's — name,
+     Why, Reference range — and everything that is source material rather than
+     answer sits behind this one disclosure. */
+  "popup.more": "Sources & technical detail",
+  /* Accessible name of the card's ✕. Not a data-en/data-ru node (applyLang swaps
+     textContent, which would overwrite the glyph) — applyLang sets it as aria-label. */
+  "popup.close": "Close",
   "popup.tagPersonal": "personal reference range — not the catalog default",
   "popup.tagNoSource": "lab-reported range; no curated source yet",
   "badge.guideline": "guideline",
@@ -117,25 +125,32 @@ export const TOOLBAR_CSS = `
 .labs-toolbar .lm-toggle .tg { grid-area: 1 / 1; text-align: center; white-space: nowrap; }
 .labs-toolbar .lm-toggle .tg:not(.active) { visibility: hidden; }
 .labs-toolbar .lm-sep { width: 1px; align-self: stretch; min-height: 1.2em; background: var(--_rule-soft); margin: 0 0.15rem; }
-.lab-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0.4rem 0 0.2rem; }
+.lab-tabs-wrap { position: relative; margin: 0.4rem 0 0.2rem; }
+.lab-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0; }
 .lab-tabs .lab-tab { font-size: 0.78rem; padding: 0.25rem 0.8rem; border: 1px solid var(--_rule); border-radius: 999px; background: var(--_bg); color: var(--_muted); cursor: pointer; }
 .lab-tabs .lab-tab:hover { color: var(--_fg); border-color: var(--_fg); }
 .lab-tabs .lab-tab[aria-pressed="true"] { color: var(--_bg); background: var(--_accent); border-color: var(--_accent); }
 @media (max-width: 640px) {
-  /* Phone: the 9-tab wrap-wall becomes a single horizontal swipe strip. A soft
-     right-edge fade hints there's more to slide to; scrollbar hidden for calm. */
+  /* Phone: the 9-tab wrap-wall becomes a single horizontal swipe strip. Scrollbar
+     hidden for calm; the edge fades below are the "more this way" signal. */
   .lab-tabs { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .lab-tabs::-webkit-scrollbar { display: none; }
   .lab-tabs .lab-tab { flex: 0 0 auto; }
-  /* "‹" / "›" chevrons over a soft fade, pinned (sticky) to the strip's edges — an
-     explicit hint that the tab strip scrolls sideways. JS toggles .at-start /
-     .at-end / .no-scroll on .lab-tabs from scrollLeft so each chevron disappears
-     once you've reached that end (and both hide when nothing overflows). */
-  .lab-tabs::before, .lab-tabs::after { position: sticky; flex: 0 0 auto; align-self: stretch; display: flex; align-items: center; font-size: 1.15rem; font-weight: 600; color: var(--_muted); pointer-events: none; }
-  .lab-tabs::before { content: "\\2039"; left: 0; padding: 0 1.4rem 0 0.3rem; background: linear-gradient(to left, transparent, var(--_bg) 60%); display: none; }
-  .lab-tabs::after { content: "\\203A"; right: 0; padding: 0 0.3rem 0 1.4rem; background: linear-gradient(to right, transparent, var(--_bg) 60%); }
-  .lab-tabs:not(.at-start):not(.no-scroll)::before { display: flex; }
-  .lab-tabs.at-end::after, .lab-tabs.no-scroll::after { display: none; }
+  /* Edge fades — the ONLY hint that the strip scrolls sideways (no glyphs, no
+     buttons: the target user is a non-technical phone reader, and a chevron reads
+     as a button she can't press). Painted as overlays on the WRAPPER, so they never
+     scroll with the strip, never consume layout space, and never take a tap target.
+     JS toggles .at-start / .at-end / .no-scroll on .lab-tabs-wrap from the strip's
+     scrollLeft, so each fade disappears once that end is reached (both hide when
+     nothing overflows). Desktop (>640px) never generates them — the strip wraps. */
+  .lab-tabs-wrap::before, .lab-tabs-wrap::after {
+    content: ""; position: absolute; top: 0; bottom: 0; width: 2.75rem;
+    pointer-events: none; z-index: 2; opacity: 1; transition: opacity 180ms linear;
+  }
+  .lab-tabs-wrap::before { left: 0; background: linear-gradient(to right, var(--_bg) 0%, color-mix(in srgb, var(--_bg) 72%, transparent) 45%, color-mix(in srgb, var(--_bg) 0%, transparent) 100%); }
+  .lab-tabs-wrap::after { right: 0; background: linear-gradient(to left, var(--_bg) 0%, color-mix(in srgb, var(--_bg) 72%, transparent) 45%, color-mix(in srgb, var(--_bg) 0%, transparent) 100%); }
+  .lab-tabs-wrap.at-start::before, .lab-tabs-wrap.no-scroll::before { opacity: 0; }
+  .lab-tabs-wrap.at-end::after, .lab-tabs-wrap.no-scroll::after { opacity: 0; }
   /* Toolbar: keep only what a phone user actually taps — collapse-all + units.
      Detail (kept at "full") and language (set once) are hidden here, not removed. */
   .labs-toolbar .lm-btn[data-act="detail"], .labs-toolbar .lm-btn[data-act="lang"] { display: none; }
@@ -186,9 +201,20 @@ export class LabMatrix extends HTMLElement {
   private ruOn = false;
   private collapsed: Set<string> = new Set();
   private popupTarget: HTMLElement | null = null;
+  /** "Tap-anything" mode — see LabMatrixModel.tapHint. Drops the ⓘ, keeps the popup. */
+  private get tapCell(): boolean {
+    return !!this._model?.tapHint;
+  }
   private _view = "all";
   private _keyViews: Record<string, string[]> = {};
   private scrollSaveTimer = 0;
+  /* Scroll-affordance state. The two "nudge" flags are per-page-load (instance)
+     only — deliberately NOT persisted: the teaching wiggle should replay on a
+     fresh visit, and localStorage would silently retire it forever after one. */
+  private tabsNudged = false;
+  private tableNudged = false;
+  /** True while the table's teaching nudge is animating — suppresses scrollX persistence. */
+  private nudgingTable = false;
 
   /** Active clinical-lens view ("all" or a lens key). Filters the table. */
   set view(k: string) {
@@ -348,7 +374,7 @@ export class LabMatrix extends HTMLElement {
 
     // optional in-component lens tab bar (host page can also drive `.view` directly)
     const tabsBar = (m.lensTabs ?? []).length
-      ? `<div class="lab-tabs" role="tablist">` +
+      ? `<div class="lab-tabs-wrap"><div class="lab-tabs" role="tablist">` +
         (m.lensTabs ?? [])
           .map(
             (tb) =>
@@ -358,7 +384,7 @@ export class LabMatrix extends HTMLElement {
               )} aria-pressed="false">${esc(tb.label)}</button>`,
           )
           .join("") +
-        `</div>`
+        `</div></div>`
       : "";
 
     // self-contained toolbar. Collapse/expand leads as a single toggle (offers
@@ -378,9 +404,25 @@ export class LabMatrix extends HTMLElement {
       toggle("lang", "control.langEN", "control.langRU") +
       `</div>`;
 
-    // the tap/click popup (styled by #cell-popup rules; lives inside the shadow)
+    // The tap/click card + its scrim (styled by #cell-scrim / #cell-popup; both live
+    // inside the shadow). The scrim is a sibling BEFORE the card so the card wins the
+    // paint order at equal stacking — and it is what makes the card legible as a layer
+    // rather than something that merely appeared over the table.
     const popup =
-      `<div id="cell-popup" hidden><button type="button" class="tip-close" aria-label="Close">×</button><div class="tip-body"></div></div>`;
+      `<div id="cell-scrim" hidden></div>` +
+      `<div id="cell-popup" role="dialog" aria-modal="true" hidden>` +
+      `<button type="button" class="tip-close" aria-label="Close">×</button>` +
+      `<div class="tip-body"></div></div>`;
+
+    // "tap-anything" hint (natalga.com only — see LabMatrixModel.tapHint). ONE muted
+    // line of prose, not a control: it replaces the per-row ⓘ badges, which spent
+    // ~34px of a 97.5px phone column repeating a fact that is true of nearly every
+    // element on the page. Said once, in words, it costs one line for the whole table.
+    const hint = m.tapHint
+      ? `<p class="lm-hint muted"${biAttr(m.tapHint.en, m.tapHint.ru)}>${esc(
+          this.ruOn ? m.tapHint.ru : m.tapHint.en,
+        )}</p>`
+      : "";
 
     // per-view explainer prose — TWO collapsibles: "Common knowledge" (agnostic
     // teaching) + "Your case" (Alex's personal interpretation). Both filled by
@@ -401,11 +443,14 @@ export class LabMatrix extends HTMLElement {
       `<style>${STYLES}${TOOLBAR_CSS}</style>` +
       tabsBar +
       toolbar +
-      `<div class="labs-scroll"><table class="labs matrix">` +
+      hint +
+      `<div class="labs-scroll-wrap"><div class="labs-scroll"><table class="labs matrix${
+        m.tapHint ? " tap-cell" : ""
+      }">` +
       `<thead>${head}</thead>` +
       `<tbody>${panelsHtml}${idxTabs}</tbody>` +
       `<tfoot>${foot}</tfoot>` +
-      `</table></div>` +
+      `</table></div></div>` +
       lensNotes +
       popup;
 
@@ -437,11 +482,16 @@ export class LabMatrix extends HTMLElement {
     });
   }
 
-  /** Persist the horizontal scroll position (throttled), guarded like other LS use. */
+  /** Persist the horizontal scroll position (throttled), guarded like other LS use.
+   *  Writes are suppressed while the teaching nudge animates — the nudge is not a
+   *  user intent, and persisting its mid-flight offsets would corrupt labsV2.scrollX. */
   private onLabsScroll(): void {
+    this.updateScrollEdges();
+    if (this.nudgingTable) return;
     if (this.scrollSaveTimer) return;
     this.scrollSaveTimer = window.setTimeout(() => {
       this.scrollSaveTimer = 0;
+      if (this.nudgingTable) return;
       const el = this.q<HTMLElement>(".labs-scroll");
       if (el) lsSet(LS.scrollX, String(Math.round(el.scrollLeft)));
     }, 150);
@@ -456,7 +506,7 @@ export class LabMatrix extends HTMLElement {
     // click delegation via composedPath() so it works across the shadow boundary
     document.addEventListener("click", (e) => this.onDocClick(e));
     document.addEventListener("keydown", (e) => this.onKeydown(e));
-    window.addEventListener("resize", () => { this.closePopup(); this.updateTabEdges(); });
+    window.addEventListener("resize", () => { this.closePopup(); this.updateEdges(); });
     // reposition the popup on any scroll (capture catches the inner .labs-scroll too)
     window.addEventListener("scroll", () => { if (this.popupTarget) this.placePopup(this.popupTarget); }, true);
   }
@@ -468,29 +518,145 @@ export class LabMatrix extends HTMLElement {
     this.applyDetail(this.minOn);
     this.applyCollapse();
     this.applyView(this._view);
-    // wire the horizontal-scroll persistence (fresh `.labs-scroll` each render)
+    // wire the horizontal-scroll persistence + edge fades (fresh `.labs-scroll` each render)
     const labsScroll = this.q(".labs-scroll") as HTMLElement | null;
     if (labsScroll) labsScroll.addEventListener("scroll", () => this.onLabsScroll(), { passive: true });
-    // wire the tab-strip scroll → edge-chevron visibility (fresh element each render)
+    // wire the tab-strip scroll → edge-fade visibility (fresh element each render)
     const tabs = this.q(".lab-tabs") as HTMLElement | null;
-    if (tabs) {
-      tabs.addEventListener("scroll", () => this.updateTabEdges(), { passive: true });
-      this.updateTabEdges();
-    }
+    if (tabs) tabs.addEventListener("scroll", () => this.updateTabEdges(), { passive: true });
+    this.scheduleEdges();
+    this.maybeNudgeTabs();
     // initial mount: let the host initialize (e.g. reveal its explore panel)
     this.dispatchViewChange();
   }
 
-  /** Toggle .at-start / .at-end / .no-scroll on the tab strip so the edge chevrons
-   *  each hide once that end is reached (and both hide when nothing overflows). */
+  // ---- scroll affordances (edge fades + teaching nudges) --------------------
+
+  /** Recompute both scroll-edge states after layout has settled. */
+  private scheduleEdges(): void {
+    requestAnimationFrame(() => this.updateEdges());
+  }
+
+  private updateEdges(): void {
+    this.updateTabEdges();
+    this.updateScrollEdges();
+  }
+
+  /** Toggle .at-start / .at-end / .no-scroll on the tab strip's WRAPPER so each edge
+   *  fade hides once that end is reached (and both hide when nothing overflows). */
   private updateTabEdges(): void {
     const tabs = this.q(".lab-tabs") as HTMLElement | null;
-    if (!tabs) return;
+    const wrap = this.q(".lab-tabs-wrap") as HTMLElement | null;
+    if (!tabs || !wrap) return;
     const max = tabs.scrollWidth - tabs.clientWidth;
     const x = tabs.scrollLeft;
-    tabs.classList.toggle("no-scroll", max <= 1);
-    tabs.classList.toggle("at-start", x <= 1);
-    tabs.classList.toggle("at-end", x >= max - 1);
+    wrap.classList.toggle("no-scroll", max <= 1);
+    wrap.classList.toggle("at-start", x <= 1);
+    wrap.classList.toggle("at-end", x >= max - 1);
+  }
+
+  /** Same for the data table, plus the two measurements its fades need: the sticky
+   *  marker column's width (the left fade must start AFTER it, never on top of it)
+   *  and any classic vertical-scrollbar width (the right fade must clear it). */
+  private updateScrollEdges(): void {
+    const el = this.q(".labs-scroll") as HTMLElement | null;
+    const wrap = this.q(".labs-scroll-wrap") as HTMLElement | null;
+    if (!el || !wrap) return;
+    const max = el.scrollWidth - el.clientWidth;
+    const x = el.scrollLeft;
+    wrap.classList.toggle("no-scroll", max <= 1);
+    wrap.classList.toggle("at-start", x <= 1);
+    wrap.classList.toggle("at-end", x >= max - 1);
+    const mc = this.q("thead th.marker-col") as HTMLElement | null;
+    const stickyW = mc ? Math.round(mc.getBoundingClientRect().width) : 0;
+    wrap.style.setProperty("--_sticky-w", `${stickyW}px`);
+    // offsetWidth - clientWidth = 2px border + vertical scrollbar (0 with overlay bars)
+    const vsb = Math.max(0, el.offsetWidth - el.clientWidth - 2);
+    wrap.style.setProperty("--_vsb-w", `${vsb}px`);
+  }
+
+  private reducedMotion(): boolean {
+    try {
+      return !!window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * The teaching nudge: slide `el` ~28px to the right, then spring back to exactly
+   * where it started (~660ms, ease-out away / ease-in-out back). It is the wordless
+   * way to say "this swipes sideways" to someone who will never find a scrollbar —
+   * no glyph, no button, no text. Returns false (and animates nothing) when there is
+   * nothing to reveal, or when the user asked for reduced motion.
+   */
+  private nudgeScroll(el: HTMLElement, onEnd?: () => void, dist = 28, dur = 660): boolean {
+    if (this.reducedMotion()) return false;
+    const max = el.scrollWidth - el.clientWidth;
+    if (max <= 4) return false; // no horizontal overflow — nothing to teach
+    const start = el.scrollLeft;
+    const d = Math.min(dist, max - start); // never push past the right end
+    if (d <= 2) return false; // already at (or within a hair of) the end
+    const t0 = typeof performance !== "undefined" ? performance.now() : Date.now();
+    const easeOut = (t: number): number => 1 - Math.pow(1 - t, 3);
+    const easeInOut = (t: number): number =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const OUT = 0.35; // fraction of the run spent travelling out; the rest springs back
+    const step = (now: number): void => {
+      const t = Math.min(1, (now - t0) / dur);
+      const k = t < OUT ? easeOut(t / OUT) : 1 - easeInOut((t - OUT) / (1 - OUT));
+      el.scrollLeft = start + d * k;
+      if (t < 1) {
+        requestAnimationFrame(step);
+      } else {
+        el.scrollLeft = start; // land exactly where we began
+        if (onEnd) onEnd();
+      }
+    };
+    requestAnimationFrame(step);
+    return true;
+  }
+
+  /** Once per page load, after layout settles: wiggle the tab strip if it overflows
+   *  and is still parked at the left. */
+  private maybeNudgeTabs(): void {
+    if (this.tabsNudged || this.reducedMotion()) return;
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        window.setTimeout(() => {
+          const el = this.q<HTMLElement>(".lab-tabs");
+          if (!el || this.tabsNudged) return;
+          if (el.scrollLeft > 1) {
+            this.tabsNudged = true; // already scrolled — she found it herself
+            return;
+          }
+          if (this.nudgeScroll(el, () => this.updateTabEdges())) this.tabsNudged = true;
+        }, 220);
+      }),
+    );
+  }
+
+  /** Same wiggle on the TABLE, fired the first time a lens tab is chosen — that is the
+   *  moment the table becomes the thing she is reading, so it is the moment to teach
+   *  that it swipes too. Explore has no table, so it doesn't consume the one shot. */
+  private maybeNudgeTable(key: string): void {
+    if (this.tableNudged || key === "explore" || this.reducedMotion()) return;
+    requestAnimationFrame(() => {
+      const el = this.q<HTMLElement>(".labs-scroll");
+      if (!el || this.tableNudged) return;
+      const start = Math.round(el.scrollLeft);
+      const ok = this.nudgeScroll(el, () => {
+        this.nudgingTable = false;
+        // Re-assert the pre-nudge position: the nudge is not a user scroll, so
+        // labsV2.scrollX must read exactly as it did before the wiggle.
+        lsSet(LS.scrollX, String(start));
+        this.updateScrollEdges();
+      });
+      if (ok) {
+        this.tableNudged = true;
+        this.nudgingTable = true;
+      }
+    });
   }
 
   /**
@@ -505,9 +671,13 @@ export class LabMatrix extends HTMLElement {
 
     // Explore mode: hide the whole matrix chrome (body + toolbar + explainers);
     // the host reveals its own explore panel on the `viewchange` event.
+    // (hide the WRAPPER, not just the scroller — otherwise its edge fades would be
+    // left hanging over the explore panel)
     const scroll = this.q(".labs-scroll") as HTMLElement | null;
+    const scrollWrap = this.q(".labs-scroll-wrap") as HTMLElement | null;
     const toolbar = this.q(".labs-toolbar") as HTMLElement | null;
     if (scroll) scroll.classList.toggle("hidden", isExplore);
+    if (scrollWrap) scrollWrap.classList.toggle("hidden", isExplore);
     if (toolbar) toolbar.classList.toggle("hidden", isExplore);
 
     // "Collapse all" only makes sense on All — the only view with collapsible panel
@@ -566,6 +736,8 @@ export class LabMatrix extends HTMLElement {
       if (on && !tr.classList.contains("idx-inline")) anyBottomIdx = true;
     }
     for (const s of idxSeps) s.hidden = !(s.dataset["itab"] === key && anyBottomIdx);
+    // the row set just changed → so did the table's scrollWidth/height
+    this.scheduleEdges();
   }
 
   /**
@@ -603,7 +775,10 @@ export class LabMatrix extends HTMLElement {
       const v = si ? td.getAttribute("data-si") : td.getAttribute("data-us");
       if (v != null && v !== "") td.textContent = v;
     }
-    for (const s of this.qa(".unit-ref")) {
+    // `.unit-ref` = the row's reference line; `.unit-pop-ref` = the ⓘ card's ranges
+    // (incl. the copy already rendered into #cell-popup, so an OPEN popup re-labels
+    // itself on the toggle rather than freezing at the units it opened with).
+    for (const s of this.qa(".unit-ref, .unit-pop-ref")) {
       s.textContent = (si ? s.getAttribute("data-si") : s.getAttribute("data-us")) || "";
     }
     for (const a of this.qa("a.loinc[data-si-loinc]")) {
@@ -646,6 +821,9 @@ export class LabMatrix extends HTMLElement {
       el.textContent = ru && rv != null && rv !== "" ? rv : en || "";
     }
     this.setToggle("lang", ru ? "control.langRU" : "control.langEN", ru);
+    // the card's ✕ carries its label in aria-label, not textContent (the glyph is the
+    // visible content), so the loop above can't reach it — localize it here.
+    this.q(".tip-close")?.setAttribute("aria-label", this._i18n.text("popup.close", ru));
     // other toggle labels are language-dependent → refresh them
     this.applyUnits(this.siOn);
     this.applyDetail(this.minOn);
@@ -727,6 +905,7 @@ export class LabMatrix extends HTMLElement {
     this.applyPanel(pr);
     lsSet(LS.collapsed, JSON.stringify([...this.collapsed]));
     this.applyCollapseToggleLabel();
+    this.scheduleEdges();
   }
 
   private onAct(act: string): void {
@@ -742,6 +921,8 @@ export class LabMatrix extends HTMLElement {
       lsSet(LS.collapsed, JSON.stringify([...this.collapsed]));
       this.applyCollapseToggleLabel();
     }
+    // units / detail / collapse all change the table's rendered width or height
+    this.scheduleEdges();
   }
 
   // ---- popup ---------------------------------------------------------------
@@ -750,11 +931,28 @@ export class LabMatrix extends HTMLElement {
     return this.shadowRoot ? (this.shadowRoot.getElementById("cell-popup") as HTMLElement | null) : null;
   }
 
+  private scrimEl(): HTMLElement | null {
+    return this.shadowRoot ? (this.shadowRoot.getElementById("cell-scrim") as HTMLElement | null) : null;
+  }
+
+  /**
+   * Honour the OS "reduce motion" switch. Motion sickness is real, and the primary
+   * reader of the natalga.com build is elderly — if she (or anyone) has asked the
+   * system for less movement, the card must simply BE there, with no travel. The
+   * scrim and the ✕ are not motion, so they stay: they carry the meaning; the
+   * animation only carries the explanation of where the card came from.
+   */
+  private prefersReducedMotion(): boolean {
+    return typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
   private closePopup(): void {
     if (this.popupTarget) this.popupTarget.classList.remove("tip-open");
     this.popupTarget = null;
     const pop = this.popupEl();
     if (pop) pop.hidden = true;
+    const scrim = this.scrimEl();
+    if (scrim) scrim.hidden = true;
   }
 
   private openPopup(el: HTMLElement, html?: string): void {
@@ -765,11 +963,60 @@ export class LabMatrix extends HTMLElement {
     const body = pop.querySelector(".tip-body") as HTMLElement | null;
     if (body) {
       if (html != null) body.innerHTML = html;
-      else body.textContent = el.getAttribute("data-tip") || "";
+      // Value-cell popup: prefer the localized text when the model carried one
+      // (natalga.com renders the engine's structured tip lines in RU). Falls back
+      // to the engine's EN `data-tip`, which is all isayenko.org ever ships.
+      else {
+        const ru = this.ruOn ? el.getAttribute("data-tip-ru") : null;
+        body.textContent = ru || el.getAttribute("data-tip") || "";
+      }
     }
     this.popupTarget = el;
     el.classList.add("tip-open");
+    const scrim = this.scrimEl();
+    if (scrim) scrim.hidden = false;
     this.placePopup(el);
+    this.animateOpen(el);
+  }
+
+  /**
+   * Grow the card out of the cell that was tapped: it starts scaled down and centred
+   * on that cell, and settles into the position placePopup() just gave it. The point
+   * is causal, not decorative — "I touched THIS, and THIS is what opened, and it is
+   * about the thing I touched" becomes something you SEE rather than something you
+   * have to infer. Short and ease-out (240 ms): it explains, it does not perform.
+   *
+   * WAAPI rather than a CSS class so the start transform can be computed from the two
+   * real rects. `animate` is absent in happy-dom (unit tests) — guarded, and its
+   * absence just means the card appears at its final position, which is correct.
+   */
+  private animateOpen(el: HTMLElement): void {
+    const pop = this.popupEl();
+    if (!pop || this.prefersReducedMotion()) return;
+    if (typeof pop.animate !== "function") return;
+
+    const c = el.getBoundingClientRect();
+    const p = pop.getBoundingClientRect();
+    if (!p.width || !p.height || !c.width) return;
+
+    // start at the cell's footprint: same centre, scaled so the card's width matches
+    // the cell's. Clamped so a very narrow cell can't collapse it to a dot.
+    const scale = Math.min(1, Math.max(0.2, c.width / p.width));
+    const dx = c.left + c.width / 2 - (p.left + p.width / 2);
+    const dy = c.top + c.height / 2 - (p.top + p.height / 2);
+
+    pop.animate(
+      [
+        { transform: `translate(${dx}px, ${dy}px) scale(${scale})`, opacity: 0.4 },
+        { transform: "translate(0px, 0px) scale(1)", opacity: 1 },
+      ],
+      { duration: 240, easing: "cubic-bezier(.2,.7,.3,1)", fill: "none" },
+    );
+
+    const scrim = this.scrimEl();
+    if (scrim && typeof scrim.animate === "function") {
+      scrim.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, easing: "ease-out", fill: "none" });
+    }
   }
 
   private placePopup(el: HTMLElement): void {
@@ -798,16 +1045,32 @@ export class LabMatrix extends HTMLElement {
     const pop = this.popupEl();
 
     const lens = match("[data-lens]");
-    if (lens && sr.contains(lens)) { this.setView(lens.getAttribute("data-lens") || "all"); return; }
+    if (lens && sr.contains(lens)) {
+      const key = lens.getAttribute("data-lens") || "all";
+      this.setView(key);
+      // first lens tab she picks this page load → teach that the table swipes too
+      this.maybeNudgeTable(key);
+      return;
+    }
     const act = match("[data-act]");
     if (act && sr.contains(act)) { this.onAct(act.getAttribute("data-act") || ""); return; }
     if (match(".tip-close")) { this.closePopup(); return; }
     if (pop && path.includes(pop)) return; // clicks inside the popup (links) don't dismiss
+    // The scrim swallows every tap outside the card and dismisses it. Explicit rather
+    // than leaning on the fall-through below: tapping "the greyed-out rest of the page"
+    // to get out is THE conventional escape hatch, and it must not depend on which
+    // selectors happen to miss.
+    if (match("#cell-scrim")) { this.closePopup(); return; }
 
     const warn = match("[data-warn]");
     const info = match("[data-analyte-info]");
     const idxInfo = match("[data-index-info]");
     const cell = match("td.num.has-tip");
+    // The WHOLE marker cell is the tap target — the ⓘ (where it is still drawn) is
+    // only an indicator inside it, exactly as the ▸/▾ triangle is an indicator on an
+    // already-tappable panel row. Matched LAST of the marker-column candidates so
+    // the ⚠ badge, which lives in the same cell, keeps its own popup.
+    const marker = match("td.marker-col");
     const panel = match("tr.panel-row.collapsible");
     if (warn && sr.contains(warn)) this.openPopup(warn, WARN_HTML);
     else if (info && sr.contains(info)) {
@@ -817,8 +1080,21 @@ export class LabMatrix extends HTMLElement {
       const src = idxInfo.parentNode ? (idxInfo.parentNode as Element).querySelector(".index-pop") : null;
       this.openPopup(idxInfo, src ? src.innerHTML : "");
     } else if (cell && sr.contains(cell)) this.openPopup(cell);
+    else if (marker && sr.contains(marker)) this.openMarkerPopup(marker);
     else if (panel && sr.contains(panel)) { this.togglePanel(panel); this.closePopup(); }
     else this.closePopup();
+  }
+
+  /**
+   * Open the marker cell's own explainer — `.analyte-pop` on a measured row,
+   * `.index-pop` on a derived-index row. A cell with neither (no provenance) has
+   * nothing to say, so a tap on it just dismisses whatever is open, like tapping
+   * any other inert part of the page.
+   */
+  private openMarkerPopup(td: HTMLElement): void {
+    const src = td.querySelector(".analyte-pop, .index-pop");
+    if (!src) { this.closePopup(); return; }
+    this.openPopup(td, src.innerHTML);
   }
 
   private onKeydown(e: KeyboardEvent): void {
@@ -826,9 +1102,13 @@ export class LabMatrix extends HTMLElement {
     if (!sr) return;
     if (e.key === "Escape") { this.closePopup(); return; }
     const active = sr.activeElement as HTMLElement | null;
-    if ((e.key === "Enter" || e.key === " ") && active && active.matches("td.num.has-tip")) {
+    if (!(e.key === "Enter" || e.key === " ") || !active) return;
+    if (active.matches("td.num.has-tip")) {
       e.preventDefault();
       this.openPopup(active);
+    } else if (active.matches("td.marker-col")) {
+      e.preventDefault();
+      this.openMarkerPopup(active);
     }
   }
 
@@ -839,9 +1119,9 @@ export class LabMatrix extends HTMLElement {
     const cells = (r.cells ?? [])
       .map((c) =>
         c
-          ? `<td class="num ${esc(c.flag || "")} has-tip" data-tip="${esc(c.title)}" data-us="${esc(
-              c.raw,
-            )}" data-si="${esc(c.siRaw)}" tabindex="0">${esc(c.raw)}</td>`
+          ? `<td class="num ${esc(c.flag || "")} has-tip" data-tip="${esc(c.title)}"${
+              c.titleRu ? ` data-tip-ru="${esc(c.titleRu)}"` : ""
+            } data-us="${esc(c.raw)}" data-si="${esc(c.siRaw)}" tabindex="0">${esc(c.raw)}</td>`
           : `<td class="num empty"><span class="muted">·</span></td>`,
       )
       .join("");
@@ -885,16 +1165,26 @@ export class LabMatrix extends HTMLElement {
     const warn = r.unreliable
       ? `<button type="button" class="warn-badge" data-warn aria-label="Why this measurement is unreliable">⚠</button>`
       : "";
+    // The row's reference range in BOTH unit systems. Hoisted above `info` because
+    // the ⓘ card's "range shown" line must reuse these EXACT strings — the popup is
+    // how she learns what a row means, so it may never contradict the row it explains.
+    // The engine deliberately does not convert this range itself: its bounds are in
+    // the source lab's unit, not the catalog's (see LabProvenance.siCatalogRange).
+    const usRef = r.refText ? `${r.refText}${r.unit ? " " + r.unit : ""}` : r.unit || "";
+    const siRef = r.siRefText ? `${r.siRefText}${r.siUnit ? " " + r.siUnit : ""}` : r.siUnit || "";
     // NB: no trailing whitespace after the ⓘ button — the visual gap before the
     // following text comes from CSS margin-right on `.marker-col .info-badge`, not a
     // space (a space would be a line-break opportunity that could orphan the badge).
     // `info` bundles the button AND its adjacent hidden `.analyte-pop` popup so the
     // two stay siblings (the click handler reads info.parentNode's `.analyte-pop`).
-    const info = r.provenance
-      ? `<button type="button" class="info-badge" data-analyte-info aria-label="Reference-range source for ${esc(
+    // In tap-cell mode the badge is dropped but the hidden `.analyte-pop` STAYS — it
+    // is the popup's content, and the cell (not the glyph) is now what opens it.
+    const infoBtn = this.tapCell
+      ? ""
+      : `<button type="button" class="info-badge" data-analyte-info aria-label="Reference-range source for ${esc(
           name,
-        )}"><svg class="info-ico" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="4.4" r="1.05" fill="currentColor"/><rect x="7.05" y="6.6" width="1.9" height="5.3" rx="0.95" fill="currentColor"/></svg></button>${this.analytePopup(r.provenance, t)}`
-      : "";
+        )}"><svg class="info-ico" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="4.4" r="1.05" fill="currentColor"/><rect x="7.05" y="6.6" width="1.9" height="5.3" rx="0.95" fill="currentColor"/></svg></button>`;
+    const info = r.provenance ? `${infoBtn}${this.analytePopup(r.provenance, t, usRef, siRef)}` : "";
     // single-name markers (no code line): ⓘ leads, then ⚠, then the name follows
     const nameBadges = showSym ? "" : `${info}${warn}`;
 
@@ -920,8 +1210,6 @@ export class LabMatrix extends HTMLElement {
     }
 
     // ---- reference-range meta (US/SI): range (+ "not measured yet") left, price right
-    const usRef = r.refText ? `${r.refText}${r.unit ? " " + r.unit : ""}` : r.unit || "";
-    const siRef = r.siRefText ? `${r.siRefText}${r.siUnit ? " " + r.siUnit : ""}` : r.siUnit || "";
     const price =
       r.scheduled && r.price != null
         ? `<span class="meta-price"><span class="mprice">€${esc(r.price)}</span></span>`
@@ -932,7 +1220,9 @@ export class LabMatrix extends HTMLElement {
     )}" data-si="${esc(siRef)}">${esc(usRef)}</span>${planned}</span>${price}</span>`;
 
     return (
-      `<td class="marker-col${showSym ? " has-sym" : ""}"><div class="marker-scroll">` +
+      `<td class="marker-col${showSym ? " has-sym" : ""}"${
+        this.tapCell && r.provenance ? ` tabindex="0"` : ""
+      }><div class="marker-scroll">` +
       `${nameBadges}<span class="analyte-name"${biAttr(name, nameRu)}>${esc(name)}</span>` +
       symLoinc +
       meta +
@@ -949,11 +1239,12 @@ export class LabMatrix extends HTMLElement {
     // button AND its adjacent hidden `.index-pop` so they stay siblings (the click
     // handler reads idxInfo.parentNode's `.index-pop`). No leading space — the gap
     // before the name comes from CSS `.marker-col .info-badge { margin: 0 0.35em 0 0 }`.
-    const info = hasProv
-      ? `<button type="button" class="info-badge" data-index-info aria-label="What ${esc(
+    const infoBtn = this.tapCell
+      ? ""
+      : `<button type="button" class="info-badge" data-index-info aria-label="What ${esc(
           ix.name,
-        )} means and its sources"><svg class="info-ico" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="4.4" r="1.05" fill="currentColor"/><rect x="7.05" y="6.6" width="1.9" height="5.3" rx="0.95" fill="currentColor"/></svg></button>${this.indexPopup(ix, t)}`
-      : "";
+        )} means and its sources"><svg class="info-ico" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="4.4" r="1.05" fill="currentColor"/><rect x="7.05" y="6.6" width="1.9" height="5.3" rx="0.95" fill="currentColor"/></svg></button>`;
+    const info = hasProv ? `${infoBtn}${this.indexPopup(ix, t)}` : "";
     // COMPACT view: like markerCell, hide the long `.analyte-name` and show the
     // short `.idx-name-compact` instead. `has-sym` drives the same hide rule the
     // analyte rows use; the compact span is rendered only when nameCompact exists
@@ -963,7 +1254,9 @@ export class LabMatrix extends HTMLElement {
       ? `<span class="idx-name-compact">${esc(ix.nameCompact!)}</span>`
       : "";
     const marker =
-      `<td class="marker-col${hasCompact ? " has-sym" : ""}"><div class="marker-scroll">${info}<span class="analyte-name"${biAttr(ix.name, ix.nameRu)}>${esc(
+      `<td class="marker-col${hasCompact ? " has-sym" : ""}"${
+        this.tapCell && hasProv ? ` tabindex="0"` : ""
+      }><div class="marker-scroll">${info}<span class="analyte-name"${biAttr(ix.name, ix.nameRu)}>${esc(
         ix.name,
       )}</span>${compactName}<span class="meta muted">${esc(ix.greenRange ?? ix.formula)}${
         ix.hasData ? "" : ` · <span class="idx-plan"${t.attr("meta.planned")}>planned</span>`
@@ -980,7 +1273,7 @@ export class LabMatrix extends HTMLElement {
   }
 
   /** The hidden `.analyte-pop` reference-range provenance block (njk `analytePopup`). */
-  private analytePopup(p: LabProvenance, t: I18n): string {
+  private analytePopup(p: LabProvenance, t: I18n, usRef: string, siRef: string): string {
     const short =
       p.shortName && p.shortName !== p.displayName ? ` <span class="ap-short">${esc(p.shortName)}</span>` : "";
 
@@ -1003,33 +1296,55 @@ export class LabMatrix extends HTMLElement {
     // Reference-range section — personal / catalog / uncited variants
     const badge = (lvl: string): string =>
       lvl ? ` <span class="ap-badge ap-lvl-${esc(lvl)}"${t.attr("badge." + lvl)}>${esc(lvl)}</span>` : "";
-    let range = "";
+    // Ranges follow the US/SI toggle via the same data-us/data-si channel as the
+    // row's reference line, so the card can never disagree with the table it
+    // explains (it used to be a frozen US string while the row already read SI).
+    // Deliberately a DIFFERENT class from the row's `.unit-ref`: that class means
+    // "the reference line of this row" (tests/e2e take the first `.unit-ref` in the
+    // shadow root), and the popup markup is emitted BEFORE the row's meta — reusing
+    // it would silently hijack that lookup. applyUnits() swaps both classes.
+    // data-si falls back to the US text: applyUnits writes `getAttribute(..) || ""`,
+    // so an empty data-si would blank the range for analytes with no molar form.
+    const unitRef = (us: string, si?: string | null): string =>
+      `<span class="unit-pop-ref" data-us="${esc(us)}" data-si="${esc(si || us)}">${esc(us)}</span>`;
+    // The range SHE IS JUDGED AGAINST — the number, and the prose that qualifies it.
+    // Nothing else: the evidence badge, the catalog default and the "where did this
+    // range come from" tags are source material, and they move to `prov` (the
+    // collapsed technical layer) so the patient layer stays three items deep.
+    const shownRef = unitRef(usRef || p.shownRange, siRef || usRef || p.shownRange);
+    let range = p.hasCatalog && !p.personal
+      ? `<div class="ap-range-line"><span class="ap-lbl"${t.attr(
+          "popup.referenceRange",
+        )}>Reference range</span> <b>${shownRef}</b></div>`
+      : `<div class="ap-range-line"><span class="ap-lbl"${t.attr(
+          "popup.rangeShown",
+        )}>Range shown</span> <b>${shownRef}</b></div>`;
+    if (p.personal && p.personalNote) range += `<div class="ap-note">${esc(p.personalNote)}</div>`;
+    if (!p.personal && p.hasCatalog && p.catalogNote)
+      range += `<div class="ap-note"${biAttr(p.catalogNote, p.catalogNoteRu)}>${esc(p.catalogNote)}</div>`;
+    range = `<div class="ap-sec ap-range">${range}</div>`;
+
+    // Provenance of that range: evidence badge, catalog default, "no curated source"
+    // / "personal, not the catalog default" tags.
+    let prov = "";
     if (p.personal) {
-      range += `<div class="ap-range-line"><span class="ap-lbl"${t.attr(
-        "popup.rangeShown",
-      )}>Range shown</span> <b>${esc(p.shownRange)}</b> <span class="ap-tag ap-tag-personal"${t.attr(
+      prov += `<div class="ap-tag ap-tag-personal"${t.attr(
         "popup.tagPersonal",
-      )}>personal reference range — not the catalog default</span></div>`;
-      if (p.personalNote) range += `<div class="ap-note">${esc(p.personalNote)}</div>`;
+      )}>personal reference range — not the catalog default</div>`;
       if (p.catalogRange)
-        range += `<div class="ap-range-line ap-catdef"><span class="ap-lbl"${t.attr(
+        prov += `<div class="ap-range-line ap-catdef"><span class="ap-lbl"${t.attr(
           "popup.catalogDefault",
-        )}>Catalog default (cited)</span> ${esc(p.catalogRange)}${badge(p.evidenceLevel || "")}</div>`;
+        )}>Catalog default (cited)</span> ${unitRef(p.catalogRange, p.siCatalogRange)}${badge(
+          p.evidenceLevel || "",
+        )}</div>`;
     } else if (p.hasCatalog) {
-      range += `<div class="ap-range-line"><span class="ap-lbl"${t.attr(
-        "popup.referenceRange",
-      )}>Reference range</span> <b>${esc(p.shownRange)}</b>${badge(p.evidenceLevel || "")}</div>`;
-      if (p.catalogNote)
-        range += `<div class="ap-note"${biAttr(p.catalogNote, p.catalogNoteRu)}>${esc(p.catalogNote)}</div>`;
+      if (p.evidenceLevel) prov += `<div class="ap-evidence">${badge(p.evidenceLevel)}</div>`;
     } else {
-      range += `<div class="ap-range-line"><span class="ap-lbl"${t.attr(
-        "popup.rangeShown",
-      )}>Range shown</span> <b>${esc(p.shownRange)}</b></div>`;
-      range += `<div class="ap-tag ap-tag-nosrc"${t.attr(
+      prov += `<div class="ap-tag ap-tag-nosrc"${t.attr(
         "popup.tagNoSource",
       )}>lab-reported range; no curated source yet</div>`;
     }
-    range = `<div class="ap-sec ap-range">${range}</div>`;
+    prov = prov ? `<div class="ap-sec ap-prov">${prov}</div>` : "";
 
     // Sources / catalog-citations
     let refs = "";
@@ -1071,15 +1386,39 @@ export class LabMatrix extends HTMLElement {
         )}</span></div>`
       : "";
 
+    // ORDER IS THE POINT. This card is now the ONLY place a cryptic row like "TC"
+    // explains itself, and its reader is a patient, not a curator. So the first
+    // screenful — no scrolling, 390×844 at root 20px — is exactly what she came for:
+    //
+    //   1. the full name (what am I looking at)   2. Why (what is it for)
+    //   3. the reference range (am I inside it)
+    //
+    // Everything below that line is source material — LOINC codes, the evidence
+    // badge, verbatim English citations, the draw note — and it used to LEAD the
+    // card, pushing "Why" under the fold. It now sits behind one plain disclosure.
+    // (The quotes stay verbatim in their own language: a quotation that is
+    // translated is no longer a quotation.)
     return (
       `<div class="analyte-pop" hidden><div class="ap-root">` +
       `<strong${biAttr(p.displayName, p.displayNameRu)}>${esc(p.displayName)}</strong>${short}` +
-      loincs +
-      range +
-      refs +
       why +
-      draw +
+      range +
+      this.apMore(t, loincs + prov + refs + draw) +
       `</div></div>`
+    );
+  }
+
+  /**
+   * The collapsed technical layer shared by both cards. A native <details> — no new
+   * control vocabulary, and (unlike a hidden div) its content stays in `textContent`,
+   * so the popup remains inspectable/searchable while closed. Empty in → nothing out.
+   */
+  private apMore(t: I18n, inner: string): string {
+    if (!inner) return "";
+    return (
+      `<details class="ap-more"><summary class="ap-more-sum"${t.attr("popup.more")}>${esc(
+        t.text("popup.more", false),
+      )}</summary><div class="ap-more-body">${inner}</div></details>`
     );
   }
 
@@ -1140,14 +1479,31 @@ export class LabMatrix extends HTMLElement {
       refs = `<div class="ap-sec ap-refs">${label}${items}</div>`;
     }
 
+    // The index row shows only a cryptic stub ("HOMA-IR", "AIP"), so its card carries
+    // the same patient-first order as analytePopup: full name (with the stub beside
+    // it, so the row and the card visibly refer to each other), what it is, the green
+    // range it is judged against, how to read it. Formula / LOINC / citations / the
+    // evidence badge are source material and go behind the disclosure.
+    // The row's stub, echoed beside the full name so the row and the card visibly
+    // refer to each other — but only when it ADDS something. "Индекс TyG · TyG" is
+    // noise; "Коэффициент атерогенности · КА" is the bridge she needs (mirrors the
+    // shortName !== displayName guard in analytePopup).
+    const stub = ix.nameCompact ?? "";
+    const echoed = !stub || ix.name.includes(stub) || (ix.nameRu ?? "").includes(stub);
+    const short = echoed ? "" : ` <span class="ap-short">${esc(stub)}</span>`;
+    const green = ix.greenRange
+      ? `<div class="ap-sec ap-range"><div class="ap-range-line"><span class="ap-lbl"${t.attr(
+          "popup.referenceRange",
+        )}>Reference range</span> <b>${esc(ix.greenRange)}</b></div></div>`
+      : "";
+    const evidence = ix.evidenceLevel ? `<div class="ap-evidence">${badge(ix.evidenceLevel)}</div>` : "";
     return (
       `<div class="index-pop" hidden><div class="ap-root">` +
-      `<strong${biAttr(ix.name, ix.nameRu)}>${esc(ix.name)}</strong>${badge(ix.evidenceLevel)}` +
-      formula +
+      `<strong${biAttr(ix.name, ix.nameRu)}>${esc(ix.name)}</strong>${short}` +
       meaning +
+      green +
       consensus +
-      loinc +
-      refs +
+      this.apMore(t, evidence + formula + loinc + refs) +
       `</div></div>`
     );
   }

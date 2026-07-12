@@ -139,3 +139,25 @@ export function molarToMass(
   const gramsPerL = molPerL * molarMassGPerMol;
   return (gramsPerL * m.volumeL) / m.prefix;
 }
+
+/**
+ * Rescale a concentration between two units of the SAME base (g→g or mol→mol):
+ * a pure prefix/volume change, no molar mass involved — e.g. g/dL → g/L (×10),
+ * mg/dL → µg/dL. Null when either unit is unparseable or the bases differ (use
+ * {@link massToMolar} / {@link molarToMass} for those).
+ *
+ * Needed because a derived analyte's reference range is stated once, in the unit
+ * the catalog cites it in, and must then be expressed in whatever unit the source
+ * report speaks (see `derived.ts`).
+ */
+export function rescaleConc(
+  value: number,
+  fromUnit: string | null | undefined,
+  toUnit: string | null | undefined,
+): number | null {
+  const f = parseConcUnit(fromUnit);
+  const t = parseConcUnit(toUnit);
+  if (!f || !t || f.base !== t.base) return null;
+  const perL = (value * f.prefix) / f.volumeL;
+  return (perL * t.volumeL) / t.prefix;
+}
