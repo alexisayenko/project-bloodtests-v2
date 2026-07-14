@@ -134,20 +134,53 @@
         "url": "https://mml.testcatalog.org/show/ALP",
         "doi": null,
         "quote": "≥19 years: 40-129 U/L. Reference values apply to adults."
+      },
+      {
+        "organization": "American College of Gastroenterology",
+        "document": "ACG Clinical Guideline: Evaluation of Abnormal Liver Chemistries (Kwo PY, Cohen SM, Lim JK; Am J Gastroenterol 2017;112:18-35)",
+        "year": 2017,
+        "url": "https://pubmed.ncbi.nlm.nih.gov/27995906/",
+        "doi": "10.1038/ajg.2016.517",
+        "quote": "To confirm hepatic origin of alkaline phosphatase, the canalicular enzyme GGT may be measured. An elevated GGT suggests that the alkaline phosphatase elevation is of hepatic origin. Alkaline phosphatase may also be fractionated to better delineate bone, intestinal or hepatic origin of an elevated alkaline phosphatase. [Recommendation 13, strong recommendation, very low level of evidence.] However, GGT elevation is not specific for cholestatic liver disease... In children and the elderly, alkaline phosphatase levels increase, especially females over 50 years of age, in part due to bone turnover."
+      },
+      {
+        "organization": "British Journal of Clinical Pharmacology (Simental-Mendia M, Sanchez-Garcia A, Simental-Mendia LE)",
+        "document": "Effect of ursodeoxycholic acid on liver markers: A systematic review and meta-analysis of randomized placebo-controlled clinical trials (22 trials, 2159 subjects)",
+        "year": 2020,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7373700/",
+        "doi": "10.1111/bcp.14311",
+        "quote": "Ursodeoxycholic acid significantly reduced alkaline phosphatase (WMD -93.80 U/L, 95% CI -126.36 to -61.25, p<0.0001) and gamma-glutamyl transferase (WMD -23.29 U/L, 95% CI -33.97 to -12.61, p<0.0001). [Heterogeneity was high (I2 95-97%); effect sizes are dominated by cholestatic-disease populations.]"
       }
     ],
     "labPrintedRef": "35-130 U/L",
-    "why": "Marker of cholestasis/biliary obstruction (and bone turnover). Disproportionate ALP elevation suggests infiltrative or obstructive hepatobiliary disease; paired with GGT to separate hepatic from bony origin.",
+    "why": "ALP is a TOTAL, not a single enzyme: the blood number sums a BONE isoenzyme (released by osteoblasts as bone remodels) and a HEPATOBILIARY one (liver and bile ducts). By itself it cannot say which source is raised — which is why a high ALP is not, on its own, a statement about your bones. GGT is the standard discriminator: it rises with hepatobiliary causes and is essentially absent from bone. So high ALP + NORMAL GGT points to bone; high ALP + HIGH GGT points to liver/bile (ACG 2017, strong recommendation). Read it as a strong pointer, not a rule: a normal GGT does not exclude a hepatic source, and GGT is itself non-specific (alcohol, enzyme-inducing drugs, pancreatic and other disease all raise it). The bone-specific fraction (BALP) is the separate test that settles the question when it really matters.",
     "frequency": null,
     "panel": "Liver & proteins",
     "unreliableAssay": false,
     "lang": {
       "ru": {
         "displayName": "Щелочная фосфатаза",
-        "why": "Маркёр холестаза/обструкции желчевыводящих путей (и костного метаболизма). Непропорциональное повышение ЩФ указывает на инфильтративное или обструктивное гепатобилиарное заболевание; в паре с ГГТ разграничивает печёночное и костное происхождение.",
-        "note": "Взрослый интервал Mayo Clinic Laboratories (≥19 лет: 40-129 U/L); Mayo не разделяет взрослый диапазон по полу. ЩФ повышается при холестазе и заболеваниях костей; для локализации источника сопоставляйте с ГГТ."
+        "why": "Щелочная фосфатаза (ЩФ) — это не один фермент, а СУММА двух. Один вырабатывает кость, когда она перестраивается; другой — печень и желчные пути. В анализе они складываются в одно число, и само по себе оно не говорит, откуда взялось повышение. Поэтому высокая ЩФ сама по себе — ещё не разговор о костях.\n\nРазличить помогает ГГТ. Этот фермент повышается при неполадках в печени и желчных путях и практически не повышается при костных причинах. Отсюда правило: ЩФ повышена, а ГГТ в норме — думаем про кость; ЩФ повышена и ГГТ тоже повышена — думаем про печень и желчные пути [консенсус: рекомендация Американской коллегии гастроэнтерологов, 2017].\n\nПравило рабочее, но не абсолютное. Нормальная ГГТ не исключает печень полностью, а повышенная ГГТ бывает не только от печени (алкоголь, некоторые лекарства, поджелудочная и другое). Если ответ принципиально важен, есть отдельный анализ — КОСТНАЯ щелочная фосфатаза (КЩФ): она измеряет только костную долю. Это уточняющий тест, а не обязательный.",
+        "note": "Взрослый интервал Mayo Clinic Laboratories (≥19 лет: 40-129 U/L); Mayo не разделяет взрослый диапазон по полу. ЩФ повышается и при холестазе, и при заболеваниях костей; для локализации источника сопоставляйте с ГГТ, а при необходимости — с костной фракцией (КЩФ). У женщин после 50 лет ЩФ физиологически выше из-за ускоренного костного обмена."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "udca",
+        "direction": "down",
+        "strength": "consensus",
+        "note": "Ursodeoxycholic acid LOWERS alkaline phosphatase. This matters here because ALP is read together with GGT to tell a bone source from a liver/bile one — and UDCA pushes BOTH numbers down, so the pair is less informative than usual while the drug is being taken. (The effect is best documented in cholestatic liver disease; in people taking UDCA for gallstones with near-normal enzymes it is less well established.)",
+        "noteRu": "Урсодезоксихолевая кислота (УДХК) СНИЖАЕТ щелочную фосфатазу. Это важно: ЩФ читают в паре с ГГТ, чтобы отличить костную причину от печёночно-желчной, — а УДХК снижает ОБА показателя сразу, поэтому на фоне её приёма эта пара говорит меньше, чем обычно. (Эффект лучше всего доказан при холестатических болезнях печени; у тех, кто принимает УДХК при желчнокаменной болезни с почти нормальными ферментами, он показан хуже.)",
+        "source": {
+          "organization": "British Journal of Clinical Pharmacology (Simental-Mendia M, Sanchez-Garcia A, Simental-Mendia LE)",
+          "document": "Effect of ursodeoxycholic acid on liver markers: a systematic review and meta-analysis of randomized placebo-controlled clinical trials (22 trials, 2159 subjects)",
+          "year": 2020,
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7373700/",
+          "doi": "10.1111/bcp.14311",
+          "quote": "Alkaline phosphatase WMD -93.80 U/L (95% CI -126.36, -61.25; p<0.0001); gamma-glutamyl transferase WMD -23.29 U/L (95% CI -33.97, -12.61; p<0.0001); ALT -15.28 U/L; AST -16.13 U/L; bilirubin -0.18 mg/dL (p=0.04). [Heterogeneity high (I2 95-97%); effects dominated by cholestatic-disease populations.]"
+        }
+      }
+    ]
   },
   "ALT": {
     "key": "ALT",
@@ -199,18 +232,55 @@
         "why": "Наиболее печёночноспецифичная аминотрансфераза; чувствительный маркёр повреждения гепатоцитов (вирусный/стеатозный/лекарственный гепатит). Повышение часто предшествует клиническим признакам.",
         "note": "Интервал Mayo Clinic Laboratories (мужчины ≥6 лет: 7-55 U/L; женщины ≥6 лет: 7-45 U/L). Примечание: AASLD/ACG рекомендуют более низкий «здоровый» верхний предел нормы ~29-33 U/L для мужчин при скрининге хронического заболевания печени; обычный печатаемый лабораторный ВГН (<41) выше."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "udca",
+        "direction": "down",
+        "strength": "consensus",
+        "note": "Ursodeoxycholic acid lowers ALT (pooled -15 U/L across randomized trials).",
+        "noteRu": "Урсодезоксихолевая кислота снижает АЛТ (в среднем на 15 Ед/л по данным рандомизированных исследований).",
+        "source": {
+          "organization": "British Journal of Clinical Pharmacology (Simental-Mendia M, Sanchez-Garcia A, Simental-Mendia LE)",
+          "document": "Effect of ursodeoxycholic acid on liver markers: a systematic review and meta-analysis of randomized placebo-controlled clinical trials (22 trials, 2159 subjects)",
+          "year": 2020,
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7373700/",
+          "doi": "10.1111/bcp.14311",
+          "quote": "Alkaline phosphatase WMD -93.80 U/L (95% CI -126.36, -61.25; p<0.0001); gamma-glutamyl transferase WMD -23.29 U/L (95% CI -33.97, -12.61; p<0.0001); ALT -15.28 U/L; AST -16.13 U/L; bilirubin -0.18 mg/dL (p=0.04). [Heterogeneity high (I2 95-97%); effects dominated by cholestatic-disease populations.]"
+        }
+      },
+      {
+        "drugClass": "statin",
+        "direction": "up",
+        "strength": "consensus",
+        "note": "Statins commonly cause a mild, transient rise in liver enzymes (up to ~3% of people; a rise past 3x the upper limit in about 1%). A small elevation on its own is expected and usually does not mean liver damage — it is the large, persistent rise that matters.",
+        "noteRu": "Статины часто дают лёгкое и временное повышение печёночных ферментов (примерно у 3% людей; выше трёх норм — примерно у 1%). Небольшое повышение само по себе ожидаемо и обычно не означает повреждения печени — значение имеет только выраженный и стойкий подъём.",
+        "source": {
+          "organization": "NIH / NIDDK — LiverTox",
+          "document": "LiverTox: Clinical and Research Information on Drug-Induced Liver Injury — Statins",
+          "year": 2020,
+          "url": "https://www.ncbi.nlm.nih.gov/books/NBK548067/",
+          "doi": null,
+          "quote": "All 7 statins have been associated with mild-to-moderate serum aminotransferase elevations during therapy that are typically transient, asymptomatic and may resolve even with continuation without dose adjustment... elevations in serum enzymes occur in up to 3% of patients... Serious hepatotoxicity is rare and unpredictable, with a rate of about 1 case per million person-years of use."
+        }
+      }
+    ]
   },
   "AMY": {
     "key": "AMY",
-    "shortName": null,
+    "shortName": "AMY",
     "displayName": "Amylase",
+    "aliases": [
+      "Amylase",
+      "Амилаза",
+      "Alpha-amylase"
+    ],
     "loincComponent": "Amylase",
     "loincs": [
       {
         "code": "1798-8",
         "longName": "Amylase [Enzymatic activity/volume] in Serum or Plasma",
-        "property": "ACnc",
+        "property": "CCnc",
         "unit": "U/L",
         "system": "Ser/Plas"
       }
@@ -240,7 +310,7 @@
     "labPrintedRef": "28-120 U/L",
     "why": "Pancreatic/salivary hydrolase; elevated in acute pancreatitis and pancreatic/salivary duct disease. Included with liver-panel enzymes to cover pancreatobiliary causes of abdominal pain (lipase is more specific).",
     "frequency": null,
-    "panel": "Liver & proteins",
+    "panel": "Pancreas",
     "unreliableAssay": false,
     "lang": {
       "ru": {
@@ -300,7 +370,39 @@
         "why": "Маркёр повреждения гепатоцитов; высвобождается из повреждённых клеток печени (а также сердечной/скелетной мышцы). Интерпретируется вместе с АЛТ (соотношение АСТ:АЛТ) для различения алкогольного и других поражений печени.",
         "note": "Взрослый мужской интервал Mayo Clinic Laboratories (мужчины ≥14 лет: 8-48 U/L; женщины ≥14 лет: 8-43 U/L). Примечание: AASLD/ACG приводят более низкий «здоровый/истинно нормальный» верхний предел ~29-33 U/L для мужчин для выявления НАЖБП/хронического заболевания печени; обычные лабораторные ВГН (например, печатаемый <40) выше."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "udca",
+        "direction": "down",
+        "strength": "consensus",
+        "note": "Ursodeoxycholic acid lowers AST (pooled -16 U/L across randomized trials).",
+        "noteRu": "Урсодезоксихолевая кислота снижает АСТ (в среднем на 16 Ед/л по данным рандомизированных исследований).",
+        "source": {
+          "organization": "British Journal of Clinical Pharmacology (Simental-Mendia M, Sanchez-Garcia A, Simental-Mendia LE)",
+          "document": "Effect of ursodeoxycholic acid on liver markers: a systematic review and meta-analysis of randomized placebo-controlled clinical trials (22 trials, 2159 subjects)",
+          "year": 2020,
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7373700/",
+          "doi": "10.1111/bcp.14311",
+          "quote": "Alkaline phosphatase WMD -93.80 U/L (95% CI -126.36, -61.25; p<0.0001); gamma-glutamyl transferase WMD -23.29 U/L (95% CI -33.97, -12.61; p<0.0001); ALT -15.28 U/L; AST -16.13 U/L; bilirubin -0.18 mg/dL (p=0.04). [Heterogeneity high (I2 95-97%); effects dominated by cholestatic-disease populations.]"
+        }
+      },
+      {
+        "drugClass": "statin",
+        "direction": "up",
+        "strength": "consensus",
+        "note": "Statins commonly cause a mild, transient rise in liver enzymes. A small elevation is expected and usually not a sign of liver damage.",
+        "noteRu": "Статины часто дают лёгкое и временное повышение печёночных ферментов. Небольшой подъём ожидаем и обычно не говорит о повреждении печени.",
+        "source": {
+          "organization": "NIH / NIDDK — LiverTox",
+          "document": "LiverTox: Clinical and Research Information on Drug-Induced Liver Injury — Statins",
+          "year": 2020,
+          "url": "https://www.ncbi.nlm.nih.gov/books/NBK548067/",
+          "doi": null,
+          "quote": "All 7 statins have been associated with mild-to-moderate serum aminotransferase elevations during therapy that are typically transient, asymptomatic and may resolve even with continuation without dose adjustment... elevations in serum enzymes occur in up to 3% of patients... Serious hepatotoxicity is rare and unpredictable, with a rate of about 1 case per million person-years of use."
+        }
+      }
+    ]
   },
   "B12": {
     "key": "B12",
@@ -534,17 +636,34 @@
       }
     ],
     "labPrintedRef": "8.40-10.20 mg/dL",
-    "why": "Total serum calcium (protein-bound + ionized) reflects skeletal and mineral homeostasis under PTH and vitamin D; abnormalities point to parathyroid disease, malignancy, vitamin D disorders and CKD.",
+    "why": "Total serum calcium (protein-bound + ionized) reflects skeletal and mineral homeostasis under PTH and vitamin D; abnormalities point to parathyroid disease, malignancy, vitamin D disorders and CKD. Read it with albumin (use corrected calcium) and with PTH — never alone.",
     "frequency": null,
     "panel": "Kidney, electrolytes & minerals",
     "unreliableAssay": false,
     "lang": {
       "ru": {
         "displayName": "Кальций",
-        "why": "Общий кальций сыворотки (связанный с белком + ионизированный) отражает скелетный и минеральный гомеостаз под действием ПТГ и витамина D; отклонения указывают на заболевания паращитовидных желёз, злокачественные опухоли, нарушения обмена витамина D и ХБП.",
+        "why": "Общий кальций крови (связанный с белком + ионизированный) отражает состояние костно-минерального обмена, которым управляют паратгормон (ПТГ) и витамин D. Отклонения бывают при болезнях паращитовидных желёз, опухолях, нарушениях обмена витамина D и болезнях почек. Оценивать его в одиночку нельзя — только вместе с альбумином (скорректированный кальций) и ПТГ.",
         "note": "Общий кальций как элементарная масса (mg/dL); 1 mg/dL Ca = 0.2495 mmol/L. Широко используемый взрослый референс 8.6-10.2 mg/dL; интерпретировать с учётом альбумина (коррекция +0.8 mg/dL на каждый 1 g/dL альбумина ниже 4.0) или измерять ионизированный кальций. Напечатанный лабораторией пациента 8.40-10.20 немного шире по нижней границе."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "thiazide",
+        "direction": "up",
+        "strength": "consensus",
+        "note": "Thiazide diuretics reduce urinary calcium excretion and raise serum calcium. Do NOT write a high calcium off as 'just the diuretic': the elevation is usually mild, but 64-71% of cases persist after the drug is stopped and about 1 in 4 turn out to have genuine primary hyperparathyroidism — the thiazide unmasks the problem rather than creating it. The right move is to discuss stopping the drug and re-testing calcium together with PTH.",
+        "noteRu": "Тиазидные мочегонные задерживают кальций в организме и повышают его уровень в крови. Но списывать высокий кальций на «это от мочегонного» — НЕЛЬЗЯ: повышение обычно небольшое, однако у 64-71% людей кальций остаётся высоким и ПОСЛЕ отмены препарата, а примерно у каждого четвёртого находят настоящий первичный гиперпаратиреоз. То есть тиазид не создаёт проблему, а ПРОЯВЛЯЕТ уже имеющуюся. Правильный шаг — обсудить с врачом отмену мочегонного и пересдать кальций вместе с паратгормоном (ПТГ).",
+        "source": {
+          "organization": "Journal of Clinical Endocrinology & Metabolism (Griebeler ML et al.) / American Journal of Medicine (Wermers RA et al.)",
+          "document": "Thiazide-Associated Hypercalcemia: Incidence and Association With Primary Hyperparathyroidism Over Two Decades (JCEM 2016;101:1166-73, PMID 26751196); Incidence and Clinical Spectrum of Thiazide-associated Hypercalcemia (Am J Med 2007;120:911.e9, PMID 17904464)",
+          "year": 2016,
+          "url": "https://pubmed.ncbi.nlm.nih.gov/26751196/",
+          "doi": "10.1210/jc.2015-3964",
+          "quote": "Of patients discontinuing thiazides, 71% continued to have hypercalcemia. Primary hyperparathyroidism was diagnosed in 53 patients (24%)... Conclusions: Many patients with thiazide-associated hypercalcemia have underlying primary hyperparathyroidism. [Wermers 2007: mean highest serum calcium 10.7 +/- 0.3 mg/dL; of 33 who stopped the thiazide, 21 (64%) had persistent hypercalcemia.]"
+        }
+      }
+    ]
   },
   "Calcitonin": {
     "key": "Calcitonin",
@@ -778,7 +897,24 @@
         "why": "Продукт мышечного метаболизма, фильтруемый клубочками и минимально реабсорбируемый; основной эндогенный маркёр СКФ и основа для расчёта рСКФ.",
         "note": "Половоспецифичный; верхний предел у мужчин выше, чем у женщин, из-за большей мышечной массы. Mayo мужчины >=15 лет 0.74-1.35 mg/dL. Напечатанный лабораторией пациента верхний предел (1.40) немного шире."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "arb",
+        "direction": "up",
+        "strength": "consensus",
+        "note": "An ARB (sartan) can cause a small rise in creatinine (and a matching dip in eGFR). This is usually a functional, expected change in how the kidney filters — not kidney injury — and it is more likely if kidney function is already reduced. A diuretic taken alongside adds to it.",
+        "noteRu": "Сартан (БРА) может немного повысить креатинин (и соответственно немного снизить СКФ). Обычно это ожидаемое функциональное изменение работы почечного фильтра, а не повреждение почек; более вероятно, если функция почек уже снижена. Мочегонное рядом усиливает этот эффект.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed",
+          "document": "DIOVAN HCT (valsartan and hydrochlorothiazide) — Prescribing Information",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d76a0419-05ee-437e-884c-65807aea9569",
+          "doi": null,
+          "quote": "In the controlled trials of various doses of Diovan HCT, the incidence of hypertensive patients who developed hypokalemia (serum potassium < 3.5 mEq/L) was 3.0%; the incidence of hyperkalemia (serum potassium > 5.7 mEq/L) was 0.4%. ... Changes in renal function including acute renal failure can be caused by drugs that inhibit the renin-angiotensin system and by diuretics."
+        }
+      }
+    ]
   },
   "CRP": {
     "key": "CRP",
@@ -1549,7 +1685,24 @@
         "why": "Фолат необходим для синтеза ДНК и кроветворения; дефицит вызывает макроцитарную (мегалобластную) анемию. Измеряется вместе с B12, поскольку два дефицита перекрываются и назначение одного фолата может маскировать дефицит B12, пока прогрессирует его нейропатия.",
         "note": "Сывороточный фолат; эквивалент СИ ~4.5-45.3 nmol/L (x2.266). Сывороточный фолат отражает недавнее поступление и является ненадёжным показателем тканевых запасов; биохимический дефицит — <3 ng/mL (<6.7 nmol/L). После введения в США обогащения продуктов фолиевой кислотой предложены более высокие взрослые референсные значения (5.8-32.8 ng/mL). Фолат эритроцитов лучше отражает запасы в организме."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "folate-supplement",
+        "direction": "up",
+        "strength": "consensus",
+        "note": "A folic-acid supplement raises SERUM folate quickly, because serum folate tracks what you ate recently — so a normal folate measured while taking it, or in the couple of weeks after, can HIDE depleted stores. Red-cell (RBC) folate is the marker a recent dose does not fool. The more serious trap runs the other way: folic acid corrects the ANAEMIA of a vitamin-B12 deficiency while doing nothing for the nerve damage, so it can mask a B12 deficiency and let the neuropathy progress undiagnosed. That hazard is exactly what the 1000 µg/day upper limit for folic acid is built on — and it is why B12 must be read alongside folate, never after it.",
+        "noteRu": "Добавка с фолиевой кислотой быстро повышает уровень фолата В СЫВОРОТКЕ, потому что сывороточный фолат отражает то, что вы съели недавно, — поэтому нормальный результат на фоне приёма (или в ближайшие пару недель после) может СКРЫТЬ истощённые запасы. Показатель, который недавним приёмом не обмануть, — фолат в эритроцитах (RBC-фолат). Но серьёзнее другая ловушка: фолиевая кислота исправляет АНЕМИЮ при дефиците витамина B12, никак не влияя на поражение нервов. То есть она способна замаскировать дефицит B12 и дать нейропатии прогрессировать незамеченной. Именно на этом риске построен верхний допустимый уровень потребления фолиевой кислоты — 1000 мкг в сутки. И именно поэтому B12 смотрят вместе с фолатом, а не после него.",
+        "source": {
+          "organization": "EFSA Panel on Nutrition, Novel Foods and Food Allergens (NDA) — European Food Safety Authority",
+          "document": "Scientific opinion on the tolerable upper intake level for folate. EFSA Journal 2023;21(11):e08353",
+          "year": 2023,
+          "url": "https://efsa.onlinelibrary.wiley.com/doi/10.2903/j.efsa.2023.8353",
+          "doi": "10.2903/j.efsa.2023.8353",
+          "quote": "The risk of progression of neurological symptoms in cobalamin-deficient patients is considered as the critical effect to establish an UL for folic acid. ... 'masking' PA, due to the correction of the anaemia by 'high' folic acid, as the critical health concern regarding 'high' folic acid intake, because of the risk that neuropathy would progress undiagnosed"
+        }
+      }
+    ]
   },
   "FSH": {
     "key": "FSH",
@@ -1731,7 +1884,24 @@
         "why": "Свободный биологически активный гормон щитовидной железы; помогает охарактеризовать гипертиреоз (например, T3-токсикоз) и состояния низкого T3; добавляет детали помимо ТТГ/свободного T4.",
         "note": "Взрослый интервал Mayo Clinic Laboratories T3FR. FT3 также сообщается в молярной форме pmol/L (примерно 3.1-6.8 pmol/L) с использованием молярной массы трийодтиронина."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "biotin-highdose",
+        "direction": "unreliable",
+        "strength": "consensus",
+        "note": "High-dose biotin (5 mg and up — hair/skin/nail supplements and B-complex megadoses, NOT an ordinary multivitamin) interferes with the immunoassay itself: free T3 can read FALSELY HIGH. The classic pattern is a falsely low TSH with falsely high free T4/T3, which imitates an overactive thyroid that is not there. Stop the biotin at least 8 hours (sometimes up to 72) before the blood draw.",
+        "noteRu": "Биотин в высоких дозах (от 5 мг — добавки «для волос, кожи и ногтей» и мегадозы витаминов группы B, но НЕ обычные поливитамины) искажает сам метод анализа: свободный Т3 может оказаться ЛОЖНО ВЫСОКИМ. Классическая картина — ложно низкий ТТГ и ложно высокие свободные Т4/Т3, что имитирует несуществующий тиреотоксикоз. Биотин надо отменить минимум за 8 часов до сдачи крови (иногда требуется до 72 часов).",
+        "source": {
+          "organization": "ADLM (formerly AACC) — Academy Guidance",
+          "document": "Biotin Interference in Laboratory Tests",
+          "year": 2024,
+          "url": "https://myadlm.org/science-and-research/academy-guidance/biotin-interference-in-laboratory-tests",
+          "doi": null,
+          "quote": "In sandwich immunoassays [excess biotin causes] falsely low results... In competitive immunoassays, excess biotin causes falsely elevated results. ... Multivitamins (<=1 mg): no reported interference. High-dose supplements (>=5 mg): significant interference. ... Patients who have consumed 5-10 mg biotin wait a minimum of 8 hours [before testing]."
+        }
+      }
+    ]
   },
   "FT4": {
     "key": "FT4",
@@ -1794,7 +1964,24 @@
         "why": "Свободный (не связанный с белком) тироксин; подтверждает и оценивает тиреоидный статус вместе с ТТГ и является ключевым маркёром центрального (гипофизарно-гипоталамического) гипотиреоза, где ТТГ ненадёжен.",
         "note": "Взрослый интервал иммуноанализа Mayo Clinic Laboratories FRT4. FT4 также сообщается в молярной форме pmol/L (примерно 12-22 pmol/L) с использованием молярной массы тироксина."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "biotin-highdose",
+        "direction": "unreliable",
+        "strength": "consensus",
+        "note": "High-dose biotin (5 mg and up — hair/skin/nail supplements and B-complex megadoses, NOT an ordinary multivitamin) interferes with the immunoassay itself: free T4 can read FALSELY HIGH. The classic pattern is a falsely low TSH with falsely high free T4/T3, which imitates an overactive thyroid that is not there. Stop the biotin at least 8 hours (sometimes up to 72) before the blood draw.",
+        "noteRu": "Биотин в высоких дозах (от 5 мг — добавки «для волос, кожи и ногтей» и мегадозы витаминов группы B, но НЕ обычные поливитамины) искажает сам метод анализа: свободный Т4 может оказаться ЛОЖНО ВЫСОКИМ. Классическая картина — ложно низкий ТТГ и ложно высокие свободные Т4/Т3, что имитирует несуществующий тиреотоксикоз. Биотин надо отменить минимум за 8 часов до сдачи крови (иногда требуется до 72 часов).",
+        "source": {
+          "organization": "ADLM (formerly AACC) — Academy Guidance",
+          "document": "Biotin Interference in Laboratory Tests",
+          "year": 2024,
+          "url": "https://myadlm.org/science-and-research/academy-guidance/biotin-interference-in-laboratory-tests",
+          "doi": null,
+          "quote": "In sandwich immunoassays [excess biotin causes] falsely low results... In competitive immunoassays, excess biotin causes falsely elevated results. ... Multivitamins (<=1 mg): no reported interference. High-dose supplements (>=5 mg): significant interference. ... Patients who have consumed 5-10 mg biotin wait a minimum of 8 hours [before testing]."
+        }
+      }
+    ]
   },
   "GGT": {
     "key": "GGT",
@@ -1836,17 +2023,34 @@
       }
     ],
     "labPrintedRef": "8-61 U/L",
-    "why": "Sensitive marker of hepatobiliary disease and cholestasis; used to confirm the hepatic source of an elevated ALP and as a marker of alcohol use / enzyme induction.",
+    "why": "Sensitive marker of hepatobiliary disease and cholestasis; its main job here is to localize a raised ALP — GGT rises with the liver/bile source and is essentially absent from bone, so high ALP + normal GGT points to bone and high ALP + high GGT points to liver/bile (ACG 2017). Sensitive but NOT specific: it is also raised by alcohol, enzyme-inducing drugs (phenytoin, barbiturates), pancreatic disease and more, so a high GGT on its own is not proof of liver disease.",
     "frequency": null,
     "panel": "Liver & proteins",
     "unreliableAssay": false,
     "lang": {
       "ru": {
         "displayName": "Гамма-глутамилтрансфераза",
-        "why": "Чувствительный маркёр гепатобилиарного заболевания и холестаза; используется для подтверждения печёночного источника повышенной ЩФ и как маркёр употребления алкоголя / индукции ферментов.",
+        "why": "ГГТ — чувствительный маркёр состояния печени и желчных путей. Главная его работа здесь — подсказать, откуда взялась повышенная щелочная фосфатаза (ЩФ): ГГТ растёт при печёночно-желчных причинах и практически не растёт при костных. Отсюда: ЩФ повышена, ГГТ в норме — думаем про кость; обе повышены — думаем про печень и желчные пути.\n\nЧувствительный, но НЕ специфичный: ГГТ повышают также алкоголь, некоторые лекарства, болезни поджелудочной и другое. Поэтому сама по себе высокая ГГТ ещё не доказывает болезнь печени.",
         "note": "Интервал Mayo Clinic Laboratories (мужчины ≥16 лет: 8-61 U/L; женщины ≥16 лет: 5-36 U/L). Соответствует напечатанному лабораторией диапазону. ГГТ повышается при холестазе/обструкции желчных путей и подтверждает печёночное (а не костное) происхождение повышенной ЩФ; также индуцируется алкоголем и ферментиндуцирующими препаратами."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "udca",
+        "direction": "down",
+        "strength": "consensus",
+        "note": "Ursodeoxycholic acid LOWERS GGT — proportionally even more than it lowers ALP (on withdrawal GGT rebounds ~118% against ALP's ~76%). Since GGT is the very test used to decide whether a raised ALP came from the liver, a normal GGT while on UDCA is WEAK evidence that the liver is not involved.",
+        "noteRu": "Урсодезоксихолевая кислота (УДХК) СНИЖАЕТ ГГТ — причём даже сильнее, чем щелочную фосфатазу (после отмены ГГТ отскакивает примерно на 118%, а ЩФ — на 76%). А ведь именно по ГГТ судят, из печени ли взялась повышенная ЩФ. Значит, нормальная ГГТ на фоне приёма УДХК — СЛАБЫЙ довод в пользу того, что печень ни при чём.",
+        "source": {
+          "organization": "Hepatology (Wunsch E et al.)",
+          "document": "Prospective evaluation of ursodeoxycholic acid withdrawal in patients with primary sclerosing cholangitis (PMID 24519384)",
+          "year": 2014,
+          "url": "https://pubmed.ncbi.nlm.nih.gov/24519384/",
+          "doi": "10.1002/hep.27074",
+          "quote": "After 3 months of UDCA withdrawal, alkaline phosphatase increased by 75.6% (P<0.0001) and gamma-glutamyl transferase by 117.9% (P<0.0001)."
+        }
+      }
+    ]
   },
   "GLU": {
     "key": "GLU",
@@ -1913,7 +2117,24 @@
         "why": "Основной маркёр гликемического статуса; норма натощак <100 mg/dL, предиабет 100-125, диабет >=126 (ADA).",
         "note": "ADA: нормальная глюкоза плазмы натощак <100 mg/dL; нарушенная гликемия натощак (предиабет) 100-125 mg/dL; диабет >=126 mg/dL (подтверждённый). Лаборатория печатает 74-110."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "thiazide",
+        "direction": "up",
+        "strength": "consensus",
+        "note": "Thiazide diuretics can impair glucose tolerance and raise blood sugar; latent diabetes may become manifest during thiazide therapy.",
+        "noteRu": "Тиазидные мочегонные могут ухудшать усвоение глюкозы и повышать сахар крови; на фоне их приёма может впервые проявиться скрытый диабет.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed",
+          "document": "DIOVAN HCT (valsartan and hydrochlorothiazide) — Prescribing Information, §5.7 & §5.9 Metabolic Disturbances",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d76a0419-05ee-437e-884c-65807aea9569",
+          "doi": null,
+          "quote": "Hydrochlorothiazide decreases urinary calcium excretion and may cause elevations of serum calcium. ... Hydrochlorothiazide may raise the serum uric acid level due to reduced clearance of uric acid and may cause or exacerbate hyperuricemia and precipitate gout in susceptible patients. ... Hydrochlorothiazide can cause hypokalemia and hyponatremia. ... Hydrochlorothiazide may alter glucose tolerance and raise serum levels of cholesterol and triglycerides."
+        }
+      }
+    ]
   },
   "HbA1c": {
     "key": "HbA1c",
@@ -2461,7 +2682,39 @@
         "why": "Доминирующий внутриклеточный катион; небольшие сдвиги в сыворотке критически влияют на возбудимость сердца и нервно-мышечной системы, а уровни отражают почечную экскрецию, кислотно-щелочной статус и альдостерон.",
         "note": "Молярная концентрация (SCnc). Mayo >=1 года 3.6-5.2 mmol/L. Гемолиз и задержка сепарации ложно повышают результаты. Напечатанный лабораторией пациента 3.50-5.30 практически эквивалентен."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "thiazide",
+        "direction": "down",
+        "strength": "consensus",
+        "note": "Thiazide diuretics can lower potassium. The effect is dose-dependent, but it is NOT confined to high doses: at the 12.5-25 mg of hydrochlorothiazide carried by a typical combination tablet, low potassium was still reported in about 3.0% of people in the valsartan/hydrochlorothiazide trials. So a low-normal or low potassium on a combination pill is expected, and worth watching, rather than dismissed as too small a dose to matter.",
+        "noteRu": "Тиазидные мочегонные могут снижать калий. Эффект зависит от дозы, но НЕ ограничивается высокими дозами: при 12,5-25 мг гидрохлортиазида, то есть в обычной комбинированной таблетке от давления, низкий калий всё равно встречался примерно у 3,0% людей в исследованиях комбинации валсартан/гидрохлортиазид. Поэтому низконормальный или низкий калий на комбинированной таблетке — это ожидаемо и заслуживает внимания, а не «доза слишком мала, чтобы влиять».",
+        "source": {
+          "organization": "U.S. FDA / DailyMed",
+          "document": "DIOVAN HCT (valsartan and hydrochlorothiazide) — Prescribing Information, §5.7 & §5.9 Metabolic Disturbances",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d76a0419-05ee-437e-884c-65807aea9569",
+          "doi": null,
+          "quote": "Hydrochlorothiazide decreases urinary calcium excretion and may cause elevations of serum calcium. ... Hydrochlorothiazide may raise the serum uric acid level due to reduced clearance of uric acid and may cause or exacerbate hyperuricemia and precipitate gout in susceptible patients. ... Hydrochlorothiazide can cause hypokalemia and hyponatremia. ... Hydrochlorothiazide may alter glucose tolerance and raise serum levels of cholesterol and triglycerides."
+        }
+      },
+      {
+        "drugClass": "arb",
+        "direction": "up",
+        "strength": "consensus",
+        "note": "An ARB (sartan) tends to RAISE potassium. But if it comes as a combination tablet with a thiazide diuretic — which lowers it — the thiazide usually wins: in trials of the valsartan/hydrochlorothiazide combination, low potassium occurred in 3.0% of people and high potassium in only 0.4%. So on the combination pill, expect potassium to run low-normal rather than high.",
+        "noteRu": "Сартан (БРА) сам по себе ПОВЫШАЕТ калий. Но если он идёт в одной таблетке с тиазидным мочегонным, которое калий СНИЖАЕТ, то обычно побеждает мочегонное: в исследованиях комбинации «валсартан + гидрохлортиазид» низкий калий встречался у 3,0% людей, а высокий — лишь у 0,4%. То есть на комбинированной таблетке калий скорее будет ближе к нижней границе нормы, чем высоким.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed",
+          "document": "DIOVAN HCT (valsartan and hydrochlorothiazide) — Prescribing Information",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d76a0419-05ee-437e-884c-65807aea9569",
+          "doi": null,
+          "quote": "In the controlled trials of various doses of Diovan HCT, the incidence of hypertensive patients who developed hypokalemia (serum potassium < 3.5 mEq/L) was 3.0%; the incidence of hyperkalemia (serum potassium > 5.7 mEq/L) was 0.4%. ... Changes in renal function including acute renal failure can be caused by drugs that inhibit the renin-angiotensin system and by diuretics."
+        }
+      }
+    ]
   },
   "LDL-C": {
     "key": "LDL-C",
@@ -2532,7 +2785,24 @@
         "why": "Основной атерогенный липопротеин и главная мишень липидснижающей терапии. ATP III оптимально <100 mg/dL; обычно рассчитывается (по Фридвальду).",
         "note": "NCEP ATP III: оптимально <100; близко/выше оптимального 100-129; погранично высокий 130-159; высокий 160-189; очень высокий >=190 mg/dL. ACC/AHA 2018 считает, что при риске АССЗ ниже — лучше. Лаборатория печатает <130."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "statin",
+        "direction": "down",
+        "strength": "consensus",
+        "note": "A statin lowers LDL cholesterol — that is what it is for. So a good LDL while on a statin is the drug working, not the problem having gone away: stopping it lets the level climb back, usually within months.",
+        "noteRu": "Статин снижает ЛПНП («плохой» холестерин) — для этого он и нужен. Поэтому хороший ЛПНП на фоне приёма статина означает, что лекарство работает, а не что проблема исчезла: после отмены уровень возвращается обратно, обычно за несколько месяцев.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed",
+          "document": "CRESTOR (rosuvastatin calcium) — Prescribing Information",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=bdea1de6-b9dc-4e73-8e26-3ad6b9e58ae5",
+          "doi": null,
+          "quote": null
+        }
+      }
+    ]
   },
   "LH": {
     "key": "LH",
@@ -2928,7 +3198,24 @@
         "why": "Кофактор сотен ферментов и АТФ-зависимых реакций; гипомагниемия часто сопровождает и поддерживает рефрактерную гипокалиемию и гипокальциемию.",
         "note": "Сообщается как элементарная масса (mg/dL); 1 mg/dL Mg = 0.4114 mmol/L. Часто цитируемый взрослый интервал 1.7-2.3 mg/dL, но международного консенсуса нет, и в лабораториях он варьирует от ~1.6-2.6 mg/dL. Напечатанный лабораторией пациента 1.80-2.60. Сыворотка отражает <1% общего магния организма."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "thiazide",
+        "direction": "down",
+        "strength": "consensus",
+        "note": "Thiazide diuretics increase urinary magnesium loss and can lower serum magnesium. Low magnesium also makes low potassium hard to correct until the magnesium is replaced.",
+        "noteRu": "Тиазидные мочегонные усиливают выведение магния с мочой и могут снижать его уровень в крови. А низкий магний, в свою очередь, мешает поднять калий, пока сам магний не восполнен.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed",
+          "document": "DIOVAN HCT (valsartan and hydrochlorothiazide) — Prescribing Information, §5.7 & §5.9 Metabolic Disturbances",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d76a0419-05ee-437e-884c-65807aea9569",
+          "doi": null,
+          "quote": "Hydrochlorothiazide decreases urinary calcium excretion and may cause elevations of serum calcium. ... Hydrochlorothiazide may raise the serum uric acid level due to reduced clearance of uric acid and may cause or exacerbate hyperuricemia and precipitate gout in susceptible patients. ... Hydrochlorothiazide can cause hypokalemia and hyponatremia. ... Hydrochlorothiazide may alter glucose tolerance and raise serum levels of cholesterol and triglycerides."
+        }
+      }
+    ]
   },
   "MONO#": {
     "key": "MONO#",
@@ -3132,7 +3419,24 @@
         "why": "Главный внеклеточный катион, определяющий осмоляльность плазмы и распределение воды; дизнатриемия отражает водный баланс и обработку АДГ/почками, а не общий натрий организма.",
         "note": "Электролит, сообщаемый как молярная концентрация (SCnc). Mayo >=1 года 135-145 mmol/L. Напечатанный лабораторией пациента верхний предел (148) немного шире."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "thiazide",
+        "direction": "down",
+        "strength": "consensus",
+        "note": "Thiazide diuretics can lower sodium. The risk is highest in exactly this group: about 14% of thiazide-treated outpatients develop hyponatraemia, and being over 70 multiplies the risk fourfold; women are at higher risk than men. It can appear in the first weeks or after years of treatment.",
+        "noteRu": "Тиазидные мочегонные могут снижать натрий. Риск особенно высок как раз у пожилых женщин: примерно у 14% принимающих тиазид уровень натрия падает ниже нормы, а возраст старше 70 лет увеличивает риск в четыре раза. Может проявиться и в первые недели приёма, и спустя годы.",
+        "source": {
+          "organization": "Journal of Geriatric Cardiology (Liamis G, Filippatos TD, Elisaf MS)",
+          "document": "Thiazide-associated hyponatremia in the elderly: what the clinician needs to know",
+          "year": 2016,
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4854958/",
+          "doi": null,
+          "quote": "approximately 14% of 951 thiazide-treated outpatients had hyponatremia (serum sodium concentration < 135 mmol/L) ... age > 70 years was associated with a fourfold increase in hyponatremia risk"
+        }
+      }
+    ]
   },
   "NEUT#": {
     "key": "NEUT#",
@@ -3592,7 +3896,24 @@
         "why": "Главный регулятор кальция и фосфата; основной тест для различения ПТГ-зависимых (первичный/вторичный гиперпаратиреоз) и ПТГ-независимых причин нарушений кальция и для мониторинга МКН-ХБП.",
         "note": "Референсный интервал иммуноанализа интактного (2-го/3-го поколения) ПТГ 15-65 pg/mL (ECLIA); зависит от метода и витамина D. Должен интерпретироваться вместе с сывороточным кальцием. Соответствует напечатанному лабораторией пациента диапазону."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "biotin-highdose",
+        "direction": "unreliable",
+        "strength": "consensus",
+        "note": "High-dose biotin (5 mg and up — hair/skin/nail supplements and B-complex megadoses, NOT an ordinary multivitamin) interferes with the immunoassay itself. Intact PTH is measured by a SANDWICH assay, and biotin drives those FALSELY LOW. That is the dangerous direction here: a falsely low PTH sitting next to a raised calcium points away from primary hyperparathyroidism — the very diagnosis the calcium/thiazide caveat on this page is telling you to look for. Stop the biotin at least 8 hours (sometimes up to 72) before the blood draw.",
+        "noteRu": "Биотин в высоких дозах (от 5 мг — добавки «для волос, кожи и ногтей» и мегадозы витаминов группы B, но НЕ обычные поливитамины) искажает сам метод анализа. Интактный паратгормон определяют «сэндвич»-методом, а его биотин занижает — ПТГ читается ложно НИЗКИМ. Именно это направление здесь опасно: ложно низкий ПТГ рядом с повышенным кальцием уводит от диагноза первичного гиперпаратиреоза — того самого, который советует искать примечание про кальций и тиазид на этой же странице. Биотин надо отменить минимум за 8 часов до сдачи крови (иногда требуется до 72 часов).",
+        "source": {
+          "organization": "ADLM (formerly AACC) — Academy Guidance",
+          "document": "Biotin Interference in Laboratory Tests",
+          "year": 2024,
+          "url": "https://myadlm.org/science-and-research/academy-guidance/biotin-interference-in-laboratory-tests",
+          "doi": null,
+          "quote": "In sandwich immunoassays [excess biotin causes] falsely low results... In competitive immunoassays, excess biotin causes falsely elevated results. ... Multivitamins (<=1 mg): no reported interference. High-dose supplements (>=5 mg): significant interference. ... Patients who have consumed 5-10 mg biotin wait a minimum of 8 hours [before testing]."
+        }
+      }
+    ]
   },
   "RBC": {
     "key": "RBC",
@@ -3942,7 +4263,24 @@
         "why": "Общий пигмент катаболизма гема; повышение вызывает желтуху. Фракционирование (прямой и непрямой) плюс ферментный профиль различают гемолитические/Жильбера (неконъюгированный) и гепатоцеллюлярные/холестатические (конъюгированный) причины.",
         "note": "Взрослый интервал Mayo Clinic Laboratories (≥18 лет: 0.0-1.2 mg/dL). Эквивалент СИ ≈ 0-20.5 µmol/L (×17.1). Умеренно повышенный неконъюгированный общий билирубин при нормальных ферментах обычно указывает на синдром Жильбера."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "udca",
+        "direction": "down",
+        "strength": "heuristic",
+        "note": "Ursodeoxycholic acid lowers total bilirubin slightly (pooled -0.18 mg/dL, barely significant). The effect is small and noisy — too small to explain a Gilbert-pattern bilirubin, which swings much more with fasting, illness and stress.",
+        "noteRu": "Урсодезоксихолевая кислота немного снижает общий билирубин (в среднем на 0,18 мг/дл — эффект на грани значимости). Он слишком мал, чтобы объяснить билирубин по типу синдрома Жильбера: тот колеблется гораздо сильнее от голодания, болезни и стресса.",
+        "source": {
+          "organization": "British Journal of Clinical Pharmacology (Simental-Mendia M, Sanchez-Garcia A, Simental-Mendia LE)",
+          "document": "Effect of ursodeoxycholic acid on liver markers: a systematic review and meta-analysis of randomized placebo-controlled clinical trials (22 trials, 2159 subjects)",
+          "year": 2020,
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7373700/",
+          "doi": "10.1111/bcp.14311",
+          "quote": "Alkaline phosphatase WMD -93.80 U/L (95% CI -126.36, -61.25; p<0.0001); gamma-glutamyl transferase WMD -23.29 U/L (95% CI -33.97, -12.61; p<0.0001); ALT -15.28 U/L; AST -16.13 U/L; bilirubin -0.18 mg/dL (p=0.04). [Heterogeneity high (I2 95-97%); effects dominated by cholestatic-disease populations.]"
+        }
+      }
+    ]
   },
   "TC": {
     "key": "TC",
@@ -4009,7 +4347,39 @@
         "why": "Общая липидная нагрузка и маркёр сердечно-сосудистого риска; желательный порог ATP III <200 mg/dL.",
         "note": "NCEP ATP III: желательно <200; погранично высокий 200-239; высокий >=240 mg/dL."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "thiazide",
+        "direction": "up",
+        "strength": "consensus",
+        "note": "Thiazide diuretics can raise serum cholesterol — a small upward push that works against a statin taken at the same time.",
+        "noteRu": "Тиазидные мочегонные могут повышать холестерин — небольшой сдвиг вверх, который работает против одновременно принимаемого статина.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed",
+          "document": "DIOVAN HCT (valsartan and hydrochlorothiazide) — Prescribing Information, §5.7 & §5.9 Metabolic Disturbances",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d76a0419-05ee-437e-884c-65807aea9569",
+          "doi": null,
+          "quote": "Hydrochlorothiazide decreases urinary calcium excretion and may cause elevations of serum calcium. ... Hydrochlorothiazide may raise the serum uric acid level due to reduced clearance of uric acid and may cause or exacerbate hyperuricemia and precipitate gout in susceptible patients. ... Hydrochlorothiazide can cause hypokalemia and hyponatremia. ... Hydrochlorothiazide may alter glucose tolerance and raise serum levels of cholesterol and triglycerides."
+        }
+      },
+      {
+        "drugClass": "statin",
+        "direction": "down",
+        "strength": "consensus",
+        "note": "A statin lowers total cholesterol. A normal value while on the drug reflects the treatment, and reverses if it is stopped.",
+        "noteRu": "Статин снижает общий холестерин. Нормальное значение на фоне приёма — это результат лечения, и после отмены оно возвращается обратно.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed",
+          "document": "CRESTOR (rosuvastatin calcium) — Prescribing Information",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=bdea1de6-b9dc-4e73-8e26-3ad6b9e58ae5",
+          "doi": null,
+          "quote": null
+        }
+      }
+    ]
   },
   "TIBC": {
     "key": "TIBC",
@@ -4202,7 +4572,24 @@
         "why": "Маркёр атерогенной дислипидемии и метаболического/инсулинорезистентного риска; нормальный порог ATP III <150 mg/dL (натощак).",
         "note": "NCEP ATP III: норма <150; погранично высокий 150-199; высокий 200-499; очень высокий >=500 mg/dL. >500 в первую очередь корректируют для профилактики панкреатита."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "thiazide",
+        "direction": "up",
+        "strength": "consensus",
+        "note": "Thiazide diuretics can raise triglycerides.",
+        "noteRu": "Тиазидные мочегонные могут повышать триглицериды.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed",
+          "document": "DIOVAN HCT (valsartan and hydrochlorothiazide) — Prescribing Information, §5.7 & §5.9 Metabolic Disturbances",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d76a0419-05ee-437e-884c-65807aea9569",
+          "doi": null,
+          "quote": "Hydrochlorothiazide decreases urinary calcium excretion and may cause elevations of serum calcium. ... Hydrochlorothiazide may raise the serum uric acid level due to reduced clearance of uric acid and may cause or exacerbate hyperuricemia and precipitate gout in susceptible patients. ... Hydrochlorothiazide can cause hypokalemia and hyponatremia. ... Hydrochlorothiazide may alter glucose tolerance and raise serum levels of cholesterol and triglycerides."
+        }
+      }
+    ]
   },
   "TSH": {
     "key": "TSH",
@@ -4254,7 +4641,24 @@
         "why": "Гипофизарный тиреотропин; наиболее чувствительный маркёр первой линии статуса тиреоидной оси (первичный гипо-/гипертиреоз) и для титрования левотироксина.",
         "note": "Общий взрослый референс Американской тиреоидной ассоциации. Верхний предел варьирует по лаборатории/методу (~4.0-4.5 mIU/L); ТТГ повышается с возрастом у пожилых. ТТГ — скрининг первой линии дисфункции щитовидной железы."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "biotin-highdose",
+        "direction": "unreliable",
+        "strength": "consensus",
+        "note": "High-dose biotin (5 mg and up — hair/skin/nail supplements and B-complex megadoses, NOT an ordinary multivitamin) interferes with the immunoassay itself: TSH can read FALSELY LOW. The classic pattern is a falsely low TSH with falsely high free T4/T3, which imitates an overactive thyroid that is not there. Stop the biotin at least 8 hours (sometimes up to 72) before the blood draw.",
+        "noteRu": "Биотин в высоких дозах (от 5 мг — добавки «для волос, кожи и ногтей» и мегадозы витаминов группы B, но НЕ обычные поливитамины) искажает сам метод анализа: ТТГ может оказаться ЛОЖНО НИЗКИМ. Классическая картина — ложно низкий ТТГ и ложно высокие свободные Т4/Т3, что имитирует несуществующий тиреотоксикоз. Биотин надо отменить минимум за 8 часов до сдачи крови (иногда требуется до 72 часов).",
+        "source": {
+          "organization": "ADLM (formerly AACC) — Academy Guidance",
+          "document": "Biotin Interference in Laboratory Tests",
+          "year": 2024,
+          "url": "https://myadlm.org/science-and-research/academy-guidance/biotin-interference-in-laboratory-tests",
+          "doi": null,
+          "quote": "In sandwich immunoassays [excess biotin causes] falsely low results... In competitive immunoassays, excess biotin causes falsely elevated results. ... Multivitamins (<=1 mg): no reported interference. High-dose supplements (>=5 mg): significant interference. ... Patients who have consumed 5-10 mg biotin wait a minimum of 8 hours [before testing]."
+        }
+      }
+    ]
   },
   "Urea": {
     "key": "Urea",
@@ -4380,7 +4784,24 @@
         "why": "Конечный продукт метаболизма пуринов; перенасыщение вызывает подагру и уратный нефролитиаз, а также является маркёром при синдроме лизиса опухоли и метаболическом синдроме.",
         "note": "Половоспецифичный (мужской диапазон выше). Mayo мужской референс 3.7-8.0 mg/dL (женский 2.7-6.1); гиперурикемия определяется как >8.0 mg/dL у мужчин. Нижняя граница имеет некоторую межлабораторную вариабельность; напечатанный лабораторией пациента 3.0-7.0 уже/ниже по верхней границе."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "thiazide",
+        "direction": "up",
+        "strength": "consensus",
+        "note": "Thiazide diuretics reduce urate clearance and raise serum uric acid, and can precipitate gout in susceptible people. So part of a raised uric acid here is the drug — which does not make the level harmless.",
+        "noteRu": "Тиазидные мочегонные ухудшают выведение мочевой кислоты и повышают её уровень, а у предрасположенных людей могут спровоцировать подагру. Поэтому часть повышения здесь — вклад лекарства. Это не значит, что на цифру можно не обращать внимания.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed",
+          "document": "DIOVAN HCT (valsartan and hydrochlorothiazide) — Prescribing Information, §5.7 & §5.9 Metabolic Disturbances",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=d76a0419-05ee-437e-884c-65807aea9569",
+          "doi": null,
+          "quote": "Hydrochlorothiazide decreases urinary calcium excretion and may cause elevations of serum calcium. ... Hydrochlorothiazide may raise the serum uric acid level due to reduced clearance of uric acid and may cause or exacerbate hyperuricemia and precipitate gout in susceptible patients. ... Hydrochlorothiazide can cause hypokalemia and hyponatremia. ... Hydrochlorothiazide may alter glucose tolerance and raise serum levels of cholesterol and triglycerides."
+        }
+      }
+    ]
   },
   "Vit D": {
     "key": "Vit D",
@@ -4871,7 +5292,24 @@
         "why": "Серосодержащая аминокислота, повышается при дефиците витаминов группы B (B12/фолат/B6) и независимо указывает на сосудистый риск. Используется в панели сердечно-сосудистого риска.",
         "note": "Норма <15 umol/L; лёгкая гипергомоцистеинемия 15-30, умеренная 30-100, тяжёлая >100 umol/L. Оптимальный/низкий риск часто <10 umol/L. Повышается при дефиците B12/фолата/B6, почечной недостаточности, вариантах MTHFR."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "folate-supplement",
+        "direction": "down",
+        "strength": "consensus",
+        "note": "Folic acid lowers homocysteine, and the size of the effect is well established: pooling randomised trials, 0.5-5 mg/day of folic acid cut blood homocysteine by about 25% (95% CI 23-28%), with a further ~7% from added B12. A 400 µg daily supplement sits just below that tested dose range, so expect the same direction and a somewhat smaller effect. This cuts both ways: a homocysteine that is STILL high while taking folate is more worrying, not less, because the obvious cause has already been treated. It points elsewhere — reduced kidney function is a common driver of a high homocysteine in older people and is worth checking (creatinine / eGFR).",
+        "noteRu": "Фолиевая кислота снижает гомоцистеин, и величина эффекта хорошо изучена: по объединённым данным рандомизированных исследований, 0,5-5 мг фолиевой кислоты в сутки снижали гомоцистеин крови примерно на 25% (95% ДИ 23-28%), плюс ещё около 7% давало добавление B12. Доза 400 мкг в сутки лежит чуть ниже изученного диапазона, так что направление то же, а эффект несколько меньше. И это работает в обе стороны: гомоцистеин, который ВСЁ РАВНО высок на фоне приёма фолиевой кислоты, — это более тревожно, а не менее, потому что очевидную причину уже пролечили. Значит, дело в другом — у пожилых частая причина высокого гомоцистеина — сниженная функция почек. Стоит посмотреть креатинин и СКФ.",
+        "source": {
+          "organization": "Homocysteine Lowering Trialists' Collaboration (BMJ)",
+          "document": "Lowering blood homocysteine with folic acid based supplements: meta-analysis of randomised trials. BMJ 1998;316(7135):894-898 — individual data on 1114 people from 12 randomised trials (PMID 9569395)",
+          "year": 1998,
+          "url": "https://pubmed.ncbi.nlm.nih.gov/9569395/",
+          "doi": "10.1136/bmj.316.7135.894",
+          "quote": "After standardisation to pretreatment blood concentrations of homocysteine of 12 μmol/l and of folate of 12 nmol/l (approximate average concentrations for Western populations), dietary folic acid reduced blood homocysteine concentrations by 25% (95% confidence interval 23% to 28%; P<0.001), with similar effects in the range of 0.5-5 mg folic acid daily. Vitamin B-12 (mean 0.5 mg daily) produced an additional 7% (3% to 10%) reduction in blood homocysteine."
+        }
+      }
+    ]
   },
   "C-peptide": {
     "key": "C-peptide",
@@ -5495,7 +5933,24 @@
         "why": "Фермент повреждения мышц; выявляет рабдомиолиз, миопатии и (вместе с тропонином/КФК-МВ) повреждение миокарда.",
         "note": "Общая КФК; сильно зависит от пола, мышечной массы и этнической принадлежности. Ориентировочно: мужчины ~39-308 U/L, женщины ~26-192 U/L; выше у темнокожих, спортсменов и после нагрузки/в/м инъекций/статинов. Выраженное повышение — повреждение скелетных или сердечной мышцы."
       }
-    }
+    },
+    "modifiers": [
+      {
+        "drugClass": "statin",
+        "direction": "up",
+        "strength": "consensus",
+        "note": "Statins can raise creatine kinase (a muscle enzyme). An isolated mild rise is common and usually not meaningful — it is a markedly high CK, or a rise together with muscle pain or weakness, that needs attention.",
+        "noteRu": "Статины могут повышать креатинкиназу (мышечный фермент). Изолированное небольшое повышение встречается часто и обычно не значимо — внимания требует резко высокая КФК или повышение вместе с болью и слабостью в мышцах.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed",
+          "document": "CRESTOR (rosuvastatin calcium) — Prescribing Information",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=bdea1de6-b9dc-4e73-8e26-3ad6b9e58ae5",
+          "doi": null,
+          "quote": "Increases in serum transaminases to more than three times the ULN occurred in 1.1% of patients taking CRESTOR versus 0.5% of patients treated with placebo. ... CRESTOR may cause myopathy (muscle pain, tenderness, or weakness associated with elevated creatine kinase (CK))."
+        }
+      }
+    ]
   },
   "Ca-ion": {
     "key": "Ca-ion",
@@ -5550,6 +6005,1007 @@
         "displayName": "Кальций ионизированный",
         "why": "Свободный, физиологически активный кальций; точная оценка кальция при нарушениях альбумина или pH (без поправки на альбумин, нужной для общего кальция).",
         "note": "Ионизированный (свободный, активный) кальций ~1.12-1.32 mmol/L (= ~4.5-5.3 mg/dL). Не зависит от альбумина — точен при гипо-/гиперальбуминемии и в критических состояниях; чувствителен к pH (ацидоз повышает), требует анаэробного забора. Для цельной крови используется отдельный LOINC (1994-3)."
+      }
+    }
+  },
+  "GLOB": {
+    "key": "GLOB",
+    "shortName": "GLOB",
+    "displayName": "Globulin (calculated)",
+    "aliases": [
+      "Глобулин",
+      "Глобулины",
+      "Globulin",
+      "Calculated globulin"
+    ],
+    "loincComponent": "Globulin",
+    "loincs": [
+      {
+        "code": "10834-0",
+        "longName": "Globulin [Mass/volume] in Serum by calculation",
+        "property": "MCnc",
+        "unit": "g/L",
+        "system": "Ser"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 2,
+      "max": 3.5,
+      "unit": "g/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "NOT measured directly — CALCULATED as total protein minus albumin (hence the LOINC 'by calculation'). The interval follows from the standard serum-protein values: total protein 6.0-8.0 g/dL minus albumin 3.5-5.0 g/dL leaves roughly 2.0-3.5 g/dL of globulins. There is no single agreed calculated-globulin interval and it varies between laboratories, so read it as an orientation band, not a sharp cutoff. The albumin/globulin (A/G) ratio is usually the more informative reading: a HIGH globulin / LOW A/G ratio points to chronic inflammation, autoimmune or chronic liver disease, or a monoclonal gammopathy (myeloma); a LOW globulin (roughly <2.0 g/dL, and especially <1.8) is the classic screening signal for antibody deficiency."
+    },
+    "evidenceLevel": "heuristic",
+    "references": [
+      {
+        "organization": "NCBI Bookshelf - Clinical Methods: The History, Physical, and Laboratory Examinations (3rd ed.)",
+        "document": "Chapter 101: Serum Albumin and Globulin (NBK204)",
+        "year": 1990,
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK204/",
+        "doi": null,
+        "quote": "The normal serum protein level is 6 to 8 g/dl. Albumin makes up 3.5 to 5.0 g/dl, and the remainder is the total globulins. These values may vary according to the individual laboratory."
+      },
+      {
+        "organization": "Journal of Clinical Pathology (BMJ) / PMC",
+        "document": "Calculated globulin (CG) as a screening test for antibody deficiency (PMC4137851)",
+        "year": 2014,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4137851/",
+        "doi": null,
+        "quote": "There was no consistent reference range for calculated globulin, varying at the upper end of the range from 35 to 45 g/l and at the lower end from 'no lower limit' to 20-28 g/l."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "The non-albumin protein fraction (antibodies, transport and clotting proteins), obtained by subtracting albumin from total protein rather than measured. Read with albumin as the A/G ratio: a high globulin flags chronic inflammation, autoimmune/liver disease or a gammopathy; a low globulin is a cheap screen for antibody deficiency.",
+    "drawNote": null,
+    "frequency": null,
+    "panel": "Liver & proteins",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Глобулины (расчётный показатель)",
+        "why": "Вся белковая фракция крови, кроме альбумина: антитела, транспортные и свёртывающие белки. Отдельно не измеряется — вычисляется как «общий белок минус альбумин». Читается вместе с альбумином (соотношение А/Г): повышение глобулинов указывает на хроническое воспаление, аутоиммунное заболевание, болезнь печени или моноклональную гаммапатию; снижение — простой скрининговый признак недостатка антител.",
+        "note": "Показатель НЕ измеряется напрямую — он ВЫЧИСЛЯЕТСЯ как общий белок минус альбумин (в LOINC так и записано: «by calculation»). Интервал следует из стандартных значений белков сыворотки: общий белок 6.0-8.0 g/dL минус альбумин 3.5-5.0 g/dL оставляет примерно 2.0-3.5 g/dL глобулинов. Единого общепринятого интервала для расчётных глобулинов нет, он различается между лабораториями, поэтому это ориентировочная полоса, а не строгий порог. Обычно информативнее соотношение альбумин/глобулин (А/Г): ВЫСОКИЕ глобулины / НИЗКОЕ А/Г — хроническое воспаление, аутоиммунное или хроническое заболевание печени, моноклональная гаммапатия (миелома); НИЗКИЕ глобулины (примерно <2.0 g/dL, особенно <1.8) — классический скрининговый признак недостаточности выработки антител."
+      }
+    }
+  },
+  "Cystatin C": {
+    "key": "Cystatin C",
+    "shortName": "Cystatin C",
+    "displayName": "Cystatin C",
+    "aliases": [
+      "Цистатин C",
+      "Цистатин С",
+      "Цистатин",
+      "Cystatin-C",
+      "CysC"
+    ],
+    "loincComponent": "Cystatin C",
+    "loincs": [
+      {
+        "code": "33863-2",
+        "longName": "Cystatin C [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.61,
+      "max": 0.95,
+      "unit": "mg/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult, >=18 years (not sex-specific)",
+      "note": "ARUP adult interval (18 years and older: 0.61-0.95 mg/L), assay standardized to the ERM-DA471/IFCC reference material. Other reference labs quote a wider band on a different assay (Mayo 0.47-1.03 mg/L), so results are NOT interchangeable between laboratories. Unlike creatinine, cystatin C is produced by all nucleated cells at a near-constant rate and is largely independent of muscle mass, age and diet — which is exactly why KDIGO recommends it to CONFIRM a creatinine-based eGFR that sits in the uncertain 45-59 mL/min/1.73m2 band, or whenever creatinine is likely to mislead (very low or very high muscle mass, amputation, malnutrition, vegetarian diet). It rises with thyroid dysfunction, high-dose steroids and severe obesity, which is its main limitation."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Cystatin and Creatinine With eGFR (test 3018316) - Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/3018316",
+        "doi": null,
+        "quote": "Cystatin C, 18 years and older: 0.61-0.95 mg/L."
+      },
+      {
+        "organization": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+        "document": "KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease",
+        "year": 2024,
+        "url": "https://kdigo.org/wp-content/uploads/2024/03/KDIGO-2024-CKD-Guideline.pdf",
+        "doi": null,
+        "quote": "KDIGO recommends using cystatin C to confirm the GFR estimate when a creatinine-based eGFR is less accurate or when a more accurate estimate will affect decisions."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "A second, muscle-independent way to estimate kidney filtration (eGFR). Used to confirm or overturn a borderline creatinine-based eGFR, and preferred wherever creatinine misleads — low or high muscle mass, malnutrition, vegetarian diet, the elderly.",
+    "drawNote": null,
+    "frequency": null,
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Цистатин C",
+        "why": "Второй, независимый от мышечной массы способ оценить фильтрационную работу почек (рСКФ). Нужен, чтобы подтвердить или опровергнуть пограничный результат, посчитанный по креатинину, и предпочтителен там, где креатинин обманывает: при малой или очень большой мышечной массе, истощении, вегетарианстве, в пожилом возрасте.",
+        "note": "Взрослый интервал ARUP (18 лет и старше: 0.61-0.95 mg/L), метод стандартизован по референсному материалу ERM-DA471/IFCC. Другие референс-лаборатории на другом методе дают более широкую полосу (Mayo 0.47-1.03 mg/L), поэтому результаты разных лабораторий НЕ взаимозаменяемы. В отличие от креатинина, цистатин C вырабатывается всеми ядерными клетками с почти постоянной скоростью и мало зависит от мышечной массы, возраста и питания — именно поэтому KDIGO рекомендует им ПОДТВЕРЖДАТЬ рСКФ по креатинину, когда она попадает в неопределённую зону 45-59 мл/мин/1.73 м2, и всегда, когда креатинин способен ввести в заблуждение (очень малая или очень большая мышечная масса, ампутация, истощение, вегетарианская диета). Повышается при нарушении функции щитовидной железы, приёме высоких доз стероидов и выраженном ожирении — это его главное ограничение."
+      }
+    }
+  },
+  "ACR": {
+    "key": "ACR",
+    "shortName": "ACR",
+    "displayName": "Albumin/Creatinine ratio (urine)",
+    "aliases": [
+      "Альбумин/креатинин",
+      "Отношение альбумин/креатинин",
+      "Соотношение альбумин/креатинин",
+      "Микроальбуминурия",
+      "МАУ",
+      "UACR",
+      "Albumin/Creatinine ratio",
+      "Urine albumin-to-creatinine ratio"
+    ],
+    "loincComponent": "Albumin/Creatinine",
+    "loincs": [
+      {
+        "code": "9318-7",
+        "longName": "Albumin/Creatinine [Mass Ratio] in Urine",
+        "property": "MRto",
+        "unit": "mg/g",
+        "system": "Urine"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": null,
+      "max": 30,
+      "unit": "mg/g",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "A URINE test, not a blood test — the only marker here drawn from urine, so it needs its own sample (a first-morning void is preferred; a random spot sample is acceptable). KDIGO albuminuria categories: A1 (normal to mildly increased) <30 mg/g (<3 mg/mmol); A2 (moderately increased) 30-299 mg/g (3-29 mg/mmol); A3 (severely increased) >=300 mg/g (>=30 mg/mmol). Chronic kidney disease requires the abnormality to PERSIST for at least 3 months, so a single raised value must be repeated. Albumin leaking into the urine is the earliest sign that the kidney filter is damaged — it appears years before creatinine or eGFR move — and it independently predicts both kidney failure and cardiovascular death. Transiently raised by fever, heavy exercise, urinary infection, heart failure and very high blood sugar or blood pressure."
+    },
+    "evidenceLevel": "guideline",
+    "references": [
+      {
+        "organization": "Kidney Disease: Improving Global Outcomes (KDIGO)",
+        "document": "KDIGO 2024 Clinical Practice Guideline for the Evaluation and Management of Chronic Kidney Disease - albuminuria categories (A1-A3)",
+        "year": 2024,
+        "url": "https://kdigo.org/wp-content/uploads/2024/03/KDIGO-2024-CKD-Guideline.pdf",
+        "doi": null,
+        "quote": "A1 normal to mildly increased: ACR <30 mg/g (<3 mg/mmol); A2 moderately increased: 30-299 mg/g (3-29 mg/mmol); A3 severely increased: >=300 mg/g (>=30 mg/mmol)."
+      },
+      {
+        "organization": "NIDDK / NCBI Bookshelf - Diabetes in America (3rd ed.)",
+        "document": "Table: Albuminuria Categories According to KDIGO Classification (NBK609462)",
+        "year": 2018,
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK609462/table/kidneydisease.T.albuminuria_categories_a/",
+        "doi": null,
+        "quote": "A1 Normal to mildly increased ACR <30 mg/g (<3 mg/mmol); A2 Moderately increased 30-299 mg/g (3-29 mg/mmol); A3 Severely increased >=300 mg/g (>=30 mg/mmol)."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "The earliest detectable sign of kidney damage: albumin leaking through the filter, years before creatinine or eGFR shift. One of the two axes (with eGFR) of the KDIGO staging of chronic kidney disease, and an independent predictor of cardiovascular risk. A urine test, not a blood test.",
+    "drawNote": "Urine, not blood — collect a first-morning void where possible. Avoid heavy exercise the day before, and postpone during fever or a urinary infection: both transiently raise albumin in the urine.",
+    "frequency": "annual",
+    "panel": "Kidney, electrolytes & minerals",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Альбумин/креатинин в моче (АКС)",
+        "why": "Самый ранний доступный признак повреждения почек: альбумин начинает просачиваться через почечный фильтр за годы до того, как сдвинутся креатинин и рСКФ. Вместе с рСКФ — одна из двух осей, по которым KDIGO определяет стадию хронической болезни почек, и независимый предиктор сердечно-сосудистого риска. Сдаётся из МОЧИ, а не из крови.",
+        "note": "Это анализ МОЧИ, а не крови — единственный такой показатель в этом списке, поэтому для него нужен отдельный образец (предпочтительно первая утренняя порция; разовая порция тоже допустима). Категории альбуминурии по KDIGO: A1 (норма или незначительное повышение) <30 mg/g (<3 mg/mmol); A2 (умеренное повышение) 30-299 mg/g (3-29 mg/mmol); A3 (выраженное повышение) >=300 mg/g (>=30 mg/mmol). Для диагноза хронической болезни почек отклонение должно СОХРАНЯТЬСЯ не менее 3 месяцев, поэтому однократно повышенный результат обязательно пересдают. Временно повышается при лихорадке, тяжёлой физической нагрузке, инфекции мочевых путей, сердечной недостаточности, а также при очень высоком сахаре или давлении."
+      }
+    }
+  },
+  "Cu": {
+    "key": "Cu",
+    "shortName": "Cu",
+    "displayName": "Copper",
+    "aliases": [
+      "Медь",
+      "Copper"
+    ],
+    "loincComponent": "Copper",
+    "loincs": [
+      {
+        "code": "5631-7",
+        "longName": "Copper [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ug/dL",
+        "system": "Ser/Plas"
+      },
+      {
+        "code": "14665-4",
+        "longName": "Copper [Moles/volume] in Serum or Plasma",
+        "property": "SCnc",
+        "unit": "umol/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 63.546,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem (Copper, element), standard atomic weight 63.546 g/mol — https://pubchem.ncbi.nlm.nih.gov/element/29/Copper . Conversion: 1 ug/dL = 0.157 umol/L.",
+      "year": null,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/element/29/Copper",
+      "doi": null,
+      "quote": null
+    },
+    "refDefault": {
+      "min": 70,
+      "max": 140,
+      "unit": "ug/dL",
+      "operator": "between",
+      "sex": "male",
+      "ageNote": "adult male, >=19 years",
+      "note": "ARUP adult interval, which is SEX-SPECIFIC: men 19+ 70-140 ug/dL, women 19+ 80-155 ug/dL (women run higher; oestrogen — pregnancy or the combined pill — raises it further). Equivalent SI ~11.0-22.0 umol/L for men (x0.157). Serum copper is mostly copper bound to ceruloplasmin, which is a POSITIVE acute-phase reactant, so infection, inflammation and oestrogen all push it up and can mask a true deficiency — interpret alongside CRP. A LOW value suggests deficiency (which causes an anemia that does not respond to iron, neutropenia, and a myelopathy) or, rarely, Wilson disease; deficiency is most often seen after bariatric surgery, with malabsorption, or from excessive zinc supplementation, which blocks copper uptake in the gut."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Copper, Serum or Plasma (test 0020096) - Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0020096",
+        "doi": null,
+        "quote": "19 years and older - Male: 70.0-140.0 ug/dL; Female: 80.0-155.0 ug/dL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Essential trace mineral, cofactor for iron transport, connective-tissue cross-linking and antioxidant defence. Measured to detect deficiency (iron-unresponsive anemia, neutropenia, myelopathy — classically after bariatric surgery, malabsorption, or excess zinc supplementation) and, with ceruloplasmin, to work up Wilson disease.",
+    "drawNote": "Needs a trace-element-free tube — an ordinary tube can leach metal into the sample and falsely raise the result.",
+    "frequency": "annual",
+    "panel": "Vitamins & minerals",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Медь",
+        "why": "Незаменимый микроэлемент, кофермент для транспорта железа, сшивки соединительной ткани и антиоксидантной защиты. Определяется для выявления дефицита (анемия, не отвечающая на железо, нейтропения, поражение спинного мозга — классически после бариатрической операции, при нарушении всасывания или на фоне избытка цинка) и, вместе с церулоплазмином, при обследовании на болезнь Вильсона.",
+        "note": "Взрослый интервал ARUP, ЗАВИСЯЩИЙ ОТ ПОЛА: мужчины 19+ 70-140 ug/dL, женщины 19+ 80-155 ug/dL (у женщин выше; эстрогены — беременность или комбинированные контрацептивы — поднимают ещё сильнее). Эквивалент СИ для мужчин ~11.0-22.0 umol/L (x0.157). Сывороточная медь — это в основном медь, связанная с церулоплазмином, а он является ПОЗИТИВНЫМ белком острой фазы: инфекция, воспаление и эстрогены повышают показатель и могут замаскировать истинный дефицит — оценивать вместе с CRP. НИЗКОЕ значение указывает на дефицит (анемия, не поддающаяся препаратам железа, нейтропения, миелопатия) или, редко, на болезнь Вильсона; дефицит чаще всего встречается после бариатрических операций, при нарушении всасывания или из-за избыточного приёма цинка, который блокирует усвоение меди в кишечнике."
+      }
+    }
+  },
+  "Se": {
+    "key": "Se",
+    "shortName": "Se",
+    "displayName": "Selenium",
+    "aliases": [
+      "Селен",
+      "Selenium"
+    ],
+    "loincComponent": "Selenium",
+    "loincs": [
+      {
+        "code": "5724-0",
+        "longName": "Selenium [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": 78.971,
+    "molarMassRef": {
+      "organization": "PubChem",
+      "document": "PubChem (Selenium, element), standard atomic weight 78.971 g/mol — https://pubchem.ncbi.nlm.nih.gov/element/34/Selenium . Conversion: 1 ug/L = 0.0127 umol/L. No molar (SCnc) LOINC is carried, so the engine builds no mass->molar SI rule for selenium and it stays reported in mass units.",
+      "year": null,
+      "url": "https://pubchem.ncbi.nlm.nih.gov/element/34/Selenium",
+      "doi": null,
+      "quote": null
+    },
+    "refDefault": {
+      "min": 23,
+      "max": 190,
+      "unit": "ug/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "ARUP interval 23-190 ug/L (ug/L and ng/mL are numerically the same). This band is DELIBERATELY wide and is not a nutritional optimum: ARUP itself notes that serum selenium reflects RECENT INTAKE and that urine selenium is preferred for assessing deficiency or toxicity. Other reference labs quote a much narrower window (Mayo 70-150 ng/mL), so a value can look normal against one lab and low against another — read it as a rough orientation, not a target. Selenium is the cofactor of glutathione peroxidase and of the deiodinases that convert T4 to active T3, which is why it appears in thyroid discussions; true deficiency is rare outside selenium-poor soil regions, malabsorption and long-term parenteral nutrition. The gap between sufficiency and toxicity is narrow — chronic intake above roughly 400 ug/day causes selenosis (hair and nail loss, garlic breath, neuropathy), so supplementing 'just in case' is not harmless."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Selenium, Serum or Plasma (test 0025023) - Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0025023",
+        "doi": null,
+        "quote": "Reference Interval: 23.0-190.0 ug/L. Serum or plasma selenium may be useful in the assessment of recent intake; for the assessment of deficiency or toxicity, Selenium, Urine is preferred."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Essential trace mineral; cofactor of glutathione peroxidase (antioxidant defence) and of the deiodinases that convert T4 into active T3. Measured to detect deficiency (malabsorption, long-term parenteral nutrition, selenium-poor soil regions) or excess — the margin between the two is narrow.",
+    "drawNote": "Needs a trace-element-free tube. Reflects recent intake, so a supplement or a Brazil-nut habit in the preceding days will show up in the result.",
+    "frequency": "annual",
+    "panel": "Vitamins & minerals",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Селен",
+        "why": "Незаменимый микроэлемент; кофермент глутатионпероксидазы (антиоксидантная защита) и дейодиназ, превращающих T4 в активный T3. Определяется для выявления дефицита (нарушение всасывания, длительное парентеральное питание, регионы с бедной селеном почвой) или избытка — расстояние между ними невелико.",
+        "note": "Интервал ARUP 23-190 ug/L (ug/L и ng/mL численно совпадают). Эта полоса НАМЕРЕННО широка и не является «оптимумом»: сама ARUP отмечает, что селен сыворотки отражает НЕДАВНЕЕ ПОСТУПЛЕНИЕ, а для оценки дефицита или токсичности предпочтителен селен мочи. Другие референс-лаборатории дают гораздо более узкое окно (Mayo 70-150 ng/mL), поэтому одно и то же значение может выглядеть нормальным по одной лаборатории и низким по другой — воспринимать как грубый ориентир, а не как цель. Селен — кофермент глутатионпероксидазы и дейодиназ, превращающих T4 в активный T3, поэтому о нём говорят в связи со щитовидной железой; истинный дефицит редок вне регионов с бедной селеном почвой, нарушений всасывания и длительного парентерального питания. Промежуток между достаточностью и токсичностью узкий — постоянный приём свыше примерно 400 мкг/сут вызывает селеноз (выпадение волос и ногтей, чесночный запах изо рта, нейропатия), поэтому принимать селен «на всякий случай» небезопасно."
+      }
+    }
+  },
+  "Anti-Tg": {
+    "key": "Anti-Tg",
+    "shortName": "Anti-Tg",
+    "displayName": "Thyroglobulin antibody (anti-Tg)",
+    "aliases": [
+      "Антитела к тиреоглобулину",
+      "Анти-ТГ",
+      "АТ-ТГ",
+      "АТ к ТГ",
+      "Anti-TG",
+      "TgAb",
+      "Thyroglobulin Ab"
+    ],
+    "loincComponent": "Thyroglobulin Ab",
+    "loincs": [
+      {
+        "code": "8098-6",
+        "longName": "Thyroglobulin Ab [Units/volume] in Serum or Plasma",
+        "property": "ACnc",
+        "unit": "IU/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": null,
+      "max": 4,
+      "unit": "IU/mL",
+      "operator": "lt",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "STRONGLY assay-dependent negative cutoff — ARUP reports <=4.0 IU/mL as negative (Beckman Coulter Access chemiluminescent immunoassay), while Mayo's assay calls <1.8 IU/mL negative and other platforms use cutoffs an order of magnitude higher. Always read positive/negative against the REPORTING lab's own cutoff, not against this number. Anti-Tg is the SECOND autoantibody of autoimmune thyroid disease: it is less sensitive and less specific than anti-TPO, and adds little when anti-TPO is already positive — its value is in the anti-TPO-negative patient with a thyroid picture that still looks autoimmune (perhaps 5% of Hashimoto cases are anti-Tg-positive only). It is also positive in some healthy people, more often women and with age. Its OTHER, quite separate use is in thyroid-cancer follow-up, where its presence invalidates the thyroglobulin tumour-marker result by interfering with the assay. Titre magnitude does not track disease severity."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Thyroglobulin Antibody (test 0050105) - Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0050105",
+        "doi": null,
+        "quote": "Reference Interval: 0.0-4.0 IU/mL. A value of 4.0 IU/mL or less indicates a negative result for thyroglobulin antibodies."
+      },
+      {
+        "organization": "Medscape (eMedicine Laboratory Medicine)",
+        "document": "Antithyroglobulin: Reference Range, Interpretation, Collection and Panels (article 2086797)",
+        "year": 2024,
+        "url": "https://emedicine.medscape.com/article/2086797-overview",
+        "doi": null,
+        "quote": "Antithyroglobulin antibody reference ranges vary substantially by laboratory and assay method; results must be interpreted against the performing laboratory's own cutoff."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "The second autoantibody of autoimmune thyroid disease (Hashimoto). Less sensitive and specific than anti-TPO and largely redundant when anti-TPO is positive; it earns its place in the anti-TPO-negative patient who still looks autoimmune. Separately, it must be measured alongside thyroglobulin in thyroid-cancer follow-up, because its presence invalidates that tumour marker. Referenced by the hypothyroidism lens.",
+    "drawNote": null,
+    "frequency": null,
+    "panel": "Thyroid, pituitary & growth axis",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Антитела к тиреоглобулину (анти-ТГ)",
+        "why": "Второе аутоантитело при аутоиммунном заболевании щитовидной железы (тиреоидит Хашимото). Менее чувствительно и менее специфично, чем анти-ТПО, и почти ничего не добавляет, если анти-ТПО уже положительны; его смысл — в ситуации, когда анти-ТПО отрицательны, а картина всё равно похожа на аутоиммунную. Отдельная задача — контроль после лечения рака щитовидной железы: наличие этих антител делает результат тиреоглобулина как опухолевого маркёра недостоверным. Используется в панели гипотиреоза.",
+        "note": "Порог негативности СИЛЬНО зависит от метода: ARUP считает отрицательным <=4.0 IU/mL (хемилюминесцентный иммуноанализ Beckman Coulter Access), метод Mayo — <1.8 IU/mL, а на других платформах порог выше на порядок. Всегда оценивать «положительно/отрицательно» по порогу ТОЙ лаборатории, которая выдала результат, а не по этому числу. Анти-ТГ — ВТОРОЕ аутоантитело аутоиммунного тиреоидита: менее чувствительное и менее специфичное, чем анти-ТПО, и мало что добавляет, если анти-ТПО уже положительны; оно полезно при отрицательных анти-ТПО, когда картина всё равно выглядит аутоиммунной (примерно 5% случаев Хашимото дают только анти-ТГ). Бывает положительным и у здоровых людей — чаще у женщин и с возрастом. Величина титра не отражает тяжесть заболевания."
+      }
+    }
+  },
+  "IgM": {
+    "key": "IgM",
+    "shortName": "IgM",
+    "displayName": "Immunoglobulin M",
+    "aliases": [
+      "Иммуноглобулин M",
+      "Иммуноглобулин М",
+      "IgM"
+    ],
+    "loincComponent": "IgM",
+    "loincs": [
+      {
+        "code": "2472-9",
+        "longName": "IgM [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "mg/dL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 35,
+      "max": 263,
+      "unit": "mg/dL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult, >=19 years (not sex-specific)",
+      "note": "ARUP age-banded adult interval (19 years and older: 35-263 mg/dL). IgM is the FIRST antibody the immune system makes on meeting something new, so a raised IgM points to a recent or acute infection; it is also the largest antibody and stays mostly in the bloodstream. Low IgM occurs in primary/secondary immunodeficiency and protein loss; a marked isolated rise raises the question of Waldenstrom macroglobulinemia (an IgM monoclonal gammopathy), and a rise together with anti-mitochondrial antibodies is typical of primary biliary cholangitis. Read together with IgA and IgG — the PATTERN across the three, not any single one, is what identifies an immunodeficiency or a gammopathy."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Immunoglobulins (IgG, IgA, IgM), Serum (test 0050630) - Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0050630",
+        "doi": null,
+        "quote": "Immunoglobulin M - 19 years and older: 35-263 mg/dL."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "The first-response antibody, produced on initial exposure to a new pathogen; a rise suggests recent/acute infection. Measured with IgA and IgG to evaluate recurrent infection and suspected immunodeficiency, and to detect a monoclonal IgM (Waldenstrom macroglobulinemia).",
+    "drawNote": null,
+    "frequency": null,
+    "panel": "Immunoglobulins",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Иммуноглобулин M",
+        "why": "Антитело «первого ответа»: вырабатывается первым при встрече с новым возбудителем, поэтому его повышение говорит о недавней или острой инфекции. Определяется вместе с IgA и IgG для оценки рецидивирующих инфекций и подозрения на иммунодефицит, а также для выявления моноклонального IgM (макроглобулинемия Вальденстрёма).",
+        "note": "Возрастной взрослый интервал ARUP (19 лет и старше: 35-263 mg/dL). IgM — ПЕРВОЕ антитело, которое иммунная система вырабатывает при встрече с чем-то новым, поэтому повышенный IgM указывает на недавнюю или острую инфекцию; это также самое крупное антитело, и оно остаётся преимущественно в кровотоке. Низкий IgM бывает при первичном/вторичном иммунодефиците и потере белка; выраженное изолированное повышение заставляет думать о макроглобулинемии Вальденстрёма (моноклональная IgM-гаммапатия), а повышение вместе с антимитохондриальными антителами типично для первичного билиарного холангита. Оценивать вместе с IgA и IgG — диагноз иммунодефицита или гаммапатии ставится по КАРТИНЕ всех трёх, а не по одному показателю."
+      }
+    }
+  },
+  "LIPA": {
+    "key": "LIPA",
+    "shortName": "LIPA",
+    "displayName": "Lipase",
+    "aliases": [
+      "Lipase",
+      "Липаза",
+      "LIP",
+      "LPS"
+    ],
+    "loincComponent": "Triacylglycerol lipase",
+    "loincs": [
+      {
+        "code": "3040-3",
+        "longName": "Lipase [Enzymatic activity/volume] in Serum or Plasma",
+        "property": "CCnc",
+        "unit": "U/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 13,
+      "max": 60,
+      "unit": "U/L",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "Adults ≥16 years (not sex-specific)",
+      "note": "Mayo Clinic Laboratories adult interval (≥16 years: 13-60 U/L). Assay-dependent — lipase reference intervals vary widely between methods, so ALWAYS read the value against the printed range of the lab that ran it. The number that matters clinically is not the range but the MULTIPLE: acute pancreatitis is diagnosed at >3× the upper limit of normal (ACG 2013), i.e. mild elevations are common and non-specific (kidney failure, bowel disease, some drugs). Value obtained via search-indexed Mayo catalog content — the catalog page itself is bot-gated; see reference URL. LOINC 3040-3 verified on loinc.org (Property CCnc, System Ser/Plas, Active)."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Mayo Clinic Laboratories",
+        "document": "Lipase, Serum (test LIPS) - Reference Values",
+        "year": 2025,
+        "url": "https://www.mayocliniclabs.com/test-catalog/overview/8598",
+        "doi": null,
+        "quote": "Reference values for people ages 16 and older are 13 to 60 units per liter (U/L)."
+      },
+      {
+        "organization": "American College of Gastroenterology",
+        "document": "ACG guideline: management of acute pancreatitis (Tenner S, Baillie J, DeWitt J, Vege SS). Am J Gastroenterol 108(9):1400-15",
+        "year": 2013,
+        "url": "https://pubmed.ncbi.nlm.nih.gov/23896955/",
+        "doi": "10.1038/ajg.2013.218",
+        "quote": "Diagnosis of acute pancreatitis requires 2 of 3: abdominal pain consistent with the disease; serum amylase and/or lipase greater than three times the upper limit of normal; characteristic findings on imaging."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "The pancreas-specific enzyme. Lipase is made almost exclusively by the pancreas, so it is both more sensitive and far more specific for pancreatic injury than amylase (which is also salivary, and rises in salivary, bowel and gynaecological disease). It also stays elevated longer after an attack, so it still finds a pancreatitis that presents late. Guidelines diagnose acute pancreatitis at >3× the upper limit of normal; the degree of elevation does NOT track severity, and lipase is often normal in chronic pancreatitis — use faecal elastase-1 for that question.",
+    "frequency": null,
+    "panel": "Pancreas",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Липаза",
+        "why": "Фермент, специфичный именно для поджелудочной железы. Липаза вырабатывается почти исключительно поджелудочной железой, поэтому она и чувствительнее, и значительно специфичнее амилазы (которая ещё и слюнная и повышается при болезнях слюнных желёз, кишечника и гинекологической сферы). Она также дольше остаётся повышенной после приступа, поэтому находит панкреатит даже при позднем обращении. Руководства ставят диагноз острого панкреатита при превышении верхней границы нормы более чем в 3 раза; степень повышения НЕ отражает тяжесть, а при хроническом панкреатите липаза часто нормальна — для этого вопроса служит панкреатическая эластаза-1 в кале.",
+        "note": "Взрослый интервал Mayo Clinic Laboratories (≥16 лет: 13-60 U/L). Зависит от метода — референсные интервалы липазы сильно различаются между анализаторами, поэтому ВСЕГДА сверяйте значение с диапазоном, напечатанным сделавшей анализ лабораторией. Клинически важен не сам диапазон, а КРАТНОСТЬ превышения: острый панкреатит диагностируют при >3× верхней границы нормы (ACG 2013), то есть небольшие повышения встречаются часто и неспецифичны (почечная недостаточность, болезни кишечника, ряд лекарств). Значение получено из проиндексированного поиском содержимого каталога Mayo — сама страница закрыта от ботов; см. ссылку. LOINC 3040-3 проверен на loinc.org (Property CCnc, System Ser/Plas, Active)."
+      }
+    }
+  },
+  "Elastase-1": {
+    "key": "Elastase-1",
+    "shortName": "Elastase-1",
+    "displayName": "Pancreatic elastase-1 (stool)",
+    "aliases": [
+      "Elastase",
+      "Fecal elastase",
+      "Faecal elastase-1",
+      "Панкреатическая эластаза",
+      "Эластаза-1",
+      "Эластаза панкреатическая в кале"
+    ],
+    "loincComponent": "Elastase.pancreatic",
+    "loincs": [
+      {
+        "code": "25907-7",
+        "longName": "Elastase.pancreatic [Mass/mass] in Stool",
+        "property": "MCnt",
+        "unit": "µg/g",
+        "system": "Stool"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 200,
+      "max": null,
+      "unit": "µg/g",
+      "operator": "gt",
+      "sex": "any",
+      "ageNote": "adults and children (not sex-specific)",
+      "note": "Normal is >200 µg/g of stool; <200 µg/g diagnoses exocrine pancreatic insufficiency (EPI) and <100 µg/g is severe, with 100-200 an indeterminate zone. NOT a blood test — a single random stool sample (a formed one: a watery stool dilutes the enzyme and produces a false low). Sensitive for moderate-severe EPI but insensitive for mild disease, so a normal result does not fully exclude it. Pancreatic enzyme supplements do NOT interfere — the assay is specific to HUMAN elastase, so the test can be taken while on enzyme replacement. LOINC 25907-7 verified on loinc.org (Property MCnt, System Stool, Active)."
+    },
+    "evidenceLevel": "consensus",
+    "references": [
+      {
+        "organization": "BMC Medicine (peer-reviewed review)",
+        "document": "Struyvenberg MR, Martin CR, Freedman SD. Practical guide to exocrine pancreatic insufficiency - Breaking the myths. BMC Med 15:29",
+        "year": 2017,
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5301368/",
+        "doi": "10.1186/s12916-017-0783-y",
+        "quote": "The reference range of less than 200 μg/g feces can be applied to both children and adults for the diagnosis of EPI. Some consider values less than 100 μg/g feces as diagnostic of EPI, with fecal elastase values between 100 and 200 μg/g to be indeterminate and difficult to interpret."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "The only routine test of what the pancreas actually DOES. Amylase and lipase read acute INJURY and are typically normal in long-standing pancreatic disease, so they cannot answer 'is this pancreas still doing its job?'. Elastase-1 is a digestive enzyme made only by the pancreas and passed through the gut unchanged, so its concentration in stool is a direct read of exocrine output. Low levels mean food is not being digested — the mechanism behind fatty stools, weight loss, bloating and the quiet deficiencies of the fat-soluble vitamins (A, D, E, K) — and it is treatable with enzyme replacement, which is why finding it matters.",
+    "frequency": null,
+    "panel": "Pancreas",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Панкреатическая эластаза-1 (кал)",
+        "why": "Единственный рутинный анализ, который проверяет, что поджелудочная железа РЕАЛЬНО ДЕЛАЕТ. Амилаза и липаза показывают острое ПОВРЕЖДЕНИЕ и при длительно текущем заболевании обычно нормальны, поэтому они не могут ответить на вопрос «справляется ли железа со своей работой?». Эластаза-1 — пищеварительный фермент, который вырабатывается только поджелудочной железой и проходит кишечник не разрушаясь, поэтому его концентрация в кале — прямой показатель внешнесекреторной функции. Низкие значения означают, что пища не переваривается — это механизм жирного стула, потери веса, вздутия и незаметного дефицита жирорастворимых витаминов (A, D, E, K), — и это лечится заместительной ферментной терапией, ради чего его и ищут.",
+        "note": "Норма — >200 µg/g кала; <200 µg/g означает внешнесекреторную недостаточность поджелудочной железы, <100 µg/g — тяжёлую; 100-200 — неопределённая зона. Это НЕ анализ крови — нужен однократный образец кала (оформленного: жидкий стул разбавляет фермент и даёт ложно низкое значение). Чувствителен при умеренной и тяжёлой недостаточности, но плохо улавливает лёгкую, поэтому нормальный результат не исключает её полностью. Приём ферментных препаратов НЕ мешает — тест специфичен к ЧЕЛОВЕЧЕСКОЙ эластазе, поэтому его можно сдавать на фоне заместительной терапии. LOINC 25907-7 проверен на loinc.org (Property MCnt, System Stool, Active)."
+      }
+    }
+  },
+  "Osteocalcin": {
+    "key": "Osteocalcin",
+    "shortName": "Osteocalcin",
+    "displayName": "Osteocalcin (bone Gla protein)",
+    "aliases": [
+      "Остеокальцин",
+      "Osteocalcin (bone Gla protein)"
+    ],
+    "loincComponent": "Osteocalcin",
+    "loincs": [
+      {
+        "code": "2697-1",
+        "longName": "Osteocalcin [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 9,
+      "max": 42,
+      "unit": "ng/mL",
+      "operator": "between",
+      "sex": "female",
+      "ageNote": "adult female (>=18 y)",
+      "note": "Bone-formation marker. IMPORTANT — the cited source documents this interval for FEMALES aged >=18 y; a male-specific interval is NOT corroborated by the quote stored here, so do not read this band as applying to men. Osteocalcin is renally cleared, so it rises in impaired kidney function without any increase in bone turnover — read it against eGFR. Turnover markers are strongly age-, sex- and menopause-dependent and are assay-specific; compare serial values on the SAME assay rather than to a population range."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Michigan Medicine — MLabs (Mayo assay)",
+        "document": "Osteocalcin, serum — reference range",
+        "year": 2025,
+        "url": "https://mlabs.umich.edu/tests/osteocalcin",
+        "doi": null,
+        "quote": "Females <5 years: 14-126 ng/mL; ... > or =18 years: 9-42 ng/mL"
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Osteocalcin is made by osteoblasts as they build bone, so it reads bone FORMATION. It is vitamin-K dependent: vitamin K is what activates it to bind calcium into the bone matrix. Read with a resorption marker (CTX) to see which way the bone is going.",
+    "frequency": null,
+    "panel": "Bone turnover",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Остеокальцин",
+        "why": "Остеокальцин вырабатывают клетки, которые СТРОЯТ кость (остеобласты), поэтому он показывает, идёт ли костеобразование. Он зависит от витамина K: именно витамин K его активирует, чтобы он «вшивал» кальций в костную ткань. Смотрят вместе с маркёром разрушения (β-CrossLaps).",
+        "note": "Маркёр костеобразования. Выводится почками, поэтому при сниженной функции почек повышается сам по себе, без ускорения костного обмена. Референс сильно зависит от пола, возраста и менопаузального статуса — приведён диапазон для женщин в постменопаузе. Значения зависят от тест-системы: сравнивать надо свои же повторные анализы, сделанные одним методом."
+      }
+    },
+    "modifiers": [
+      {
+        "drugClass": "antiresorptive",
+        "direction": "unreliable",
+        "strength": "consensus",
+        "note": "On a bisphosphonate or denosumab this marker is suppressed by the drug itself — deeply (denosumab cuts CTX by ~85% within days; alendronate cuts resorption markers by 50-70%). The number is still useful, but it is now measuring the TREATMENT (is it working, are you taking it), not your natural bone turnover — so it must not be compared against a normal range built from untreated people.",
+        "noteRu": "На бисфосфонате или деносумабе этот показатель подавлен самим лекарством, причём сильно (деносумаб снижает CTX примерно на 85% за считанные дни; алендронат снижает маркёры разрушения кости на 50-70%). Цифра при этом не бесполезна — но она теперь измеряет ЛЕЧЕНИЕ (работает ли оно, принимаете ли вы препарат), а не ваш собственный костный обмен. Поэтому сравнивать её с нормой, построенной на людях без лечения, нельзя.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed (Prolia/denosumab) and U.S. FDA / DailyMed (Fosamax/alendronate)",
+          "document": "Prolia (denosumab) Prescribing Information; Fosamax (alendronate sodium) Prescribing Information",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=49e5afe9-a0c7-40c4-af9f-f287a80c5c88",
+          "doi": null,
+          "quote": "Prolia: 'reduction in the bone resorption marker serum type 1 C-telopeptide (CTX) by approximately 85% by 3 days, with maximal reductions occurring by 1 month'; 'subsequent reductions in bone formation markers (i.e., osteocalcin and procollagen type 1 N-terminal peptide [P1NP]) were observed starting 1 month after the first dose'. Fosamax: 'reduced urinary excretion of markers of bone resorption... by approximately 50% and 70%'."
+        }
+      },
+      {
+        "drugClass": "glucocorticoid",
+        "direction": "down",
+        "strength": "heuristic",
+        "note": "Glucocorticoids (steroids) suppress bone FORMATION quickly and in proportion to the dose, so this marker drops while bone is being lost, not gained. Direction is well accepted; the size of the effect is not well pinned down.",
+        "noteRu": "Глюкокортикоиды (стероиды) быстро и дозозависимо подавляют ОБРАЗОВАНИЕ кости, поэтому этот показатель падает — при том что кость при этом теряется, а не набирается. Направление эффекта общепризнано, а вот его величина изучена плохо.",
+        "source": {
+          "organization": "ESCEO / IOF / IFCC (Osteoporosis International)",
+          "document": "Update on the role of bone turnover markers in the diagnosis and management of osteoporosis — consensus",
+          "year": 2025,
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12064614/",
+          "doi": null,
+          "quote": "Studies involving antiresorptive therapy have shown a decrease of BTMs ranging from -10 to -81%. ... Medications with action on bone turnover, including hormones and glucocorticoid, as well as bone-acting agents will influence BTM levels."
+        }
+      }
+    ]
+  },
+  "CTX": {
+    "key": "CTX",
+    "shortName": "CTX",
+    "displayName": "Beta-CrossLaps (CTx, C-telopeptide)",
+    "aliases": [
+      "β-CrossLaps",
+      "Бета-кросслапс",
+      "C-телопептид",
+      "CTx"
+    ],
+    "loincComponent": "Collagen crosslinked C-telopeptide",
+    "loincs": [
+      {
+        "code": "41171-0",
+        "longName": "Collagen crosslinked C-telopeptide [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "pg/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 177,
+      "max": 1015,
+      "unit": "pg/mL",
+      "operator": "between",
+      "sex": "female",
+      "ageNote": "postmenopausal female (ARUP menopausal-status band)",
+      "note": "Bone-RESORPTION marker. The range shown is the POSTMENOPAUSAL female band (177-1015 pg/mL). ARUP also publishes age bands for women: 60-69 y 132-752, >=70 y 118-776 pg/mL; premenopausal 136-689. CTX has a large circadian swing (highest in the early morning, falls after eating) — draw fasting, in the morning, and always the same way."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "C-Telopeptide, Beta-Cross-Linked, Serum (ARUP test 0070416) — Reference Interval",
+        "year": 2025,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0070416",
+        "doi": null,
+        "quote": "Premenopausal: 136-689 pg/mL; Postmenopausal: 177-1015 pg/mL. ... 60-69 years: 132-752 pg/mL; 70 years or greater: 118-776 pg/mL"
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "CTX is a fragment torn out of bone collagen when bone is broken down, so it reads bone RESORPTION — the demolition side. Paired with a formation marker (P1NP or osteocalcin) it shows whether the skeleton is losing more than it builds.",
+    "frequency": null,
+    "panel": "Bone turnover",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "β-CrossLaps (C-телопептид)",
+        "why": "β-CrossLaps — это обломок костного коллагена, который отрывается, когда кость РАЗРУШАЕТСЯ. Он показывает скорость разрушения костной ткани. Вместе с маркёром костеобразования (P1NP или остеокальцин) видно, теряет скелет больше, чем строит, или нет.",
+        "note": "Маркёр разрушения кости. Показан диапазон для женщин в постменопаузе (177–1015 pg/mL); ARUP приводит также возрастные: 60–69 лет 132–752, 70 лет и старше 118–776 pg/mL. Сильные суточные колебания: максимум рано утром, после еды падает — сдавать утром натощак и всегда одинаково."
+      }
+    },
+    "modifiers": [
+      {
+        "drugClass": "statin",
+        "direction": "down",
+        "strength": "disputed",
+        "note": "DISPUTED. Observational data (one large cohort) found lower CTX in statin users, but randomized trials pooled together show NO effect, and one subgroup analysis pointed the other way. Treat a CTX value on a statin as if the drug were not there — and do not read any of this as bone harm: in a randomized trial of 17,802 people rosuvastatin did not change fracture risk at all.",
+        "noteRu": "СПОРНО. По наблюдательным данным (одна крупная когорта) у принимающих статины CTX ниже, но в рандомизированных исследованиях эффекта НЕТ, а в одном подгрупповом анализе он оказался обратным. Практически: считайте CTX на фоне статина так, как будто препарата нет. И главное — не читайте это как вред для костей: в рандомизированном исследовании на 17 802 участниках розувастатин никак не изменил риск переломов.",
+        "source": {
+          "organization": "Advances in Pharmaceutical Bulletin (Arabi SM et al.) — GRADE-assessed dose-response meta-analysis of RCTs; and Maturitas / JCEM (Hernandez JL et al., Camargo Cohort)",
+          "document": "Statin therapy and bone turnover markers: meta-analysis of randomized controlled trials (7 trials, n=542). Contrasted with the observational Camargo Cohort (Maturitas 2013; JCEM 2014).",
+          "year": 2024,
+          "url": "https://doi.org/10.34172/apb.2024.051",
+          "doi": "10.34172/apb.2024.051",
+          "quote": "Statin therapy did not change the S-CTX concentration when compared to the controls (WMD = 0.01 ng/mL; 95% CI -0.03 to 0.06; p = 0.5; I2 = 71.2%). [GRADE certainty for CTX: low. Subgroup analysis found atorvastatin INCREASED S-CTX.] By contrast the observational Camargo Cohort (Maturitas 2013, n=2431) reported: 'they had lower levels of aminoterminal propeptide of type I collagen (PINP) and C-terminal telopeptide of type I collagen (CTX) than non-users (p<0.0001).' The two disagree."
+        }
+      },
+      {
+        "drugClass": "antiresorptive",
+        "direction": "unreliable",
+        "strength": "consensus",
+        "note": "On a bisphosphonate or denosumab this marker is suppressed by the drug itself — deeply (denosumab cuts CTX by ~85% within days; alendronate cuts resorption markers by 50-70%). The number is still useful, but it is now measuring the TREATMENT (is it working, are you taking it), not your natural bone turnover — so it must not be compared against a normal range built from untreated people.",
+        "noteRu": "На бисфосфонате или деносумабе этот показатель подавлен самим лекарством, причём сильно (деносумаб снижает CTX примерно на 85% за считанные дни; алендронат снижает маркёры разрушения кости на 50-70%). Цифра при этом не бесполезна — но она теперь измеряет ЛЕЧЕНИЕ (работает ли оно, принимаете ли вы препарат), а не ваш собственный костный обмен. Поэтому сравнивать её с нормой, построенной на людях без лечения, нельзя.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed (Prolia/denosumab) and U.S. FDA / DailyMed (Fosamax/alendronate)",
+          "document": "Prolia (denosumab) Prescribing Information; Fosamax (alendronate sodium) Prescribing Information",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=49e5afe9-a0c7-40c4-af9f-f287a80c5c88",
+          "doi": null,
+          "quote": "Prolia: 'reduction in the bone resorption marker serum type 1 C-telopeptide (CTX) by approximately 85% by 3 days, with maximal reductions occurring by 1 month'; 'subsequent reductions in bone formation markers (i.e., osteocalcin and procollagen type 1 N-terminal peptide [P1NP]) were observed starting 1 month after the first dose'. Fosamax: 'reduced urinary excretion of markers of bone resorption... by approximately 50% and 70%'."
+        }
+      }
+    ]
+  },
+  "P1NP": {
+    "key": "P1NP",
+    "shortName": "P1NP",
+    "displayName": "P1NP (procollagen type I N-terminal propeptide)",
+    "aliases": [
+      "P1NP",
+      "PINP",
+      "Проколлаген I типа N-концевой пропептид"
+    ],
+    "loincComponent": "Procollagen type I.N-terminal propeptide",
+    "loincs": [
+      {
+        "code": "77370-5",
+        "longName": "Procollagen type I.N-terminal propeptide [Mass/volume] in Serum or Plasma by Immunoassay",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 16,
+      "max": 96,
+      "unit": "ng/mL",
+      "operator": "between",
+      "sex": "female",
+      "ageNote": "postmenopausal female",
+      "note": "Bone-FORMATION marker. Reported as ng/mL or µg/L — the same number (1 µg/L = 1 ng/mL). The band shown is postmenopausal female (16-96); premenopausal female 19-83, adult male 22-87. P1NP is the IOF/IFCC reference marker for bone formation and the standard way to check that osteoporosis treatment is working (it should fall on an antiresorptive, rise on an anabolic)."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Michigan Medicine — MLabs (Mayo intact-P1NP assay)",
+        "document": "Procollagen I Intact N-Terminal, Serum — reference range",
+        "year": 2025,
+        "url": "https://mlabs.umich.edu/tests/procollagen-i-intact-n-terminal-serum",
+        "doi": null,
+        "quote": "Adult male: 22 - 87 mcg/L; Adult female premenopausal: 19 - 83 mcg/L; Adult female post menopausal: 16 - 96 mcg/L."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "P1NP is the offcut released when new bone collagen is laid down, so it reads bone FORMATION — the building side. It is the marker of choice for checking that osteoporosis treatment is doing what it should.",
+    "frequency": null,
+    "panel": "Bone turnover",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "P1NP (проколлаген I типа)",
+        "why": "P1NP — это «обрезок», который отделяется, когда организм укладывает новый костный коллаген. Он показывает скорость СТРОИТЕЛЬСТВА кости. Основной маркёр для проверки того, работает ли лечение остеопороза.",
+        "note": "Маркёр костеобразования. Обозначается и как нг/мл, и как мкг/л — это одно и то же число. Показан диапазон для женщин в постменопаузе (16–96); до менопаузы 19–83, у мужчин 22–87. Референс сильно зависит от пола, возраста и менопаузального статуса."
+      }
+    },
+    "modifiers": [
+      {
+        "drugClass": "antiresorptive",
+        "direction": "unreliable",
+        "strength": "consensus",
+        "note": "On a bisphosphonate or denosumab this marker is suppressed by the drug itself — deeply (denosumab cuts CTX by ~85% within days; alendronate cuts resorption markers by 50-70%). The number is still useful, but it is now measuring the TREATMENT (is it working, are you taking it), not your natural bone turnover — so it must not be compared against a normal range built from untreated people.",
+        "noteRu": "На бисфосфонате или деносумабе этот показатель подавлен самим лекарством, причём сильно (деносумаб снижает CTX примерно на 85% за считанные дни; алендронат снижает маркёры разрушения кости на 50-70%). Цифра при этом не бесполезна — но она теперь измеряет ЛЕЧЕНИЕ (работает ли оно, принимаете ли вы препарат), а не ваш собственный костный обмен. Поэтому сравнивать её с нормой, построенной на людях без лечения, нельзя.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed (Prolia/denosumab) and U.S. FDA / DailyMed (Fosamax/alendronate)",
+          "document": "Prolia (denosumab) Prescribing Information; Fosamax (alendronate sodium) Prescribing Information",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=49e5afe9-a0c7-40c4-af9f-f287a80c5c88",
+          "doi": null,
+          "quote": "Prolia: 'reduction in the bone resorption marker serum type 1 C-telopeptide (CTX) by approximately 85% by 3 days, with maximal reductions occurring by 1 month'; 'subsequent reductions in bone formation markers (i.e., osteocalcin and procollagen type 1 N-terminal peptide [P1NP]) were observed starting 1 month after the first dose'. Fosamax: 'reduced urinary excretion of markers of bone resorption... by approximately 50% and 70%'."
+        }
+      },
+      {
+        "drugClass": "glucocorticoid",
+        "direction": "down",
+        "strength": "heuristic",
+        "note": "Glucocorticoids (steroids) suppress bone FORMATION quickly and in proportion to the dose, so this marker drops while bone is being lost, not gained. Direction is well accepted; the size of the effect is not well pinned down.",
+        "noteRu": "Глюкокортикоиды (стероиды) быстро и дозозависимо подавляют ОБРАЗОВАНИЕ кости, поэтому этот показатель падает — при том что кость при этом теряется, а не набирается. Направление эффекта общепризнано, а вот его величина изучена плохо.",
+        "source": {
+          "organization": "ESCEO / IOF / IFCC (Osteoporosis International)",
+          "document": "Update on the role of bone turnover markers in the diagnosis and management of osteoporosis — consensus",
+          "year": 2025,
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12064614/",
+          "doi": null,
+          "quote": "Studies involving antiresorptive therapy have shown a decrease of BTMs ranging from -10 to -81%. ... Medications with action on bone turnover, including hormones and glucocorticoid, as well as bone-acting agents will influence BTM levels."
+        }
+      }
+    ]
+  },
+  "Vit K": {
+    "key": "Vit K",
+    "shortName": "Vit K",
+    "displayName": "Vitamin K1 (phylloquinone)",
+    "aliases": [
+      "Витамин K",
+      "Витамин K1",
+      "Филлохинон",
+      "Phytonadione"
+    ],
+    "loincComponent": "Phytonadione",
+    "loincs": [
+      {
+        "code": "9622-2",
+        "longName": "Phytonadione [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "ng/mL",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 0.1,
+      "max": 2.2,
+      "unit": "ng/mL",
+      "operator": "between",
+      "sex": "any",
+      "ageNote": "adult",
+      "note": "Measured by LC-MS/MS. Serum vitamin K1 reflects recent intake and is a weak measure of tissue status; the functional alternative is undercarboxylated osteocalcin (ucOC). Warfarin and other vitamin-K antagonists make it uninterpretable."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "Allina Health Laboratory (Mayo/Labcorp LC-MS/MS assay)",
+        "document": "Vitamin K1, serum — reference range and LOINC",
+        "year": 2025,
+        "url": "https://labs.allinahealth.org/Lab/View?customObjectUID=a0fc8dc1-ff14-47d1-bea8-4857728d4921&templateUID=ff24f908-cdc8-4068-84eb-6ce60783f288",
+        "doi": null,
+        "quote": "Reference Range: 0.10 - 2.20 ng/mL. Result LOINC: 9622-2"
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "Vitamin K activates osteocalcin, and activated osteocalcin is what binds calcium into the bone matrix. Without it, calcium is absorbed but not fixed into bone. It sits in this lens for that one reason.",
+    "frequency": null,
+    "panel": "Electrolytes, minerals & vitamins",
+    "unreliableAssay": false,
+    "lang": {
+      "ru": {
+        "displayName": "Витамин K1 (филлохинон)",
+        "why": "Витамин K активирует остеокальцин, а активированный остеокальцин «вшивает» кальций в костную ткань. Без витамина K кальций всасывается, но в кость не закрепляется. Ради этого он и стоит в этой линзе.",
+        "note": "Определяется методом ЛХ-МС/МС. Уровень в крови отражает скорее недавнее поступление с едой, чем запасы в тканях. На фоне варфарина показатель не интерпретируется."
+      }
+    }
+  },
+  "BALP": {
+    "key": "BALP",
+    "shortName": "BALP",
+    "displayName": "Bone-specific alkaline phosphatase",
+    "aliases": [
+      "Костная щелочная фосфатаза",
+      "КЩФ",
+      "Bone ALP",
+      "BSAP",
+      "Ostase"
+    ],
+    "loincComponent": "Alkaline phosphatase.bone",
+    "loincs": [
+      {
+        "code": "17838-4",
+        "longName": "Alkaline phosphatase.bone [Mass/volume] in Serum or Plasma",
+        "property": "MCnc",
+        "unit": "µg/L",
+        "system": "Ser/Plas"
+      }
+    ],
+    "molarMass": null,
+    "molarMassRef": null,
+    "refDefault": {
+      "min": 7,
+      "max": 22.4,
+      "unit": "µg/L",
+      "operator": "between",
+      "sex": "female",
+      "ageNote": "postmenopausal women",
+      "note": "ARUP Laboratories immunoassay interval. Postmenopausal women 7.0-22.4 µg/L; premenopausal women 4.5-16.9 µg/L; men >=25 y 6.5-20.1 µg/L. The postmenopausal interval is HIGHER than the premenopausal one (bone turnover accelerates after menopause), so a single 'adult female' range would misclassify. Turnover markers are assay-specific: compare serial values run on the SAME assay rather than against a population range. IMPORTANT ASSAY CAVEAT: liver ALP cross-reacts — each 100 U/L of liver ALP adds 2.5-5.8 µg/L to the reported BALP, so a genuinely hepatic ALP rise can itself inflate BALP. BALP is the best bone-specific fraction, not an infallible arbiter."
+    },
+    "evidenceLevel": "reference-lab",
+    "references": [
+      {
+        "organization": "ARUP Laboratories",
+        "document": "Bone Specific Alkaline Phosphatase (test code 0070053), Quantitative Immunoassay — Reference Interval",
+        "year": 2026,
+        "url": "https://ltd.aruplab.com/Tests/Pub/0070053",
+        "doi": null,
+        "quote": "Premenopausal Female 4.5-16.9 µg/L; Postmenopausal Female 7.0-22.4 µg/L; 25 years and older [Male] 6.5-20.1 µg/L; 18-24 years [Male] 10.0-28.8 µg/L. Liver alkaline phosphatase can affect the measurement of bone specific alkaline phosphatase in this assay. Each 100 U/L of liver alkaline phosphatase contributes an additional 2.5 to 5.8 µg/L to the bone specific alkaline phosphatase result."
+      },
+      {
+        "organization": "Mayo Clinic Proceedings (Minisola S, Cipriani C, Colangelo L, Labbadia G, Pepe J, Magnusson P)",
+        "document": "Diagnostic Approach to Abnormal Alkaline Phosphatase Value (Mayo Clin Proc 2025;100:712-728, PMID 40019430)",
+        "year": 2025,
+        "url": "https://pubmed.ncbi.nlm.nih.gov/40019430/",
+        "doi": "10.1016/j.mayocp.2024.11.019",
+        "quote": "Electrophoretic assays are preferable for visualizing and investigating the cause of increased serum total ALP activities, and bone ALP immunoassays are preferable for investigating and monitoring individuals with bone and mineral metabolic abnormalities."
+      },
+      {
+        "organization": "American College of Gastroenterology",
+        "document": "ACG Clinical Guideline: Evaluation of Abnormal Liver Chemistries (Am J Gastroenterol 2017;112:18-35, PMID 27995906)",
+        "year": 2017,
+        "url": "https://pubmed.ncbi.nlm.nih.gov/27995906/",
+        "doi": "10.1038/ajg.2016.517",
+        "quote": "Alkaline phosphatase may also be fractionated to better delineate bone, intestinal or hepatic origin of an elevated alkaline phosphatase."
+      }
+    ],
+    "labPrintedRef": null,
+    "why": "The clean answer to the ambiguity built into total ALP. Total alkaline phosphatase SUMS a bone isoenzyme and a liver/bile one, so a raised total never says by itself which source is responsible. BALP measures the BONE fraction alone, and it reads bone FORMATION (osteoblasts release it as they build bone) — the same thing P1NP reads, by a different route. Order it when a raised ALP has to be pinned to bone or to liver and the usual first move (checking whether GGT is raised too) has not settled it — or when GGT is unreliable because the person is taking ursodeoxycholic acid, which lowers it. Not a routine test: it is the confirmatory one, worth having when the answer actually changes what you do.",
+    "drawNote": null,
+    "frequency": null,
+    "panel": "Bone turnover",
+    "unreliableAssay": false,
+    "modifiers": [
+      {
+        "drugClass": "statin",
+        "direction": "down",
+        "strength": "heuristic",
+        "note": "Statins slightly lower bone-specific ALP (pooled across randomized trials, with no disagreement between them — but the absolute effect is small and probably not clinically meaningful). Worth knowing if BALP is being used to judge bone formation.",
+        "noteRu": "Статины немного снижают костную щелочную фосфатазу (по данным рандомизированных исследований, согласующихся между собой, — но эффект по величине небольшой и, скорее всего, клинически незначимый). Стоит помнить, если по КЩФ оценивают костеобразование.",
+        "source": {
+          "organization": "Advances in Pharmaceutical Bulletin (Arabi SM et al.)",
+          "document": "Statin therapy and bone turnover markers — GRADE-assessed meta-analysis of randomized controlled trials",
+          "year": 2024,
+          "url": "https://doi.org/10.34172/apb.2024.051",
+          "doi": "10.34172/apb.2024.051",
+          "quote": "Statin therapy significantly reduces BALP concentration (WMD = -1.1 U/L; 95% CI -2.2 to -0.07; p = 0.03) without any significant heterogeneity observed across the studies (I2 = 0%). [GRADE: moderate. The absolute effect is small.]"
+        }
+      },
+      {
+        "drugClass": "antiresorptive",
+        "direction": "unreliable",
+        "strength": "consensus",
+        "note": "On a bisphosphonate or denosumab this marker is suppressed by the drug itself — deeply (denosumab cuts CTX by ~85% within days; alendronate cuts resorption markers by 50-70%). The number is still useful, but it is now measuring the TREATMENT (is it working, are you taking it), not your natural bone turnover — so it must not be compared against a normal range built from untreated people.",
+        "noteRu": "На бисфосфонате или деносумабе этот показатель подавлен самим лекарством, причём сильно (деносумаб снижает CTX примерно на 85% за считанные дни; алендронат снижает маркёры разрушения кости на 50-70%). Цифра при этом не бесполезна — но она теперь измеряет ЛЕЧЕНИЕ (работает ли оно, принимаете ли вы препарат), а не ваш собственный костный обмен. Поэтому сравнивать её с нормой, построенной на людях без лечения, нельзя.",
+        "source": {
+          "organization": "U.S. FDA / DailyMed (Prolia/denosumab) and U.S. FDA / DailyMed (Fosamax/alendronate)",
+          "document": "Prolia (denosumab) Prescribing Information; Fosamax (alendronate sodium) Prescribing Information",
+          "year": 2025,
+          "url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=49e5afe9-a0c7-40c4-af9f-f287a80c5c88",
+          "doi": null,
+          "quote": "Prolia: 'reduction in the bone resorption marker serum type 1 C-telopeptide (CTX) by approximately 85% by 3 days, with maximal reductions occurring by 1 month'; 'subsequent reductions in bone formation markers (i.e., osteocalcin and procollagen type 1 N-terminal peptide [P1NP]) were observed starting 1 month after the first dose'. Fosamax: 'reduced urinary excretion of markers of bone resorption... by approximately 50% and 70%'."
+        }
+      },
+      {
+        "drugClass": "glucocorticoid",
+        "direction": "down",
+        "strength": "heuristic",
+        "note": "Glucocorticoids (steroids) suppress bone FORMATION quickly and in proportion to the dose, so this marker drops while bone is being lost, not gained. Direction is well accepted; the size of the effect is not well pinned down.",
+        "noteRu": "Глюкокортикоиды (стероиды) быстро и дозозависимо подавляют ОБРАЗОВАНИЕ кости, поэтому этот показатель падает — при том что кость при этом теряется, а не набирается. Направление эффекта общепризнано, а вот его величина изучена плохо.",
+        "source": {
+          "organization": "ESCEO / IOF / IFCC (Osteoporosis International)",
+          "document": "Update on the role of bone turnover markers in the diagnosis and management of osteoporosis — consensus",
+          "year": 2025,
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12064614/",
+          "doi": null,
+          "quote": "Studies involving antiresorptive therapy have shown a decrease of BTMs ranging from -10 to -81%. ... Medications with action on bone turnover, including hormones and glucocorticoid, as well as bone-acting agents will influence BTM levels."
+        }
+      }
+    ],
+    "lang": {
+      "ru": {
+        "displayName": "Костная щелочная фосфатаза (КЩФ)",
+        "why": "Это чистый ответ на путаницу, заложенную в обычной щелочной фосфатазе (ЩФ). Обычная ЩФ — это СУММА двух ферментов: костного и печёночно-желчного. Поэтому повышенная ЩФ сама по себе никогда не говорит, откуда она взялась.\n\nКостная щелочная фосфатаза измеряет ТОЛЬКО костную долю. Она показывает, как активно СТРОИТСЯ кость (её выделяют остеобласты — клетки-строители), то есть отвечает на тот же вопрос, что и P1NP, но другим способом.\n\nКогда её стоит сдавать: если повышенную ЩФ нужно уверенно отнести к кости или к печени, а обычный первый шаг — посмотреть, повышена ли заодно ГГТ — вопрос не решил. Или если на ГГТ нельзя положиться, потому что человек принимает урсодезоксихолевую кислоту (она ГГТ снижает). Это не рутинный анализ, а уточняющий: его имеет смысл делать тогда, когда от ответа зависит решение.",
+        "note": "Интервал ARUP Laboratories (иммуноферментный метод). Женщины в постменопаузе 7,0-22,4 мкг/л; женщины до менопаузы 4,5-16,9 мкг/л; мужчины от 25 лет 6,5-20,1 мкг/л. Обратите внимание: у женщин в постменопаузе диапазон ВЫШЕ, чем до менопаузы, — после менопаузы костный обмен ускоряется. Значения зависят от тест-системы: сравнивать надо свои же повторные анализы, сделанные одним методом. ВАЖНАЯ ОГОВОРКА: печёночная ЩФ мешает измерению — каждые 100 Ед/л печёночной ЩФ добавляют к результату 2,5-5,8 мкг/л. Поэтому при действительно печёночном повышении ЩФ костная фракция тоже может оказаться завышенной. КЩФ — лучший костный показатель, но не абсолютный судья."
       }
     }
   }
