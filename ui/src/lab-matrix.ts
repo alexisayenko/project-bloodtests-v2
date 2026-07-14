@@ -52,6 +52,12 @@ const DEFAULT_I18N: Record<string, string> = {
   "popup.sources": "Sources",
   "popup.why": "Why",
   "popup.draw": "Draw",
+  /* Drug caveats — derived (analyte's generic modifiers ∩ the reader's own meds). */
+  "popup.meds": "Your medication affects this",
+  "popup.medIntermittent": "taken on and off — the effect comes and goes between draws, so the trend line can mislead",
+  "mod.up": "raises it",
+  "mod.down": "lowers it",
+  "mod.unreliable": "makes it unreliable",
   "popup.formula": "Formula",
   "popup.meaning": "What it is",
   "popup.consensus": "Interpretation",
@@ -73,6 +79,8 @@ const DEFAULT_I18N: Record<string, string> = {
   "badge.consensus": "consensus",
   "badge.heuristic": "heuristic",
   "badge.uncited": "uncited",
+  /* modifier evidence grade — reuses consensus/heuristic above, adds the contested one */
+  "badge.disputed": "disputed",
   "control.unitsUS": "Units: US",
   "control.unitsSI": "Units: SI",
   "control.detailsFull": "Details: full",
@@ -83,6 +91,7 @@ const DEFAULT_I18N: Record<string, string> = {
   "control.collapseAll": "Collapse all",
   "note.common": "Common knowledge",
   "note.personal": "Your case",
+  "note.sep": "What this means",
 };
 
 /** EN/RU helper matching the njk `la` (attributes) / `lt` (span) macros. */
@@ -127,7 +136,39 @@ export const TOOLBAR_CSS = `
 .labs-toolbar .lm-sep { width: 1px; align-self: stretch; min-height: 1.2em; background: var(--_rule-soft); margin: 0 0.15rem; }
 .lab-tabs-wrap { position: relative; margin: 0.4rem 0 0.2rem; }
 .lab-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0; }
-.lab-tabs .lab-tab { font-size: 0.78rem; padding: 0.25rem 0.8rem; border: 1px solid var(--_rule); border-radius: 999px; background: var(--_bg); color: var(--_muted); cursor: pointer; }
+/* UNIFORM PILLS. Every lens pill is the SAME BOX — one fixed width, one fixed height —
+   and the label wraps inside it. Two lines is the design height, so:
+     - a long label («Сердечно-сосудистый риск») wraps to two lines instead of being
+       truncated or stretching the pill;
+     - a short one («Все») keeps exactly the same box, its single line CENTRED in it
+       (inline-flex + align-items:center) — not stretched, not shrunk.
+   No ellipsis and no font shrink: whatever the label, it is fully readable.
+   height: 2.5em = two lines at line-height 1.25, + 0.5rem padding + 2px border
+   (border-box).
+   width: --_pill-w is the ONE number that has to hold every label, so it is set by the
+   WORST label — and the worst label is not the longest one, it is the one with the
+   longest UNBREAKABLE WORD, because a word with no space and no hyphen in it cannot be
+   wrapped at ANY line count. Measured on natalga.com (root 20px ⇒ pill font 15.6px):
+     «Инсулинорезистентность»    183px  ← 22 chars, nowhere to break: THE constraint
+     «Костно-минеральный баланс» 100px  (breaks at the hyphen and at the space)
+     «Сердечно-сосудистый риск»   85px
+   183px + 32px horizontal padding + 2px border = 217px floor; 11rem = 220px there,
+   3px of slack. Everything in that sum (word, padding, font) is proportional to the
+   root size, so rem keeps the pill correct on a consumer with a different root — at
+   root 16px the same 11rem is 176px and the labels shrink with it.
+   The consequence, stated plainly: at 220px only ~1.7 pills are on screen at once on a
+   390px phone. Adding lines cannot fix that — only shorter labels can. A consumer whose
+   lens names are shorter should set --_pill-w lower (the floor is: widest unbreakable
+   word + 2rem + 2px). */
+.lab-tabs .lab-tab {
+  box-sizing: border-box; flex: 0 0 auto;
+  width: var(--_pill-w, 11rem); height: calc(2.5em + 0.5rem + 2px);
+  display: inline-flex; align-items: center; justify-content: center; text-align: center;
+  white-space: normal; overflow-wrap: normal;
+  font-size: 0.78rem; line-height: 1.25;
+  padding: 0.25rem 0.8rem; border: 1px solid var(--_rule); border-radius: 999px;
+  background: var(--_bg); color: var(--_muted); cursor: pointer;
+}
 .lab-tabs .lab-tab:hover { color: var(--_fg); border-color: var(--_fg); }
 .lab-tabs .lab-tab[aria-pressed="true"] { color: var(--_bg); background: var(--_accent); border-color: var(--_accent); }
 @media (max-width: 640px) {
@@ -135,7 +176,6 @@ export const TOOLBAR_CSS = `
      hidden for calm; the edge fades below are the "more this way" signal. */
   .lab-tabs { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .lab-tabs::-webkit-scrollbar { display: none; }
-  .lab-tabs .lab-tab { flex: 0 0 auto; }
   /* Edge fades — the ONLY hint that the strip scrolls sideways (no glyphs, no
      buttons: the target user is a non-technical phone reader, and a chevron reads
      as a button she can't press). Painted as overlays on the WRAPPER, so they never
@@ -201,9 +241,9 @@ export class LabMatrix extends HTMLElement {
   private ruOn = false;
   private collapsed: Set<string> = new Set();
   private popupTarget: HTMLElement | null = null;
-  /** "Tap-anything" mode — see LabMatrixModel.tapHint. Drops the ⓘ, keeps the popup. */
+  /** "Tap-anything" mode — see LabMatrixModel.tapAnything. Drops the ⓘ, keeps the popup. */
   private get tapCell(): boolean {
-    return !!this._model?.tapHint;
+    return !!this._model?.tapAnything;
   }
   private _view = "all";
   private _keyViews: Record<string, string[]> = {};
@@ -414,22 +454,24 @@ export class LabMatrix extends HTMLElement {
       `<button type="button" class="tip-close" aria-label="Close">×</button>` +
       `<div class="tip-body"></div></div>`;
 
-    // "tap-anything" hint (natalga.com only — see LabMatrixModel.tapHint). ONE muted
-    // line of prose, not a control: it replaces the per-row ⓘ badges, which spent
-    // ~34px of a 97.5px phone column repeating a fact that is true of nearly every
-    // element on the page. Said once, in words, it costs one line for the whole table.
-    const hint = m.tapHint
-      ? `<p class="lm-hint muted"${biAttr(m.tapHint.en, m.tapHint.ru)}>${esc(
-          this.ruOn ? m.tapHint.ru : m.tapHint.en,
-        )}</p>`
-      : "";
-
     // per-view explainer prose — TWO collapsibles: "Common knowledge" (agnostic
     // teaching) + "Your case" (Alex's personal interpretation). Both filled by
     // applyView; RU is empty for now so their inner nodes carry NO data-en/data-ru
     // (applyLang leaves them untouched). Native collapsibles: the summary labels
     // are constant, the bodies swap per view; each hides when its content is empty.
+    //
+    // PLACEMENT: the notes render BELOW the table, never above it. The table is what
+    // the reader came for; the note is what explains it. Above the table the prose is a
+    // wall to get past; below, it waits for whoever has already looked and wants to know
+    // more. The separator below opens that section in the same visual family as the
+    // in-table `idx-sep` row, so the reading order down the page is:
+    //   numbers → derived indices → what it all means.
+    // The common note is OPEN by default (it is no longer in anyone's way, and closed it
+    // would just be a second thing to press); the personal note stays collapsed.
     const lensNotes =
+      `<div class="lens-note-sep" hidden><span${t.attr("note.sep")}>${esc(
+        t.text("note.sep", this.ruOn),
+      )}</span></div>` +
       `<details class="lens-note lens-note-common" part="lens-note" hidden>` +
       `<summary class="lens-note-sum">${esc(t.text("note.common", this.ruOn))}</summary>` +
       `<div class="lens-note-body"></div>` +
@@ -443,9 +485,8 @@ export class LabMatrix extends HTMLElement {
       `<style>${STYLES}${TOOLBAR_CSS}</style>` +
       tabsBar +
       toolbar +
-      hint +
       `<div class="labs-scroll-wrap"><div class="labs-scroll"><table class="labs matrix${
-        m.tapHint ? " tap-cell" : ""
+        this.tapCell ? " tap-cell" : ""
       }">` +
       `<thead>${head}</thead>` +
       `<tbody>${panelsHtml}${idxTabs}</tbody>` +
@@ -555,7 +596,7 @@ export class LabMatrix extends HTMLElement {
     wrap.classList.toggle("at-end", x >= max - 1);
   }
 
-  /** Same for the data table, plus the two measurements its fades need: the sticky
+  /** The data table's fades, plus the two measurements they need: the sticky
    *  marker column's width (the left fade must start AFTER it, never on top of it)
    *  and any classic vertical-scrollbar width (the right fade must clear it). */
   private updateScrollEdges(): void {
@@ -845,15 +886,29 @@ export class LabMatrix extends HTMLElement {
     const isExplore = key === "explore";
     const pick = (b?: { en?: string; ru?: string }): string =>
       (this.ruOn && b?.ru ? b.ru : b?.en) ?? "";
-    const fill = (sel: string, html: string): void => {
+    const fill = (sel: string, html: string, openByDefault = false): void => {
       const note = this.q(sel) as HTMLDetailsElement | null;
       if (!note) return;
       const body = note.querySelector(".lens-note-body");
       if (body) body.innerHTML = html;
       note.hidden = !html || isExplore;
-      if (resetOpen) note.open = false;
+      if (resetOpen) note.open = openByDefault && !note.hidden;
     };
-    fill(".lens-note-common", pick(blocks?.common));
+    const common = pick(blocks?.common);
+    // The summary carries the lens's FULL NAME. It is the only place the full name can
+    // surface: the tab pill may carry a shortened label (a pill is width-constrained),
+    // and there is no other per-lens heading anywhere on the page. "Костно-минеральный
+    // обмен — общие знания" both names the thing and keeps the section's register.
+    const sum = this.q(".lens-note-common .lens-note-sum") as HTMLElement | null;
+    if (sum) {
+      const tab = (this._model?.lensTabs ?? []).find((tb) => tb.key === key);
+      const name = tab ? (this.ruOn && tab.labelRu ? tab.labelRu : tab.label) : "";
+      const generic = this._i18n.text("note.common", this.ruOn);
+      sum.textContent = name && key !== "all" ? `${name} — ${generic.toLocaleLowerCase()}` : generic;
+    }
+    const sep = this.q(".lens-note-sep") as HTMLElement | null;
+    if (sep) sep.hidden = (!common && !pick(blocks?.personal)) || isExplore;
+    fill(".lens-note-common", common, true);
     fill(".lens-note-personal", pick(blocks?.personal));
   }
 
@@ -1377,6 +1432,50 @@ export class LabMatrix extends HTMLElement {
         )}>${esc(p.why)}</span></div>`
       : "";
 
+    // Drug caveats — DERIVED, never authored. The engine joined this analyte's generic
+    // `modifiers` ("a thiazide raises calcium") with the reader's own medication list
+    // ("she takes Вальсакор Н"), so the note appears by itself on every analyte the drug
+    // touches and vanishes when the drug does. Empty for any consumer that ships no med
+    // list — Alex's homepage renders nothing here, which is the intended degradation.
+    //
+    // This is the one section that is genuinely ABOUT HER, so it is not buried in the
+    // collapsed technical layer: a reader who does not know that her blood-pressure pill
+    // is quietly holding her calcium up will read the calcium number wrong, and no amount
+    // of correct reference-range prose will save her from that.
+    const modSec = (p.modifiers || []).length
+      ? `<div class="ap-sec ap-mods">` +
+        `<span class="ap-lbl"${t.attr("popup.meds")}>${esc(t.text("popup.meds", this.ruOn))}</span>` +
+        (p.modifiers || [])
+          .map((m) => {
+            const arrow = m.direction === "up" ? "↑" : m.direction === "down" ? "↓" : "⚠";
+            const drugs = m.drugs.join(", ");
+            const inter = m.intermittent
+              ? ` <span class="ap-mod-inter"${t.attr("popup.medIntermittent")}>${esc(
+                  t.text("popup.medIntermittent", this.ruOn),
+                )}</span>`
+              : "";
+            const src = m.source?.url
+              ? ` <a class="ap-cite" href="${esc(m.source.url)}" target="_blank" rel="noopener noreferrer">${esc(
+                  m.source.cite || "source",
+                )}</a>`
+              : "";
+            return (
+              `<div class="ap-mod ap-mod-${esc(m.direction)}">` +
+              `<div class="ap-mod-head"><span class="ap-mod-arrow">${arrow}</span> ` +
+              `<b${biAttr(drugs, drugs)}>${esc(drugs)}</b>` +
+              ` <span class="ap-badge ap-lvl-${esc(m.strength)}"${t.attr(
+                "badge." + m.strength,
+              )}>${esc(m.strength)}</span></div>` +
+              `<div class="ap-mod-note"${biAttr(m.note, m.noteRu)}>${esc(m.note)}</div>` +
+              (inter ? `<div class="ap-mod-note">${inter}</div>` : "") +
+              (src ? `<div class="ap-mod-src">${src}</div>` : "") +
+              `</div>`
+            );
+          })
+          .join("") +
+        `</div>`
+      : "";
+
     // Draw — universal draw-physiology note (timing/prep). Agnostic; mirrors the
     // why/note blocks. (The former personal "Why scheduled" section was removed —
     // the ⓘ popup stays patient-agnostic; scheduling lives in the personal note.)
@@ -1403,6 +1502,9 @@ export class LabMatrix extends HTMLElement {
       `<strong${biAttr(p.displayName, p.displayNameRu)}>${esc(p.displayName)}</strong>${short}` +
       why +
       range +
+      // after the range, deliberately: the caveat's job is to change how the reader reads
+      // the number she has just compared against it ("normal — but you are on a thiazide").
+      modSec +
       this.apMore(t, loincs + prov + refs + draw) +
       `</div></div>`
     );

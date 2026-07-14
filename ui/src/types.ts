@@ -69,6 +69,28 @@ export interface LabProvenance {
   molarMassRef?: { cite?: string; url?: string } | null;
   /** universal draw-physiology note (timing/prep) — shown in the popup "Draw" section. */
   drawNote?: string | null;
+  /**
+   * Drug caveats that apply to THIS reader — the engine's join of the analyte's
+   * generic `modifiers` ("a thiazide raises calcium") with the reader's own
+   * medication list ("she takes Вальсакор Н"). Derived, never authored. Absent or
+   * empty for any consumer that supplies no med list, so the section simply does
+   * not render.
+   */
+  modifiers?: LabModifier[];
+}
+
+/** One drug caveat on an analyte, already matched to a drug the reader takes. */
+export interface LabModifier {
+  drugClass: string;
+  direction: "up" | "down" | "unreliable";
+  strength: "consensus" | "heuristic" | "disputed";
+  note: string;
+  noteRu: string;
+  /** the reader's own drugs in this class, e.g. ["Вальсакор Н80"] */
+  drugs: string[];
+  /** taken on-and-off — the effect comes and goes BETWEEN draws, so it bends the trend line */
+  intermittent: boolean;
+  source?: LabReference | null;
 }
 
 /** A scheduled-draw prescription badge (which doctor can order the marker). */
@@ -207,16 +229,20 @@ export interface LabMatrixModel {
    *     rows AND derived-index rows) — on a 25vw phone column it cost ~34px of a
    *     97.5px cell, and since practically everything on the page is tappable a
    *     per-row "you can tap this" glyph carries no information;
-   *   - this hint line is rendered above the table instead, saying it once in words;
    *   - the marker cell gets `tabindex` so the whole cell is a keyboard target.
    *
    * The whole-marker-cell CLICK target is unconditional (see onDocClick) — where
-   * the ⓘ is still drawn (isayenko.org, which leaves `tapHint` unset) it simply
+   * the ⓘ is still drawn (isayenko.org, which leaves `tapAnything` unset) it simply
    * becomes an indicator inside an already-tappable cell, exactly like the ▸/▾
-   * triangle on a panel row. Leaving `tapHint` unset therefore renders byte-identical
-   * HTML to before.
+   * triangle on a panel row. Leaving `tapAnything` unset therefore renders
+   * byte-identical HTML to before.
+   *
+   * This used to be spelled `tapHint: {en, ru}` — an object whose PRESENCE flipped
+   * the mode and whose TEXT was also printed as a line of prose above the table.
+   * The prose was dropped (the affordance is discoverable without narrating it);
+   * the mode it carried was not, so it became a plain boolean.
    */
-  tapHint?: { en: string; ru: string };
+  tapAnything?: boolean;
   drawCount?: number;
   markerCount?: number;
   ok?: boolean;

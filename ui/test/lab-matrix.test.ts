@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { defineLabMatrix, LabMatrix } from "../src/index.js";
-import type { LabMatrixModel } from "../src/types.js";
+import type { LabMatrixModel, LabRow } from "../src/types.js";
 
 beforeAll(() => defineLabMatrix());
 
@@ -469,14 +469,14 @@ describe("<lab-matrix> lens views (phase 3b)", () => {
 });
 
 describe("marker cell — badge placement + price alignment", () => {
-  const cellFor = (row) => {
-    const el = document.createElement("lab-matrix");
+  const cellFor = (row: LabRow): Element => {
+    const el = document.createElement("lab-matrix") as LabMatrix;
     document.body.appendChild(el);
     el.model = {
       matrix: { cols: [{ id: "a", date: "2025-01", labName: "L" }], rows: [] },
       panels: [{ name: "P", rows: [row] }],
     };
-    return el.shadowRoot.querySelector("td.marker-col");
+    return el.shadowRoot!.querySelector("td.marker-col")!;
   };
   const prov = { hasCatalog: true, personal: false, displayName: "x", shownRange: "x", loincs: [], references: [] };
 
@@ -514,9 +514,9 @@ describe("marker cell — badge placement + price alignment", () => {
   it("price is a right-side sibling of the range (no ' · ' prefix)", () => {
     const c = cellFor({ key: "HGB", shortName: "HGB", displayName: "Hemoglobin", displayShortName: "HGB",
       unit: "g/dL", refText: "13.5–17.5", scheduled: true, price: 5, cells: [null] });
-    const meta = c.querySelector(".meta");
+    const meta = c.querySelector(".meta")!;
     expect(meta.querySelector(".meta-ref .unit-ref")).toBeTruthy();
-    expect(meta.querySelector(".meta-price .mprice").textContent).toBe("€5");
+    expect(meta.querySelector(".meta-price .mprice")!.textContent).toBe("€5");
     expect(meta.querySelector(".meta-ref .meta-price")).toBeNull(); // price is outside the range group
     expect(meta.textContent).not.toContain("· €"); // separator dropped
   });
@@ -606,8 +606,8 @@ describe("<lab-matrix> derived-index LOINC (ⓘ popup)", () => {
     const el = mount();
     const sr = el.shadowRoot!;
     const rows = sr.querySelectorAll("tr.idx-row");
-    const withLoinc = rows[0].querySelector(".index-pop")!;
-    const withoutLoinc = rows[1].querySelector(".index-pop")!;
+    const withLoinc = rows[0]!.querySelector(".index-pop")!;
+    const withoutLoinc = rows[1]!.querySelector(".index-pop")!;
     const link = withLoinc.querySelector(".ap-loincs a") as HTMLAnchorElement;
     expect(link).toBeTruthy();
     expect(link.getAttribute("href")).toBe("https://loinc.org/9830-1/");
@@ -647,18 +647,18 @@ describe("<lab-matrix> derived-index sub-label = green reference range (not form
     const el = mount();
     const sr = el.shadowRoot!;
     const rows = sr.querySelectorAll("tr.idx-row");
-    const meta = rows[0].querySelector(".meta") as HTMLElement;
+    const meta = rows[0]!.querySelector(".meta") as HTMLElement;
     expect(meta.textContent).toContain("< 0.11"); // range, not formula
     expect(meta.textContent).not.toContain("log₁₀"); // formula is NOT in the sub-label
     // formula stays available in the popup
-    expect(rows[0].querySelector(".index-pop .ap-formula-txt")?.textContent).toBe("log₁₀(TG / HDL)");
+    expect(rows[0]!.querySelector(".index-pop .ap-formula-txt")?.textContent).toBe("log₁₀(TG / HDL)");
     el.remove();
   });
 
   it("falls back to the formula when an index has no greenRange", () => {
     const el = mount();
     const sr = el.shadowRoot!;
-    const meta = sr.querySelectorAll("tr.idx-row")[1].querySelector(".meta") as HTMLElement;
+    const meta = sr.querySelectorAll("tr.idx-row")[1]!.querySelector(".meta") as HTMLElement;
     expect(meta.textContent).toContain("A / B");
     el.remove();
   });
@@ -711,10 +711,10 @@ describe("<lab-matrix> multi-lens derived index — no duplication (AIP-style)",
       Array.from(sr.querySelectorAll("tr.idx-row")).filter((r) => !(r as HTMLElement).hidden);
     el.view = "ir";
     expect(visibleIdx().length).toBe(1);
-    expect(visibleIdx()[0].getAttribute("data-itab")).toBe("ir");
+    expect(visibleIdx()[0]!.getAttribute("data-itab")).toBe("ir");
     el.view = "cardio";
     expect(visibleIdx().length).toBe(1);
-    expect(visibleIdx()[0].getAttribute("data-itab")).toBe("cardio");
+    expect(visibleIdx()[0]!.getAttribute("data-itab")).toBe("cardio");
     el.remove();
   });
 });
@@ -853,20 +853,56 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     el.remove();
   });
 
-  it("both notes start collapsed and reset to collapsed on every view change", () => {
+  it("common note starts OPEN, personal starts collapsed; both reset to that on every view change", () => {
     const el = mountExplore();
     const sr = el.shadowRoot!;
     const common = sr.querySelector(".lens-note-common") as HTMLDetailsElement;
     const personal = sr.querySelector(".lens-note-personal") as HTMLDetailsElement;
-    // default view: neither expanded
-    expect(common.open).toBe(false);
+    // The notes now render BELOW the table, so the common one is no longer in the
+    // reader's way — it is open by default (closed, it would just be a second thing
+    // to press). The personal note stays collapsed: it is the opinionated layer.
+    expect(common.open).toBe(true);
     expect(personal.open).toBe(false);
-    // user opens both, then switches view → both must collapse again
-    common.open = true;
+    // user collapses the common one and opens the personal one, then switches view →
+    // both must snap back to their defaults (open / collapsed)
+    common.open = false;
     personal.open = true;
     el.view = "anemia";
-    expect(common.open).toBe(false);
+    expect(common.open).toBe(true);
     expect(personal.open).toBe(false);
+    el.remove();
+  });
+
+  it("a hidden note is never open (explore has no notes → nothing to expand)", () => {
+    const el = mountExplore();
+    const sr = el.shadowRoot!;
+    const common = sr.querySelector(".lens-note-common") as HTMLDetailsElement;
+    el.view = "explore";
+    expect(common.hidden).toBe(true);
+    expect(common.open).toBe(false); // openByDefault must not fight `hidden`
+    el.remove();
+  });
+
+  it("the common note's summary carries the lens's FULL NAME (the pill may be shortened)", () => {
+    const el = mountExplore();
+    const sr = el.shadowRoot!;
+    const sum = () => (sr.querySelector(".lens-note-common .lens-note-sum") as HTMLElement).textContent;
+    // "all" is not a lens — it keeps the bare generic label
+    expect(sum()).toBe("Common knowledge");
+    // a real lens prefixes its full name: "Anemia — common knowledge"
+    el.view = "anemia";
+    expect(sum()).toBe("Anemia — common knowledge");
+    el.remove();
+  });
+
+  it("the separator heads the note section, and hides when there is no note to head", () => {
+    const el = mountExplore();
+    const sr = el.shadowRoot!;
+    const sep = sr.querySelector(".lens-note-sep") as HTMLElement;
+    expect(sep.textContent).toBe("What this means");
+    expect(sep.hidden).toBe(false); // "all" has notes
+    el.view = "explore"; // explore suppresses the notes → nothing to separate
+    expect(sep.hidden).toBe(true);
     el.remove();
   });
 

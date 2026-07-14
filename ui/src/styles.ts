@@ -57,6 +57,9 @@ const SCHEME_LIGHT = `
   --_lvl-textbook: #6a4ba3;
   --_lvl-consensus: #8a6d1f;
   --_lvl-heuristic: #9a5a2b;
+  /* contested claim — the honest grade for e.g. statin->CTX (one cohort says yes, the
+     randomized trials say no). Sits past "heuristic" on the same warm ramp. */
+  --_lvl-disputed: #a34a3c;
   --_tag-personal: #9a5ea3;
   /* prescription badges on PLANNED (not yet drawn) cells — greyed variants */
   --_rxp-K: #8f8672;
@@ -84,6 +87,7 @@ const SCHEME_DARK = `
   --_lvl-textbook: #b79ce0;
   --_lvl-consensus: #d9bd7a;
   --_lvl-heuristic: #d8a678;
+  --_lvl-disputed: #e39185;
   --_tag-personal: #c79ccb;
   --_rxp-K: #a89f8a;
   --_rxp-D: #8b95a0;
@@ -165,8 +169,23 @@ export const STYLES = `
 .labs-scroll-wrap.at-end::after, .labs-scroll-wrap.no-scroll::after { opacity: 0; }
 /* explore mode / toggled-off chrome */
 .hidden { display: none !important; }
-/* per-view explainer prose (rendered right after the lens tab bar). Sized down to
-   match the matrix table (0.82rem) rather than inheriting the larger shadow size. */
+/* Separator that opens the explainer section BELOW the table — the visual echo of the
+   in-table .idx-sep ("Derived indices") row, so the page reads: numbers → derived
+   indices → what it all means. Same weight/size/letter-spacing as .panel-head, with a
+   rule above it to close the table off. Hidden whenever there is no note to introduce. */
+.lens-note-sep {
+  margin: 1.2rem 0 0.2rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--_rule);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--_muted);
+}
+.lens-note-sep[hidden] { display: none; }
+/* per-view explainer prose (rendered BELOW the table, after .lens-note-sep). Sized down
+   to match the matrix table (0.82rem) rather than inheriting the larger shadow size. */
 .lens-note {
   max-width: 60ch;
   margin: 0.3rem 0 0.6rem;
@@ -323,11 +342,6 @@ export const STYLES = `
 .labs.matrix td.num.has-tip:focus-visible { outline: 2px solid var(--_accent); outline-offset: -2px; }
 .labs.matrix td.num.tip-open { box-shadow: inset 0 0 0 2px var(--_accent); }
 
-/* "Tap anything" hint — the one line that replaces every per-row ⓘ badge. Prose,
-   not chrome: no border, no icon, no background, nothing to press. Rendered only
-   when the model carries tapHint (natalga.com), so isayenko.org never sees it. */
-.lm-hint { margin: 0.1rem 0 0.5rem; font-size: 0.8rem; line-height: 1.35; color: var(--_muted); }
-
 /* Tap-cell mode: the whole marker cell opens the row's explainer, so it must LOOK
    pressable (pointer + focus ring) and CONFIRM the press (the same inset accent
    ring the value cells already use when their popup is open). The ⓘ is gone; the
@@ -421,7 +435,22 @@ export const STYLES = `
 #cell-popup .ap-lvl-consensus { color: var(--_lvl-consensus); }
 #cell-popup .ap-lvl-heuristic { color: var(--_lvl-heuristic); }
 #cell-popup .ap-lvl-uncited { color: var(--_muted); }
+#cell-popup .ap-lvl-disputed { color: var(--_lvl-disputed); }
 #cell-popup .ap-tag-personal { color: var(--_tag-personal); }
+/* Drug caveats — the reader's own medication acting on THIS analyte (derived: the
+   analyte's generic modifiers ∩ her med list). Given a tinted, ruled block because it
+   is the only part of the card that is about HER: it has to survive a skim, or she
+   reads a drug-shifted number as if it were her own physiology. Deliberately NOT red —
+   this is context, not an alarm; an alarm on every second row would train her to
+   ignore it. */
+#cell-popup .ap-mods { border-left: 2px solid var(--_lvl-heuristic); padding-left: 0.5rem; }
+#cell-popup .ap-mod { margin-top: 0.35rem; }
+#cell-popup .ap-mod-head { display: flex; align-items: baseline; gap: 0.3rem; flex-wrap: wrap; }
+#cell-popup .ap-mod-arrow { font-weight: 700; color: var(--_lvl-heuristic); }
+#cell-popup .ap-mod-note { color: var(--_fg); margin-top: 0.15rem; }
+#cell-popup .ap-mod-inter { color: var(--_muted); font-style: italic; }
+#cell-popup .ap-mod-src { margin-top: 0.15rem; }
+#cell-popup .ap-mod-src a { color: var(--_accent); text-decoration: underline; font-size: 0.72rem; }
 #cell-popup .ap-tag-nosrc { color: var(--_muted); font-weight: 600; text-transform: none; letter-spacing: 0; }
 /* The name leads the card and must read as a heading, not as another label — she
    arrives here from a row that says only "TC". Its stub sits beside it so the row
