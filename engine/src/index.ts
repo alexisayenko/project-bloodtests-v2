@@ -22,6 +22,15 @@ export { ANALYTE_CATALOG } from "./catalog/data.js";
 
 // Catalog / grouping
 export { PANELS, groupByPanel, type Panel, type PanelGroup, type PanelRow } from "./panels.js";
+
+// Self-validation of the shared data: a marker key declared in PANELS/DEFAULT_LENSES
+// with no catalog entry renders as a NAMELESS row (no name/unit/range/ⓘ) instead of
+// failing. Consumers should call assertCatalogCoversDeclaredKeys() at build time.
+export {
+  assertCatalogCoversDeclaredKeys, findCatalogGaps, findUnknownLensPanels,
+  findUnpanelledEntries, declaredKeys,
+  type CatalogGap, type DeclaredKeySources,
+} from "./validate.js";
 export { priceOf, estimateCost, type PriceCatalog, type PanelBilling } from "./cost.js";
 
 // Derivation + matrix
@@ -41,7 +50,13 @@ export { buildIndices, type IndexMatrix, type IndexItem, type IndexCol, type Ind
 export { applyPlan, type LabPlan, type NextAssayItem, type ScheduleDraw, type PlanRow, type PlanMatrix, type RxBadge, type RxMap, type PlanOverlayConfig } from "./plan.js";
 
 // Reference-range provenance (ADR-0007) — render-ready ⓘ-popup data
-export { buildProvenance, type LabProvenance } from "./catalog/provenance.js";
+export {
+  buildProvenance,
+  resolveModifiers,
+  type LabProvenance,
+  type ProvenanceModifier,
+  type PatientDrug,
+} from "./catalog/provenance.js";
 
 // Clinical-lens catalog (which markers make up each diagnostic lens + its
 // agnostic "common knowledge" explainer)
