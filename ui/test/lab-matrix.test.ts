@@ -455,15 +455,22 @@ describe("<lab-matrix> lens views (phase 3b)", () => {
     el.remove();
   });
 
-  it("the area list has a heading and it is a translatable node that never says «панель»", () => {
+  it("the list has a heading that is present but VISUALLY HIDDEN (a11y name, never «панель»)", () => {
     const el = mountLens();
     const sr = el.shadowRoot!;
     const h = sr.querySelector(".lab-areas-h") as HTMLElement;
+    // present in the DOM (the list's announced heading), just not painted
     expect(h).toBeTruthy();
     expect(h.textContent).toBeTruthy();
     // model ships no RU dict → RU falls back to EN; the host supplies «Области интереса»
     expect(h.textContent).toBe("Areas of interest");
     expect(h.getAttribute("data-ru")).not.toMatch(/панел/i);
+    // hidden by CLIPPING, not display:none — display:none would drop it from the
+    // accessibility tree and leave the list heading-less
+    const css = sr.querySelector("style")!.textContent!;
+    const rule = css.match(/\.lab-areas-h\s*\{[^}]*\}/)![0];
+    expect(rule).toMatch(/clip-path/);
+    expect(rule).not.toMatch(/display:\s*none/);
     el.remove();
   });
 

@@ -101,9 +101,10 @@ const DEFAULT_I18N: Record<string, string> = {
      интереса». The word «панель» is banned in Russian user-facing prose (it means the
      lower axis, the strict marker partition, which the reader calls «группа»). */
   "control.areas": "Areas of interest",
-  /* Back-link label — names its DESTINATION (the landing list of every view this page
-     offers), not the word "back". */
-  "control.backToList": "All sections",
+  /* Back-link label — plain «Назад» / "Back" (Alex, 2026-07-14). The visible text is a
+     real word (not just the ← glyph, which is aria-hidden), so it carries the button's
+     accessible name on its own. */
+  "control.backToList": "Back",
   "control.units": "Units",
   "control.unitsSwitchSI": "Switch to SI units",
   "control.unitsSwitchUS": "Switch to US units",
@@ -184,7 +185,16 @@ export const TOOLBAR_CSS = `
    list idiom, which is the one list pattern every phone owner already knows. */
 .lab-areas { margin: 0.4rem 0 1.2rem; }
 .lab-areas[hidden] { display: none; }
-.lab-areas-h { margin: 0 0 0.5rem; font-size: 0.95rem; font-weight: 600; color: var(--_muted); }
+/* «Области интереса» — VISUALLY HIDDEN (Alex, 2026-07-14: «hide»), same treatment as
+   the page <h1>s: the list reads cleanly as just its links, but the heading stays in
+   the DOM and the accessibility tree so the <ul> still has an announced name. Clipped,
+   NOT display:none — display:none would drop it from the a11y tree and leave the list
+   heading-less. (There is no matching heading over the modes group, so nothing is left
+   orphaned by hiding this one.) */
+.lab-areas-h {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
 .lab-area-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--_rule-soft); }
 .lab-area-list li { margin: 0; padding: 0; }
 .lab-area {
@@ -225,8 +235,8 @@ export const TOOLBAR_CSS = `
    — and it would re-introduce, next to the table, exactly the collapsed control we
    just removed from the top of the page. One way in, one way back, and the way back
    lands on the list where every alternative is visible again.
-   The link is labelled with its DESTINATION (the list — «← Все разделы»), not with the
-   word "back": it says where she will end up, the same principle that named the views. */
+   The link reads «← Назад» (Alex, 2026-07-14): arrow + a plain word. It always returns
+   to the one place there is to go back to — the list — so «Назад» is unambiguous. */
 .lab-crumb { display: flex; flex-direction: column; align-items: flex-start; gap: 0.15rem; margin: 0.2rem 0 0.6rem; }
 .lab-crumb[hidden] { display: none; }
 .lab-back {
@@ -958,10 +968,10 @@ export class LabMatrix extends HTMLElement {
   }
 
   /**
-   * Fill the in-view header: the back-link (labelled with its DESTINATION — the list
-   * she came from) and the chosen view's own title. Called from applyView (the view
-   * changed) and applyLang (the labels did) — the back label is an i18n id, but the
-   * title carries a MODEL label, which the applyLang data-en/-ru sweep cannot reach.
+   * Fill the in-view header: the back-link (a plain «Назад», the only place there is
+   * to go back to being the list) and the chosen view's own title. Called from
+   * applyView (the view changed) and applyLang (the labels did) — the back label is an
+   * i18n id, but the title carries a MODEL label, which the applyLang sweep can't reach.
    *
    * The OVERVIEW gets no title here: the chart (`<lab-explore>`'s `.explore-title`)
    * already prints «Что в норме, а что нет», and two identical headings stacked is
