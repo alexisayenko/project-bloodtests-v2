@@ -68,8 +68,11 @@ const SPECS = {
     analysis: "Globulin",
     loinc: "10834-0",
     formula: "Protein Total − ALB",
-    // Globulin has no catalog entry yet, so its range cannot come from one.
-    ref: { min: 2.0, max: 3.5, unit: "g/dL" },
+    // No literal range here on purpose (same reasoning as I-BIL above): the adult
+    // interval is the CITED one in the GLOB catalog entry (2.0–3.5 g/dL, derived
+    // from the standard serum-protein values in NCBI Clinical Methods ch. 101,
+    // evidenceLevel "consensus"), and citedRef() reads it from there. Keeping a
+    // second copy here is exactly the drift this module's doc-comment warns about.
   },
 } satisfies Record<string, DerivedSpec>;
 

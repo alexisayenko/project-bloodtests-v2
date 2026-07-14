@@ -3,10 +3,10 @@ import { DEFAULT_LENSES, resolveLenses } from "../src/lenses.js";
 import type { PanelGroup } from "../src/panels.js";
 
 describe("DEFAULT_LENSES", () => {
-  it("has 9 lenses in the given order", () => {
+  it("has 10 lenses in the given order", () => {
     expect(DEFAULT_LENSES.map((l) => l.key)).toEqual([
       "hypogonadism", "hypothyroidism", "adrenal", "ir", "cardio",
-      "nafld", "kidney", "anemia", "bone",
+      "nafld", "kidney", "anemia", "bone", "pancreas",
     ]);
   });
 
@@ -30,6 +30,31 @@ describe("DEFAULT_LENSES", () => {
     expect(/[Ѐ-ӿ]/.test(ir.common!.ru!)).toBe(true); // real Cyrillic RU
     const cardio = DEFAULT_LENSES.find((l) => l.key === "cardio")!;
     expect(cardio.common).toBeUndefined();
+  });
+
+  it("pancreas cuts across panels and carries en+ru prose", () => {
+    const p = DEFAULT_LENSES.find((l) => l.key === "pancreas")!;
+    // its own panel (injury + function) ...
+    expect(p.keys).toEqual(expect.arrayContaining(["AMY", "LIPA", "Elastase-1"]));
+    // ... the endocrine pancreas, which lives in "Glycemic control" ...
+    expect(p.keys).toEqual(expect.arrayContaining(["GLU", "HbA1c", "Insulin", "C-peptide"]));
+    // ... the two causes, which live in "Lipids" and "Electrolytes" ...
+    expect(p.keys).toEqual(expect.arrayContaining(["TRIG", "Ca"]));
+    // ... and the biliary-obstruction arm, which lives in "LFT (liver)".
+    expect(p.keys).toEqual(expect.arrayContaining(["ALP", "GGT", "T-BIL", "D-BIL"]));
+    expect(/[Ѐ-ӿ]/.test(p.common!.ru!)).toBe(true);
+    expect(p.common!.en).toMatch(/pancreas/i);
+  });
+
+  it("pancreas cites LOINC 72272-8, whose members are exactly AMY + LIPA", () => {
+    const p = DEFAULT_LENSES.find((l) => l.key === "pancreas")!;
+    expect(p.loinc).toEqual([
+      expect.objectContaining({
+        code: "72272-8",
+        name: "Amylase and triacylglycerol lipase panel - Serum or Plasma",
+        relation: "superset",
+      }),
+    ]);
   });
 });
 
@@ -58,6 +83,14 @@ describe("resolveLenses", () => {
     const resolved = resolveLenses(panelGroups);
     expect(resolved.find((l) => l.key === "ir")!.common?.en).toMatch(/insulin/i);
     expect(resolved.find((l) => l.key === "cardio")!.common).toBeUndefined();
+  });
+
+  // Absence of `loinc` is a POSITIVE finding ("no LOINC panel corresponds"), so the
+  // resolver must neither invent it nor drop it.
+  it("propagates the LOINC panel citation, and omits it where none corresponds", () => {
+    const resolved = resolveLenses(panelGroups);
+    expect(resolved.find((l) => l.key === "pancreas")!.loinc?.[0]?.code).toBe("72272-8");
+    expect(resolved.find((l) => l.key === "ir")!.loinc).toBeUndefined();
   });
 
   it("every resolved lens has a non-empty label and a keys array", () => {
