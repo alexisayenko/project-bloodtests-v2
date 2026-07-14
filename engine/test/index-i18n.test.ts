@@ -12,8 +12,11 @@ describe("IndexCatalog — Russian (ru) localization", () => {
     }
   });
 
-  it("all 23 indices are translated", () => {
+  it("EVERY index is translated — no untranslated index can be added", () => {
+    // Was a hardcoded 23. The magic number added nothing the loop above did not
+    // already assert, and it failed for the one reason that is not a bug: a new
+    // index (HOMA-%B) arriving fully translated. The invariant is "all of them".
     const translated = INDEX_DEFS.filter((d) => d.lang?.ru?.name);
-    expect(translated).toHaveLength(23);
+    expect(translated).toHaveLength(INDEX_DEFS.length);
   });
 });

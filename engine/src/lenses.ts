@@ -103,11 +103,16 @@ export const DEFAULT_LENSES: LensDef[] = [
   // checklist row would send a well person to buy it); ALT/AST (the ALT>3xULN
   // gallstone-aetiology sign belongs to an ACUTE attack, and carrying them would
   // just duplicate the `nafld` lens).
-  // NO derived index. The lipase/amylase ratio was considered and REFUSED: no
-  // LOINC term surfaced for it, and its only claimed use (separating alcoholic
-  // from biliary pancreatitis) rests on inconsistent studies with cut-offs
-  // ranging 2-5 and is endorsed by no guideline — folklore, not a respectable
-  // index. `bone` likewise carries none; that is an accepted lens shape.
+  // The lipase/amylase ratio was considered and REFUSED: no LOINC term surfaced
+  // for it, and its only claimed use (separating alcoholic from biliary
+  // pancreatitis) rests on inconsistent studies with cut-offs ranging 2-5 and is
+  // endorsed by no guideline — folklore, not a respectable index. `bone` carries
+  // no index at all; that is an accepted lens shape.
+  // It DOES now carry HOMA-%B (beta-cell function) — the endocrine-pancreas read,
+  // built from the GLU + Insulin already on this lens. It is graded `heuristic` and
+  // is deliberately also pinned to the `ir` lens: its authors call measuring
+  // beta-cell function in isolation a misuse of HOMA, so it never appears anywhere
+  // HOMA-IR does not. See INDEX_DEFS.homab.
   { key: "pancreas", label: "Pancreatic function",
     keys: ["AMY", "LIPA", "Elastase-1", "GLU", "HbA1c", "Insulin", "C-peptide", "TRIG", "Ca", "ALP", "GGT", "T-BIL", "D-BIL"],
     common: LENS_COMMON.pancreas,

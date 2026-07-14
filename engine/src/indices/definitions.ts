@@ -240,7 +240,10 @@ export const INDEX_DEFS: IndexDef[] = [
       consensus: "Грубый, нестандартизованный суррогат ИР, вытеснен HOMA-IR (построен из тех же двух значений). Оставлен в основном потому, что лаборатория его сообщила; предпочтительнее HOMA-IR.",
     } },
     fn: (m) => has(m, "GLU", "Insulin") ? m["GLU"]! / m["Insulin"]! : null },
-  { key: "homair", name: "HOMA-IR", nameCompact: "HOMA-IR", itab: "ir", formula: "glucose(mmol/L) × insulin(µIU/mL) / 22.5", cut: [2, 2.9], needs: ["GLU", "Insulin"], inputUnits: { GLU: "mmol/L", Insulin: "µIU/mL" }, level: "consensus",
+  // itab gained "pancreas" when HOMA-%B was added: %B may not be read in isolation
+  // (its authors say so explicitly), so wherever %B is shown, HOMA-IR must be shown
+  // beside it. The pancreas lens already carries GLU + Insulin, so it computes there.
+  { key: "homair", name: "HOMA-IR", nameCompact: "HOMA-IR", itab: ["ir", "pancreas"], formula: "glucose(mmol/L) × insulin(µIU/mL) / 22.5", cut: [2, 2.9], needs: ["GLU", "Insulin"], inputUnits: { GLU: "mmol/L", Insulin: "µIU/mL" }, level: "consensus",
     meaning: "Fasting insulin-resistance estimate. Guide: <2 normal · 2–2.9 borderline / early insulin resistance · ≥2.9 insulin resistance.",
     consensus: "Standard IR screening index. Requires fasting glucose AND insulin from one draw — insulin not yet measured.",
     evidenceLevel: "consensus",
@@ -254,6 +257,34 @@ export const INDEX_DEFS: IndexDef[] = [
     } },
     // GLU arrives already in mmol/L (declared via inputUnits, normalized by buildIndices) — no internal conversion.
     fn: (m) => has(m, "GLU", "Insulin") ? (m["GLU"]! * m["Insulin"]!) / 22.5 : null }, // RS [verified 2026-07-04] — HOMA-IR = glucose(mmol/L)×insulin(µU/mL)/22.5. Matthews DR et al. Diabetologia 1985;28(7):412-419.
+  // HOMA-%B — the OTHER half of the same two numbers. HOMA-IR asks "how resistant are
+  // the tissues?"; %B asks "is the pancreas still able to compensate?". Shipped on BOTH
+  // the pancreas lens and the IR lens (itab is an array) for one specific reason: the
+  // HOMA authors (Wallace/Levy/Matthews 2004) name "measuring beta-cell function in
+  // isolation" as an INAPPROPRIATE use of the model. Read next to HOMA-IR it is their
+  // sanctioned pairing; read alone it is exactly the misuse they warn about. So it is
+  // never given a home where HOMA-IR is absent.
+  // NO LOINC. 47214-2 ("Homeostasis model assessment") is generic and its LOINC page
+  // prints the HOMA-IR formula — it is already correctly assigned to `homair`. Citing
+  // it here would be citing a code for a different quantity, so the field stays unset.
+  { key: "homab", name: "HOMA-%B (beta-cell function)", nameCompact: "HOMA-%B", itab: ["pancreas", "ir"], formula: "20 × insulin(µIU/mL) / (glucose(mmol/L) − 3.5)", cut: [80, 50], hi: true, unit: "%", needs: ["GLU", "Insulin"], inputUnits: { GLU: "mmol/L", Insulin: "µIU/mL" }, level: "heuristic",
+    meaning: "Estimates how well the pancreas's beta cells are still producing insulin, from the SAME fasting glucose + insulin pair as HOMA-IR (one draw, both fasting). Reference is ~100% = normal beta-cell function; lower means the beta cells are no longer keeping up. It must be read NEXT TO HOMA-IR, never alone: the two answer different halves of one question — HOMA-IR says how resistant the tissues are, %B says whether the pancreas can still compensate. A calm HOMA-IR with a low %B is a real pattern: no insulin resistance, but the beta cells are under-delivering, and glucose creeps up anyway. Guide: >80% good · 50–80% borderline · <50% low — orientation only, HOMA-%B has no agreed cut-points. And one draw is one point, not a trend.",
+    consensus: "Deliberately graded HEURISTIC, not consensus, for two honest reasons. (1) HOMA1's linear approximation is imprecise — the original paper reports a coefficient of variation around 32%; the non-linear HOMA2 model is the better estimator and this engine does not implement it. (2) The HOMA authors explicitly list measuring beta-cell function in isolation among the model's inappropriate uses; %B is meaningful only alongside HOMA-IR, which is why it is shipped on the same lenses and never on its own. Requires fasting glucose AND insulin from ONE draw — computed only where both exist on the same date, never paired across dates. Undefined when fasting glucose ≤ 3.5 mmol/L (the formula's denominator), in which case no value is produced.",
+    evidenceLevel: "heuristic",
+    references: [
+      { organization: "Diabetologia (Matthews DR et al.)", document: "Homeostasis model assessment: insulin resistance and beta-cell function from fasting plasma glucose and insulin concentrations in man", year: 1985, url: "https://pubmed.ncbi.nlm.nih.gov/3899825/", doi: "10.1007/BF00280883", quote: "Source of the HOMA1 %B approximation, %B = 20 × insulin(µU/mL) / (glucose(mmol/L) − 3.5), and of the ~32% coefficient of variation that makes a single estimate imprecise." },
+      { organization: "Diabetes Care (Wallace TM, Levy JC, Matthews DR)", document: "Use and abuse of HOMA modeling", year: 2004, url: "https://pubmed.ncbi.nlm.nih.gov/15161807/", doi: "10.2337/diacare.27.6.1487", quote: "The HOMA authors' own guidance on appropriate use: HOMA2 is preferred over the HOMA1 linear approximation, and measuring beta-cell function in isolation is named as an inappropriate use of the model — %B is to be read together with HOMA-IR." },
+    ],
+    lang: { ru: {
+      name: "HOMA-%B (функция бета-клеток)",
+      meaning: "Оценка того, насколько бета-клетки поджелудочной железы ещё справляются с выработкой инсулина. Считается из той же пары «глюкоза + инсулин натощак», что и HOMA-IR (обязательно из одного забора, оба натощак). За норму принято ~100%; чем ниже, тем хуже бета-клетки добирают. Читать ТОЛЬКО рядом с HOMA-IR, никогда отдельно: эти два числа отвечают на разные половины одного вопроса — HOMA-IR говорит, насколько ткани не слушаются инсулина, а %B — справляется ли ещё сама поджелудочная. Бывает и так: HOMA-IR спокойный (сопротивления нет), а %B низкий — то есть бета-клетки уже не добирают, и сахар всё равно потихоньку ползёт вверх. Ориентир: >80% хорошо · 50–80% пограничный · <50% низко — это именно ориентир, общепринятых порогов у HOMA-%B нет. И помните: один забор — это одна точка, а не тенденция.",
+      consensus: "Уровень доказательности намеренно «эвристика», а не «консенсус», по двум честным причинам. (1) Линейное приближение HOMA1 неточное — в исходной работе коэффициент вариации около 32%; более точная нелинейная модель HOMA2 в этой программе не реализована. (2) Сами авторы HOMA прямо относят измерение функции бета-клеток в отрыве от HOMA-IR к неправильному использованию модели; %B имеет смысл только вместе с HOMA-IR, поэтому он и показывается рядом с ним, а не сам по себе. Требуются глюкоза И инсулин натощак из ОДНОГО забора — считается только там, где обе величины сданы в один день, и никогда не подставляет значения из разных дней. При глюкозе натощак ≤ 3,5 ммоль/л формула не определена, и значение не выводится.",
+    } },
+    // GLU arrives already in mmol/L (declared via inputUnits, normalized by buildIndices).
+    // The `> 3.5` guard is not cosmetic: at glucose = 3.5 the denominator is zero and at
+    // lower values it is negative, so the index would return ±Infinity or a nonsense
+    // negative percentage. Undefined is the honest answer — emit nothing.
+    fn: (m) => (has(m, "GLU", "Insulin") && m["GLU"]! > 3.5 ? (20 * m["Insulin"]!) / (m["GLU"]! - 3.5) : null) }, // RS [verified 2026-07-14] — HOMA1-%B = 20×insulin(µU/mL)/(glucose(mmol/L)−3.5). Matthews DR et al. Diabetologia 1985;28(7):412-419.
   { key: "cft", name: "Free testosterone (calculated)", nameCompact: "cFT", itab: "hypogonadism", anchor: "FT", formula: "Vermeulen (T, SHBG, albumin)", cut: [100, 65], unit: "pg/mL", hi: true, needs: ["T", "SHBG"], level: "consensus",
     loinc: "103227-5", // LOINC 103227-5 — Testosterone Free [Mass/volume] in Serum or Plasma by Calculation (matches our pg/mL calculated free T; the Moles/volume calculated variant is 96559-0)
     meaning: "Bioavailable testosterone estimated from total T, SHBG and albumin (Vermeulen equation), in pg/mL. Assay-independent — compare it with the measured Free Testosterone row, whose direct immunoassay is unreliable and uses incompatible reference ranges across labs. Higher is better; guide: >100 good · 65–100 low-normal · <65 low (~6.5 ng/dL floor). Albumin defaults to 4.3 g/dL when not measured. The equation solves the binding equilibrium of testosterone to SHBG (high affinity, Ks≈1×10⁹ L/mol) and albumin (low affinity, Ka≈3.6×10⁴ L/mol) as a quadratic: free T = [−b+√(b²−4ac)]/2a, with a=N·Ks, b=N+Ks(SHBG−T), c=−T and N=1+Ka·albumin (all in mol/L).",
