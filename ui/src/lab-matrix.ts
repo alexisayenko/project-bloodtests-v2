@@ -18,6 +18,7 @@ import type {
   LabRow,
   LabPanelGroup,
   LabProvenance,
+  LabDataQualityNote,
   LabIndexItem,
   LabI18n,
 } from "./types.js";
@@ -73,6 +74,11 @@ const DEFAULT_I18N: Record<string, string> = {
   "popup.close": "Close",
   "popup.tagPersonal": "personal reference range — not the catalog default",
   "popup.tagNoSource": "lab-reported range; no curated source yet",
+  /* ⚠ heading — the reference range on screen may not be the right one for you. */
+  "popup.dataQuality": "Careful with this reference range",
+  /* Panel header: how many of this group's markers have never been taken. Not an
+     error count — a to-do count ("worth asking for these"). */
+  "panel.notTaken": "never taken",
   "badge.guideline": "guideline",
   "badge.reference-lab": "reference-lab",
   "badge.textbook": "textbook",
@@ -352,11 +358,24 @@ export class LabMatrix extends HTMLElement {
     const panelsHtml = groups
       .map((g) => {
         const panelName = g.name ?? "";
+        // How many of this group's markers have never been taken. Panels are COLLAPSED
+        // by default, so without this the never-taken rows are invisible until you
+        // happen to open the right group — which is exactly how they got missed. The
+        // count rides on the closed header and says which groups are worth opening.
+        // Deliberately a sibling of `.panel-sticky`, not a child: applyLang rewrites
+        // that node's textContent wholesale and would eat the chip.
+        const nNotTaken = (g.rows ?? []).filter((r) => r.planned).length;
+        const notTaken = nNotTaken
+          ? `<span class="panel-notaken"${biAttr(
+              `${nNotTaken} ${t.text("panel.notTaken", false)}`,
+              `${nNotTaken} ${t.text("panel.notTaken", true)}`,
+            )}>${nNotTaken} ${esc(t.text("panel.notTaken", false))}</span>`
+          : "";
         const panelHead = g.name
           ? `<tr class="panel-row" data-panel="${esc(panelName)}"><th class="panel-head" colspan="${panelSpan}"><span class="panel-sticky"${biAttr(
               g.name,
               g.nameRu,
-            )}>${esc(g.name)}</span></th></tr>`
+            )}>${esc(g.name)}</span>${notTaken}</th></tr>`
           : "";
         const rows = (g.rows ?? [])
           .map((r) => {
@@ -1127,8 +1146,14 @@ export class LabMatrix extends HTMLElement {
     // the ⚠ badge, which lives in the same cell, keeps its own popup.
     const marker = match("td.marker-col");
     const panel = match("tr.panel-row.collapsible");
-    if (warn && sr.contains(warn)) this.openPopup(warn, WARN_HTML);
-    else if (info && sr.contains(info)) {
+    // ⚠ carries its explainer the way ⓘ does — in a hidden sibling emitted next to
+    // the button — so a warning can be per-row (which range is wrong, and why) instead
+    // of the one global string it used to be. WARN_HTML stays as the fallback for the
+    // unreliable-assay flag, which has no per-row payload to carry.
+    if (warn && sr.contains(warn)) {
+      const src = warn.parentNode ? (warn.parentNode as Element).querySelector(".warn-pop") : null;
+      this.openPopup(warn, src ? src.innerHTML : WARN_HTML);
+    } else if (info && sr.contains(info)) {
       const src = info.parentNode ? (info.parentNode as Element).querySelector(".analyte-pop") : null;
       this.openPopup(info, src ? src.innerHTML : "");
     } else if (idxInfo && sr.contains(idxInfo)) {
@@ -1217,9 +1242,23 @@ export class LabMatrix extends HTMLElement {
     // ⚠ unreliable + ⓘ provenance badges. The ⓘ is a LEADING inline badge: it
     // opens the line it belongs to, reading "ⓘ ApoA1" (code line when there IS a
     // visible short-name; otherwise the name line), with the reference range below.
-    const warn = r.unreliable
-      ? `<button type="button" class="warn-badge" data-warn aria-label="Why this measurement is unreliable">⚠</button>`
-      : "";
+    // ⚠ — "something about what this row SHOWS is not trustworthy". Two sources feed
+    // it, and they are different claims:
+    //   • r.unreliable      → the ASSAY is bad (direct free-T). Static explainer.
+    //   • provenance.dataQuality → the RANGE on screen may not be yours (unsourced,
+    //     or authored for the other sex). Per-row, engine-derived, bilingual.
+    // One glyph, one popup, one click route — the payload is what differs, so it is
+    // emitted as a hidden sibling (`.warn-pop`) and lifted on tap, exactly like ⓘ.
+    const dq = r.provenance?.dataQuality ?? [];
+    const warnHtml = dq.length ? this.dataQualityPopup(dq, r.unreliable) : "";
+    const warn =
+      r.unreliable || dq.length
+        ? `<button type="button" class="warn-badge" data-warn aria-label="${
+            r.unreliable
+              ? "Why this measurement is unreliable"
+              : "Why the reference range shown here may not be yours"
+          }">⚠</button>${warnHtml}`
+        : "";
     // The row's reference range in BOTH unit systems. Hoisted above `info` because
     // the ⓘ card's "range shown" line must reuse these EXACT strings — the popup is
     // how she learns what a row means, so it may never contradict the row it explains.
@@ -1269,7 +1308,9 @@ export class LabMatrix extends HTMLElement {
       r.scheduled && r.price != null
         ? `<span class="meta-price"><span class="mprice">€${esc(r.price)}</span></span>`
         : "";
-    const planned = r.planned ? `<span class="meta-planned"> · ${t.span("meta.notMeasuredYet")}</span>` : "";
+    // No leading " · " separator any more: this is a bordered chip now, not a run-on
+    // clause of the meta line, and a dot inside the border reads as a typo.
+    const planned = r.planned ? `<span class="meta-planned">${t.span("meta.notMeasuredYet")}</span>` : "";
     const meta = `<span class="meta muted"><span class="meta-ref"><span class="unit-ref" data-us="${esc(
       usRef,
     )}" data-si="${esc(siRef)}">${esc(usRef)}</span>${planned}</span>${price}</span>`;
@@ -1497,16 +1538,59 @@ export class LabMatrix extends HTMLElement {
     // card, pushing "Why" under the fold. It now sits behind one plain disclosure.
     // (The quotes stay verbatim in their own language: a quotation that is
     // translated is no longer a quotation.)
+    // The ⚠ caveat rides in the ⓘ card too, immediately under the range it is about.
+    // It has to: this card is where the male "catalog default" is printed with a
+    // "reference-lab" badge next to it, so this is the exact spot where an unsourced
+    // or wrong-sex range would otherwise pass itself off as authoritative.
+    const dqSec = this.dataQualityNotes(p.dataQuality ?? [], t);
+
     return (
       `<div class="analyte-pop" hidden><div class="ap-root">` +
       `<strong${biAttr(p.displayName, p.displayNameRu)}>${esc(p.displayName)}</strong>${short}` +
       why +
       range +
+      dqSec +
       // after the range, deliberately: the caveat's job is to change how the reader reads
       // the number she has just compared against it ("normal — but you are on a thiazide").
       modSec +
       this.apMore(t, loincs + prov + refs + draw) +
       `</div></div>`
+    );
+  }
+
+  /**
+   * The ⚠ block: a heading and one plain-language paragraph per note. Shared by the
+   * ⚠ badge's own card and the ⓘ card, so the two can never tell her different things.
+   * Empty in → nothing out (the silent, sourced, sex-appropriate majority of rows).
+   */
+  private dataQualityNotes(notes: LabDataQualityNote[], t: I18n): string {
+    if (!notes.length) return "";
+    const items = notes
+      .map(
+        (n) =>
+          `<div class="dq-note dq-${esc(n.code)}"${biAttr(n.text, n.textRu)}>${esc(n.text)}</div>`,
+      )
+      .join("");
+    return (
+      `<div class="ap-sec ap-dq"><div class="dq-head"><span class="dq-glyph" aria-hidden="true">⚠</span>` +
+      `<span class="ap-lbl"${t.attr("popup.dataQuality")}>${esc(
+        t.text("popup.dataQuality", false),
+      )}</span></div>${items}</div>`
+    );
+  }
+
+  /**
+   * The hidden payload the ⚠ badge lifts on tap (the `.analyte-pop` pattern). When a
+   * row is BOTH an unreliable assay and a suspect range, both are said: they are
+   * different claims (the method is bad / the goalposts are not yours), and dropping
+   * either one would be a lie of omission.
+   */
+  private dataQualityPopup(notes: LabDataQualityNote[], unreliable: boolean | undefined): string {
+    return (
+      `<div class="warn-pop" hidden>` +
+      (unreliable ? WARN_HTML : "") +
+      this.dataQualityNotes(notes, this._i18n) +
+      `</div>`
     );
   }
 

@@ -590,3 +590,209 @@ describe("loinc-link (docs/product/features/loinc-link.md)", () => {
     );
   });
 });
+
+// ---------------------------------------------------------------------------
+// Fixture for the two data-honesty features. Kept separate from makeModel() so the
+// blocks above keep asserting against exactly the table they were written for.
+//
+// Models the real natalga.com shape: a group whose markers she has NEVER had drawn
+// (planned), one of which additionally shows a MALE reference range (Ferritin), plus
+// a measured row whose range came off the lab form with no source (β-липопротеиды).
+const makeHonestyModel = (): LabMatrixModel => ({
+  matrix: { cols: [{ id: "2025-01|Alpha", date: "2025-01", labName: "Alpha" }], rows: [] },
+  keyViews: { bone: ["CTX", "Ferritin"] },
+  lensTabs: [
+    { key: "all", label: "All", labelRu: "Все" },
+    { key: "bone", label: "Bone", labelRu: "Кости" },
+  ],
+  panels: [
+    {
+      name: "Bone turnover",
+      nameRu: "Костный обмен",
+      rows: [
+        {
+          key: "CTX",
+          shortName: "CTX",
+          displayName: "β-CrossLaps (C-telopeptide)",
+          displayNameRu: "β-CrossLaps (C-телопептид)",
+          displayShortName: "CTX",
+          planned: true,
+          unit: "пг/мл",
+          refText: "177–1015",
+          cells: [null],
+        },
+        {
+          key: "Ferritin",
+          shortName: "Ferritin",
+          displayName: "Ferritin",
+          displayNameRu: "Ферритин",
+          displayShortName: "Ferritin",
+          planned: true,
+          unit: "нг/мл",
+          refText: "12–300",
+          cells: [null],
+          provenance: {
+            hasCatalog: true,
+            personal: false,
+            displayName: "Ferritin",
+            displayNameRu: "Ферритин",
+            loincs: [],
+            shownRange: "12–300 нг/мл",
+            references: [],
+            dataQuality: [
+              {
+                code: "sex-mismatch",
+                text: "The reference range on this row (12–300 ng/mL) is the reference range for men.",
+                textRu: "Референсный диапазон в этой строке (12–300 нг/мл) — это диапазон для мужчин.",
+              },
+            ],
+          },
+        },
+      ],
+    },
+    {
+      name: "Lipids",
+      rows: [
+        {
+          key: "β-липопротеиды",
+          analysis: "β-липопротеиды",
+          displayName: "β-липопротеиды",
+          unit: "Ед",
+          refText: "35–55",
+          cells: [{ raw: "55", siRaw: "55", flag: "", title: "2025-01 · Alpha" }],
+          provenance: {
+            hasCatalog: false,
+            personal: false,
+            displayName: "β-липопротеиды",
+            loincs: [],
+            shownRange: "35–55 Ед",
+            references: [],
+            dataQuality: [
+              {
+                code: "no-source",
+                text: "The reference range shown here (35–55 Ед) was copied straight off the lab's own form.",
+                textRu: "Референсный диапазон, показанный здесь (35–55 Ед), взят прямо с бланка лаборатории.",
+              },
+            ],
+          },
+        },
+      ],
+    },
+  ],
+  indices: { anchored: {}, tabs: [] },
+  i18n: {
+    en: {},
+    ru: { "meta.notMeasuredYet": "не сдавалось", "panel.notTaken": "не сдавалось" },
+  },
+});
+
+const mountHonesty = (): LabMatrix => {
+  const el = document.createElement("lab-matrix") as LabMatrix;
+  document.body.appendChild(el);
+  el.model = makeHonestyModel();
+  return el;
+};
+
+describe("never-taken rows — a shopping list, not missing data", () => {
+  it("a declared-but-never-drawn marker renders as a real row: name, unit, range, dotted cells", () => {
+    const el = mountHonesty();
+    const r = row(el, "CTX");
+    expect(r).toBeTruthy();
+    // it keeps its identity — this is the whole point: she must be able to read the
+    // name and go ask a lab for THAT test
+    expect(r.textContent).toContain("β-CrossLaps");
+    expect(r.textContent).toContain("177–1015");
+    // and every value cell is a dot, not a blank
+    expect(r.querySelectorAll("td.num.empty").length).toBe(1);
+    expect(r.querySelector("td.num")!.textContent).toContain("·");
+  });
+
+  it("it is VISIBLY marked as never taken — the bug was that it looked like any other row", () => {
+    const el = mountHonesty();
+    const r = row(el, "CTX");
+    expect(r.classList.contains("planned-row")).toBe(true);
+    const chip = r.querySelector(".meta-planned")!;
+    expect(chip).toBeTruthy();
+    expect(chip.textContent).toContain("not measured yet");
+    // a measured row carries neither
+    expect(row(el, "β-липопротеиды").classList.contains("planned-row")).toBe(false);
+    expect(row(el, "β-липопротеиды").querySelector(".meta-planned")).toBeNull();
+  });
+
+  it("it is NOT dressed up as an error — no ⚠ merely for never having been taken", () => {
+    const el = mountHonesty();
+    // CTX has no data-quality problem; it is simply a test she has not had.
+    expect(row(el, "CTX").querySelector("[data-warn]")).toBeNull();
+  });
+
+  it("the closed group header counts them, so she knows which group to open", () => {
+    const el = mountHonesty();
+    const head = sr(el).querySelector('tr.panel-row[data-panel="Bone turnover"] .panel-notaken')!;
+    expect(head).toBeTruthy();
+    expect(head.textContent).toBe("2 never taken");
+    // a group with nothing outstanding says nothing
+    expect(sr(el).querySelector('tr.panel-row[data-panel="Lipids"] .panel-notaken')).toBeNull();
+  });
+
+  it("in Russian the chip and the count both read «не сдавалось» (Alex's word)", () => {
+    const el = mountHonesty();
+    click(btn(el, "lang")); // → RU
+    expect(row(el, "CTX").querySelector(".meta-planned")!.textContent).toContain("не сдавалось");
+    expect(
+      sr(el).querySelector('tr.panel-row[data-panel="Bone turnover"] .panel-notaken')!.textContent,
+    ).toBe("2 не сдавалось");
+  });
+});
+
+describe("data-quality ⚠ — the range on screen may not be yours", () => {
+  it("a male reference range shown to a female reader gets a ⚠ she can tap", () => {
+    const el = mountHonesty();
+    const warn = row(el, "Ferritin").querySelector(".warn-badge[data-warn]")!;
+    expect(warn).toBeTruthy();
+    expect(warn.textContent).toBe("⚠");
+    click(warn);
+    const body = popup(el).querySelector(".tip-body")!;
+    expect(popup(el).hidden).toBe(false);
+    expect(body.textContent).toContain("is the reference range for men");
+  });
+
+  it("an unsourced range (no catalog entry) gets its own ⚠, naming the range", () => {
+    const el = mountHonesty();
+    click(row(el, "β-липопротеиды").querySelector("[data-warn]")!);
+    const body = popup(el).querySelector(".tip-body")!;
+    expect(body.textContent).toContain("35–55 Ед");
+    expect(body.textContent).toContain("copied straight off the lab's own form");
+  });
+
+  it("each ⚠ carries ITS OWN explanation — the badge is no longer one global string", () => {
+    const el = mountHonesty();
+    click(row(el, "Ferritin").querySelector("[data-warn]")!);
+    const first = popup(el).querySelector(".tip-body")!.textContent;
+    click(row(el, "β-липопротеиды").querySelector("[data-warn]")!);
+    const second = popup(el).querySelector(".tip-body")!.textContent;
+    expect(first).not.toBe(second);
+    expect(first).toContain("for men");
+    expect(second).toContain("lab's own form");
+  });
+
+  it("the caveat also rides in the ⓘ card, under the range it is about", () => {
+    const el = mountHonesty();
+    // the ⓘ card is where the male 'catalog default' is printed — the caveat must be there too
+    const pop = row(el, "Ferritin").querySelector(".analyte-pop")!;
+    expect(pop.querySelector(".ap-dq")).toBeTruthy();
+    expect(pop.querySelector(".ap-dq .dq-note")!.textContent).toContain("for men");
+  });
+
+  it("it speaks Russian, and tells her which range actually counts", () => {
+    const el = mountHonesty();
+    click(btn(el, "lang")); // → RU
+    click(row(el, "Ferritin").querySelector("[data-warn]")!);
+    const body = popup(el).querySelector(".tip-body")!;
+    expect(body.textContent).toContain("это диапазон для мужчин");
+  });
+
+  it("a sourced, sex-appropriate row stays silent — no badge, no noise", () => {
+    const el = mountHonesty();
+    expect(row(el, "CTX").querySelector("[data-warn]")).toBeNull();
+  });
+});

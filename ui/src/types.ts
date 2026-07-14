@@ -77,6 +77,24 @@ export interface LabProvenance {
    * not render.
    */
   modifiers?: LabModifier[];
+  /**
+   * Data-quality caveats about the range this row DISPLAYS — "these goalposts may
+   * not be yours". Derived by the engine (unsourced range; a sex-specific range
+   * shown to the other sex), never authored here. Renders as the ⚠ badge.
+   *
+   * Distinct from `LabModifier.strength: "disputed"` on purpose: that grades how
+   * contested a DRUG's effect is, which says nothing about whether the reference
+   * interval on screen belongs to this reader. Absent/empty → no badge, silence.
+   */
+  dataQuality?: LabDataQualityNote[];
+}
+
+/** One data-quality caveat about the reference range a row shows. */
+export interface LabDataQualityNote {
+  /** `no-source` | `sex-mismatch` */
+  code: string;
+  text: string;
+  textRu: string;
 }
 
 /** One drug caveat on an analyte, already matched to a drug the reader takes. */

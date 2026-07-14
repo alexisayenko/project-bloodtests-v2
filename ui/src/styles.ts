@@ -333,7 +333,10 @@ export const STYLES = `
    link); keep it out of the inline marker column in both detail modes */
 .labs.matrix .marker-col .loinc-codes { display: none; }
 .labs.matrix.min-details .marker-col .meta-price { display: none; }
-.labs.matrix.min-details .marker-col .meta-planned { display: none; }
+/* Compact hides the meta line — EXCEPT on a never-taken row, where the chip IS the
+   content and the long name is the only thing she can take to a lab and ask for. */
+.labs.matrix.min-details tr.planned-row .marker-col .meta-planned { display: inline-block; }
+.labs.matrix.min-details tr.planned-row .marker-col.has-sym .analyte-name { display: inline; }
 /* scheduled-draw marker — blue (yellow is reserved for warnings); matches the
    table's existing .low blue so it stays on-palette */
 .na-mark { color: var(--_low); }
@@ -410,7 +413,15 @@ export const STYLES = `
    RIGHT (not the base's left margin) and the badge is enlarged a touch for a
    comfortable tap target. Scoped to .marker-col so other ⓘ badges are untouched. */
 .labs.matrix .marker-col .info-badge { display: inline-block; margin: 0 0.35em 0 0; font-size: 1.3em; vertical-align: -0.08em; }
-.labs.matrix .analyte-pop, .labs.matrix .index-pop { display: none; }
+.labs.matrix .analyte-pop, .labs.matrix .index-pop, .labs.matrix .warn-pop { display: none; }
+
+/* ⚠ data-quality block — inside the card only. Yellow, never red: "these goalposts
+   may not be yours" is a caveat to read the number by, not a fault to panic about. */
+#cell-popup .ap-dq { border-left: 3px solid var(--_warn-badge); padding-left: 0.5rem; }
+#cell-popup .dq-head { display: flex; align-items: center; gap: 0.3rem; margin-bottom: 0.2rem; }
+#cell-popup .dq-head .ap-lbl { color: var(--_warn-badge); margin-right: 0; }
+#cell-popup .dq-glyph { color: var(--_warn-badge); font-size: 0.95em; line-height: 1; }
+#cell-popup .dq-note { margin-top: 0.25rem; }
 #cell-popup .ap-formula-txt { font-variant-numeric: tabular-nums; }
 #cell-popup .ap-root { white-space: normal; }
 #cell-popup .ap-root > strong { font-size: 0.86rem; }
@@ -471,8 +482,50 @@ export const STYLES = `
        (style.css 1060-1103, 1400) — ported for parity --- */
 .labs.matrix tfoot .cost-row td.cost-total { text-align: center; font-weight: 600; font-size: 0.72rem; white-space: nowrap; border-top: 2px solid var(--_rule-soft); border-left: 1px solid var(--_rule-soft); }
 .labs.matrix .marker-col .mprice { white-space: nowrap; }
+/* ---------------------------------------------------------------------------
+   NEVER-TAKEN ("не сдавалось") ROWS — a shopping list, not missing data.
+   These rows are the point of a lens-as-checklist: the marker that would answer
+   the question and that she has never had drawn. They must read as "worth asking
+   for", never as "broken / failed to load". Hence: muted and italic (secondary),
+   a dashed left rule (an open box, not an error bar), a neutral chip — and NO red,
+   no ⚠, no strikethrough. The dotted cells carry the "no data" meaning already.
+   --------------------------------------------------------------------------- */
 .labs.matrix tr.planned-row .analyte-name { color: var(--_muted); font-weight: 400; font-style: italic; }
 .labs.matrix tr.planned-row td.num { opacity: 0.5; }
+.labs.matrix tr.planned-row .marker-col { border-left: 2px dashed var(--_rule); }
+/* The chip that names the state. It is the whole findability fix, so unlike the
+   other .meta-* bits it is NEVER hidden — see the compact/phone overrides below,
+   which re-assert it after those modes hide the rest of the meta line. */
+.labs.matrix .marker-col .meta-planned {
+  display: inline-block;
+  margin-left: 0.35em;
+  padding: 0 0.4em;
+  border: 1px dashed var(--_rule);
+  border-radius: 3px;
+  font-size: 0.62rem;
+  /* Deliberately NOT uppercase. "НЕ СДАВАЛОСЬ" shouts, and it is ~110px wide — wider
+     than the whole 25vw (≈97px) marker column on her phone, so it clipped. Lower case
+     both fits and reads as the quiet to-do tag this is meant to be. */
+  letter-spacing: 0.03em;
+  color: var(--_muted);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+/* Panel header count — "3 не сдавалось" on the CLOSED group header, so she knows
+   which groups are worth opening without opening all twelve. */
+.labs.matrix .panel-head .panel-notaken {
+  margin-left: 0.5em;
+  padding: 0 0.4em;
+  border: 1px dashed var(--_rule);
+  border-radius: 3px;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: none;
+  color: var(--_muted);
+  white-space: nowrap;
+  vertical-align: middle;
+}
 .labs.matrix tr.unreliable td.num { color: var(--_muted); opacity: 0.6; font-style: italic; font-weight: 400; }
 .labs.matrix tr.unreliable .analyte-name { color: var(--_muted); font-weight: 400; }
 .labs.matrix .ref-note { display: block; color: var(--_muted); font-size: 0.66rem; font-style: italic; }
@@ -508,6 +561,39 @@ export const STYLES = `
   .labs.matrix .marker-col.has-sym .idx-name-compact { display: inline; }
   .labs.matrix .marker-col .meta-price,
   .labs.matrix .marker-col .meta-planned { display: none; }
+
+  /* …but a never-taken row keeps BOTH the chip and its full name on the phone.
+     This is the row's entire purpose: she reads it on a phone, and "CTX" alone is
+     not something you can ask a lab for — "β-CrossLaps (C-телопептид)" is. Hiding
+     the name here (because the row happens to have an abbreviation) and hiding the
+     chip (because it is "meta") is what made these rows unfindable in the first
+     place. Higher specificity + later source order than the two rules above. */
+  .labs.matrix tr.planned-row .marker-col .meta-planned { display: inline-block; }
+  .labs.matrix tr.planned-row .marker-col.has-sym .analyte-name { display: inline; }
+  /* …and they WRAP rather than swipe-scroll. The measured rows' 25vw cell keeps its
+     one-line-plus-horizontal-pan trick, which is right for a number you glance at.
+     It is wrong here: the name is the thing she has to READ and carry to a lab, and
+     nobody discovers a hidden sideways swipe inside a 97px cell — the name and the
+     "не сдавалось" chip would both sit off-screen, which is the original bug wearing
+     a new hat. Wrapping makes the row taller and completely legible.
+     .sym-loinc goes back to its own line (it is display:block at the desktop base):
+     forced inline it butts straight against the now-visible name with no separator —
+     "ОЖСС" + "TIBC" renders as "ОЖССTIBC". It cannot simply be hidden, because the
+     ⓘ and ⚠ badges are emitted INSIDE it whenever the row has an abbreviation. */
+  .labs.matrix tr.planned-row .marker-col .marker-scroll { overflow-x: visible; white-space: normal; }
+  .labs.matrix tr.planned-row .marker-col .analyte-name,
+  .labs.matrix tr.planned-row .marker-col .sym-loinc,
+  .labs.matrix tr.planned-row .marker-col .meta { white-space: normal; }
+  .labs.matrix tr.planned-row .marker-col .sym-loinc { display: block; }
+  /* Russian analyte names are long single words ("Остеокальцин", "фосфатаза") that do
+     not fit 25vw and have no break opportunity, so wrapping alone still clipped them
+     at the cell edge. Let them break mid-word: a hyphen-less break is far better than
+     a name she cannot read. */
+  .labs.matrix tr.planned-row .marker-col .marker-scroll { overflow-wrap: anywhere; }
+  /* Once it wraps onto its own line the chip's left margin is what pushes it 2px past
+     the 96px cell (it is the widest unbreakable box in the column). It no longer needs
+     the margin — nothing sits to its left any more. */
+  .labs.matrix tr.planned-row .marker-col .meta-planned { margin-left: 0; }
 
   /* Reclaim pixels: tighter cell padding and a narrower marker column (short RU
      names leave a lot of slack next to it) give the data columns more room.

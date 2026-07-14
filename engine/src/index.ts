@@ -56,6 +56,7 @@ export {
   type LabProvenance,
   type ProvenanceModifier,
   type PatientDrug,
+  type DataQualityNote,
 } from "./catalog/provenance.js";
 
 // Clinical-lens catalog (which markers make up each diagnostic lens + its

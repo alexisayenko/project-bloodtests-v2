@@ -65,6 +65,31 @@ export interface ProvenanceModifier {
   source: ProvenanceReference | null;
 }
 
+/**
+ * A caveat about the DATA QUALITY of what this row puts on screen — "the reference
+ * range you are looking at may not be right for you". Rendered as the ⚠ badge.
+ *
+ * This is a THIRD, independent axis, and keeping it separate from the two that
+ * already exist is the whole point:
+ *   - `evidenceLevel` grades how well the catalog's range is CITED (guideline …
+ *     uncited). A perfectly-cited range can still be the wrong range for you.
+ *   - `modifiers[].strength` (consensus | heuristic | **disputed**) grades how well
+ *     established a DRUG→marker effect is. `disputed` means "experts disagree that
+ *     this pill moves this number" — it says nothing about the number's own quality.
+ * `dataQuality` is the one that means "this displayed range is suspect FOR YOU".
+ * Reusing `disputed` for it would conflate a contested drug effect with a wrong
+ * reference interval, and would silently badge rows whose numbers are fine.
+ *
+ * Bilingual by construction: the engine speaks English, the reader may not. Plain
+ * language on purpose — the audience is a patient, not a clinician.
+ */
+export interface DataQualityNote {
+  /** Stable machine code: `no-source` | `sex-mismatch`. */
+  code: string;
+  text: string;
+  textRu: string;
+}
+
 /** The full render-ready provenance object for one matrix row. */
 export interface LabProvenance {
   hasCatalog: boolean;
@@ -102,6 +127,12 @@ export interface LabProvenance {
   drawNote: string | null;
   /** drug caveats that apply to THIS reader; empty when no med list was supplied */
   modifiers: ProvenanceModifier[];
+  /**
+   * Data-quality caveats about the range this row shows. Empty for a row whose
+   * range is sourced and sex-appropriate — which is the overwhelming majority, so
+   * an empty array (not a badge) is the normal, silent case.
+   */
+  dataQuality: DataQualityNote[];
 }
 
 /**
@@ -166,6 +197,17 @@ export interface BuildProvenanceOpts {
    */
   drugs?: PatientDrug[];
   refOverride?: Record<string, RefOverrideEntry>;
+  /**
+   * The READER's sex. Supplying it does NOT make range *selection* sex-aware — the
+   * engine still shows `refDefault` as authored. What it does is let us NOTICE that
+   * the range we are about to show was authored for the other sex, and say so out
+   * loud (a `sex-mismatch` DataQualityNote → the ⚠ badge).
+   *
+   * Omit it and no sex notes are produced at all: a consumer that never told us who
+   * is reading does not get guesses. That is also why this is opt-in rather than
+   * defaulted — a wrong default here would put a warning on every correct row.
+   */
+  sex?: "male" | "female" | "any";
 }
 
 /** Approximate numeric equality (tolerant to float noise; both-null counts as equal). */
@@ -230,6 +272,88 @@ function shownRangeOf(row: ProvenanceRow): string {
 }
 
 /**
+ * ⚠ #1 — the row shows a reference range that came off the lab's own printout and
+ * was never checked against anything, because we have no catalog entry for the
+ * marker at all. (β-липопротеиды is the live example: "35–55 Ед" is the Burstein
+ * turbidimetric assay's arbitrary units, transcribed from a paper form.)
+ *
+ * Note what this is NOT: it is not "the value is wrong". It is "nobody vouched for
+ * the goalposts", which is exactly the thing a reader cannot discover on her own.
+ */
+function noSourceNote(shownRange: string): DataQualityNote {
+  return {
+    code: "no-source",
+    text:
+      `The reference range shown here (${shownRange}) was copied straight off the lab's own form. ` +
+      `We have no entry for this marker, so nobody has checked that range against a guideline or a ` +
+      `reference lab — it is not a verified number. Go by the range printed on your own lab form.`,
+    textRu:
+      `Референсный диапазон, показанный здесь (${shownRange}), взят прямо с бланка лаборатории. ` +
+      `В справочнике такого показателя нет, поэтому этот диапазон никто не сверял ни с рекомендациями, ` +
+      `ни с референс-лабораторией — это непроверенное число. Ориентируйтесь на диапазон, напечатанный ` +
+      `в бланке вашей лаборатории.`,
+  };
+}
+
+/**
+ * ⚠ #2 — a sex-specific reference range is being shown to a reader of the other sex.
+ *
+ * The engine does NOT pick ranges by sex (deliberately: that is a separate feature,
+ * and a wrong one shipped quietly would be worse than the honest warning). So when
+ * `refDefault.sex` says "male" and the reader is female, we show the male range —
+ * and now we say so, rather than letting a male interval sit on a woman's page
+ * wearing a "cited / reference-lab" badge.
+ *
+ * Two shapes, because the hazard genuinely differs:
+ *  - `shown` (personal=false): the male range IS the row's reference range — the
+ *    goalposts on the row itself are the wrong ones.
+ *  - `catalog-default only` (personal=true): her own lab's range governs the row and
+ *    is correct; the male range appears only in the ⓘ card as "catalog default". The
+ *    row is safe; the card could still mislead her into thinking her ceiling is higher.
+ * Both end in the same instruction, which is the one that is always right.
+ */
+const SEX_EN: Record<string, string> = { male: "men", female: "women" };
+const SEX_RU_GEN: Record<string, string> = { male: "мужчин", female: "женщин" };
+
+function sexMismatchNote(
+  rangeSex: "male" | "female",
+  isShownRange: boolean,
+  catalogRange: string | null,
+): DataQualityNote {
+  const en = SEX_EN[rangeSex] ?? rangeSex;
+  const ru = SEX_RU_GEN[rangeSex] ?? rangeSex;
+  const range = catalogRange ? ` (${catalogRange})` : "";
+  if (isShownRange) {
+    return {
+      code: "sex-mismatch",
+      text:
+        `The reference range on this row${range} is the reference range for ${en}. This program does ` +
+        `not yet choose a normal range by sex, so it may simply not apply to you — and it does not ` +
+        `account for age either. When you take this test, go by the range printed on your own lab ` +
+        `form: that is the one that counts.`,
+      textRu:
+        `Референсный диапазон в этой строке${range} — это диапазон для ${ru}. Программа пока не умеет ` +
+        `подбирать норму по полу, поэтому вам он может не подходить; возраст он тоже не учитывает. ` +
+        `Когда сдадите этот анализ, ориентируйтесь на диапазон, напечатанный в бланке вашей ` +
+        `лаборатории, — он и есть правильный.`,
+    };
+  }
+  return {
+    code: "sex-mismatch",
+    text:
+      `This row is compared against your own lab's range, which is correct. But the "catalog default" ` +
+      `shown in this card${range} is the reference range for ${en} — this program does not yet choose a ` +
+      `normal range by sex, and it does not account for age. Do not measure yourself against it. The ` +
+      `range printed on your own lab form is the one that counts.`,
+    textRu:
+      `Эта строка сравнивается с диапазоном вашей лаборатории — и это правильно. Но «диапазон по ` +
+      `справочнику», показанный в этой карточке${range}, — это диапазон для ${ru}: программа пока не ` +
+      `умеет подбирать норму по полу и не учитывает возраст. Не ориентируйтесь на него. Правильный ` +
+      `диапазон — тот, что напечатан в бланке вашей лаборатории.`,
+  };
+}
+
+/**
  * Provenance for a row with NO catalog entry: a bare LOINC/range card, or null
  * when there is nothing at all to source (planned row, or no LOINCs and no range).
  */
@@ -263,6 +387,10 @@ function buildBareProvenance(row: ProvenanceRow, shownRange: string): LabProvena
     catalogNote: null,
     personalNote: null,
     drawNote: null,
+    // A range with no catalog behind it is an unsourced range. Only warn when there
+    // IS a range to be wrong about — a bare row carrying nothing but a LOINC has
+    // nothing to caveat.
+    dataQuality: shownRange ? [noSourceNote(shownRange)] : [],
   };
 }
 
@@ -273,6 +401,7 @@ function buildCatalogProvenance(
   planOv: RefOverrideEntry | null,
   shownRange: string,
   drugs: PatientDrug[],
+  readerSex: "male" | "female" | "any" | undefined,
 ): LabProvenance {
   const rd = entry.refDefault || null;
   const catMatches = rd ? nearNum(row.refMin, rd.min) && nearNum(row.refMax, rd.max) : false;
@@ -295,6 +424,21 @@ function buildCatalogProvenance(
   // One rule drives BOTH SI strings, so the "range shown" and the "catalog default"
   // can never disagree about units inside the same card.
   const siRule = siRuleFor(row);
+
+  // Sex check. `refDefault.sex` has been carried (and validated) by the schema all
+  // along and then thrown away by every consumer — this is the first thing that
+  // reads it. We still do not SELECT by sex; we only refuse to stay quiet about it.
+  const dataQuality: DataQualityNote[] = [];
+  const rangeSex = rd?.sex;
+  if (
+    (rangeSex === "male" || rangeSex === "female") &&
+    (readerSex === "male" || readerSex === "female") &&
+    rangeSex !== readerSex
+  ) {
+    dataQuality.push(
+      sexMismatchNote(rangeSex, !personal, rd ? fmtRange(rd.min, rd.max, rd.unit) : null),
+    );
+  }
 
   return {
     hasCatalog: true,
@@ -321,6 +465,7 @@ function buildCatalogProvenance(
     molarMassRef: mmRef,
     drawNote: entry.drawNote ?? null,
     modifiers: resolveModifiers(entry, drugs),
+    dataQuality,
   };
 }
 
@@ -346,5 +491,5 @@ export function buildProvenance(row: ProvenanceRow, opts: BuildProvenanceOpts): 
   const shownRange = shownRangeOf(row);
 
   if (!entry) return buildBareProvenance(row, shownRange);
-  return buildCatalogProvenance(row, entry, planOv, shownRange, opts.drugs ?? []);
+  return buildCatalogProvenance(row, entry, planOv, shownRange, opts.drugs ?? [], opts.sex);
 }
