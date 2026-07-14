@@ -19,7 +19,9 @@ Concepts in this product:
 - [`observation`](observation.md) — one lab result (the atomic fact)
 - [`draw`](draw.md) — a dated collection of observations
 - [`analyte`](analyte.md) — the measured substance; catalog key
-- [`panel`](panel.md) — a group of markers + clinical lenses
+- [`panel`](panel.md) — a filing partition: where an analyte lives
+- [`lens`](lens.md) — a question asked of the data + its indices
+  (also the terminology reference for the panel/lens split)
 - [`index`](index.md) — a derived, formula-computed figure
 - [`reference`](reference.md) — a stored citation for a clinical number
 - [`data-layers`](data-layers.md) — the four data kinds + their homes

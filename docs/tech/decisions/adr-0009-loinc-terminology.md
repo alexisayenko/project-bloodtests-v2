@@ -1,6 +1,23 @@
 # ADR-0009: Align terminology to LOINC/FHIR — analyte, panel, group/lens
 
-Status: accepted · 2026-07-03
+Status: accepted · 2026-07-03 · **amended** (see below)
+
+> **Amendment.** The "Group / view / lens" decision below is
+> superseded by
+> [`concepts/lens.md`](../../product/concepts/lens.md). It used
+> "lens" for any app-invented thematic grouping — but the axis
+> groups (HPG/HPT/HPA) are **panels** in this codebase: they live in
+> `PANELS`, they partition, they carry no indices. "Lens" now names
+> only the orthogonal `DEFAULT_LENSES` axis (a *question* + its
+> derived indices). The analyte / LOINC-list / display-name
+> decisions below stand.
+>
+> Also note: the Consequences section predicted `loincPanel` on
+> Kidney (`24362-6`) and Electrolytes (`24326-1`). The
+> implementation deliberately did **not** do that — our `Kidney`
+> panel is a thematic group, not the LOINC Renal Function battery,
+> and Electrolytes spans several batteries. Only CBC and Lipids
+> carry a code.
 
 ## Context
 

@@ -4,7 +4,9 @@ Narrow the whole matrix to a single clinical lens (cardio, insulin-resistance, h
 
 ## What it does
 
-`"all"` shows every marker plus each marker's inline anchored indices. Picking a lens key filters the table down to a curated subset of markers and reveals the derived-index rows that belong to that lens. The filter is a pure DOM show/hide pass — nothing is re-rendered.
+`"all"` shows every marker under its panel header, and **no index rows at all** — inline anchored ones included (`on = !isAll && …`, `lab-matrix.ts:734`; `idx-inline` rows are still `tr.idx-row`). Picking a lens key filters the table down to a curated subset of markers, hides *every* panel header, and reveals the derived-index rows that belong to that lens. So a panel header is only ever seen in `"all"`, and an index only ever inside a lens — the two groupings never share the screen. The filter is a pure DOM show/hide pass — nothing is re-rendered.
+
+For what a lens *is* (vs a panel), the naming decision, and the RU display terms, see [`../concepts/lens.md`](../concepts/lens.md).
 
 ## Data it reads
 

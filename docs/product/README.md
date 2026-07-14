@@ -41,8 +41,14 @@ file in [`concepts/`](concepts/); this table is the index.
 | **Analyte** | The measured quantity (LOINC Component axis), e.g. "Glucose". The standard term for what the lab measures, and the key of the analyte catalog. One analyte carries a **list** of LOINC codes (see *Biomarker*). | LOINC axis 1 |
 | **Biomarker** | Informal / role-flavoured synonym for the measured quantity ("marker" is the same, more casual). Prose prefers **analyte** for the measured quantity; "biomarker" only when the *clinical-signal role* is meant. | — |
 | **Analyte catalog** | Reference data keyed by analyte: its **list** of LOINC codes (one analyte can have several — e.g. SHBG is both `2942-1` and `13967-5`), molar mass, symbol, reference defaults, translations, "why/frequency". Stored once, not per draw. | — |
-| **Panel** | A standardized battery a lab orders/reports as a unit and that LOINC gives a panel code (CBC `58410-2`, Lipid `57698-3`, Renal `24362-6`, Electrolytes `24326-1`). | LOINC panel code |
-| **Group / view / lens** | An app-specific thematic grouping with **no** standard code (HPG/HPT/HPA axis, "Trace elements", "Vitamins"…). Not a standard panel — don't call it one. | — |
+| **Panel** | A **filing partition** — where an analyte lives. Every analyte in exactly one panel (`PANELS`, 16 panels / 111 keys, no duplicates). Renders as the collapsible group headers. RU: «группа». | ≈ LOINC panel (code carried when the panel is a real standard battery — CBC `58410-2`, Lipid `57698-3`, Pancreas `72272-8`) |
+| **Lens** | A **question asked of the data** — a curated cross-panel selection of markers *plus the derived indices that answer it* (`DEFAULT_LENSES`; indices reach it via `itab`). Overlapping and non-covering, so **not** a partition. RU: «область интереса». | — |
+
+Panel and lens are **orthogonal** and both load-bearing — see
+[`concepts/lens.md`](concepts/lens.md) for the split, the naming
+decision, and the rejected alternatives. (This supersedes the old
+"group / view / lens" row, which used "lens" for what are in fact
+panels; amends ADR-0009.)
 | **Index** | A derived figure computed by a formula over Observations (free T, HOMA-IR…), with an evidence level and reference. | — |
 | **Specimen** | The sample type (blood, urine, saliva, semen, swab). Carried by the LOINC code itself. | LOINC System axis 4 |
 | **Scale** | `Qn` (quantitative / numeric), `Ord` (ordinal), `Nom` (nominal). Discriminator for numeric vs coded results. | LOINC Scale axis 5 |
