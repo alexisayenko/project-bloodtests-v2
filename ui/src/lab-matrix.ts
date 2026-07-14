@@ -101,6 +101,9 @@ const DEFAULT_I18N: Record<string, string> = {
      интереса». The word «панель» is banned in Russian user-facing prose (it means the
      lower axis, the strict marker partition, which the reader calls «группа»). */
   "control.areas": "Areas of interest",
+  /* Back-link label — names its DESTINATION (the landing list of every view this page
+     offers), not the word "back". */
+  "control.backToList": "All sections",
   "control.units": "Units",
   "control.unitsSwitchSI": "Switch to SI units",
   "control.unitsSwitchUS": "Switch to US units",
@@ -200,30 +203,30 @@ export const TOOLBAR_CSS = `
 .lab-area:hover::after { color: var(--_accent); }
 .lab-area:focus-visible { outline: 2px solid var(--_accent); outline-offset: -2px; }
 
-/* «ПОЛНЫЙ СПИСОК» — SET APART, and the gap is the argument.
-   It was called «Все», sitting in the same list, in the same shape as the areas — so
-   it read as a ninth area. It is not one. Every other entry answers a QUESTION ABOUT
-   HER HEALTH: «щитовидка?», «анемия?», «почки?». This one answers none. It is a MODE:
-   the whole table, every group, no filter — the lab-form primitive, dense and
-   comparable, which is the right tool for Alex and the wrong first thing for her.
-   «Все» let a mode masquerade as an area; «Полный список» says what it actually is,
-   and the separator says it is not one of them. It is also the ONLY way into the
-   collapsible-groups table (Alex: «а вот таблица с группами коллапсирующими будет
-   только если нажать на Все»). */
+/* THE TWO MODES — «ПОЛНЫЙ СПИСОК» then «ЧТО В НОРМЕ, А ЧТО НЕТ» — SET APART, and the
+   gap is the argument. They sit in the same list as the areas but are NOT areas: every
+   area answers a QUESTION ABOUT HER HEALTH («щитовидка?», «анемия?», «почки?»), and
+   these two answer none. «Полный список» is a MODE — the whole grouped table, the
+   lab-form primitive, right for Alex and the wrong first thing for her; «Что в норме»
+   is a MODE — the normalized overview chart. «Все» once let the table masquerade as a
+   ninth area; the rename plus this separator say what they actually are and that they
+   are not among the areas. «Полный список» is the ONLY way into the collapsible-groups
+   table (Alex: «а вот таблица с группами коллапсирующими будет только если нажать на
+   Все»); «Что в норме» is the ONLY way into the overview chart — it is no longer the
+   default (Alex, 2026-07-14: the page opens on the bare list, nothing shown). */
 .lab-area-mode { margin-top: 1.1rem; border-top: 1px solid var(--_rule); }
-.lab-area-full { color: var(--_muted); }
-.lab-area-full:hover { color: var(--_accent); }
+.lab-area-full, .lab-area-overview { color: var(--_muted); }
+.lab-area-full:hover, .lab-area-overview:hover { color: var(--_accent); }
 
-/* ── INSIDE AN AREA: a back-link, not a second picker ─────────────────────────
-   Deliberately NOT a "switch area" control inside the area view. The list she came
+/* ── INSIDE A VIEW: a back-link, not a second picker ──────────────────────────
+   Deliberately NOT a "switch area" control inside a chosen view. The list she came
    from already shows all eight areas at once, in full, in her own language; any
    in-place switcher would be a strictly smaller, strictly more abstract copy of it
    — and it would re-introduce, next to the table, exactly the collapsed control we
    just removed from the top of the page. One way in, one way back, and the way back
-   lands on a page where the alternatives are all visible again.
-   The link is labelled with its DESTINATION («← Что в норме, а что нет»), not with
-   the word "back": it says where she will end up, which is the same principle that
-   named the view in the first place. */
+   lands on the list where every alternative is visible again.
+   The link is labelled with its DESTINATION (the list — «← Все разделы»), not with the
+   word "back": it says where she will end up, the same principle that named the views. */
 .lab-crumb { display: flex; flex-direction: column; align-items: flex-start; gap: 0.15rem; margin: 0.2rem 0 0.6rem; }
 .lab-crumb[hidden] { display: none; }
 .lab-back {
@@ -315,22 +318,27 @@ export class LabMatrix extends HTMLElement {
     return this._view;
   }
 
+  /** The synthetic landing view: the bare list of links, nothing rendered. */
+  private static readonly LIST = "list";
+
   /**
-   * THE VIEW SHE LANDS ON — the overview («Что в норме, а что нет»), whenever the
-   * model ships one.
+   * THE STATE SHE LANDS ON — the bare list of links, and nothing else (Alex,
+   * 2026-07-14). No chart, no table, nothing expanded: just the header, the
+   * breadcrumbs, and the list. She chooses a destination; only then does anything
+   * render.
    *
-   * It used to be "all": 68 rows of a wide table, of which two concern her, opened
-   * on a 360px phone behind a horizontal scroll. A table is a lab-form primitive —
-   * dense, comparable, the right tool for someone who already knows which row he is
-   * looking for. She does not. The overview answers the one question she actually
-   * arrives with, and the area list beneath it offers the next eight.
+   * This replaced two earlier landings — the full table (68 wide rows, of which two
+   * concern her, behind a horizontal scroll) and then the overview chart. Both made a
+   * choice FOR her. The list makes none: every destination — the eight health
+   * questions, «Полный список» (the whole table), «Что в норме, а что нет» (the
+   * overview) — is one tap away and equally weighted, and she sees them all at once.
    *
-   * "all" remains the home only for a model with no overview tab at all (there is
-   * then nowhere else to land), which also keeps a host that drives `.view` itself
-   * in full control — see `_viewExplicit`.
+   * A model with a lens list lands here. One WITHOUT any lensTabs has nothing to list,
+   * so it falls back to the plain table ("all") — and a host that drives `.view`
+   * itself keeps control regardless (see `_viewExplicit`).
    */
   private homeView(): string {
-    return (this._model?.lensTabs ?? []).some((tb) => tb.key === "explore") ? "explore" : "all";
+    return (this._model?.lensTabs ?? []).length ? LabMatrix.LIST : "all";
   }
 
   /** The view-model to render. Setting it re-renders. */
@@ -489,31 +497,40 @@ export class LabMatrix extends HTMLElement {
         `</tr>`
       : "";
 
-    // ---- navigation: the on-page area list + the in-area back-link.
-    // See the .lab-areas / .lab-area-mode / .lab-crumb blocks in the stylesheet for
-    // WHY this is a list and not a control, why «Полный список» sits apart from the
-    // areas, and why an area view gets a back-link rather than a second picker.
+    // ---- navigation: the BARE LIST she lands on, + the in-view back-link.
+    // On load nothing is rendered but this list (Alex, 2026-07-14): no chart, no table,
+    // nothing expanded. Every destination — the eight areas of interest, «Полный список»,
+    // and «Что в норме, а что нет» — is a link she chooses from. She sees the header,
+    // the breadcrumbs, and the list; then she picks. See the .lab-areas / .lab-area-mode
+    // / .lab-crumb blocks in the stylesheet for why this is a list and not a control, and
+    // why a chosen view gets a back-link to the list rather than an in-view picker.
     const tabs = m.lensTabs ?? [];
-    const home = this.homeView();
+    // The eight HEALTH QUESTIONS. The other two entries are MODES, not questions —
+    // «Полный список» is the whole grouped table, «Что в норме» is the overview chart —
+    // so they sit apart, below the areas, in that order (Alex, 2026-07-14).
     const areaTabs = tabs.filter((tb) => tb.key !== "explore" && tb.key !== "all");
     const fullTab = tabs.find((tb) => tb.key === "all");
+    const overviewTab = tabs.find((tb) => tb.key === "explore");
     const areaBtn = (tb: LabLensTab, cls: string): string =>
       `<li><button type="button" class="${cls}" data-area="${esc(tb.key)}"${biAttr(
         tb.label,
         tb.labelRu,
       )}>${esc(tb.label)}</button></li>`;
 
+    // The two modes, set apart from the areas: «Полный список» first, «Что в норме» last.
+    const modeItems =
+      (fullTab ? areaBtn(fullTab, "lab-area lab-area-full") : "") +
+      (overviewTab ? areaBtn(overviewTab, "lab-area lab-area-overview") : "");
+
     const areasNav = tabs.length
       ? `<nav class="lab-areas" hidden>` +
-        `<h2 class="lab-areas-h"${t.attr("control.areas")}>${esc(
-          t.text("control.areas", this.ruOn),
-        )}</h2>` +
-        `<ul class="lab-area-list">${areaTabs.map((tb) => areaBtn(tb, "lab-area")).join("")}</ul>` +
-        // «Полный список» is only an ENTRY when it isn't already where we stand: a model
-        // with no overview tab has "all" as its home, and the list then sits above it.
-        (fullTab && home !== "all"
-          ? `<ul class="lab-area-list lab-area-mode">${areaBtn(fullTab, "lab-area lab-area-full")}</ul>`
+        (areaTabs.length
+          ? `<h2 class="lab-areas-h"${t.attr("control.areas")}>${esc(
+              t.text("control.areas", this.ruOn),
+            )}</h2>` +
+            `<ul class="lab-area-list">${areaTabs.map((tb) => areaBtn(tb, "lab-area")).join("")}</ul>`
           : "") +
+        (modeItems ? `<ul class="lab-area-list lab-area-mode">${modeItems}</ul>` : "") +
         `</nav>`
       : "";
 
@@ -628,12 +645,13 @@ export class LabMatrix extends HTMLElement {
 
     root.innerHTML =
       `<style>${STYLES}${TOOLBAR_CSS}</style>` +
-      // ORDER DOWN THE PAGE, and it is the whole point of today's change:
-      //   [ the overview chart — a sibling <lab-explore>, ABOVE this element ]
-      //   areasNav   the eight questions this page can answer — she lands here
-      //   crumb      only inside an area: where she is, and the way back
-      //   toolbar    only inside an area / «Полный список»
+      // ORDER DOWN THE PAGE:
+      //   areasNav   the bare list of links — she lands HERE, and only here, on load
+      //   crumb      only inside a chosen view: the back-link + (table views) its name
+      //   toolbar    only inside «Полный список» / an area table
       //   table      the lab-form primitive — reachable, never the first thing
+      //   [ the overview chart is a sibling <lab-explore>, rendered BELOW this element,
+      //     shown by the host only when the view is "explore" ]
       areasNav +
       crumb +
       toolbar +
@@ -829,28 +847,31 @@ export class LabMatrix extends HTMLElement {
    */
   private applyView(key: string): void {
     if (!this.shadowRoot) return;
+    const atList = key === LabMatrix.LIST;
     const isExplore = key === "explore";
+    // Neither the bare list NOR the overview shows the matrix table. The list shows
+    // only the links; the overview shows only the sibling chart (revealed by the host
+    // on the `viewchange` event). So both hide the whole matrix body + toolbar.
+    const bodyHidden = atList || isExplore;
 
-    // NAVIGATION SHELL. At home, the page IS the area list; inside an area, it is the
-    // back-link + the area's name. Exactly one of the two is ever on screen, so there
-    // is never a moment where she is offered both "pick an area" and "you are in one".
-    const atHome = key === this.homeView();
+    // NAVIGATION SHELL. At the list she sees only the links; in any chosen view she
+    // sees only the back-link + (for a table view) the view's name. Exactly one of the
+    // two is ever on screen — never both "pick a destination" and "you are in one".
     const areas = this.q(".lab-areas") as HTMLElement | null;
-    if (areas) areas.hidden = !atHome;
+    if (areas) areas.hidden = !atList;
     const crumbEl = this.q(".lab-crumb") as HTMLElement | null;
-    if (crumbEl) crumbEl.hidden = atHome;
+    if (crumbEl) crumbEl.hidden = atList;
     this.applyCrumb();
 
-    // Explore mode: hide the whole matrix chrome (body + toolbar + explainers);
-    // the host reveals its own explore panel on the `viewchange` event.
-    // (hide the WRAPPER, not just the scroller — otherwise its edge fades would be
-    // left hanging over the explore panel)
+    // Hide the whole matrix chrome (body + toolbar + explainers) for the list and the
+    // overview. (hide the WRAPPER, not just the scroller — otherwise its edge fades
+    // would be left hanging over the empty space / the explore panel.)
     const scroll = this.q(".labs-scroll") as HTMLElement | null;
     const scrollWrap = this.q(".labs-scroll-wrap") as HTMLElement | null;
     const toolbar = this.q(".labs-toolbar") as HTMLElement | null;
-    if (scroll) scroll.classList.toggle("hidden", isExplore);
-    if (scrollWrap) scrollWrap.classList.toggle("hidden", isExplore);
-    if (toolbar) toolbar.classList.toggle("hidden", isExplore);
+    if (scroll) scroll.classList.toggle("hidden", bodyHidden);
+    if (scrollWrap) scrollWrap.classList.toggle("hidden", bodyHidden);
+    if (toolbar) toolbar.classList.toggle("hidden", bodyHidden);
 
     // "Collapse all" only makes sense on All — the only view with collapsible panel
     // groups (lens views hide panel headers). Hide the button and its separator on
@@ -867,9 +888,9 @@ export class LabMatrix extends HTMLElement {
     // collapsed on every view change (never carry an open note across tabs).
     this.applyNotes(key, true);
 
-    // explore hides the matrix body, so there is nothing to filter — and "explore"
-    // must NOT fall through to the isAll (show-all-markers) branch below.
-    if (isExplore) return;
+    // the list and the overview both hide the matrix body, so there is nothing to
+    // filter — and neither must fall through to the isAll (show-all-markers) branch.
+    if (bodyHidden) return;
 
     const isAll = key === "all" || !this._keyViews[key];
     const keyList = this._keyViews[key];
@@ -937,16 +958,25 @@ export class LabMatrix extends HTMLElement {
   }
 
   /**
-   * Fill the in-area header: the back-link (labelled with its DESTINATION — the
-   * overview's own name, not the word "back") and the area's own title. Called from
-   * applyView (the view changed) and applyLang (the labels did) — these carry model
-   * text, not i18n ids, so the applyLang data-en/-ru sweep cannot reach them.
+   * Fill the in-view header: the back-link (labelled with its DESTINATION — the list
+   * she came from) and the chosen view's own title. Called from applyView (the view
+   * changed) and applyLang (the labels did) — the back label is an i18n id, but the
+   * title carries a MODEL label, which the applyLang data-en/-ru sweep cannot reach.
+   *
+   * The OVERVIEW gets no title here: the chart (`<lab-explore>`'s `.explore-title`)
+   * already prints «Что в норме, а что нет», and two identical headings stacked is
+   * just noise. Every table view (a lens, «Полный список») has no other heading, so
+   * it takes its name here.
    */
   private applyCrumb(): void {
     const back = this.q(".lab-back-lbl");
-    if (back) back.textContent = this.tabLabel(this.homeView());
-    const title = this.q(".lab-area-title");
-    if (title) title.textContent = this.tabLabel(this._view);
+    if (back) back.textContent = this._i18n.text("control.backToList", this.ruOn);
+    const title = this.q(".lab-area-title") as HTMLElement | null;
+    if (title) {
+      const name = this._view === "explore" ? "" : this.tabLabel(this._view);
+      title.textContent = name;
+      title.hidden = !name;
+    }
   }
 
   private q<T extends Element = Element>(sel: string): T | null {

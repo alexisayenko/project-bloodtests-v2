@@ -159,9 +159,12 @@ const goBack = (root: ShadowRoot): void => {
 /** The name of the area currently open (empty at home). */
 const areaTitle = (root: ShadowRoot): string =>
   (root.querySelector(".lab-area-title") as HTMLElement).textContent ?? "";
-/** Is the on-page area list showing? */
+/** Is the on-page list of links showing? */
 const areasShown = (root: ShadowRoot): boolean =>
   !(root.querySelector(".lab-areas") as HTMLElement).hidden;
+/** Is the matrix table hidden (as on the bare list and the overview)? */
+const tableHidden = (root: ShadowRoot): boolean =>
+  (root.querySelector(".labs-scroll-wrap") as HTMLElement).classList.contains("hidden");
 
 const mount = (): LabMatrix => {
   const el = document.createElement("lab-matrix") as LabMatrix;
@@ -205,12 +208,18 @@ beforeEach(() => {
 
 // ---------------------------------------------------------------------------
 describe("lens-filter (docs/product/features/lens-filter.md)", () => {
-  it("user opens the table and sees every marker (the 'all' lens) with derived-index rows tucked away", () => {
+  it("she lands on the bare list; opening «Полный список» shows every marker, indices tucked away", () => {
     const el = mount();
+    // on load: the list, nothing else — the table is hidden
+    expect(el.view).toBe("list");
+    expect(tableHidden(sr(el))).toBe(true);
+    // opening «Полный список» reveals the whole table
+    openArea(sr(el), "all");
+    expect(tableHidden(sr(el))).toBe(false);
     expect(row(el, "HGB").hidden).toBe(false);
     expect(row(el, "PLT").hidden).toBe(false);
     expect(row(el, "CHOL").hidden).toBe(false);
-    // derived indices only surface once a lens is picked
+    // derived indices only surface once an area is picked
     for (const idx of sr(el).querySelectorAll("tr.idx-row"))
       expect((idx as HTMLElement).hidden).toBe(true);
   });
@@ -229,14 +238,14 @@ describe("lens-filter (docs/product/features/lens-filter.md)", () => {
     const headers = Array.from(sr(el).querySelectorAll("tr.panel-row[data-panel]")) as HTMLElement[];
     for (const h of headers) expect(h.hidden).toBe(true);
     // inside an area the list steps aside and the area names itself — exactly one of
-    // "pick an area" / "you are in one" is ever on screen
+    // "pick a destination" / "you are in one" is ever on screen
     expect(areasShown(sr(el))).toBe(false);
     expect(areaTitle(sr(el))).toBe("Anemia");
-    // ...and the back-link returns her to the list, where the panel headers show again
+    // ...and the back-link returns her to the bare list
     goBack(sr(el));
-    for (const h of headers) expect(h.hidden).toBe(false);
-    expect(el.view).toBe("all"); // this model ships no overview tab → home IS "all"
+    expect(el.view).toBe("list");
     expect(areasShown(sr(el))).toBe(true);
+    expect(tableHidden(sr(el))).toBe(true);
   });
 
   it("a lens with a bottom (non-inline) index also reveals its 'Derived indices' separator", () => {
@@ -246,16 +255,15 @@ describe("lens-filter (docs/product/features/lens-filter.md)", () => {
     expect((sr(el).querySelector("tr.idx-row:not(.idx-inline)") as HTMLElement).hidden).toBe(false);
   });
 
-  it("lens selection is NOT remembered — after a reload the page opens at home again", () => {
+  it("lens selection is NOT remembered — after a reload the page opens on the bare list again", () => {
     let el = mount();
     openArea(sr(el), "anemia");
     expect(row(el, "PLT").hidden).toBe(true);
     el = remount(el);
-    expect(row(el, "PLT").hidden).toBe(false);
-    // and the navigation has gone home with it — it must never claim to be in an area
-    // the table is not actually showing
-    expect(el.view).toBe("all");
+    // reload returns to the bare list — never a stale area
+    expect(el.view).toBe("list");
     expect(areasShown(sr(el))).toBe(true);
+    expect(tableHidden(sr(el))).toBe(true);
   });
 });
 

@@ -434,21 +434,24 @@ describe("<lab-matrix> lens views (phase 3b)", () => {
     click(root.querySelector(`[data-area="${key}"]`)!);
   };
 
-  it("renders the on-page area list (one row per area + «Полный список») and, with no overview tab, lands on All", () => {
+  it("lands on the bare list — nothing rendered but the links (no chart, no table)", () => {
     const el = mountLens();
     const sr = el.shadowRoot!;
     const nav = sr.querySelector(".lab-areas") as HTMLElement;
     expect(nav).toBeTruthy();
-    // areas are the non-all/non-explore lenses; «Полный список» rides in its own group
+    // she lands on the list — the matrix body + toolbar are hidden, the list is shown
+    expect(el.view).toBe("list");
+    expect(nav.hidden).toBe(false);
+    expect((sr.querySelector(".labs-scroll-wrap") as HTMLElement).classList.contains("hidden")).toBe(true);
+    expect((sr.querySelector(".labs-toolbar") as HTMLElement).classList.contains("hidden")).toBe(true);
+    expect((sr.querySelector(".lab-crumb") as HTMLElement).hidden).toBe(true);
+    // areas are the non-all/non-explore lenses; «Полный список» rides in its own mode group
     expect(sr.querySelectorAll(".lab-area-list .lab-area:not(.lab-area-full)").length).toBe(1); // anemia
     expect(sr.querySelector('[data-area="anemia"]')).toBeTruthy();
-    // this model has no overview tab, so "all" is home → the full table is already the
-    // landing view and «Полный список» is NOT offered as a separate entry
-    expect(el.view).toBe("all");
-    expect(sr.querySelector(".lab-area-full")).toBeFalsy();
-    expect((sr.querySelector('tr[data-key="HGB"]') as HTMLElement).hidden).toBe(false);
-    expect((sr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(false);
-    expect((sr.querySelector("tr.idx-row") as HTMLElement).hidden).toBe(true);
+    // this model has an "all" tab → «Полный список» is a link in the list (its sole entry)
+    expect(sr.querySelector('.lab-area-full[data-area="all"]')).toBeTruthy();
+    // no overview tab in this model → no «Что в норме» link
+    expect(sr.querySelector(".lab-area-overview")).toBeFalsy();
     el.remove();
   });
 
@@ -845,8 +848,9 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     document.body.appendChild(el); // no model yet → render returns early, no dispatch
     el.model = EXPLORE_MODEL; // first real render → one dispatch
     expect(seen.length).toBe(1);
-    // she LANDS on the overview — a model that ships an "explore" tab makes it home
-    expect(seen[0]).toEqual({ view: "explore", isExplore: true });
+    // she LANDS on the bare list — nothing is chosen for her, isExplore is false so the
+    // host keeps the overview chart hidden
+    expect(seen[0]).toEqual({ view: "list", isExplore: false });
     el.remove();
   });
 
@@ -901,29 +905,37 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     el.remove();
   });
 
-  it("she LANDS on the overview; the grouped table is reachable ONLY via «Полный список»", () => {
+  it("lands on the bare list; the overview and the grouped table are each reachable via ONE link", () => {
     const el = mountExplore();
     const sr = el.shadowRoot!;
     const click = (n: Element) =>
       n.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, cancelable: true }));
-    // landing view is the overview → the whole matrix chrome is hidden, area list shows
-    expect(el.view).toBe("explore");
+    // landing state is the bare list → NOTHING rendered: matrix body hidden, and the
+    // view is not "explore" so the host keeps the overview chart hidden too
+    expect(el.view).toBe("list");
     expect((sr.querySelector(".labs-scroll") as HTMLElement).classList.contains("hidden")).toBe(true);
     expect((sr.querySelector(".lab-areas") as HTMLElement).hidden).toBe(false);
-    // the area list carries the real areas AND a set-apart «Полный список» entry — and
-    // that entry is the model's "all" tab, the sole door to the collapsible-groups table
-    expect(sr.querySelector('.lab-area-full[data-area="all"]')).toBeTruthy();
-    // no plain area row IS "all" — «Полный список» is not one of the areas
+    // the two modes are set apart, in order: «Полный список» (all) then «Что в норме» (explore)
+    const modeKeys = Array.from(
+      sr.querySelectorAll(".lab-area-mode .lab-area"),
+    ).map((b) => b.getAttribute("data-area"));
+    expect(modeKeys).toEqual(["all", "explore"]);
+    // no plain area row IS a mode — the areas are only the health questions
     const plainAreas = Array.from(
-      sr.querySelectorAll(".lab-area:not(.lab-area-full)"),
+      sr.querySelectorAll(".lab-area-list:not(.lab-area-mode) .lab-area"),
     ).map((b) => b.getAttribute("data-area"));
     expect(plainAreas).toEqual(["anemia"]);
-    expect(plainAreas).not.toContain("all");
-    // tapping «Полный список» opens the grouped table (panel headers back, groups collapsible)
+    // «Полный список» is the sole door to the collapsible-groups table
     click(sr.querySelector('.lab-area-full')!);
     expect(el.view).toBe("all");
     expect((sr.querySelector(".labs-scroll") as HTMLElement).classList.contains("hidden")).toBe(false);
     expect(sr.querySelector("tr.panel-row.collapsible")).toBeTruthy();
+    // and «Что в норме» is the sole door to the overview (isExplore → host shows the chart)
+    const seen: boolean[] = [];
+    el.addEventListener("viewchange", (e) => seen.push((e as CustomEvent).detail.isExplore));
+    click(sr.querySelector('.lab-area-overview')!);
+    expect(el.view).toBe("explore");
+    expect(seen).toContain(true);
     el.remove();
   });
 
