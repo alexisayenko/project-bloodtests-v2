@@ -429,66 +429,62 @@ describe("<lab-matrix> lens views (phase 3b)", () => {
     return el;
   };
 
-  /** Pick a lens from the native <select> — what the OS picker does on commit. */
-  const pickLens = (root: ShadowRoot, key: string): void => {
-    const sel = root.querySelector(".lab-lens") as HTMLSelectElement;
-    sel.value = key;
-    sel.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+  /** Tap an area on the on-page list — the way into a table. */
+  const openArea = (root: ShadowRoot, key: string): void => {
+    click(root.querySelector(`[data-area="${key}"]`)!);
   };
 
-  it("renders the lens dropdown (one option per lens) and defaults to All (all markers, indices hidden)", () => {
+  it("renders the on-page area list (one row per area + «Полный список») and, with no overview tab, lands on All", () => {
     const el = mountLens();
     const sr = el.shadowRoot!;
-    const sel = sr.querySelector(".lab-lens") as HTMLSelectElement;
-    expect(sel).toBeTruthy();
-    expect(sel.querySelectorAll("option").length).toBe(2);
-    // the closed control must say which view we are in
-    expect(sel.value).toBe("all");
+    const nav = sr.querySelector(".lab-areas") as HTMLElement;
+    expect(nav).toBeTruthy();
+    // areas are the non-all/non-explore lenses; «Полный список» rides in its own group
+    expect(sr.querySelectorAll(".lab-area-list .lab-area:not(.lab-area-full)").length).toBe(1); // anemia
+    expect(sr.querySelector('[data-area="anemia"]')).toBeTruthy();
+    // this model has no overview tab, so "all" is home → the full table is already the
+    // landing view and «Полный список» is NOT offered as a separate entry
+    expect(el.view).toBe("all");
+    expect(sr.querySelector(".lab-area-full")).toBeFalsy();
     expect((sr.querySelector('tr[data-key="HGB"]') as HTMLElement).hidden).toBe(false);
     expect((sr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(false);
     expect((sr.querySelector("tr.idx-row") as HTMLElement).hidden).toBe(true);
     el.remove();
   });
 
-  it("the dropdown keeps an accessible name even though its label is hidden from view", () => {
+  it("the area list has a heading and it is a translatable node that never says «панель»", () => {
     const el = mountLens();
     const sr = el.shadowRoot!;
-    const lab = sr.querySelector(".lab-lens-label") as HTMLLabelElement;
-    // VISUALLY hidden, not deleted: the label must still be in the DOM and still be
-    // wired to the control, or the <select> has no accessible name at all.
-    expect(lab).toBeTruthy();
-    expect(lab.getAttribute("for")).toBe("lab-lens");
-    expect((sr.querySelector(".lab-lens") as HTMLElement).id).toBe("lab-lens");
-    expect(lab.textContent).toBeTruthy();
-    // it is a translatable node (this model ships no RU dict, so RU falls back to EN;
-    // the host supplies «Область интереса»). Whatever it resolves to, «панель» is banned.
-    expect(lab.textContent).toBe("Area of interest");
-    expect(lab.getAttribute("data-ru")).not.toMatch(/панел/i);
-    // hidden by CLIPPING, not display:none — display:none would drop it from the
-    // accessibility tree and leave the control nameless. Read the shadow stylesheet.
-    const css = sr.querySelector("style")!.textContent!;
-    const rule = css.match(/\.lab-lens-label\s*\{[^}]*\}/)![0];
-    expect(rule).toMatch(/clip-path/);
-    expect(rule).not.toMatch(/display:\s*none/);
+    const h = sr.querySelector(".lab-areas-h") as HTMLElement;
+    expect(h).toBeTruthy();
+    expect(h.textContent).toBeTruthy();
+    // model ships no RU dict → RU falls back to EN; the host supplies «Области интереса»
+    expect(h.textContent).toBe("Areas of interest");
+    expect(h.getAttribute("data-ru")).not.toMatch(/панел/i);
     el.remove();
   });
 
-  it("selecting a lens filters to its markers + shows its indices", () => {
+  it("tapping an area filters to its markers + shows its indices, and names the area", () => {
     const el = mountLens();
     const sr = el.shadowRoot!;
-    pickLens(sr, "anemia");
+    openArea(sr, "anemia");
     expect((sr.querySelector('tr[data-key="HGB"]') as HTMLElement).hidden).toBe(false); // in anemia set
     expect((sr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(true); // not in set
     expect((sr.querySelector('tr.idx-row[data-itab="anemia"]') as HTMLElement).hidden).toBe(false);
-    expect((sr.querySelector(".lab-lens") as HTMLSelectElement).value).toBe("anemia");
+    expect(el.view).toBe("anemia");
+    // the list steps aside; the crumb names the area and offers the way back
+    expect((sr.querySelector(".lab-areas") as HTMLElement).hidden).toBe(true);
+    expect((sr.querySelector(".lab-crumb") as HTMLElement).hidden).toBe(false);
+    expect((sr.querySelector(".lab-area-title") as HTMLElement).textContent).toBe("Anemia");
     el.remove();
   });
 
-  it("the host driving .view directly also moves the closed dropdown", () => {
+  it("the host driving .view directly also moves the on-page navigation", () => {
     const el = mountLens();
     const sr = el.shadowRoot!;
     el.view = "anemia";
-    expect((sr.querySelector(".lab-lens") as HTMLSelectElement).value).toBe("anemia");
+    expect((sr.querySelector(".lab-area-title") as HTMLElement).textContent).toBe("Anemia");
+    expect((sr.querySelector(".lab-areas") as HTMLElement).hidden).toBe(true);
     el.remove();
   });
 
@@ -849,24 +845,26 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     document.body.appendChild(el); // no model yet → render returns early, no dispatch
     el.model = EXPLORE_MODEL; // first real render → one dispatch
     expect(seen.length).toBe(1);
-    expect(seen[0]).toEqual({ view: "all", isExplore: false });
+    // she LANDS on the overview — a model that ships an "explore" tab makes it home
+    expect(seen[0]).toEqual({ view: "explore", isExplore: true });
     el.remove();
   });
 
-  it("dispatches viewchange with the right detail when a lens is picked from the dropdown", () => {
+  it("dispatches viewchange with the right detail when an area is tapped on the list", () => {
     const el = mountExplore();
     const sr = el.shadowRoot!;
     const seen: { view: string; isExplore: boolean }[] = [];
     el.addEventListener("viewchange", (e) => seen.push((e as CustomEvent).detail));
-    const pick = (key: string): void => {
-      const sel = sr.querySelector(".lab-lens") as HTMLSelectElement;
-      sel.value = key;
-      sel.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+    const open = (key: string): void => {
+      sr.querySelector(`[data-area="${key}"]`)!.dispatchEvent(
+        new MouseEvent("click", { bubbles: true, composed: true, cancelable: true }),
+      );
     };
-    pick("anemia");
-    pick("explore");
+    open("anemia");
+    // «Полный список» is the model's "all" tab
+    open("all");
     expect(seen).toContainEqual({ view: "anemia", isExplore: false });
-    expect(seen).toContainEqual({ view: "explore", isExplore: true });
+    expect(seen).toContainEqual({ view: "all", isExplore: false });
     el.remove();
   });
 
@@ -903,6 +901,32 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     el.remove();
   });
 
+  it("she LANDS on the overview; the grouped table is reachable ONLY via «Полный список»", () => {
+    const el = mountExplore();
+    const sr = el.shadowRoot!;
+    const click = (n: Element) =>
+      n.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, cancelable: true }));
+    // landing view is the overview → the whole matrix chrome is hidden, area list shows
+    expect(el.view).toBe("explore");
+    expect((sr.querySelector(".labs-scroll") as HTMLElement).classList.contains("hidden")).toBe(true);
+    expect((sr.querySelector(".lab-areas") as HTMLElement).hidden).toBe(false);
+    // the area list carries the real areas AND a set-apart «Полный список» entry — and
+    // that entry is the model's "all" tab, the sole door to the collapsible-groups table
+    expect(sr.querySelector('.lab-area-full[data-area="all"]')).toBeTruthy();
+    // no plain area row IS "all" — «Полный список» is not one of the areas
+    const plainAreas = Array.from(
+      sr.querySelectorAll(".lab-area:not(.lab-area-full)"),
+    ).map((b) => b.getAttribute("data-area"));
+    expect(plainAreas).toEqual(["anemia"]);
+    expect(plainAreas).not.toContain("all");
+    // tapping «Полный список» opens the grouped table (panel headers back, groups collapsible)
+    click(sr.querySelector('.lab-area-full')!);
+    expect(el.view).toBe("all");
+    expect((sr.querySelector(".labs-scroll") as HTMLElement).classList.contains("hidden")).toBe(false);
+    expect(sr.querySelector("tr.panel-row.collapsible")).toBeTruthy();
+    el.remove();
+  });
+
   it("renders the two explainer blocks (common + personal); personal empty-hides; both hidden on explore", () => {
     const el = mountExplore();
     const sr = el.shadowRoot!;
@@ -912,10 +936,11 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     const pbody = () => personal.querySelector(".lens-note-body") as HTMLElement;
     expect(common.getAttribute("part")).toBe("lens-note");
     expect(personal.getAttribute("part")).toBe("lens-note-personal");
-    // constant summary labels
+    // she lands on the overview → notes hidden there; open «Полный список» to see them
+    el.view = "all";
+    // constant summary labels (the "all" summary is the bare generic — not a lens)
     expect((common.querySelector(".lens-note-sum") as HTMLElement).textContent).toBe("Common knowledge");
     expect((personal.querySelector(".lens-note-sum") as HTMLElement).textContent).toBe("Your case");
-    // default view "all" → both blocks show (all has common + personal)
     expect(common.hidden).toBe(false);
     expect(cbody().innerHTML).toContain("Everything measured.");
     expect(personal.hidden).toBe(false);
@@ -937,6 +962,8 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     const sr = el.shadowRoot!;
     const common = sr.querySelector(".lens-note-common") as HTMLDetailsElement;
     const personal = sr.querySelector(".lens-note-personal") as HTMLDetailsElement;
+    // she lands on the overview (no notes there) → step into «Полный список» first
+    el.view = "all";
     // The notes now render BELOW the table, so the common one is no longer in the
     // reader's way — it is open by default (closed, it would just be a second thing
     // to press). The personal note stays collapsed: it is the opinionated layer.
@@ -966,6 +993,8 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     const el = mountExplore();
     const sr = el.shadowRoot!;
     const sum = () => (sr.querySelector(".lens-note-common .lens-note-sum") as HTMLElement).textContent;
+    // she lands on the overview (no notes) → step into «Полный список» first
+    el.view = "all";
     // "all" is not a lens — it keeps the bare generic label
     expect(sum()).toBe("Common knowledge");
     // a real lens prefixes its full name: "Anemia — common knowledge"
@@ -979,6 +1008,7 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     const sr = el.shadowRoot!;
     const sep = sr.querySelector(".lens-note-sep") as HTMLElement;
     expect(sep.textContent).toBe("What this means");
+    el.view = "all";
     expect(sep.hidden).toBe(false); // "all" has notes
     el.view = "explore"; // explore suppresses the notes → nothing to separate
     expect(sep.hidden).toBe(true);

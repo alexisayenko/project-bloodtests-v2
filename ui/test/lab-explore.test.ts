@@ -86,6 +86,70 @@ describe("exploreFromLabs", () => {
     expect(m.markers["T"]!.label).toBe("T");
     expect(m.markers["fat-tanita"]!.panel).toBe("Body composition");
   });
+
+  it("propagates the ⚠ from a suspect range (dataQuality) or a bad assay (unreliable)", () => {
+    // A marker whose printed range is unsourced / wrong-sex, and one whose assay is bad —
+    // both must reach the chart flagged, because normalization erases the range that
+    // would otherwise let a reader see the problem.
+    const labs: LabMatrixModel = {
+      matrix: { cols: [], rows: [] },
+      panels: [{
+        name: "Iron studies",
+        rows: [
+          { key: "Fe", shortName: "Fe", unit: "µmol/L", refMin: 12, refMax: 30,
+            series: [{ date: "2024-01-01", value: 20 }],
+            provenance: { dataQuality: [{ code: "sex", text: "male range" }] } } as never,
+          { key: "FT", shortName: "FT", unit: "pmol/L", refMin: 3, refMax: 30, unreliable: true,
+            series: [{ date: "2024-01-01", value: 10 }] } as never,
+          { key: "HGB", shortName: "HGB", unit: "g/L", refMin: 120, refMax: 160,
+            series: [{ date: "2024-01-01", value: 140 }] } as never, // clean → no ⚠
+        ],
+      }],
+    };
+    const m = exploreFromLabs(labs);
+    expect(m.markers["Fe"]!.warn).toBe(true);
+    expect(m.markers["FT"]!.warn).toBe(true);
+    expect(m.markers["HGB"]!.warn).toBe(false);
+  });
+
+  it("an override clears the ⚠ — the chart now normalizes against the curated band", () => {
+    const labs: LabMatrixModel = {
+      matrix: { cols: [], rows: [] },
+      panels: [{
+        name: "Lipids",
+        rows: [
+          { key: "HDL", shortName: "HDL-C", unit: "mg/dL", refMin: 40, refMax: null,
+            provenance: { dataQuality: [{ code: "sex", text: "male range" }] },
+            series: [{ date: "2024-01-01", value: 55 }] } as never,
+        ],
+      }],
+    };
+    const m = exploreFromLabs(labs, {
+      overrides: { "HDL-C": { refMin: 40, refMax: 60 } },
+    });
+    expect(m.markers["HDL"]!.warn).toBe(false);
+  });
+
+  it("a never-drawn marker is carried to notTaken (named, unplottable), never dropped or zeroed", () => {
+    // labsFixture's ApoB has series:[] — it must be NAMED, not silently gone
+    const m = exploreFromLabs(labsFixture());
+    expect(m.markers["ApoB-empty"]).toBeUndefined(); // not plotted
+    const nt = (m.notTaken ?? []).find((n) => n.key === "ApoB-empty");
+    expect(nt).toBeTruthy();
+    expect(nt!.label).toBe("ApoB");
+    expect(nt!.panel).toBe("Lipids");
+  });
+
+  it("carries title / intro / labels through to the model", () => {
+    const m = exploreFromLabs(labsFixture(), {
+      title: "Что в норме, а что нет",
+      intro: "hi",
+      labels: { notTaken: "не сдавалось", axisPct: "% от нормы" },
+    });
+    expect(m.title).toBe("Что в норме, а что нет");
+    expect(m.intro).toBe("hi");
+    expect(m.labels?.notTaken).toBe("не сдавалось");
+  });
 });
 
 // ---- <lab-explore> — DOM behavior (chart canvas itself is Playwright's job) --
@@ -189,5 +253,61 @@ describe("<lab-explore>", () => {
   it("empty model shows a friendly message", () => {
     const { sr } = mount({ markers: {} });
     expect(sr.textContent).toContain("No plottable markers");
+  });
+
+  it("renders the view's own title when the model carries one", () => {
+    const model = exploreModel();
+    model.title = "Что в норме, а что нет";
+    const { sr } = mount(model);
+    expect(sr.querySelector(".explore-title")!.textContent).toBe("Что в норме, а что нет");
+  });
+
+  // ---- ⚠ propagation — the view's own name is a promise it must keep ----------
+  const warnModel = (): LabExploreModel => ({
+    title: "What's in range, what isn't",
+    markers: {
+      Fe: { label: "Fe", unit: "µmol/L", refMin: 12, refMax: 30, panel: "Iron",
+        warn: true, data: [["2024-01-01", 20]] },
+      HGB: { label: "HGB", unit: "g/L", refMin: 120, refMax: 160, panel: "CBC",
+        data: [["2024-01-01", 140]] },
+    },
+    notTaken: [{ key: "PTH", label: "PTH", panel: "Bone" }],
+    defaultSelection: ["HGB"],
+    labels: { notTaken: "не сдавалось", dataQuality: "диапазону доверять нельзя." },
+  });
+
+  it("a ⚠-flagged marker is marked in the picker (badge carries ⚠ + the warn class)", () => {
+    const { sr } = mount(warnModel());
+    const fe = sr.querySelector<HTMLElement>('.mbadge[data-key="Fe"]')!;
+    expect(fe.classList.contains("warn")).toBe(true);
+    expect(fe.textContent).toContain("⚠");
+    const hgb = sr.querySelector<HTMLElement>('.mbadge[data-key="HGB"]')!;
+    expect(hgb.classList.contains("warn")).toBe(false);
+    expect(hgb.textContent).not.toContain("⚠");
+  });
+
+  it("the ⚠ footnote appears only while a flagged marker is selected, and names it", () => {
+    const { sr } = mount(warnModel()); // default selection = HGB (clean) → no footnote
+    const foot = sr.querySelector<HTMLElement>(".dq-foot")!;
+    expect(foot.hidden).toBe(true);
+    sr.querySelector<HTMLElement>('.mbadge[data-key="Fe"]')!.click(); // select the flagged one
+    expect(foot.hidden).toBe(false);
+    expect(foot.textContent).toContain("Fe");
+    expect(foot.textContent).toContain("диапазону доверять нельзя.");
+    sr.querySelector<HTMLElement>('.mbadge[data-key="Fe"]')!.click(); // deselect → footnote gone
+    expect(sr.querySelector<HTMLElement>(".dq-foot")!.hidden).toBe(true);
+  });
+
+  it("a never-drawn marker shows in the picker as a disabled, named, unselectable chip", () => {
+    const { sr } = mount(warnModel());
+    const pth = sr.querySelector<HTMLButtonElement>('.mbadge[data-key="PTH"]')!;
+    expect(pth).toBeTruthy();
+    expect(pth.disabled).toBe(true);
+    expect(pth.classList.contains("nodata")).toBe(true);
+    expect(pth.textContent).toContain("PTH");
+    expect(pth.textContent).toContain("не сдавалось");
+    // it is inert: clicking it selects nothing (no value to plot)
+    pth.click();
+    expect(pth.classList.contains("on")).toBe(false);
   });
 });

@@ -17,6 +17,7 @@ import type {
   LabMatrixModel,
   LabRow,
   LabPanelGroup,
+  LabLensTab,
   LabProvenance,
   LabDataQualityNote,
   LabIndexItem,
@@ -96,6 +97,10 @@ const DEFAULT_I18N: Record<string, string> = {
   "control.expandAll": "Expand all",
   "control.collapseAll": "Collapse all",
   "control.lens": "Area of interest",
+  /* Heading over the on-page list of areas. Plural of control.lens — «Области
+     интереса». The word «панель» is banned in Russian user-facing prose (it means the
+     lower axis, the strict marker partition, which the reader calls «группа»). */
+  "control.areas": "Areas of interest",
   "control.units": "Units",
   "control.unitsSwitchSI": "Switch to SI units",
   "control.unitsSwitchUS": "Switch to US units",
@@ -159,49 +164,85 @@ export const TOOLBAR_CSS = `
    touching the icon; aria-pressed carries the state to assistive tech only. */
 .labs-toolbar .lm-icon-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 0; }
 .labs-toolbar .lm-ico { display: block; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-/* LENS SELECTOR — a native <select>, deliberately.
-   This replaced a horizontal swipe-strip of uniform pills (removed 2026-07-14). The
-   strip could only ever show ~1.7 lenses at a time on a 390px phone, because the
-   widest label («Инсулинорезистентность») is a 22-character unbreakable word that
-   set the pill width for all of them; every other lens lived off-screen behind a
-   sideways swipe the reader had to discover. The dropdown removes the width
-   constraint entirely — which is also why the labels are now the FULL lens names and
-   the abbreviation question (ИР / ЖБП) simply dissolved.
-   NATIVE, not a custom popover: it opens the OS picker — full-width rows, big hit
-   targets, native momentum scrolling, and it honours her system font size. It needs
-   no JS to open, no focus trap, no outside-click handling, and it cannot lose a
-   z-index fight with the sticky table header. It is accessible for free. A custom
-   listbox would look tidier here and would be worse.
-   The native dropdown arrow is left alone (no appearance:none) — it is the only
-   affordance saying "this opens", and the platform draws it better than we would. */
-.lab-lens-wrap { margin: 0.5rem 0 0.5rem; display: flex; flex-direction: column; gap: 0.3rem; }
-/* The «Область интереса» label is VISUALLY HIDDEN (Alex, 2026-07-14: «надписи скрой»)
-   — the closed <select> already shows the current area, so the label only repeated it.
-   It stays in the DOM and stays the <select>'s accessible name: clip-path, not
-   display:none, because display:none would take it out of the accessibility tree too
-   and leave the control nameless for a screen reader. */
-.lab-lens-label {
-  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
-  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+/* ── THE AREA LIST — the page IS the menu ─────────────────────────────────────
+   A native <select> lived here until 2026-07-14, and a swipe-strip of pills before
+   that. Both are gone, and the reason is the same one that killed the strip: a
+   CONTROL is a promise that something is behind it, and a 78-year-old reader on a
+   360px phone has no reason to accept that promise, or to know she has been made
+   one. A list is not a promise. It is the thing itself.
+
+   So the areas of interest are rendered ON THE PAGE, in full, one per row, under the
+   overview chart she lands on (Alex, verbatim: «фокусы — они будут отображены на
+   странице этим списком, и кликая на них будет открываться соотв раздел с таблицей»).
+   Eight rows she can read in one breath, each naming a question this page can answer
+   about her. Tapping one opens that area's table. There is nothing to discover.
+
+   Full-bleed rows, ≥44px, hairline-separated, chevron on the right: the OS settings-
+   list idiom, which is the one list pattern every phone owner already knows. */
+.lab-areas { margin: 0.4rem 0 1.2rem; }
+.lab-areas[hidden] { display: none; }
+.lab-areas-h { margin: 0 0 0.5rem; font-size: 0.95rem; font-weight: 600; color: var(--_muted); }
+.lab-area-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--_rule-soft); }
+.lab-area-list li { margin: 0; padding: 0; }
+.lab-area {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  box-sizing: border-box; width: 100%; min-height: 44px;
+  margin: 0; padding: 0.7rem 0.2rem;
+  font: inherit; font-size: 1rem; line-height: 1.3; text-align: left;
+  color: var(--_fg); background: none;
+  border: 0; border-bottom: 1px solid var(--_rule-soft);
+  cursor: pointer;
 }
-select.lab-lens {
-  box-sizing: border-box; width: 100%; max-width: 26rem;
-  min-height: 2.75rem; padding: 0.5rem 0.75rem;
-  font-family: inherit; font-size: 1rem; line-height: 1.3;
-  color: var(--_fg); background: var(--_bg);
-  border: 1px solid var(--_rule); border-radius: 0.6rem; cursor: pointer;
+/* The chevron is CSS, not markup: applyLang() rewrites these buttons' textContent to
+   swap EN/RU, which would wipe any child node we put inside them. */
+.lab-area::after { content: "›"; flex: none; color: var(--_muted); font-size: 1.3em; line-height: 1; }
+.lab-area:hover { color: var(--_accent); }
+.lab-area:hover::after { color: var(--_accent); }
+.lab-area:focus-visible { outline: 2px solid var(--_accent); outline-offset: -2px; }
+
+/* «ПОЛНЫЙ СПИСОК» — SET APART, and the gap is the argument.
+   It was called «Все», sitting in the same list, in the same shape as the areas — so
+   it read as a ninth area. It is not one. Every other entry answers a QUESTION ABOUT
+   HER HEALTH: «щитовидка?», «анемия?», «почки?». This one answers none. It is a MODE:
+   the whole table, every group, no filter — the lab-form primitive, dense and
+   comparable, which is the right tool for Alex and the wrong first thing for her.
+   «Все» let a mode masquerade as an area; «Полный список» says what it actually is,
+   and the separator says it is not one of them. It is also the ONLY way into the
+   collapsible-groups table (Alex: «а вот таблица с группами коллапсирующими будет
+   только если нажать на Все»). */
+.lab-area-mode { margin-top: 1.1rem; border-top: 1px solid var(--_rule); }
+.lab-area-full { color: var(--_muted); }
+.lab-area-full:hover { color: var(--_accent); }
+
+/* ── INSIDE AN AREA: a back-link, not a second picker ─────────────────────────
+   Deliberately NOT a "switch area" control inside the area view. The list she came
+   from already shows all eight areas at once, in full, in her own language; any
+   in-place switcher would be a strictly smaller, strictly more abstract copy of it
+   — and it would re-introduce, next to the table, exactly the collapsed control we
+   just removed from the top of the page. One way in, one way back, and the way back
+   lands on a page where the alternatives are all visible again.
+   The link is labelled with its DESTINATION («← Что в норме, а что нет»), not with
+   the word "back": it says where she will end up, which is the same principle that
+   named the view in the first place. */
+.lab-crumb { display: flex; flex-direction: column; align-items: flex-start; gap: 0.15rem; margin: 0.2rem 0 0.6rem; }
+.lab-crumb[hidden] { display: none; }
+.lab-back {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  min-height: 44px; margin: 0; padding: 0.3rem 0.2rem 0.3rem 0;
+  font: inherit; font-size: 0.95rem; text-align: left;
+  color: var(--_accent); background: none; border: 0; cursor: pointer;
 }
-select.lab-lens:hover { border-color: var(--_fg); }
-select.lab-lens:focus-visible { outline: 2px solid var(--_accent); outline-offset: 2px; }
+.lab-back:hover { text-decoration: underline; }
+.lab-back:focus-visible { outline: 2px solid var(--_accent); outline-offset: 2px; }
+.lab-back-ico { font-size: 1.1em; line-height: 1; }
+.lab-area-title { margin: 0 0 0.2rem; font-size: 1.25rem; line-height: 1.25; font-weight: 600; }
+
 @media (max-width: 640px) {
-  /* Full width on a phone, and never below 16px: iOS Safari zooms the page when it
-     focuses a control with a smaller font, and the zoom does not come back. */
-  select.lab-lens { max-width: none; font-size: 1rem; }
   /* Toolbar: keep only what a phone user actually taps — collapse-all + units.
      Detail (kept at "full") and language (set once) are hidden here, not removed. */
   .labs-toolbar .lm-btn[data-act="detail"], .labs-toolbar .lm-btn[data-act="lang"] { display: none; }
-  /* "Units" leads and stays put; "Collapse all" (shown only on the All tab) trails,
-     so switching to a lens tab drops it from the END without shoving Units sideways.
+  /* "Units" leads and stays put; "Collapse all" (shown only on «Полный список») trails,
+     so switching to an area drops it from the END without shoving Units sideways.
      Drop the divider on mobile — with two controls it just adds noise. */
   .labs-toolbar .lm-units-btn { order: -1; }
   .labs-toolbar .lm-sep { display: none; }
@@ -252,6 +293,8 @@ export class LabMatrix extends HTMLElement {
     return !!this._model?.tapAnything;
   }
   private _view = "all";
+  /** True once the HOST has set `.view` explicitly — then we stop choosing for it. */
+  private _viewExplicit = false;
   private _keyViews: Record<string, string[]> = {};
   private scrollSaveTimer = 0;
   /* Scroll-affordance state. The two "nudge" flags are per-page-load (instance)
@@ -263,12 +306,31 @@ export class LabMatrix extends HTMLElement {
 
   /** Active clinical-lens view ("all" or a lens key). Filters the table. */
   set view(k: string) {
+    this._viewExplicit = true;
     this._view = k || "all";
     this.applyView(this._view);
     this.dispatchViewChange();
   }
   get view(): string {
     return this._view;
+  }
+
+  /**
+   * THE VIEW SHE LANDS ON — the overview («Что в норме, а что нет»), whenever the
+   * model ships one.
+   *
+   * It used to be "all": 68 rows of a wide table, of which two concern her, opened
+   * on a 360px phone behind a horizontal scroll. A table is a lab-form primitive —
+   * dense, comparable, the right tool for someone who already knows which row he is
+   * looking for. She does not. The overview answers the one question she actually
+   * arrives with, and the area list beneath it offers the next eight.
+   *
+   * "all" remains the home only for a model with no overview tab at all (there is
+   * then nowhere else to land), which also keeps a host that drives `.view` itself
+   * in full control — see `_viewExplicit`.
+   */
+  private homeView(): string {
+    return (this._model?.lensTabs ?? []).some((tb) => tb.key === "explore") ? "explore" : "all";
   }
 
   /** The view-model to render. Setting it re-renders. */
@@ -320,6 +382,9 @@ export class LabMatrix extends HTMLElement {
     }
     const t = (this._i18n = new I18n(m.i18n));
     this._keyViews = m.keyViews ?? {};
+    // The landing view is the model's, not a constant: a model with an overview tab
+    // lands on the overview. A host that set `.view` itself keeps what it set.
+    if (!this._viewExplicit) this._view = this.homeView();
     const cols = m.matrix.cols ?? [];
     const scheduleCols = m.scheduleCols ?? (m.scheduleCosts ?? []).map((s) => s.col);
     const scheduleCosts = m.scheduleCosts ?? [];
@@ -424,23 +489,43 @@ export class LabMatrix extends HTMLElement {
         `</tr>`
       : "";
 
-    // optional in-component lens selector (host page can also drive `.view` directly).
-    // A native <select>: see the .lab-lens block in the stylesheet for why.
-    // The <label> matters as much as the control — it is what tells her this is a
-    // CHOICE and not a heading. «Область интереса» is the agreed term for this axis.
-    const tabsBar = (m.lensTabs ?? []).length
-      ? `<div class="lab-lens-wrap">` +
-        `<label class="lab-lens-label" for="lab-lens"${t.attr("control.lens")}>${esc(
-          t.text("control.lens", this.ruOn),
-        )}</label>` +
-        `<select class="lab-lens" id="lab-lens">` +
-        (m.lensTabs ?? [])
-          .map(
-            (tb) =>
-              `<option value="${esc(tb.key)}"${biAttr(tb.label, tb.labelRu)}>${esc(tb.label)}</option>`,
-          )
-          .join("") +
-        `</select></div>`
+    // ---- navigation: the on-page area list + the in-area back-link.
+    // See the .lab-areas / .lab-area-mode / .lab-crumb blocks in the stylesheet for
+    // WHY this is a list and not a control, why «Полный список» sits apart from the
+    // areas, and why an area view gets a back-link rather than a second picker.
+    const tabs = m.lensTabs ?? [];
+    const home = this.homeView();
+    const areaTabs = tabs.filter((tb) => tb.key !== "explore" && tb.key !== "all");
+    const fullTab = tabs.find((tb) => tb.key === "all");
+    const areaBtn = (tb: LabLensTab, cls: string): string =>
+      `<li><button type="button" class="${cls}" data-area="${esc(tb.key)}"${biAttr(
+        tb.label,
+        tb.labelRu,
+      )}>${esc(tb.label)}</button></li>`;
+
+    const areasNav = tabs.length
+      ? `<nav class="lab-areas" hidden>` +
+        `<h2 class="lab-areas-h"${t.attr("control.areas")}>${esc(
+          t.text("control.areas", this.ruOn),
+        )}</h2>` +
+        `<ul class="lab-area-list">${areaTabs.map((tb) => areaBtn(tb, "lab-area")).join("")}</ul>` +
+        // «Полный список» is only an ENTRY when it isn't already where we stand: a model
+        // with no overview tab has "all" as its home, and the list then sits above it.
+        (fullTab && home !== "all"
+          ? `<ul class="lab-area-list lab-area-mode">${areaBtn(fullTab, "lab-area lab-area-full")}</ul>`
+          : "") +
+        `</nav>`
+      : "";
+
+    // Back-link + the area's own name. Both filled by applyCrumb() (they carry model
+    // labels, not i18n ids, so they are not data-en/-ru nodes applyLang can swap).
+    const crumb = tabs.length
+      ? `<div class="lab-crumb" hidden>` +
+        `<button type="button" class="lab-back" data-act="back">` +
+        `<span class="lab-back-ico" aria-hidden="true">←</span>` +
+        `<span class="lab-back-lbl"></span></button>` +
+        `<h2 class="lab-area-title"></h2>` +
+        `</div>`
       : "";
 
     // self-contained toolbar. Collapse/expand leads as an ICON-ONLY button; then the
@@ -465,16 +550,19 @@ export class LabMatrix extends HTMLElement {
     // assistive tech through aria-pressed + aria-label — it is conveyed to the screen
     // reader, just not to the glyph.
     //
-    // The mark is the classic collapse-tree: a spine on the left, three branch stubs,
-    // each ending in an outlined rounded box. Inline SVG on currentColor — no asset, no
-    // icon font, and it inherits the toolbar's stroke colour.
+    // THE MARK: the "expand all" tree Alex picked by looking at it
+    // (creazilla #3230984, 2026-07-14) — a spine down the left, three branch stubs,
+    // each running into an outlined rounded box; the spine turns right into the last
+    // stub on a rounded corner, and its top is flush with the first box. Redrawn here
+    // as inline SVG on currentColor: no asset, no icon font, no external request, and
+    // it inherits the toolbar's colour and stroke weight.
     const collapseBtn =
       `<button type="button" class="lm-btn lm-icon-btn" data-act="collapse-toggle" aria-pressed="false">` +
       `<svg class="lm-ico" viewBox="0 0 20 20" width="22" height="22" aria-hidden="true" focusable="false">` +
-      `<path class="lm-ico-tree" d="M2.6 5.5v9M2.6 5.5h4M2.6 10h4M2.6 14.5h4"/>` +
-      `<rect class="lm-ico-box" x="6.6" y="3.5" width="11.4" height="4" rx="1.3"/>` +
-      `<rect class="lm-ico-box" x="6.6" y="8" width="11.4" height="4" rx="1.3"/>` +
-      `<rect class="lm-ico-box" x="6.6" y="12.5" width="11.4" height="4" rx="1.3"/>` +
+      `<path class="lm-ico-tree" d="M3 2.5V14.6a1.3 1.3 0 0 0 1.3 1.3H6.9M3 4.1H6.9M3 10H6.9"/>` +
+      `<rect class="lm-ico-box" x="6.9" y="2.5" width="10.3" height="3.2" rx="1.2"/>` +
+      `<rect class="lm-ico-box" x="6.9" y="8.4" width="10.3" height="3.2" rx="1.2"/>` +
+      `<rect class="lm-ico-box" x="6.9" y="14.3" width="10.3" height="3.2" rx="1.2"/>` +
       `</svg></button>`;
 
     // UNITS — ONE button, ONE word (Alex, 2026-07-14: «SI / US - используй одну кнопку -
@@ -540,7 +628,14 @@ export class LabMatrix extends HTMLElement {
 
     root.innerHTML =
       `<style>${STYLES}${TOOLBAR_CSS}</style>` +
-      tabsBar +
+      // ORDER DOWN THE PAGE, and it is the whole point of today's change:
+      //   [ the overview chart — a sibling <lab-explore>, ABOVE this element ]
+      //   areasNav   the eight questions this page can answer — she lands here
+      //   crumb      only inside an area: where she is, and the way back
+      //   toolbar    only inside an area / «Полный список»
+      //   table      the lab-form primitive — reachable, never the first thing
+      areasNav +
+      crumb +
       toolbar +
       `<div class="labs-scroll-wrap"><div class="labs-scroll"><table class="labs matrix${
         this.tapCell ? " tap-cell" : ""
@@ -619,17 +714,8 @@ export class LabMatrix extends HTMLElement {
     // wire the horizontal-scroll persistence + edge fades (fresh `.labs-scroll` each render)
     const labsScroll = this.q(".labs-scroll") as HTMLElement | null;
     if (labsScroll) labsScroll.addEventListener("scroll", () => this.onLabsScroll(), { passive: true });
-    // lens <select> — `change` (not `input`): on a native picker `change` is the
-    // commit, and it is what fires once the OS sheet is dismissed with a pick.
-    const lensSel = this.q(".lab-lens") as HTMLSelectElement | null;
-    if (lensSel) {
-      lensSel.addEventListener("change", () => {
-        const key = lensSel.value || "all";
-        this.setView(key);
-        // first lens she picks this page load → teach that the table swipes too
-        this.maybeNudgeTable(key);
-      });
-    }
+    // The area buttons and the back-link are plain <button>s handled by the delegated
+    // click listener (onDocClick) — nothing to wire per render.
     this.scheduleEdges();
     // initial mount: let the host initialize (e.g. reveal its explore panel)
     this.dispatchViewChange();
@@ -745,6 +831,16 @@ export class LabMatrix extends HTMLElement {
     if (!this.shadowRoot) return;
     const isExplore = key === "explore";
 
+    // NAVIGATION SHELL. At home, the page IS the area list; inside an area, it is the
+    // back-link + the area's name. Exactly one of the two is ever on screen, so there
+    // is never a moment where she is offered both "pick an area" and "you are in one".
+    const atHome = key === this.homeView();
+    const areas = this.q(".lab-areas") as HTMLElement | null;
+    if (areas) areas.hidden = !atHome;
+    const crumbEl = this.q(".lab-crumb") as HTMLElement | null;
+    if (crumbEl) crumbEl.hidden = atHome;
+    this.applyCrumb();
+
     // Explore mode: hide the whole matrix chrome (body + toolbar + explainers);
     // the host reveals its own explore panel on the `viewchange` event.
     // (hide the WRAPPER, not just the scroller — otherwise its edge fades would be
@@ -770,14 +866,6 @@ export class LabMatrix extends HTMLElement {
     // personal RU is intentionally deferred so it always shows EN). Reset to
     // collapsed on every view change (never carry an open note across tabs).
     this.applyNotes(key, true);
-
-    // reflect the active view in the closed <select> (for every view, including
-    // explore) — the closed state must always show what is currently selected, which
-    // is the whole point of the control. Guarded: assigning .value when it already
-    // matches is a no-op, but assigning during the user's own `change` would be a
-    // re-entrant write on the element mid-event.
-    const sel = this.q(".lab-lens") as HTMLSelectElement | null;
-    if (sel && sel.value !== key) sel.value = key;
 
     // explore hides the matrix body, so there is nothing to filter — and "explore"
     // must NOT fall through to the isAll (show-all-markers) branch below.
@@ -839,6 +927,26 @@ export class LabMatrix extends HTMLElement {
     this._view = key || "all";
     this.applyView(this._view);
     this.dispatchViewChange();
+  }
+
+  /** A lens tab's label in the active language (RU→EN fallback). */
+  private tabLabel(key: string): string {
+    const tb = (this._model?.lensTabs ?? []).find((x) => x.key === key);
+    if (!tb) return "";
+    return this.ruOn && tb.labelRu ? tb.labelRu : tb.label;
+  }
+
+  /**
+   * Fill the in-area header: the back-link (labelled with its DESTINATION — the
+   * overview's own name, not the word "back") and the area's own title. Called from
+   * applyView (the view changed) and applyLang (the labels did) — these carry model
+   * text, not i18n ids, so the applyLang data-en/-ru sweep cannot reach them.
+   */
+  private applyCrumb(): void {
+    const back = this.q(".lab-back-lbl");
+    if (back) back.textContent = this.tabLabel(this.homeView());
+    const title = this.q(".lab-area-title");
+    if (title) title.textContent = this.tabLabel(this._view);
   }
 
   private q<T extends Element = Element>(sel: string): T | null {
@@ -923,6 +1031,9 @@ export class LabMatrix extends HTMLElement {
     this.applyUnits(this.siOn);
     this.applyDetail(this.minOn);
     this.applyCollapseToggleLabel();
+    // the back-link + area title carry MODEL labels, not i18n ids — the sweep above
+    // cannot reach them, so swap them here
+    this.applyCrumb();
     // explainer bodies are innerHTML (not data-en/-ru nodes) → re-fill in the new
     // language, preserving the current open/closed state (don't reset on a swap).
     this.applyNotes(this._view, false);
@@ -970,8 +1081,9 @@ export class LabMatrix extends HTMLElement {
   /**
    * The collapse button carries no text, so its NAME lives in aria-label + title —
    * kept here in the active language, and flipped with the state ("Collapse all" when
-   * the panels are open, "Expand all" when they are all shut). aria-pressed doubles as
-   * the CSS hook that rotates the chevron, so the glyph and the state cannot drift.
+   * the groups are open, "Expand all" when they are all shut). aria-pressed carries the
+   * same state to assistive tech. It reaches NOTHING visual: the glyph is static by
+   * design (see the .lm-ico block), so there is no CSS selector on [aria-pressed].
    */
   private applyCollapseToggleLabel(): void {
     const allCollapsed = this.allPanelsCollapsed();
@@ -1029,6 +1141,7 @@ export class LabMatrix extends HTMLElement {
   }
 
   private onAct(act: string): void {
+    if (act === "back") { this.closePopup(); this.setView(this.homeView()); return; }
     if (act === "units") { this.siOn = !this.siOn; this.applyUnits(this.siOn); lsSet(LS.units, this.siOn ? "si" : "us"); }
     else if (act === "detail") { this.minOn = !this.minOn; this.applyDetail(this.minOn); lsSet(LS.details, this.minOn ? "min" : "full"); }
     else if (act === "lang") { this.ruOn = !this.ruOn; this.applyLang(this.ruOn); lsSet(LS.lang, this.ruOn ? "ru" : "en"); }
@@ -1164,8 +1277,18 @@ export class LabMatrix extends HTMLElement {
       (path.find((n) => n instanceof HTMLElement && n.matches(sel)) as HTMLElement | undefined) ?? null;
     const pop = this.popupEl();
 
-    // NB: the lens selector is a native <select> and reports through `change`, wired in
-    // applyState() — it is deliberately NOT handled here as a click.
+    // An area row (or «Полный список») — the ONLY way into the table. Matched before
+    // the popup guards: these buttons live outside the table and open a view, never a card.
+    const area = match("[data-area]");
+    if (area && sr.contains(area)) {
+      const key = area.getAttribute("data-area") || "all";
+      this.closePopup();
+      this.setView(key);
+      // she has just opened a table for the first time this page load → teach it swipes
+      this.maybeNudgeTable(key);
+      return;
+    }
+
     const act = match("[data-act]");
     if (act && sr.contains(act)) { this.onAct(act.getAttribute("data-act") || ""); return; }
     if (match(".tip-close")) { this.closePopup(); return; }

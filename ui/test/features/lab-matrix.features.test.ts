@@ -147,16 +147,21 @@ const makeModel = (): LabMatrixModel => ({
 const click = (n: Element): boolean =>
   n.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, cancelable: true }));
 
-/** Pick a lens from the native <select> — what the OS picker does on commit.
- *  (The lens control was a strip of pills until 2026-07-14; it is a dropdown now.) */
-const pickLens = (root: ShadowRoot, key: string): void => {
-  const sel = root.querySelector(".lab-lens") as HTMLSelectElement;
-  sel.value = key;
-  sel.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+/** Tap an area on the on-page list — the ONLY way into a table.
+ *  (Pills until 2026-07-14, then a <select>; it is a list on the page now.) */
+const openArea = (root: ShadowRoot, key: string): void => {
+  click(root.querySelector(`[data-area="${key}"]`)!);
 };
-/** The lens the closed control is currently showing. */
-const lensValue = (root: ShadowRoot): string =>
-  (root.querySelector(".lab-lens") as HTMLSelectElement).value;
+/** Tap the back-link — the only way out of an area view. */
+const goBack = (root: ShadowRoot): void => {
+  click(root.querySelector(".lab-back")!);
+};
+/** The name of the area currently open (empty at home). */
+const areaTitle = (root: ShadowRoot): string =>
+  (root.querySelector(".lab-area-title") as HTMLElement).textContent ?? "";
+/** Is the on-page area list showing? */
+const areasShown = (root: ShadowRoot): boolean =>
+  !(root.querySelector(".lab-areas") as HTMLElement).hidden;
 
 const mount = (): LabMatrix => {
   const el = document.createElement("lab-matrix") as LabMatrix;
@@ -210,9 +215,9 @@ describe("lens-filter (docs/product/features/lens-filter.md)", () => {
       expect((idx as HTMLElement).hidden).toBe(true);
   });
 
-  it("user picks a lens from the dropdown and the table narrows to its markers, its indices, and only panels that still have rows", () => {
+  it("user taps an area on the list and the table narrows to its markers, its indices, and only panels that still have rows", () => {
     const el = mount();
-    pickLens(sr(el), "anemia");
+    openArea(sr(el), "anemia");
     // curated markers only
     expect(row(el, "HGB").hidden).toBe(false);
     expect(row(el, "PLT").hidden).toBe(true);
@@ -223,30 +228,34 @@ describe("lens-filter (docs/product/features/lens-filter.md)", () => {
     // source-panel headers are noise once the markers are gathered cross-panel
     const headers = Array.from(sr(el).querySelectorAll("tr.panel-row[data-panel]")) as HTMLElement[];
     for (const h of headers) expect(h.hidden).toBe(true);
-    // the closed control shows the lens she picked — that is the point of it
-    expect(lensValue(sr(el))).toBe("anemia");
-    // ...but in the "all" view the panel headers are visible again
-    pickLens(sr(el), "all");
+    // inside an area the list steps aside and the area names itself — exactly one of
+    // "pick an area" / "you are in one" is ever on screen
+    expect(areasShown(sr(el))).toBe(false);
+    expect(areaTitle(sr(el))).toBe("Anemia");
+    // ...and the back-link returns her to the list, where the panel headers show again
+    goBack(sr(el));
     for (const h of headers) expect(h.hidden).toBe(false);
-    expect(lensValue(sr(el))).toBe("all");
+    expect(el.view).toBe("all"); // this model ships no overview tab → home IS "all"
+    expect(areasShown(sr(el))).toBe(true);
   });
 
   it("a lens with a bottom (non-inline) index also reveals its 'Derived indices' separator", () => {
     const el = mount();
-    pickLens(sr(el), "cardio");
+    openArea(sr(el), "cardio");
     expect((sr(el).querySelector('tr.idx-sep[data-itab="cardio"]') as HTMLElement).hidden).toBe(false);
     expect((sr(el).querySelector("tr.idx-row:not(.idx-inline)") as HTMLElement).hidden).toBe(false);
   });
 
-  it("lens selection is NOT remembered — after a reload the table opens at 'all' again", () => {
+  it("lens selection is NOT remembered — after a reload the page opens at home again", () => {
     let el = mount();
-    pickLens(sr(el), "anemia");
+    openArea(sr(el), "anemia");
     expect(row(el, "PLT").hidden).toBe(true);
     el = remount(el);
     expect(row(el, "PLT").hidden).toBe(false);
-    // and the closed control has gone back to "all" with it — it must never show a
-    // lens the table is not actually in
-    expect(lensValue(sr(el))).toBe("all");
+    // and the navigation has gone home with it — it must never claim to be in an area
+    // the table is not actually showing
+    expect(el.view).toBe("all");
+    expect(areasShown(sr(el))).toBe(true);
   });
 });
 
@@ -343,14 +352,14 @@ describe("language-toggle (docs/product/features/language-toggle.md)", () => {
     const el = document.createElement("lab-matrix") as LabMatrix;
     document.body.appendChild(el);
     const m = makeModel();
-    m.i18n = { en: {}, ru: { "control.lens": "Область интереса", "col.marker": "Маркер" } };
+    m.i18n = { en: {}, ru: { "control.areas": "Области интереса", "col.marker": "Маркер" } };
     el.model = m;
     click(btn(el, "lang"));
-    // the lens dropdown's label re-renders in the new language (a data-en/data-ru node
-    // picked up by applyLang) — and it says «Область интереса», never «панель»
-    const lensLabel = sr(el).querySelector(".lab-lens-label")!;
-    expect(lensLabel.textContent).toBe("Область интереса");
-    expect(lensLabel.textContent).not.toMatch(/панел/i);
+    // the area list's heading re-renders in the new language (a data-en/data-ru node
+    // picked up by applyLang) — and it says «Области интереса», never «панель»
+    const areasH = sr(el).querySelector(".lab-areas-h")!;
+    expect(areasH.textContent).toBe("Области интереса");
+    expect(areasH.textContent).not.toMatch(/панел/i);
     expect(sr(el).querySelector("thead th.marker-col")!.textContent).toBe("Маркер");
   });
 

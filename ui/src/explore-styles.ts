@@ -21,6 +21,7 @@ const SCHEME_LIGHT = `
   --_rule-soft: var(--rule-soft, #e4e4e4);
   --_accent: var(--accent, #2f6f9f);
   --_tip-ok: #1e8449;
+  --_warn: var(--z-warn, #8a5a00);
 `;
 const SCHEME_DARK = `
   --_fg: var(--fg, #d6d6d6);
@@ -30,6 +31,7 @@ const SCHEME_DARK = `
   --_rule-soft: var(--rule-soft, #2c2c2c);
   --_accent: var(--accent, #6fa8d4);
   --_tip-ok: #58d68d;
+  --_warn: var(--z-warn, #d4ac0d);
 `;
 
 export const EXPLORE_STYLES = `
@@ -53,6 +55,9 @@ export const EXPLORE_STYLES = `
   ${SCHEME_DARK}
 }
 .muted { color: var(--_muted); }
+/* The view's name — the first heading on the labs page (the page's own <h1> is
+   visually hidden), so it is sized as a real section title, not chart chrome. */
+.explore-title { margin: 0 0 0.3rem; font-size: 1.25rem; line-height: 1.25; font-weight: 600; }
 .hpg-note { font-size: 0.82rem; margin: 0 0 0.4rem; }
 .hpg-auto { font-size: 0.85rem; display: inline-flex; align-items: center; gap: 0.3rem; cursor: pointer; }
 
@@ -86,6 +91,28 @@ export const EXPLORE_STYLES = `
 .mbadge { font: inherit; font-size: 0.8rem; line-height: 1; padding: 0.32rem 0.55rem; border: 1px solid var(--_rule-soft); border-radius: 999px; background: transparent; color: var(--_fg); cursor: pointer; transition: background 0.12s, border-color 0.12s, color 0.12s; }
 .mbadge:hover { border-color: var(--_muted); }
 .mbadge.on { color: #fff; font-weight: 500; }
+/* ⚠ MARKER — its reference range is unsourced or written for the other sex, so the
+   0–100 % it would plot at is a percentage of the wrong thing. The badge carries the
+   ⚠ in its own label (see #buildPicker) and a dashed border that ECHOES the dashed
+   line it will draw on the chart, so the badge and the series are recognisably the
+   same claim. It stays fully selectable: the trend is still worth seeing, it is the
+   VERDICT that is not available. */
+.mbadge.warn { border-style: dashed; border-color: var(--_warn); }
+.mbadge.warn.on { border-style: dashed; border-color: var(--_warn); }
+/* NEVER TAKEN — named, unselectable, obviously inert. Not hidden (it exists, and it
+   is the one she could go and ask for) and never plotted (there is no value; 0 %
+   would read as catastrophically low). */
+.mbadge.nodata { border-style: dotted; color: var(--_muted); cursor: default; opacity: 0.85; }
+.mbadge.nodata:hover { border-color: var(--_rule-soft); }
+
+/* The ⚠ footnote under the plot — prose, because a glyph cannot say WHY. */
+.dq-foot {
+  margin: 0.55rem 0 0; padding: 0.5rem 0.65rem;
+  font-size: 0.82rem; line-height: 1.45;
+  color: var(--_fg); border-left: 3px solid var(--_warn);
+  background: color-mix(in srgb, var(--_warn) 8%, transparent);
+}
+.dq-foot[hidden] { display: none; }
 
 /* hover tooltip on chart points */
 .u-tip {
@@ -98,6 +125,7 @@ export const EXPLORE_STYLES = `
 .u-tip-row { display: flex; align-items: center; gap: 0.35rem; }
 .u-tip-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .u-tip-ok { color: var(--_tip-ok); font-weight: 600; }
+.u-tip-warn { color: var(--_warn); font-weight: 700; }
 
 .uplot, .u-legend { font-family: inherit; color: var(--_fg); }
 .u-legend { font-size: 0.78rem; }

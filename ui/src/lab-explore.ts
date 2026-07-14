@@ -22,8 +22,14 @@ import {
   type Navigator,
   type SetTarget,
 } from "@alexisayenko/chart-kit";
-import type { ExploreEvent, ExploreMarker, LabExploreModel } from "./explore-types.js";
+import type { ExploreMarker, LabExploreModel } from "./explore-types.js";
 import { EXPLORE_STYLES, UPLOT_CSS } from "./explore-styles.js";
+
+const esc = (s: unknown): string =>
+  String(s ?? "").replace(
+    /[&<>"]/g,
+    (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]!),
+  );
 
 const PALETTE = [
   "#9f2f28", "#2f6f9f", "#1e8449", "#b8860b", "#7d3c98", "#16a085", "#c0392b", "#5d6d7e",
@@ -42,6 +48,18 @@ const DEFAULT_STEPS = [
 const DEFAULT_INTRO =
   "Pick markers below to overlay them, normalized to % of each marker's reference range " +
   "(0–100 % = within normal, shaded). Hover for actual values · drag to scroll · −/+ to zoom.";
+
+/** English fallbacks for the chart's chrome; a host page overrides via model.labels. */
+const DEFAULT_LABELS = {
+  notTaken: "never taken",
+  dataQuality:
+    "their reference range is not trustworthy (unsourced, or written for the other sex), " +
+    "so read their position on this chart as a hint, not as a verdict.",
+  axisPct: "% of reference range",
+  events: "Events:",
+  autoscale: "Autoscale vertical",
+  panelToggle: "Select / deselect all in this group",
+};
 
 interface UsedMarker extends ExploreMarker {
   key: string;
@@ -129,6 +147,11 @@ export class LabExplore extends HTMLElement {
 
   // ---- render ------------------------------------------------------------
 
+  /** A chrome string: the host's override, else the English default. */
+  #lbl(k: keyof typeof DEFAULT_LABELS): string {
+    return this.#model?.labels?.[k] || DEFAULT_LABELS[k];
+  }
+
   #render(): void {
     const m = this.#model;
     if (this.#u) {
@@ -145,6 +168,9 @@ export class LabExplore extends HTMLElement {
     const events = m.events ?? [];
     this.#root.innerHTML =
       `<style>${UPLOT_CSS}${EXPLORE_STYLES}</style>` +
+      // The view's own name. It is the first thing on the labs page — see
+      // LabExploreModel.title for why it is a promise and not a label.
+      (m.title ? `<h2 class="explore-title">${esc(m.title)}</h2>` : "") +
       `<p class="muted hpg-note">${m.intro ?? DEFAULT_INTRO}</p>` +
       `<div class="chart-toolbar">` +
       `<div class="zoom-ctrl">` +
@@ -152,20 +178,22 @@ export class LabExplore extends HTMLElement {
       `<span class="zoom-label"></span>` +
       `<button type="button" class="zoom" data-zoom="in" aria-label="Zoom in">+</button>` +
       `</div>` +
-      `<label class="hpg-auto"><input type="checkbox" data-autoscale> Autoscale vertical</label>` +
+      `<label class="hpg-auto"><input type="checkbox" data-autoscale> ${esc(this.#lbl("autoscale"))}</label>` +
       `</div>` +
       (events.length
-        ? `<div class="src-toggles"><span class="tog-label muted">Events:</span>` +
+        ? `<div class="src-toggles"><span class="tog-label muted">${esc(this.#lbl("events"))}</span>` +
           events
             .map(
               (ev) =>
-                `<label><input type="checkbox" class="ev-tog" value="${ev.id}"${ev.defaultOn ? " checked" : ""}> ${ev.label}</label>`,
+                `<label><input type="checkbox" class="ev-tog" value="${esc(ev.id)}"${ev.defaultOn ? " checked" : ""}> ${esc(ev.label)}</label>`,
             )
             .join("") +
           `</div>`
         : "") +
-      `<div class="axis-caps"><span class="cap-left">% of reference range</span></div>` +
+      `<div class="axis-caps"><span class="cap-left">${esc(this.#lbl("axisPct"))}</span></div>` +
       `<div class="chart-wrap"></div>` +
+      // The ⚠ footnote. Hidden while nothing flagged is plotted; filled by #refreshWarnFoot().
+      `<p class="dq-foot" role="note" hidden></p>` +
       `<div class="marker-picker"></div>`;
 
     // selection: persisted → default
@@ -206,14 +234,23 @@ export class LabExplore extends HTMLElement {
     const picker = this.#root.querySelector(".marker-picker")!;
     const byPanel: Record<string, string[]> = {};
     const order: string[] = [];
-    for (const k of Object.keys(m.markers)) {
-      const p = m.markers[k]!.panel;
+    const add = (p: string): string[] => {
       if (!byPanel[p]) {
         byPanel[p] = [];
         order.push(p);
       }
-      byPanel[p]!.push(k);
+      return byPanel[p]!;
+    };
+    for (const k of Object.keys(m.markers)) add(m.markers[k]!.panel).push(k);
+    // never-drawn markers ride in their own group box, so a group whose markers she
+    // has ALL never had taken still appears — that group is the one worth reading.
+    const nt = m.notTaken ?? [];
+    const ntByPanel: Record<string, typeof nt> = {};
+    for (const n of nt) {
+      add(n.panel);
+      (ntByPanel[n.panel] ??= []).push(n);
     }
+
     for (const pname of order) {
       const box = document.createElement("div");
       box.className = "picker-panel";
@@ -221,18 +258,33 @@ export class LabExplore extends HTMLElement {
       cap.type = "button";
       cap.className = "picker-cap";
       cap.textContent = pname;
-      cap.title = "Select / deselect all in this panel";
-      cap.addEventListener("click", () => this.#togglePanel(byPanel[pname]!));
+      cap.title = this.#lbl("panelToggle");
+      cap.addEventListener("click", () => this.#togglePanel(byPanel[pname] ?? []));
       box.appendChild(cap);
       const bb = document.createElement("div");
       bb.className = "picker-badges";
-      for (const k of byPanel[pname]!) {
+      for (const k of byPanel[pname] ?? []) {
+        const mk = m.markers[k]!;
         const b = document.createElement("button");
         b.type = "button";
-        b.className = "mbadge";
+        b.className = mk.warn ? "mbadge warn" : "mbadge";
         b.dataset.key = k;
-        b.textContent = m.markers[k]!.label;
+        // ⚠ RIDES THE LABEL ITSELF, not a separate glyph elsewhere: the badge is the
+        // one place she reads this marker's name before choosing to plot it, so the
+        // caveat has to be attached to the name, the way it is in the table.
+        b.textContent = mk.warn ? `⚠ ${mk.label}` : mk.label;
         b.addEventListener("click", () => this.#toggle(k));
+        bb.appendChild(b);
+      }
+      // NEVER TAKEN — present, named, and disabled. Not plotted (there is no value),
+      // not omitted (it exists), not zero (0 % would read as catastrophically low).
+      for (const n of ntByPanel[pname] ?? []) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "mbadge nodata";
+        b.disabled = true;
+        b.dataset.key = n.key;
+        b.textContent = `${n.label} · ${this.#lbl("notTaken")}`;
         bb.appendChild(b);
       }
       box.appendChild(bb);
@@ -241,13 +293,33 @@ export class LabExplore extends HTMLElement {
   }
 
   #refreshBadges(): void {
-    this.#root.querySelectorAll<HTMLElement>(".mbadge").forEach((b) => {
+    this.#root.querySelectorAll<HTMLElement>(".mbadge:not(.nodata)").forEach((b) => {
       const k = b.dataset.key!;
       const on = !!this.#selSet[k];
       b.classList.toggle("on", on);
       b.style.background = on ? this.#colorFor(k) : "";
       b.style.borderColor = on ? this.#colorFor(k) : "";
     });
+  }
+
+  /**
+   * The ⚠ footnote under the chart — the last line of defence for the view's name.
+   *
+   * A dashed line and a ⚠ in a badge say "careful"; they do not say WHY, and a
+   * reader who has just looked at a chart called «Что в норме, а что нет» is owed
+   * the why in plain words. So whenever at least one flagged marker is on the plot,
+   * it is named here, in prose, immediately under the picture it undermines. When
+   * nothing flagged is plotted the line is not there at all — a permanent caveat is
+   * a caveat nobody reads.
+   */
+  #refreshWarnFoot(): void {
+    const foot = this.#root.querySelector<HTMLElement>(".dq-foot");
+    if (!foot) return;
+    const flagged = this.#used.filter((mk) => mk.warn);
+    foot.hidden = !flagged.length;
+    foot.textContent = flagged.length
+      ? `⚠ ${flagged.map((mk) => mk.label).join(", ")} — ${this.#lbl("dataQuality")}`
+      : "";
   }
 
   #toggle(k: string): void {
@@ -356,6 +428,9 @@ export class LabExplore extends HTMLElement {
 
   #makeChart(): void {
     this.#buildData();
+    // BEFORE the canvas guard: the footnote is DOM, not canvas, so it must also be
+    // right in a DOM-only environment (SSR, happy-dom) where the plot never draws.
+    this.#refreshWarnFoot();
     const m = this.#model!;
     const wrap = this.#root.querySelector<HTMLElement>(".chart-wrap")!;
 
@@ -396,11 +471,16 @@ export class LabExplore extends HTMLElement {
         const norm = this.#data[i + 1]![idx];
         const note =
           mk.goodAbove != null && a >= mk.goodAbove
-            ? ` <span class="u-tip-ok">✓ ${mk.goodNote || "optimal"}</span>`
+            ? ` <span class="u-tip-ok">✓ ${esc(mk.goodNote || "optimal")}</span>`
             : "";
+        // The tooltip is where the % is stated as a NUMBER — the most authoritative
+        // form it ever takes. So this is exactly where a flagged marker must carry
+        // its ⚠, right against the figure it is casting doubt on.
+        const w = mk.warn ? `<span class="u-tip-warn" title="⚠">⚠</span> ` : "";
         rows +=
           `<div class="u-tip-row"><span class="u-tip-dot" style="background:${this.#colorFor(mk.key)}"></span>` +
-          `${mk.label}: <b>${a}${mk.unit ? " " + mk.unit : ""}</b> <span class="muted">(${norm}%)</span>${note}</div>`;
+          `${w}${esc(mk.label)}: <b>${esc(a)}${mk.unit ? " " + esc(mk.unit) : ""}</b> ` +
+          `<span class="muted">(${esc(norm)}%${mk.warn ? " ⚠" : ""})</span>${note}</div>`;
       });
       return rows;
     };
@@ -453,6 +533,12 @@ export class LabExplore extends HTMLElement {
         scale: "pct",
         stroke: this.#colorFor(mk.key),
         width: 1.5,
+        // DASHED = "this line is drawn against a band we do not trust". A dashed line
+        // reads as provisional in every chart convention there is, and — unlike a
+        // colour or an opacity change — it survives greyscale, colour-blindness and a
+        // phone screen in sunlight. It costs the marker none of its visibility: she
+        // still sees the trend, she just cannot mistake it for a verdict.
+        ...(mk.warn ? { dash: [5, 4] } : {}),
         spanGaps: true,
         paths: th.spline,
         points: { show: true, size: 4 },

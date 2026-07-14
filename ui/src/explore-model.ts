@@ -18,7 +18,13 @@
  */
 
 import type { LabMatrixModel, LabRow } from "./types.js";
-import type { ExploreEvent, ExploreMarker, LabExploreModel } from "./explore-types.js";
+import type {
+  ExploreEvent,
+  ExploreLabels,
+  ExploreMarker,
+  ExploreNotTaken,
+  LabExploreModel,
+} from "./explore-types.js";
 
 /** A manual band for markers whose printed range can't drive the chart. */
 export interface ExploreBandOverride {
@@ -38,6 +44,12 @@ export interface ExploreFromLabsOptions {
   /** explicit default selection; wins over defaultPanel */
   defaultSelection?: string[];
   events?: ExploreEvent[];
+  /** heading over the chart — the view's own name (see LabExploreModel.title) */
+  title?: string;
+  /** intro line under the heading */
+  intro?: string;
+  /** localized chrome strings (see ExploreLabels) */
+  labels?: ExploreLabels;
 }
 
 interface SeriesPoint {
@@ -59,29 +71,60 @@ function labelOf(r: LabRow): string {
   return r.shortName || r.displayShortName || r.analysis || r.key;
 }
 
+/**
+ * ⚠ — is the BAND this marker would be normalized against trustworthy?
+ *
+ * Two independent ways it is not, and the engine already knows both:
+ *   • `provenance.dataQuality` — the printed range is unsourced, or it was
+ *     authored for the other sex (a male uric-acid interval on a 78-year-old
+ *     woman's page). The number is real; the goalposts are not hers.
+ *   • `unreliable` — the ASSAY is bad (direct free-T).
+ *
+ * In the TABLE this surfaces as the ⚠ badge beside the analyte's name. On a
+ * NORMALIZED CHART it matters more, not less: the table at least prints the range
+ * next to the value, so a reader can see what she is being compared with; the
+ * chart erases it into a bare percentage. Without this flag the view would be
+ * making its central promise — "here is what is in range and what is not" — with
+ * its most doubtful eleven rows and no tell.
+ */
+function warnOf(r: LabRow): boolean {
+  return !!(r.unreliable || (r.provenance?.dataQuality ?? []).length);
+}
+
 export function exploreFromLabs(
   labs: LabMatrixModel,
   opts: ExploreFromLabsOptions = {},
 ): LabExploreModel {
   const overrides = opts.overrides ?? {};
   const markers: Record<string, ExploreMarker> = {};
+  const notTaken: ExploreNotTaken[] = [];
   const defaultSel: string[] = [];
 
   for (const panel of labs.panels ?? []) {
     const panelName = panel.name ?? panel.panel ?? "";
     for (const r of panel.rows) {
       const series = seriesOf(r);
-      if (!series.length) continue;
+      // NEVER DRAWN — no value, so nothing to plot and nothing to normalize. It is
+      // NOT dropped: it is carried to the picker as a named, unselectable chip. See
+      // ExploreNotTaken for why silence and zero are both lies here.
+      if (!series.length) {
+        notTaken.push({ key: r.key, label: labelOf(r), panel: panelName });
+        continue;
+      }
       const refMin = numField(r, "refMin");
       const refMax = numField(r, "refMax");
       const data: [string, number][] = series.map((p) => [p.date, p.value]);
-      const base = { label: labelOf(r), unit: r.unit ?? "", panel: panelName, data };
+      const warn = warnOf(r);
+      const base = { label: labelOf(r), unit: r.unit ?? "", panel: panelName, data, warn };
 
       const ovr = overrides[r.shortName ?? ""] ?? overrides[r.key];
       if (ovr) {
-        // manual band beats (or rescues) the printed range — HDL-C etc.
+        // manual band beats (or rescues) the printed range — HDL-C etc. An override
+        // is an ANSWER to a bad printed range, so it clears the ⚠: the band the chart
+        // now normalizes against is the curated one, not the one the row complained about.
         markers[r.key] = {
           ...base,
+          warn: false,
           refMin: ovr.refMin,
           refMax: ovr.refMax,
           goodAbove: ovr.goodAbove ?? null,
@@ -109,7 +152,11 @@ export function exploreFromLabs(
 
   return {
     markers,
+    notTaken,
     defaultSelection: opts.defaultSelection ?? defaultSel,
     events: opts.events,
+    title: opts.title,
+    intro: opts.intro,
+    labels: opts.labels,
   };
 }
