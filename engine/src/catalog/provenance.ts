@@ -32,6 +32,39 @@ export interface MolarMassRef {
 /** A cited reference as rendered in the popup (the catalog Reference + a short cite label). */
 export type ProvenanceReference = Reference & { cite: string };
 
+/**
+ * A drug caveat that APPLIES TO THIS READER — the join of two things that are
+ * deliberately stored apart:
+ *
+ *   generic (engine)  "a thiazide raises serum calcium"     — catalog `modifiers`
+ *   personal (site)   "she takes Вальсакор Н, a thiazide"   — the consumer's med list
+ *
+ * Neither half is a caveat on its own; the caveat is the intersection, and it is
+ * DERIVED, never authored. Add a drug to her list and the notes appear on every
+ * analyte that drug touches; stop the drug and they disappear. There is no prose to
+ * keep in sync, and the two can never drift apart.
+ *
+ * A consumer that passes no `drugClasses` (Alex's homepage today) gets an empty
+ * array on every row — the feature degrades to nothing, it does not break.
+ */
+export interface ProvenanceModifier {
+  drugClass: string;
+  direction: "up" | "down" | "unreliable";
+  strength: "consensus" | "heuristic" | "disputed";
+  note: string;
+  noteRu: string;
+  /** the reader's OWN drugs in this class, e.g. ["Вальсакор Н80"] — the personal half */
+  drugs: string[];
+  /**
+   * True when at least one of those drugs is taken on-and-off rather than daily.
+   * This is not a footnote: an intermittent drug's effect comes and goes BETWEEN
+   * blood draws, so it does not merely shift the level, it corrupts the trend line —
+   * two values can differ because of the drug, not because anything changed.
+   */
+  intermittent: boolean;
+  source: ProvenanceReference | null;
+}
+
 /** The full render-ready provenance object for one matrix row. */
 export interface LabProvenance {
   hasCatalog: boolean;
@@ -67,6 +100,22 @@ export interface LabProvenance {
   molarMass: number | null;
   molarMassRef: MolarMassRef | null;
   drawNote: string | null;
+  /** drug caveats that apply to THIS reader; empty when no med list was supplied */
+  modifiers: ProvenanceModifier[];
+}
+
+/**
+ * One drug the reader is actually taking, as the consumer's own data describes it.
+ * `classes` is what makes the join work: match on the CLASS, never on the name.
+ * "Вальсакор Н" is valsartan + hydrochlorothiazide — a thiazide wearing a brand name
+ * that contains neither word, so a name match would silently miss it. A combination
+ * pill simply carries several classes.
+ */
+export interface PatientDrug {
+  name: string;
+  classes: string[];
+  /** taken on-and-off (a course, or "when I need it") rather than every day */
+  intermittent?: boolean;
 }
 
 /** A plan reference override entry (personal layer). */
@@ -76,8 +125,46 @@ export interface RefOverrideEntry {
   note?: string | null;
 }
 
+/**
+ * The join itself: the analyte's generic `modifiers` ∩ the drugs this reader takes.
+ *
+ * Only drugs the reader is CURRENTLY on are passed in — a statin she stopped ten
+ * months ago must not raise a caveat as though it were still acting. Currency is the
+ * consumer's call (it owns the dates); this function trusts the list it is given.
+ */
+export function resolveModifiers(
+  entry: AnalyteEntry,
+  drugs: PatientDrug[],
+): ProvenanceModifier[] {
+  if (!drugs.length) return [];
+  const mods = entry.modifiers || [];
+  if (!mods.length) return [];
+
+  const out: ProvenanceModifier[] = [];
+  for (const m of mods) {
+    const hits = drugs.filter((d) => d.classes.includes(m.drugClass));
+    if (!hits.length) continue;
+    out.push({
+      drugClass: m.drugClass,
+      direction: m.direction,
+      strength: m.strength,
+      note: m.note,
+      noteRu: m.noteRu,
+      drugs: hits.map((d) => d.name),
+      intermittent: hits.some((d) => !!d.intermittent),
+      source: m.source ? { ...m.source, cite: citeOf(m.source) } : null,
+    });
+  }
+  return out;
+}
+
 export interface BuildProvenanceOpts {
   catalog: AnalyteCatalog;
+  /**
+   * The reader's CURRENT medications, class-tagged. Omit and no drug caveats are
+   * produced anywhere — the clean-degradation path for a consumer with no med list.
+   */
+  drugs?: PatientDrug[];
   refOverride?: Record<string, RefOverrideEntry>;
 }
 
@@ -166,6 +253,8 @@ function buildBareProvenance(row: ProvenanceRow, shownRange: string): LabProvena
     shownRange,
     references: [],
     why: null,
+    // no catalog entry -> nothing generic to join against -> no drug caveats
+    modifiers: [],
     molarMass: null,
     molarMassRef: null,
     evidenceLevel: null,
@@ -183,6 +272,7 @@ function buildCatalogProvenance(
   entry: AnalyteEntry,
   planOv: RefOverrideEntry | null,
   shownRange: string,
+  drugs: PatientDrug[],
 ): LabProvenance {
   const rd = entry.refDefault || null;
   const catMatches = rd ? nearNum(row.refMin, rd.min) && nearNum(row.refMax, rd.max) : false;
@@ -230,6 +320,7 @@ function buildCatalogProvenance(
     molarMass: entry.molarMass ?? null,
     molarMassRef: mmRef,
     drawNote: entry.drawNote ?? null,
+    modifiers: resolveModifiers(entry, drugs),
   };
 }
 
@@ -255,5 +346,5 @@ export function buildProvenance(row: ProvenanceRow, opts: BuildProvenanceOpts): 
   const shownRange = shownRangeOf(row);
 
   if (!entry) return buildBareProvenance(row, shownRange);
-  return buildCatalogProvenance(row, entry, planOv, shownRange);
+  return buildCatalogProvenance(row, entry, planOv, shownRange, opts.drugs ?? []);
 }

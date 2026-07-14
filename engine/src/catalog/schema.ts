@@ -70,6 +70,59 @@ export const LocaleTextSchema = z.object({
 });
 export type LocaleText = z.infer<typeof LocaleTextSchema>;
 
+/**
+ * A DRUG CLASS that moves this analyte.
+ *
+ * Why a class and not a drug name: a name-based match cannot work. "Вальсакор Н"
+ * is valsartan + hydrochlorothiazide — a thiazide hiding inside a combination
+ * blood-pressure tablet, under a brand name that contains neither word. Match on
+ * the CLASS and a combination drug simply carries several tags; match on the name
+ * and you miss it, and you break on every spelling variant.
+ *
+ * This is GENERIC knowledge — a property of the analyte, true for everyone ("a
+ * thiazide raises serum calcium"). The PERSONAL half ("she takes Вальсакор Н")
+ * lives with the consumer's own data, never here. The caveat the reader sees is
+ * the JOIN of the two, computed at build time (see buildProvenance's
+ * `drugClasses`): add a drug to her list and the caveats appear on every analyte
+ * it touches; remove it and they vanish. No prose to maintain, and no chance of
+ * the two drifting apart.
+ */
+export const ModifierSchema = z.object({
+  /**
+   * Stable class key, e.g. "thiazide" | "statin" | "udca" | "arb" | "antiresorptive"
+   * | "glucocorticoid" | "biotin-highdose" | "folate-supplement".
+   *
+   * The key must span every drug family the note actually talks about, because the
+   * join is a literal string match (see buildProvenance's `drugClasses`). Hence
+   * "antiresorptive" rather than "bisphosphonate": denosumab is a RANKL inhibitor,
+   * not a bisphosphonate, yet it suppresses the bone-turnover markers just as hard
+   * (harder, in fact) — a consumer who correctly tags it as its own class would
+   * otherwise get NO caveat at all.
+   */
+  drugClass: z.string(),
+  /**
+   * What the drug does to the NUMBER:
+   *  - "up"/"down"   — it moves the value in that direction; the value is real but
+   *                    partly the drug's doing.
+   *  - "unreliable"  — the number no longer measures what the reader thinks it does
+   *                    (e.g. an antiresorptive suppresses CTX/P1NP by 50-70%, so the
+   *                    marker reads the DRUG, not native bone turnover).
+   */
+  direction: z.enum(["up", "down", "unreliable"]),
+  /**
+   * Evidence grade — NOT optional. A caveat without its evidence level is a rumour,
+   * and several of these are genuinely disputed (statin → CTX is observational only).
+   * Maps to the [консенсус] / [эвристика] / [спорно] convention used on the site.
+   */
+  strength: z.enum(["consensus", "heuristic", "disputed"]),
+  /** one plain sentence, in the reader's register — no jargon dumps */
+  note: z.string(),
+  noteRu: z.string(),
+  /** citation for the claim (same shape as any other clinical number here) */
+  source: ReferenceSchema.nullable().optional(),
+});
+export type Modifier = z.infer<typeof ModifierSchema>;
+
 export const AnalyteEntrySchema = z.object({
   key: z.string(),                                 // catalog key (short name, else analysis name)
   shortName: z.string().nullable().optional(),
@@ -106,6 +159,12 @@ export const AnalyteEntrySchema = z.object({
   frequency: z.string().nullable().optional(),
   panel: z.string().nullable().optional(),         // panel / group membership
   unreliableAssay: z.boolean().default(false),     // e.g. direct free-T immunoassay
+  /**
+   * Drug CLASSES that move this analyte — joined against the reader's own med list.
+   * Optional (not `.default([])`) so that an analyte with nothing to say about drugs
+   * simply omits the key, and existing catalog fixtures stay valid.
+   */
+  modifiers: z.array(ModifierSchema).optional(),
   lang: z.object({
     en: LocaleTextSchema.nullable().optional(),
     ru: LocaleTextSchema.nullable().optional(),
