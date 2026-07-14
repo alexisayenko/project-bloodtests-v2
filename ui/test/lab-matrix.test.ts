@@ -302,26 +302,39 @@ describe("<lab-matrix> behaviours (phase 3)", () => {
     return el;
   };
 
-  it("renders a self-contained toolbar with default labels", () => {
+  it("renders a self-contained toolbar: collapse icon, SI/US segmented control, detail + lang toggles", () => {
     const el = fresh();
     const sr = el.shadowRoot!;
-    expect(sr.querySelectorAll(".labs-toolbar .lm-btn").length).toBe(4);
-    expect(sr.querySelector('[data-act="collapse-toggle"] .tg.active')!.textContent).toBe("Expand all");
-    expect(sr.querySelector('[data-act="units"] .tg.active')!.textContent).toBe("Units: US");
+    // collapse icon + SI + US + detail + lang = 5 buttons
+    expect(sr.querySelectorAll(".labs-toolbar .lm-btn").length).toBe(5);
+    // collapse is icon-only: no text, an inline SVG, and a real accessible name
+    const tog = sr.querySelector('[data-act="collapse-toggle"]')!;
+    expect(tog.textContent?.trim()).toBe("");
+    expect(tog.querySelector("svg.lm-ico")).toBeTruthy();
+    expect(tog.getAttribute("aria-label")).toBe("Expand all");
+    expect(tog.getAttribute("title")).toBe("Expand all");
+    // units: BOTH systems on screen, US filled by default
+    expect(sr.querySelector('[data-act="units-si"]')!.textContent).toBe("SI");
+    expect(sr.querySelector('[data-act="units-us"]')!.textContent).toBe("US");
+    expect(sr.querySelector('[data-act="units-us"]')!.getAttribute("aria-pressed")).toBe("true");
+    expect(sr.querySelector('[data-act="units-si"]')!.getAttribute("aria-pressed")).toBe("false");
+    expect(sr.querySelector(".lm-seg")!.getAttribute("aria-label")).toBe("Units");
     expect(sr.querySelector('[data-act="lang"] .tg.active')!.textContent).toBe("Lang: EN");
     el.remove();
   });
 
-  it("US/SI toggle swaps cell values + range + button state", () => {
+  it("SI/US segmented control swaps cell values + range and moves the fill", () => {
     const el = fresh();
     const sr = el.shadowRoot!;
     const cell = sr.querySelector('tr[data-key="HGB"] td.num.low')!;
     const unitRef = sr.querySelector('tr[data-key="HGB"] .unit-ref')!;
     expect(cell.textContent).toBe("14.8"); // US
-    click(sr.querySelector('[data-act="units"]')!);
+    click(sr.querySelector('[data-act="units-si"]')!);
     expect(cell.textContent).toBe("148"); // SI (data-si)
     expect(unitRef.textContent).toBe("135–175 g/L");
-    expect(sr.querySelector('[data-act="units"]')!.getAttribute("aria-pressed")).toBe("true");
+    // exactly one side is filled, and it is the one she picked
+    expect(sr.querySelector('[data-act="units-si"]')!.getAttribute("aria-pressed")).toBe("true");
+    expect(sr.querySelector('[data-act="units-us"]')!.getAttribute("aria-pressed")).toBe("false");
     el.remove();
   });
 
@@ -415,24 +428,57 @@ describe("<lab-matrix> lens views (phase 3b)", () => {
     return el;
   };
 
-  it("renders the lens tab bar and defaults to All (all markers, indices hidden)", () => {
+  /** Pick a lens from the native <select> — what the OS picker does on commit. */
+  const pickLens = (root: ShadowRoot, key: string): void => {
+    const sel = root.querySelector(".lab-lens") as HTMLSelectElement;
+    sel.value = key;
+    sel.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+  };
+
+  it("renders the lens dropdown (one option per lens) and defaults to All (all markers, indices hidden)", () => {
     const el = mountLens();
     const sr = el.shadowRoot!;
-    expect(sr.querySelectorAll(".lab-tabs .lab-tab").length).toBe(2);
+    const sel = sr.querySelector(".lab-lens") as HTMLSelectElement;
+    expect(sel).toBeTruthy();
+    expect(sel.querySelectorAll("option").length).toBe(2);
+    // the closed control must say which view we are in
+    expect(sel.value).toBe("all");
     expect((sr.querySelector('tr[data-key="HGB"]') as HTMLElement).hidden).toBe(false);
     expect((sr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(false);
     expect((sr.querySelector("tr.idx-row") as HTMLElement).hidden).toBe(true);
     el.remove();
   });
 
+  it("the dropdown carries a label so it reads as a choice, not a heading", () => {
+    const el = mountLens();
+    const sr = el.shadowRoot!;
+    const lab = sr.querySelector(".lab-lens-label") as HTMLLabelElement;
+    expect(lab).toBeTruthy();
+    expect(lab.getAttribute("for")).toBe("lab-lens");
+    expect((sr.querySelector(".lab-lens") as HTMLElement).id).toBe("lab-lens");
+    // it is a translatable node (this model ships no RU dict, so RU falls back to EN;
+    // the host supplies «Область интереса»). Whatever it resolves to, «панель» is banned.
+    expect(lab.textContent).toBe("Area of interest");
+    expect(lab.getAttribute("data-ru")).not.toMatch(/панел/i);
+    el.remove();
+  });
+
   it("selecting a lens filters to its markers + shows its indices", () => {
     const el = mountLens();
     const sr = el.shadowRoot!;
-    click(sr.querySelector('[data-lens="anemia"]')!);
+    pickLens(sr, "anemia");
     expect((sr.querySelector('tr[data-key="HGB"]') as HTMLElement).hidden).toBe(false); // in anemia set
     expect((sr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(true); // not in set
     expect((sr.querySelector('tr.idx-row[data-itab="anemia"]') as HTMLElement).hidden).toBe(false);
-    expect(sr.querySelector('[data-lens="anemia"]')!.getAttribute("aria-pressed")).toBe("true");
+    expect((sr.querySelector(".lab-lens") as HTMLSelectElement).value).toBe("anemia");
+    el.remove();
+  });
+
+  it("the host driving .view directly also moves the closed dropdown", () => {
+    const el = mountLens();
+    const sr = el.shadowRoot!;
+    el.view = "anemia";
+    expect((sr.querySelector(".lab-lens") as HTMLSelectElement).value).toBe("anemia");
     el.remove();
   });
 
@@ -779,13 +825,18 @@ describe("<lab-matrix> explore view + per-view explainer + viewchange event", ()
     el.remove();
   });
 
-  it("dispatches viewchange with the right detail when a lens tab is clicked", () => {
+  it("dispatches viewchange with the right detail when a lens is picked from the dropdown", () => {
     const el = mountExplore();
     const sr = el.shadowRoot!;
     const seen: { view: string; isExplore: boolean }[] = [];
     el.addEventListener("viewchange", (e) => seen.push((e as CustomEvent).detail));
-    click(sr.querySelector('[data-lens="anemia"]')!);
-    click(sr.querySelector('[data-lens="explore"]')!);
+    const pick = (key: string): void => {
+      const sel = sr.querySelector(".lab-lens") as HTMLSelectElement;
+      sel.value = key;
+      sel.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+    };
+    pick("anemia");
+    pick("explore");
     expect(seen).toContainEqual({ view: "anemia", isExplore: false });
     expect(seen).toContainEqual({ view: "explore", isExplore: true });
     el.remove();

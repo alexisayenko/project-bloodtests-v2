@@ -18,29 +18,28 @@ quoting LOINC itself.
 
 ## 1. Lenses → dropdown
 
-**Status:** TODO
+**Status:** DONE (2026-07-14)
 
-Replace the horizontal scrollable strip of lens pills with a **drop-down list**.
+The horizontal scrolling strip of lens pills is gone; the lens selector is a
+native `<select>` labelled «Область интереса».
 
-**Context.** Today we shipped uniform fixed-size lens pills laid out in a single
-scrolling row. That solved the ragged-width problem but not the underlying one:
-the row still scrolls horizontally, so lenses past the fold are invisible unless
-the user thinks to swipe. A dropdown shows the whole set at once and removes the
-width constraint entirely.
+**Why native and not a custom control** — this is a standing decision, not a
+default to be "improved" later. The reader is a 78-year-old on a ~360px phone. A
+native `<select>` opens the OS picker: full-width rows, large hit targets, native
+momentum scrolling, and it honours her system font size. It needs no JS to open,
+no focus trap, no outside-click handling, and it cannot lose a z-index fight with
+the sticky table header. It is accessible for free. A custom listbox would look
+tidier and would be worse.
 
-There are 8 lenses in Nataliya's build: `hypothyroidism`, `ir`, `cardio`,
-`nafld`, `kidney`, `anemia`, `bone`, `pancreas`.
+The strip could only show ~1.7 pills at a time, because the pill width was set by
+the longest *unbreakable* word («Инсулинорезистентность», 22 chars); every other
+lens lived off-screen behind a swipe the reader had to discover.
 
-**Open question — full names or abbreviations?**
-The Russian labels are long: «Костно-минеральный обмен», «Жировая болезнь
-печени». In the pill strip that length is what forced the discussion about
-abbreviations (ИР for инсулинорезистентность, ЖБП for жировая болезнь печени).
-That discussion was **deferred and is still unresolved.**
-
-Note the dependency runs the other way now: **a dropdown may make abbreviations
-unnecessary**, because a dropdown row is as wide as the menu, not as wide as a
-pill. If we go with the dropdown, the abbreviation question may simply dissolve.
-Decide the dropdown first, then re-ask whether abbreviations are still needed.
+**The abbreviations question is CLOSED — dissolved, not decided.** It only ever
+existed because the pill width had to hold the longest label. A dropdown row is as
+wide as the menu, so the constraint is gone and the lenses now carry their **full
+names** («Костно-минеральный обмен», «Жировая болезнь печени», …). No ИР/ЖБП. If
+the control ever goes back to a fixed-width form, the question comes back with it.
 
 ---
 
@@ -240,6 +239,32 @@ computer model is the better estimator.
 See the pancreas section of
 [`docs/product/concepts/lens-loinc-mapping.md`](docs/product/concepts/lens-loinc-mapping.md)
 for the LOINC side of the same research.
+
+---
+
+## Videos (narration series for her)
+
+### 8. The collapse icon MUST be explained in the narration
+
+**Status:** TODO — blocking for the next re-shoot of the labs video.
+
+The collapse/expand control on the labs page is now an **icon with no text label**
+(Alex's explicit call, 2026-07-14). That makes it **the only unlabelled control on
+the page**, and an abstract icon is *learned*, not intuited — she has no prior
+exposure to the collapse-tree glyph from file managers or IDEs.
+
+The objection was raised and answered: **the video is the onboarding channel, and
+it will explain what the button does.** That answer is only true if the explanation
+actually ships. If it does not, the button is effectively invisible to her and the
+groups can never be opened.
+
+So: when the labs video is re-shot, the narration must show the icon being pressed
+and say what it does. It is not optional colour — it is the control's only
+discoverability. Everything else on the page names itself; this one does not.
+
+(The button is still correct for assistive tech — `aria-label` + `title` in the
+active language, ≥44px target, and the chevron rotates with the state. The gap is
+purely for a sighted reader who has never seen the glyph.)
 
 ---
 

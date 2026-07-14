@@ -147,6 +147,17 @@ const makeModel = (): LabMatrixModel => ({
 const click = (n: Element): boolean =>
   n.dispatchEvent(new MouseEvent("click", { bubbles: true, composed: true, cancelable: true }));
 
+/** Pick a lens from the native <select> — what the OS picker does on commit.
+ *  (The lens control was a strip of pills until 2026-07-14; it is a dropdown now.) */
+const pickLens = (root: ShadowRoot, key: string): void => {
+  const sel = root.querySelector(".lab-lens") as HTMLSelectElement;
+  sel.value = key;
+  sel.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+};
+/** The lens the closed control is currently showing. */
+const lensValue = (root: ShadowRoot): string =>
+  (root.querySelector(".lab-lens") as HTMLSelectElement).value;
+
 const mount = (): LabMatrix => {
   const el = document.createElement("lab-matrix") as LabMatrix;
   document.body.appendChild(el);
@@ -168,6 +179,14 @@ const btn = (el: LabMatrix, act: string): HTMLElement =>
 /** The visible label of a toggle button = its currently-active stacked span. */
 const lbl = (el: LabMatrix, act: string): string =>
   btn(el, act).querySelector(".tg.active")?.textContent ?? "";
+/** Units is a SI/US segmented control (2026-07-14): pick a side by name. */
+const pickUnits = (el: LabMatrix, sys: "si" | "us"): boolean => click(btn(el, `units-${sys}`));
+/** Which side of the segmented control is filled — i.e. the units on screen. */
+const unitsActive = (el: LabMatrix): string =>
+  (sr(el).querySelector('.lm-seg .lm-seg-btn[aria-pressed="true"]') as HTMLElement)?.textContent ?? "";
+/** Collapse-all is icon-only (2026-07-14): its NAME lives in aria-label, not on screen. */
+const collapseName = (el: LabMatrix): string =>
+  btn(el, "collapse-toggle").getAttribute("aria-label") ?? "";
 const popup = (el: LabMatrix): HTMLElement => sr(el).getElementById("cell-popup") as HTMLElement;
 
 beforeEach(() => {
@@ -191,9 +210,9 @@ describe("lens-filter (docs/product/features/lens-filter.md)", () => {
       expect((idx as HTMLElement).hidden).toBe(true);
   });
 
-  it("user picks a lens tab and the table narrows to its markers, its indices, and only panels that still have rows", () => {
+  it("user picks a lens from the dropdown and the table narrows to its markers, its indices, and only panels that still have rows", () => {
     const el = mount();
-    click(sr(el).querySelector('[data-lens="anemia"]')!);
+    pickLens(sr(el), "anemia");
     // curated markers only
     expect(row(el, "HGB").hidden).toBe(false);
     expect(row(el, "PLT").hidden).toBe(true);
@@ -204,27 +223,30 @@ describe("lens-filter (docs/product/features/lens-filter.md)", () => {
     // source-panel headers are noise once the markers are gathered cross-panel
     const headers = Array.from(sr(el).querySelectorAll("tr.panel-row[data-panel]")) as HTMLElement[];
     for (const h of headers) expect(h.hidden).toBe(true);
-    // the picked tab reads as active
-    expect(sr(el).querySelector('[data-lens="anemia"]')!.getAttribute("aria-pressed")).toBe("true");
+    // the closed control shows the lens she picked — that is the point of it
+    expect(lensValue(sr(el))).toBe("anemia");
     // ...but in the "all" view the panel headers are visible again
-    click(sr(el).querySelector('[data-lens="all"]')!);
+    pickLens(sr(el), "all");
     for (const h of headers) expect(h.hidden).toBe(false);
+    expect(lensValue(sr(el))).toBe("all");
   });
 
   it("a lens with a bottom (non-inline) index also reveals its 'Derived indices' separator", () => {
     const el = mount();
-    click(sr(el).querySelector('[data-lens="cardio"]')!);
+    pickLens(sr(el), "cardio");
     expect((sr(el).querySelector('tr.idx-sep[data-itab="cardio"]') as HTMLElement).hidden).toBe(false);
     expect((sr(el).querySelector("tr.idx-row:not(.idx-inline)") as HTMLElement).hidden).toBe(false);
   });
 
   it("lens selection is NOT remembered — after a reload the table opens at 'all' again", () => {
     let el = mount();
-    click(sr(el).querySelector('[data-lens="anemia"]')!);
+    pickLens(sr(el), "anemia");
     expect(row(el, "PLT").hidden).toBe(true);
     el = remount(el);
     expect(row(el, "PLT").hidden).toBe(false);
-    expect(sr(el).querySelector('[data-lens="anemia"]')!.getAttribute("aria-pressed")).toBe("false");
+    // and the closed control has gone back to "all" with it — it must never show a
+    // lens the table is not actually in
+    expect(lensValue(sr(el))).toBe("all");
   });
 });
 
@@ -239,32 +261,45 @@ describe("units-toggle (docs/product/features/units-toggle.md)", () => {
     expect(hgbRef.textContent).toBe("13.5–17.5 g/dL");
     expect(cholLoinc.getAttribute("href")).toBe("https://loinc.org/2093-3/");
 
-    click(btn(el, "units"));
+    // both systems are on screen; US is the filled one to start with
+    expect(unitsActive(el)).toBe("US");
+    pickUnits(el, "si");
 
     expect(hgbCell.textContent).toBe("148");
     expect(hgbRef.textContent).toBe("135–175 g/L");
     expect(cholLoinc.textContent).toBe("14647-2");
     expect(cholLoinc.getAttribute("href")).toBe("https://loinc.org/14647-2/");
-    expect(lbl(el, "units")).toBe("Units: SI");
-    expect(btn(el, "units").getAttribute("aria-pressed")).toBe("true");
+    // the fill moved to SI — and only one side is ever filled
+    expect(unitsActive(el)).toBe("SI");
+    expect(btn(el, "units-si").getAttribute("aria-pressed")).toBe("true");
+    expect(btn(el, "units-us").getAttribute("aria-pressed")).toBe("false");
   });
 
   it("user flips back to US and sees the conventional values again", () => {
     const el = mount();
-    click(btn(el, "units"));
-    click(btn(el, "units"));
+    pickUnits(el, "si");
+    pickUnits(el, "us");
     expect(row(el, "HGB").querySelector("td.num.low")!.textContent).toBe("14.8");
-    expect(lbl(el, "units")).toBe("Units: US");
-    expect(btn(el, "units").getAttribute("aria-pressed")).toBe("false");
+    expect(unitsActive(el)).toBe("US");
+    expect(btn(el, "units-us").getAttribute("aria-pressed")).toBe("true");
+  });
+
+  it("pressing the side that is already active is a no-op, not a flip", () => {
+    const el = mount();
+    pickUnits(el, "si");
+    expect(unitsActive(el)).toBe("SI");
+    pickUnits(el, "si"); // press SI again — it must STAY on SI
+    expect(unitsActive(el)).toBe("SI");
+    expect(row(el, "HGB").querySelector("td.num.low")!.textContent).toBe("148");
   });
 
   it("the SI choice survives a reload (localStorage labsV2.units)", () => {
     let el = mount();
-    click(btn(el, "units"));
+    pickUnits(el, "si");
     expect(localStorage.getItem("labsV2.units")).toBe("si");
     el = remount(el);
     expect(row(el, "HGB").querySelector("td.num.low")!.textContent).toBe("148");
-    expect(lbl(el, "units")).toBe("Units: SI");
+    expect(unitsActive(el)).toBe("SI");
   });
 });
 
@@ -292,11 +327,14 @@ describe("language-toggle (docs/product/features/language-toggle.md)", () => {
     const el = document.createElement("lab-matrix") as LabMatrix;
     document.body.appendChild(el);
     const m = makeModel();
-    m.i18n = { en: {}, ru: { "control.unitsUS": "Единицы: US", "col.marker": "Маркер" } };
+    m.i18n = { en: {}, ru: { "control.lens": "Область интереса", "col.marker": "Маркер" } };
     el.model = m;
     click(btn(el, "lang"));
-    // units-button label re-rendered in the new language (applyLang re-runs applyUnits)
-    expect(lbl(el, "units")).toBe("Единицы: US");
+    // the lens dropdown's label re-renders in the new language (a data-en/data-ru node
+    // picked up by applyLang) — and it says «Область интереса», never «панель»
+    const lensLabel = sr(el).querySelector(".lab-lens-label")!;
+    expect(lensLabel.textContent).toBe("Область интереса");
+    expect(lensLabel.textContent).not.toMatch(/панел/i);
     expect(sr(el).querySelector("thead th.marker-col")!.textContent).toBe("Маркер");
   });
 
@@ -338,7 +376,7 @@ describe("details-toggle (docs/product/features/details-toggle.md)", () => {
 
 // ---------------------------------------------------------------------------
 describe("panels-collapse (docs/product/features/panels-collapse.md)", () => {
-  it("a single collapse/expand toggle leads the toolbar, labeled by state, in both languages", () => {
+  it("a single collapse/expand ICON leads the toolbar; it is wordless on screen but named for assistive tech, in both languages", () => {
     const el = document.createElement("lab-matrix") as LabMatrix;
     document.body.appendChild(el);
     const m = makeModel();
@@ -348,25 +386,41 @@ describe("panels-collapse (docs/product/features/panels-collapse.md)", () => {
     const first = sr(el).querySelector<HTMLElement>(".labs-toolbar .lm-btn")!;
     const tog = sr(el).querySelector<HTMLElement>('[data-act="collapse-toggle"]')!;
     expect(first).toBe(tog);
-    // default load = all collapsed → toggle offers "Expand all"
-    expect(tog.querySelector(".tg.active")?.textContent).toBe("Expand all");
+    // ICON ONLY: no text on screen — but it carries a real accessible name and a title,
+    // and it draws an inline SVG (no icon font, no external asset).
+    expect(tog.textContent?.trim()).toBe("");
+    expect(tog.querySelector("svg.lm-ico")).toBeTruthy();
+    expect(tog.getAttribute("title")).toBe(tog.getAttribute("aria-label"));
+    // default load = all collapsed → the button offers "Expand all"
+    expect(collapseName(el)).toBe("Expand all");
     click(tog);
-    expect(tog.querySelector(".tg.active")?.textContent).toBe("Collapse all"); // now everything is open
+    expect(collapseName(el)).toBe("Collapse all"); // now everything is open
     sr(el).querySelector<HTMLElement>('[data-act="lang"]')!.click();
-    expect(tog.querySelector(".tg.active")?.textContent).toBe("Свернуть все");
+    expect(collapseName(el)).toBe("Свернуть все"); // the name follows the language
     click(tog); // collapse all again
-    expect(tog.querySelector(".tg.active")?.textContent).toBe("Развернуть все");
+    expect(collapseName(el)).toBe("Развернуть все");
+  });
+
+  it("the icon reflects state rather than being a dead stamp (aria-pressed drives the chevron)", () => {
+    const el = mount();
+    const tog = btn(el, "collapse-toggle");
+    // all collapsed on load → not "pressed" → CSS rotates the chevron to point right
+    expect(tog.getAttribute("aria-pressed")).toBe("false");
+    click(tog); // expand everything
+    expect(tog.getAttribute("aria-pressed")).toBe("true");
+    click(tog); // collapse everything again
+    expect(tog.getAttribute("aria-pressed")).toBe("false");
   });
 
   it("the toggle offers Collapse while any panel is open (mixed state)", () => {
     const el = mount();
     const tog = btn(el, "collapse-toggle");
-    expect(tog.querySelector(".tg.active")?.textContent).toBe("Expand all"); // all collapsed
+    expect(collapseName(el)).toBe("Expand all"); // all collapsed
     // open just one panel → not-all-collapsed → toggle flips to Collapse all
     click(sr(el).querySelector('tr.panel-row[data-panel="Complete blood count (CBC)"]')!);
-    expect(tog.querySelector(".tg.active")?.textContent).toBe("Collapse all");
+    expect(collapseName(el)).toBe("Collapse all");
     click(tog); // collapses everything
-    expect(tog.querySelector(".tg.active")?.textContent).toBe("Expand all");
+    expect(collapseName(el)).toBe("Expand all");
   });
 
   it("on a first-ever load every panel opens collapsed", () => {
@@ -571,10 +625,10 @@ describe("loinc-link (docs/product/features/loinc-link.md)", () => {
   it("the LOINC follows the unit system: flipping to SI swaps code and href, flipping back restores them", () => {
     const el = mount();
     const link = row(el, "CHOL").querySelector("a.loinc") as HTMLAnchorElement;
-    click(btn(el, "units"));
+    pickUnits(el, "si");
     expect(link.textContent).toBe("14647-2");
     expect(link.getAttribute("href")).toBe("https://loinc.org/14647-2/");
-    click(btn(el, "units"));
+    pickUnits(el, "us");
     expect(link.textContent).toBe("2093-3");
     expect(link.getAttribute("href")).toBe("https://loinc.org/2093-3/");
   });

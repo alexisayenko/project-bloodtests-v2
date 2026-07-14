@@ -95,6 +95,8 @@ const DEFAULT_I18N: Record<string, string> = {
   "control.langRU": "Язык: RU",
   "control.expandAll": "Expand all",
   "control.collapseAll": "Collapse all",
+  "control.lens": "Area of interest",
+  "control.units": "Units",
   "note.common": "Common knowledge",
   "note.personal": "Your case",
   "note.sep": "What this means",
@@ -140,70 +142,65 @@ export const TOOLBAR_CSS = `
 .labs-toolbar .lm-toggle .tg { grid-area: 1 / 1; text-align: center; white-space: nowrap; }
 .labs-toolbar .lm-toggle .tg:not(.active) { visibility: hidden; }
 .labs-toolbar .lm-sep { width: 1px; align-self: stretch; min-height: 1.2em; background: var(--_rule-soft); margin: 0 0.15rem; }
-.lab-tabs-wrap { position: relative; margin: 0.4rem 0 0.2rem; }
-.lab-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0; }
-/* UNIFORM PILLS. Every lens pill is the SAME BOX — one fixed width, one fixed height —
-   and the label wraps inside it. Two lines is the design height, so:
-     - a long label («Сердечно-сосудистый риск») wraps to two lines instead of being
-       truncated or stretching the pill;
-     - a short one («Все») keeps exactly the same box, its single line CENTRED in it
-       (inline-flex + align-items:center) — not stretched, not shrunk.
-   No ellipsis and no font shrink: whatever the label, it is fully readable.
-   height: 2.5em = two lines at line-height 1.25, + 0.5rem padding + 2px border
-   (border-box).
-   width: --_pill-w is the ONE number that has to hold every label, so it is set by the
-   WORST label — and the worst label is not the longest one, it is the one with the
-   longest UNBREAKABLE WORD, because a word with no space and no hyphen in it cannot be
-   wrapped at ANY line count. Measured on natalga.com (root 20px ⇒ pill font 15.6px):
-     «Инсулинорезистентность»    183px  ← 22 chars, nowhere to break: THE constraint
-     «Костно-минеральный баланс» 100px  (breaks at the hyphen and at the space)
-     «Сердечно-сосудистый риск»   85px
-   183px + 32px horizontal padding + 2px border = 217px floor; 11rem = 220px there,
-   3px of slack. Everything in that sum (word, padding, font) is proportional to the
-   root size, so rem keeps the pill correct on a consumer with a different root — at
-   root 16px the same 11rem is 176px and the labels shrink with it.
-   The consequence, stated plainly: at 220px only ~1.7 pills are on screen at once on a
-   390px phone. Adding lines cannot fix that — only shorter labels can. A consumer whose
-   lens names are shorter should set --_pill-w lower (the floor is: widest unbreakable
-   word + 2rem + 2px). */
-.lab-tabs .lab-tab {
-  box-sizing: border-box; flex: 0 0 auto;
-  width: var(--_pill-w, 11rem); height: calc(2.5em + 0.5rem + 2px);
-  display: inline-flex; align-items: center; justify-content: center; text-align: center;
-  white-space: normal; overflow-wrap: normal;
-  font-size: 0.78rem; line-height: 1.25;
-  padding: 0.25rem 0.8rem; border: 1px solid var(--_rule); border-radius: 999px;
-  background: var(--_bg); color: var(--_muted); cursor: pointer;
+
+/* SI / US — a segmented control. The old single button read «Единицы: СИ»: it named
+   the topic but not the choice, and the alternative was invisible until you pressed
+   it. Both systems are on screen now, and the ACTIVE one is filled — the same
+   "selected" treatment the rest of the site uses for a chosen option (accent fill,
+   background-coloured text), not a new invention. */
+.labs-toolbar .lm-seg { display: inline-flex; border: 1px solid var(--_rule); border-radius: 3px; overflow: hidden; }
+.labs-toolbar .lm-seg .lm-seg-btn { border: 0; border-radius: 0; margin: 0; min-height: 1.9rem; padding: 0.2rem 0.7rem; letter-spacing: 0.02em; }
+.labs-toolbar .lm-seg .lm-seg-btn + .lm-seg-btn { border-left: 1px solid var(--_rule); }
+.labs-toolbar .lm-seg .lm-seg-btn[aria-pressed="true"] { background: var(--_accent); color: var(--_bg); border-color: var(--_accent); font-weight: 600; }
+.labs-toolbar .lm-seg .lm-seg-btn[aria-pressed="false"]:hover { color: var(--_fg); }
+
+/* COLLAPSE-ALL — icon only (Alex's call; the narration video teaches it). It is still
+   a real button: >=44px touch target, and aria-label/title are kept in the active
+   language by applyCollapseToggleLabel(), so it is wordless on screen but never
+   wordless to assistive tech. The chevron rotates with the state — down when the
+   panels are open, right when they are all collapsed. */
+.labs-toolbar .lm-icon-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 0; }
+.labs-toolbar .lm-ico { display: block; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.labs-toolbar .lm-ico-chev { transform-origin: 5px 9px; transition: transform 160ms ease; }
+.labs-toolbar .lm-icon-btn[aria-pressed="false"] .lm-ico-chev { transform: rotate(-90deg); }
+@media (prefers-reduced-motion: reduce) { .labs-toolbar .lm-ico-chev { transition: none; } }
+/* LENS SELECTOR — a native <select>, deliberately.
+   This replaced a horizontal swipe-strip of uniform pills (removed 2026-07-14). The
+   strip could only ever show ~1.7 lenses at a time on a 390px phone, because the
+   widest label («Инсулинорезистентность») is a 22-character unbreakable word that
+   set the pill width for all of them; every other lens lived off-screen behind a
+   sideways swipe the reader had to discover. The dropdown removes the width
+   constraint entirely — which is also why the labels are now the FULL lens names and
+   the abbreviation question (ИР / ЖБП) simply dissolved.
+   NATIVE, not a custom popover: it opens the OS picker — full-width rows, big hit
+   targets, native momentum scrolling, and it honours her system font size. It needs
+   no JS to open, no focus trap, no outside-click handling, and it cannot lose a
+   z-index fight with the sticky table header. It is accessible for free. A custom
+   listbox would look tidier here and would be worse.
+   The native dropdown arrow is left alone (no appearance:none) — it is the only
+   affordance saying "this opens", and the platform draws it better than we would. */
+.lab-lens-wrap { margin: 0.5rem 0 0.5rem; display: flex; flex-direction: column; gap: 0.3rem; }
+.lab-lens-label { font-size: 0.85rem; color: var(--_muted); }
+select.lab-lens {
+  box-sizing: border-box; width: 100%; max-width: 26rem;
+  min-height: 2.75rem; padding: 0.5rem 0.75rem;
+  font-family: inherit; font-size: 1rem; line-height: 1.3;
+  color: var(--_fg); background: var(--_bg);
+  border: 1px solid var(--_rule); border-radius: 0.6rem; cursor: pointer;
 }
-.lab-tabs .lab-tab:hover { color: var(--_fg); border-color: var(--_fg); }
-.lab-tabs .lab-tab[aria-pressed="true"] { color: var(--_bg); background: var(--_accent); border-color: var(--_accent); }
+select.lab-lens:hover { border-color: var(--_fg); }
+select.lab-lens:focus-visible { outline: 2px solid var(--_accent); outline-offset: 2px; }
 @media (max-width: 640px) {
-  /* Phone: the 9-tab wrap-wall becomes a single horizontal swipe strip. Scrollbar
-     hidden for calm; the edge fades below are the "more this way" signal. */
-  .lab-tabs { flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .lab-tabs::-webkit-scrollbar { display: none; }
-  /* Edge fades — the ONLY hint that the strip scrolls sideways (no glyphs, no
-     buttons: the target user is a non-technical phone reader, and a chevron reads
-     as a button she can't press). Painted as overlays on the WRAPPER, so they never
-     scroll with the strip, never consume layout space, and never take a tap target.
-     JS toggles .at-start / .at-end / .no-scroll on .lab-tabs-wrap from the strip's
-     scrollLeft, so each fade disappears once that end is reached (both hide when
-     nothing overflows). Desktop (>640px) never generates them — the strip wraps. */
-  .lab-tabs-wrap::before, .lab-tabs-wrap::after {
-    content: ""; position: absolute; top: 0; bottom: 0; width: 2.75rem;
-    pointer-events: none; z-index: 2; opacity: 1; transition: opacity 180ms linear;
-  }
-  .lab-tabs-wrap::before { left: 0; background: linear-gradient(to right, var(--_bg) 0%, color-mix(in srgb, var(--_bg) 72%, transparent) 45%, color-mix(in srgb, var(--_bg) 0%, transparent) 100%); }
-  .lab-tabs-wrap::after { right: 0; background: linear-gradient(to left, var(--_bg) 0%, color-mix(in srgb, var(--_bg) 72%, transparent) 45%, color-mix(in srgb, var(--_bg) 0%, transparent) 100%); }
-  .lab-tabs-wrap.at-start::before, .lab-tabs-wrap.no-scroll::before { opacity: 0; }
-  .lab-tabs-wrap.at-end::after, .lab-tabs-wrap.no-scroll::after { opacity: 0; }
+  /* Full width on a phone, and never below 16px: iOS Safari zooms the page when it
+     focuses a control with a smaller font, and the zoom does not come back. */
+  select.lab-lens { max-width: none; font-size: 1rem; }
   /* Toolbar: keep only what a phone user actually taps — collapse-all + units.
      Detail (kept at "full") and language (set once) are hidden here, not removed. */
   .labs-toolbar .lm-btn[data-act="detail"], .labs-toolbar .lm-btn[data-act="lang"] { display: none; }
   /* "Units" leads and stays put; "Collapse all" (shown only on the All tab) trails,
      so switching to a lens tab drops it from the END without shoving Units sideways.
      Drop the divider on mobile — with two controls it just adds noise. */
-  .labs-toolbar .lm-btn[data-act="units"] { order: -1; }
+  .labs-toolbar .lm-seg { order: -1; }
   .labs-toolbar .lm-sep { display: none; }
 }
 `;
@@ -257,7 +254,6 @@ export class LabMatrix extends HTMLElement {
   /* Scroll-affordance state. The two "nudge" flags are per-page-load (instance)
      only — deliberately NOT persisted: the teaching wiggle should replay on a
      fresh visit, and localStorage would silently retire it forever after one. */
-  private tabsNudged = false;
   private tableNudged = false;
   /** True while the table's teaching nudge is animating — suppresses scrollX persistence. */
   private nudgingTable = false;
@@ -431,34 +427,69 @@ export class LabMatrix extends HTMLElement {
         `</tr>`
       : "";
 
-    // optional in-component lens tab bar (host page can also drive `.view` directly)
+    // optional in-component lens selector (host page can also drive `.view` directly).
+    // A native <select>: see the .lab-lens block in the stylesheet for why.
+    // The <label> matters as much as the control — it is what tells her this is a
+    // CHOICE and not a heading. «Область интереса» is the agreed term for this axis.
     const tabsBar = (m.lensTabs ?? []).length
-      ? `<div class="lab-tabs-wrap"><div class="lab-tabs" role="tablist">` +
+      ? `<div class="lab-lens-wrap">` +
+        `<label class="lab-lens-label" for="lab-lens"${t.attr("control.lens")}>${esc(
+          t.text("control.lens", this.ruOn),
+        )}</label>` +
+        `<select class="lab-lens" id="lab-lens">` +
         (m.lensTabs ?? [])
           .map(
             (tb) =>
-              `<button type="button" class="lab-tab" role="tab" data-lens="${esc(tb.key)}"${biAttr(
-                tb.label,
-                tb.labelRu,
-              )} aria-pressed="false">${esc(tb.label)}</button>`,
+              `<option value="${esc(tb.key)}"${biAttr(tb.label, tb.labelRu)}>${esc(tb.label)}</option>`,
           )
           .join("") +
-        `</div></div>`
+        `</select></div>`
       : "";
 
-    // self-contained toolbar. Collapse/expand leads as a single toggle (offers
-    // "Expand all" when everything is collapsed, "Collapse all" otherwise);
-    // then US/SI · full/compact · EN/RU. Labels set by applyState() in-language.
-    // Each toggle stacks both state labels in one grid cell so the button width
+    // self-contained toolbar. Collapse/expand leads as an ICON-ONLY button; then the
+    // SI/US segmented control; then full/compact · EN/RU. Labels set by applyState().
+    // Each text toggle stacks both state labels in one grid cell so the button width
     // is fixed to the widest label (no reflow when the value flips).
     const toggle = (act: string, kA: string, kB: string) =>
       `<button type="button" class="lm-btn lm-toggle" data-act="${act}" aria-pressed="false">` +
       `<span class="tg" data-tk="${kA}"></span><span class="tg" data-tk="${kB}"></span></button>`;
+
+    // COLLAPSE-ALL ICON. Icon-only is Alex's explicit call (2026-07-14); the narration
+    // video is what teaches it. Wordless on screen is NOT wordless to a screen reader:
+    // applyCollapseToggleLabel() keeps aria-label + title in sync with the state, in
+    // the active language. The glyph is the file-manager/IDE collapse-tree mark — three
+    // stacked rows with a branch chevron — and the chevron ROTATES with the state
+    // (down = panels open, right = panels collapsed), so it is a live indicator and not
+    // a dead stamp. Inline SVG on currentColor: no asset, no icon font, and it inherits
+    // the toolbar's own stroke colour.
+    const collapseBtn =
+      `<button type="button" class="lm-btn lm-icon-btn" data-act="collapse-toggle" aria-pressed="false">` +
+      `<svg class="lm-ico" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false">` +
+      `<path class="lm-ico-rows" d="M8.5 4h9M8.5 10h9M8.5 16h9"/>` +
+      `<path class="lm-ico-chev" d="M2.5 7.75L5 10.25l2.5-2.5"/>` +
+      `</svg></button>`;
+
+    // UNITS. Was a single button reading «Единицы: СИ» — which names the topic but not
+    // the choice, and hides the alternative. Now a segmented control: BOTH systems are
+    // on screen and the active one is filled, so the current state is readable at a
+    // glance and the other option is visibly one tap away. "SI"/"US" need no
+    // translation; the group carries a localized aria-label.
+    const unitBtn = (act: string, label: string) =>
+      `<button type="button" class="lm-btn lm-seg-btn" data-act="${act}" aria-pressed="false">${label}</button>`;
+    // NB: no data-en/data-ru on the group — applyLang() sets textContent on every
+    // [data-en] node, which would wipe the two buttons out of it. Its aria-label is
+    // set from JS in applyUnits() instead.
+    const unitsSeg =
+      `<div class="lm-seg" role="group">` +
+      unitBtn("units-si", "SI") +
+      unitBtn("units-us", "US") +
+      `</div>`;
+
     const toolbar =
       `<div class="labs-toolbar" part="toolbar">` +
-      toggle("collapse-toggle", "control.expandAll", "control.collapseAll") +
+      collapseBtn +
       `<span class="lm-sep"></span>` +
-      toggle("units", "control.unitsUS", "control.unitsSI") +
+      unitsSeg +
       toggle("detail", "control.detailsFull", "control.detailsCompact") +
       toggle("lang", "control.langEN", "control.langRU") +
       `</div>`;
@@ -581,11 +612,18 @@ export class LabMatrix extends HTMLElement {
     // wire the horizontal-scroll persistence + edge fades (fresh `.labs-scroll` each render)
     const labsScroll = this.q(".labs-scroll") as HTMLElement | null;
     if (labsScroll) labsScroll.addEventListener("scroll", () => this.onLabsScroll(), { passive: true });
-    // wire the tab-strip scroll → edge-fade visibility (fresh element each render)
-    const tabs = this.q(".lab-tabs") as HTMLElement | null;
-    if (tabs) tabs.addEventListener("scroll", () => this.updateTabEdges(), { passive: true });
+    // lens <select> — `change` (not `input`): on a native picker `change` is the
+    // commit, and it is what fires once the OS sheet is dismissed with a pick.
+    const lensSel = this.q(".lab-lens") as HTMLSelectElement | null;
+    if (lensSel) {
+      lensSel.addEventListener("change", () => {
+        const key = lensSel.value || "all";
+        this.setView(key);
+        // first lens she picks this page load → teach that the table swipes too
+        this.maybeNudgeTable(key);
+      });
+    }
     this.scheduleEdges();
-    this.maybeNudgeTabs();
     // initial mount: let the host initialize (e.g. reveal its explore panel)
     this.dispatchViewChange();
   }
@@ -598,21 +636,7 @@ export class LabMatrix extends HTMLElement {
   }
 
   private updateEdges(): void {
-    this.updateTabEdges();
     this.updateScrollEdges();
-  }
-
-  /** Toggle .at-start / .at-end / .no-scroll on the tab strip's WRAPPER so each edge
-   *  fade hides once that end is reached (and both hide when nothing overflows). */
-  private updateTabEdges(): void {
-    const tabs = this.q(".lab-tabs") as HTMLElement | null;
-    const wrap = this.q(".lab-tabs-wrap") as HTMLElement | null;
-    if (!tabs || !wrap) return;
-    const max = tabs.scrollWidth - tabs.clientWidth;
-    const x = tabs.scrollLeft;
-    wrap.classList.toggle("no-scroll", max <= 1);
-    wrap.classList.toggle("at-start", x <= 1);
-    wrap.classList.toggle("at-end", x >= max - 1);
   }
 
   /** The data table's fades, plus the two measurements they need: the sticky
@@ -677,26 +701,11 @@ export class LabMatrix extends HTMLElement {
     return true;
   }
 
-  /** Once per page load, after layout settles: wiggle the tab strip if it overflows
-   *  and is still parked at the left. */
-  private maybeNudgeTabs(): void {
-    if (this.tabsNudged || this.reducedMotion()) return;
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => {
-        window.setTimeout(() => {
-          const el = this.q<HTMLElement>(".lab-tabs");
-          if (!el || this.tabsNudged) return;
-          if (el.scrollLeft > 1) {
-            this.tabsNudged = true; // already scrolled — she found it herself
-            return;
-          }
-          if (this.nudgeScroll(el, () => this.updateTabEdges())) this.tabsNudged = true;
-        }, 220);
-      }),
-    );
-  }
+  /* The tab-strip teaching nudge lived here. It existed only to say "this strip
+     swipes sideways" — a problem the <select> does not have, so it is gone with the
+     strip. The TABLE nudge below stays: the table still scrolls horizontally. */
 
-  /** Same wiggle on the TABLE, fired the first time a lens tab is chosen — that is the
+  /** The wiggle on the TABLE, fired the first time a lens is chosen — that is the
    *  moment the table becomes the thing she is reading, so it is the moment to teach
    *  that it swipes too. Explore has no table, so it doesn't consume the one shot. */
   private maybeNudgeTable(key: string): void {
@@ -755,10 +764,13 @@ export class LabMatrix extends HTMLElement {
     // collapsed on every view change (never carry an open note across tabs).
     this.applyNotes(key, true);
 
-    // reflect active tab (for every view, including explore)
-    for (const b of this.qa("[data-lens]")) {
-      b.setAttribute("aria-pressed", String(b.getAttribute("data-lens") === key));
-    }
+    // reflect the active view in the closed <select> (for every view, including
+    // explore) — the closed state must always show what is currently selected, which
+    // is the whole point of the control. Guarded: assigning .value when it already
+    // matches is a no-op, but assigning during the user's own `change` would be a
+    // re-entrant write on the element mid-event.
+    const sel = this.q(".lab-lens") as HTMLSelectElement | null;
+    if (sel && sel.value !== key) sel.value = key;
 
     // explore hides the matrix body, so there is nothing to filter — and "explore"
     // must NOT fall through to the isAll (show-all-markers) branch below.
@@ -848,7 +860,13 @@ export class LabMatrix extends HTMLElement {
         a.setAttribute("href", `https://loinc.org/${code}/`);
       }
     }
-    this.setToggle("units", si ? "control.unitsSI" : "control.unitsUS", si);
+    // Segmented control: fill the active side, un-fill the other. aria-pressed is the
+    // state AND the selector the CSS fill hangs off, so the two can never disagree.
+    this.q('[data-act="units-si"]')?.setAttribute("aria-pressed", String(si));
+    this.q('[data-act="units-us"]')?.setAttribute("aria-pressed", String(!si));
+    // The group's accessible name (set here, not via data-en: applyLang() overwrites
+    // textContent on [data-en] nodes and would empty the group of its buttons).
+    this.q(".lm-seg")?.setAttribute("aria-label", this._i18n.text("control.units", this.ruOn));
   }
 
   /** full ⇄ compact — compact hides lab names + long analyte names (CSS). */
@@ -932,9 +950,20 @@ export class LabMatrix extends HTMLElement {
   }
 
   /** Label the single collapse/expand toggle by current state (all-collapsed → offer Expand). */
+  /**
+   * The collapse button carries no text, so its NAME lives in aria-label + title —
+   * kept here in the active language, and flipped with the state ("Collapse all" when
+   * the panels are open, "Expand all" when they are all shut). aria-pressed doubles as
+   * the CSS hook that rotates the chevron, so the glyph and the state cannot drift.
+   */
   private applyCollapseToggleLabel(): void {
     const allCollapsed = this.allPanelsCollapsed();
-    this.setToggle("collapse-toggle", allCollapsed ? "control.expandAll" : "control.collapseAll", !allCollapsed);
+    const btn = this.q('[data-act="collapse-toggle"]');
+    if (!btn) return;
+    const label = this._i18n.text(allCollapsed ? "control.expandAll" : "control.collapseAll", this.ruOn);
+    btn.setAttribute("aria-label", label);
+    btn.setAttribute("title", label);
+    btn.setAttribute("aria-pressed", String(!allCollapsed));
   }
 
   /** True when every panel is collapsed (the toggle then offers "Expand all"). */
@@ -983,7 +1012,15 @@ export class LabMatrix extends HTMLElement {
   }
 
   private onAct(act: string): void {
-    if (act === "units") { this.siOn = !this.siOn; this.applyUnits(this.siOn); lsSet(LS.units, this.siOn ? "si" : "us"); }
+    // The segmented control SELECTS a side (idempotent) rather than flipping, so
+    // pressing the already-active side is a no-op instead of a surprise toggle.
+    if (act === "units-si" || act === "units-us") {
+      const si = act === "units-si";
+      if (si === this.siOn) return;
+      this.siOn = si;
+      this.applyUnits(si);
+      lsSet(LS.units, si ? "si" : "us");
+    }
     else if (act === "detail") { this.minOn = !this.minOn; this.applyDetail(this.minOn); lsSet(LS.details, this.minOn ? "min" : "full"); }
     else if (act === "lang") { this.ruOn = !this.ruOn; this.applyLang(this.ruOn); lsSet(LS.lang, this.ruOn ? "ru" : "en"); }
     else if (act === "collapse-toggle") {
@@ -1118,14 +1155,8 @@ export class LabMatrix extends HTMLElement {
       (path.find((n) => n instanceof HTMLElement && n.matches(sel)) as HTMLElement | undefined) ?? null;
     const pop = this.popupEl();
 
-    const lens = match("[data-lens]");
-    if (lens && sr.contains(lens)) {
-      const key = lens.getAttribute("data-lens") || "all";
-      this.setView(key);
-      // first lens tab she picks this page load → teach that the table swipes too
-      this.maybeNudgeTable(key);
-      return;
-    }
+    // NB: the lens selector is a native <select> and reports through `change`, wired in
+    // applyState() — it is deliberately NOT handled here as a click.
     const act = match("[data-act]");
     if (act && sr.contains(act)) { this.onAct(act.getAttribute("data-act") || ""); return; }
     if (match(".tip-close")) { this.closePopup(); return; }
