@@ -48,7 +48,7 @@ export interface MatrixCol { id: string; date: string; labName: string }
  *
  * The engine stays EN-canonical: `title` below is the EN rendering of exactly
  * these lines. A consumer with a dictionary (natalga.com passes RU) re-renders
- * them in its own language — the same split the model already uses for tapHint.
+ * them in its own language into `titleRu`, leaving the EN `title` intact.
  */
 export interface TipLine {
   labelKey?: string;
