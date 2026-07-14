@@ -308,6 +308,17 @@ export class LabMatrix extends HTMLElement {
   private _view = "all";
   /** True once the HOST has set `.view` explicitly — then we stop choosing for it. */
   private _viewExplicit = false;
+  /**
+   * STANDALONE (per-page) MODE. natalga.com now serves ONE static HTML page per
+   * destination (each area of interest, «Полный список»), so the browser URL — not a
+   * client-side view switch — is what carries "which section you are in". A standalone
+   * page sets `.standalone = true` and drives `.view` itself: the element then renders
+   * ONLY that view's table, with NO bare-list navigation and NO in-component crumb/
+   * back-link/area-title — the page's own static breadcrumb (Здоровье › Анализы ›
+   * <section>) names the section and is the way back. Default (unset) is the
+   * single-page list+routing flow isayenko.org still uses, unchanged.
+   */
+  private _standalone = false;
   private _keyViews: Record<string, string[]> = {};
   private scrollSaveTimer = 0;
   /* Scroll-affordance state. The two "nudge" flags are per-page-load (instance)
@@ -326,6 +337,19 @@ export class LabMatrix extends HTMLElement {
   }
   get view(): string {
     return this._view;
+  }
+
+  /**
+   * Per-page mode (see `_standalone`). Setting it re-renders: a standalone element
+   * drops the bare-list nav and the in-component crumb, leaving just the toolbar +
+   * the single view's table. The host is expected to also drive `.view`.
+   */
+  set standalone(v: boolean) {
+    this._standalone = !!v;
+    this.render();
+  }
+  get standalone(): boolean {
+    return this._standalone;
   }
 
   /** The synthetic landing view: the bare list of links, nothing rendered. */
@@ -361,7 +385,7 @@ export class LabMatrix extends HTMLElement {
   }
 
   static get observedAttributes(): string[] {
-    return ["model"];
+    return ["model", "standalone", "view"];
   }
 
   attributeChangedCallback(name: string, _old: string | null, value: string | null): void {
@@ -371,11 +395,24 @@ export class LabMatrix extends HTMLElement {
       } catch {
         /* ignore malformed attribute JSON — use the .model property instead */
       }
+    } else if (name === "standalone") {
+      this.standalone = value != null;
+    } else if (name === "view" && value) {
+      this.view = value;
     }
   }
 
   connectedCallback(): void {
     if (!this.shadowRoot) this.attachShadow({ mode: "open" });
+    // Declarative per-page setup: `<lab-matrix standalone view="anemia">` works even
+    // before the page script sets the matching properties (attributeChangedCallback
+    // may fire before connect for parsed attributes; re-read here to be certain).
+    if (this.hasAttribute("standalone")) this._standalone = true;
+    const viewAttr = this.getAttribute("view");
+    if (viewAttr) {
+      this._viewExplicit = true;
+      this._view = viewAttr;
+    }
     // load persisted view state (units / detail / language / collapsed panels)
     this.siOn = lsGet(LS.units) === "si";
     this.minOn = lsGet(LS.details) === "min";
@@ -532,7 +569,13 @@ export class LabMatrix extends HTMLElement {
       (fullTab ? areaBtn(fullTab, "lab-area lab-area-full") : "") +
       (overviewTab ? areaBtn(overviewTab, "lab-area lab-area-overview") : "");
 
-    const areasNav = tabs.length
+    // STANDALONE pages carry neither the bare list nor the in-component crumb: the
+    // URL is the section, and the page's static breadcrumb is the way back. So both
+    // the areas nav and the crumb collapse to nothing here (the table view is driven
+    // entirely by the host-set `.view`).
+    const areasNav = this._standalone
+      ? ""
+      : tabs.length
       ? `<nav class="lab-areas" hidden>` +
         (areaTabs.length
           ? `<h2 class="lab-areas-h"${t.attr("control.areas")}>${esc(
@@ -546,7 +589,9 @@ export class LabMatrix extends HTMLElement {
 
     // Back-link + the area's own name. Both filled by applyCrumb() (they carry model
     // labels, not i18n ids, so they are not data-en/-ru nodes applyLang can swap).
-    const crumb = tabs.length
+    const crumb = this._standalone
+      ? ""
+      : tabs.length
       ? `<div class="lab-crumb" hidden>` +
         `<button type="button" class="lab-back" data-act="back">` +
         `<span class="lab-back-ico" aria-hidden="true">←</span>` +

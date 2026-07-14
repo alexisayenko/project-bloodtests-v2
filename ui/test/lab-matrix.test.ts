@@ -528,6 +528,64 @@ describe("<lab-matrix> lens views (phase 3b)", () => {
     expect(hgb().classList.contains("panel-collapsed")).toBe(true);
     el.remove();
   });
+
+  // ── STANDALONE (per-page) MODE ────────────────────────────────────────────
+  // natalga.com serves one static page per section; each drives `.view` itself and
+  // sets `.standalone = true`. The element then renders ONLY that view's table — no
+  // bare-list nav, no in-component crumb/back-link (the page's static breadcrumb is
+  // the section name and the way back). This is additive: the default flow above is
+  // unchanged.
+  const mountStandalone = (view: string): LabMatrix => {
+    try { localStorage.clear(); } catch { /* ignore */ }
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    document.body.appendChild(el);
+    el.standalone = true;
+    el.view = view;
+    el.model = LENS_MODEL;
+    return el;
+  };
+
+  it("standalone: no bare list and no in-component crumb — the page's breadcrumb owns nav", () => {
+    const el = mountStandalone("anemia");
+    const sr = el.shadowRoot!;
+    expect(el.standalone).toBe(true);
+    expect(sr.querySelector(".lab-areas")).toBeNull();
+    expect(sr.querySelector(".lab-crumb")).toBeNull();
+    expect(sr.querySelector(".lab-back")).toBeNull();
+    expect(sr.querySelector(".lab-area-title")).toBeNull();
+    el.remove();
+  });
+
+  it("standalone: renders exactly the driven view's table (a lens filters, «all» shows every marker)", () => {
+    const lens = mountStandalone("anemia");
+    const lsr = lens.shadowRoot!;
+    expect(lens.view).toBe("anemia");
+    // the table is visible (not hidden like the list/overview landings)
+    expect((lsr.querySelector(".labs-scroll-wrap") as HTMLElement).classList.contains("hidden")).toBe(false);
+    expect((lsr.querySelector('tr[data-key="HGB"]') as HTMLElement).hidden).toBe(false); // in anemia
+    expect((lsr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(true);  // not in anemia
+    lens.remove();
+
+    const all = mountStandalone("all");
+    const asr = all.shadowRoot!;
+    expect(all.view).toBe("all");
+    expect((asr.querySelector('tr[data-key="PLT"]') as HTMLElement).hidden).toBe(false); // full list shows all
+    all.remove();
+  });
+
+  it("standalone is declarable via attributes (`standalone` + `view`)", () => {
+    try { localStorage.clear(); } catch { /* ignore */ }
+    const el = document.createElement("lab-matrix") as LabMatrix;
+    el.setAttribute("standalone", "");
+    el.setAttribute("view", "anemia");
+    document.body.appendChild(el);
+    el.model = LENS_MODEL;
+    const sr = el.shadowRoot!;
+    expect(el.standalone).toBe(true);
+    expect(el.view).toBe("anemia");
+    expect(sr.querySelector(".lab-areas")).toBeNull();
+    el.remove();
+  });
 });
 
 describe("marker cell — badge placement + price alignment", () => {
