@@ -302,39 +302,40 @@ describe("<lab-matrix> behaviours (phase 3)", () => {
     return el;
   };
 
-  it("renders a self-contained toolbar: collapse icon, SI/US segmented control, detail + lang toggles", () => {
+  it("renders a self-contained toolbar: collapse icon, one units button, detail + lang toggles", () => {
     const el = fresh();
     const sr = el.shadowRoot!;
-    // collapse icon + SI + US + detail + lang = 5 buttons
-    expect(sr.querySelectorAll(".labs-toolbar .lm-btn").length).toBe(5);
+    // collapse icon + units + detail + lang = 4 buttons
+    expect(sr.querySelectorAll(".labs-toolbar .lm-btn").length).toBe(4);
     // collapse is icon-only: no text, an inline SVG, and a real accessible name
     const tog = sr.querySelector('[data-act="collapse-toggle"]')!;
     expect(tog.textContent?.trim()).toBe("");
     expect(tog.querySelector("svg.lm-ico")).toBeTruthy();
     expect(tog.getAttribute("aria-label")).toBe("Expand all");
     expect(tog.getAttribute("title")).toBe("Expand all");
-    // units: BOTH systems on screen, US filled by default
-    expect(sr.querySelector('[data-act="units-si"]')!.textContent).toBe("SI");
-    expect(sr.querySelector('[data-act="units-us"]')!.textContent).toBe("US");
-    expect(sr.querySelector('[data-act="units-us"]')!.getAttribute("aria-pressed")).toBe("true");
-    expect(sr.querySelector('[data-act="units-si"]')!.getAttribute("aria-pressed")).toBe("false");
-    expect(sr.querySelector(".lm-seg")!.getAttribute("aria-label")).toBe("Units");
+    // units: ONE button, ONE word — the system currently on screen
+    expect(sr.querySelectorAll(".lm-units-btn").length).toBe(1);
+    expect(sr.querySelector(".lm-units-btn .lm-units-lbl")!.textContent).toBe("US");
+    expect(sr.querySelector(".lm-units-btn")!.getAttribute("aria-label")).toBe(
+      "Units: US. Switch to SI units",
+    );
     expect(sr.querySelector('[data-act="lang"] .tg.active')!.textContent).toBe("Lang: EN");
     el.remove();
   });
 
-  it("SI/US segmented control swaps cell values + range and moves the fill", () => {
+  it("the units button swaps cell values + range and relabels itself", () => {
     const el = fresh();
     const sr = el.shadowRoot!;
     const cell = sr.querySelector('tr[data-key="HGB"] td.num.low')!;
     const unitRef = sr.querySelector('tr[data-key="HGB"] .unit-ref')!;
+    const lbl = () => sr.querySelector(".lm-units-btn .lm-units-lbl")!.textContent;
     expect(cell.textContent).toBe("14.8"); // US
-    click(sr.querySelector('[data-act="units-si"]')!);
+    expect(lbl()).toBe("US");
+    click(sr.querySelector('[data-act="units"]')!);
     expect(cell.textContent).toBe("148"); // SI (data-si)
     expect(unitRef.textContent).toBe("135–175 g/L");
-    // exactly one side is filled, and it is the one she picked
-    expect(sr.querySelector('[data-act="units-si"]')!.getAttribute("aria-pressed")).toBe("true");
-    expect(sr.querySelector('[data-act="units-us"]')!.getAttribute("aria-pressed")).toBe("false");
+    expect(lbl()).toBe("SI"); // the label follows the table
+    expect(sr.querySelector('[data-act="units"]')!.getAttribute("aria-pressed")).toBe("true");
     el.remove();
   });
 
@@ -449,17 +450,26 @@ describe("<lab-matrix> lens views (phase 3b)", () => {
     el.remove();
   });
 
-  it("the dropdown carries a label so it reads as a choice, not a heading", () => {
+  it("the dropdown keeps an accessible name even though its label is hidden from view", () => {
     const el = mountLens();
     const sr = el.shadowRoot!;
     const lab = sr.querySelector(".lab-lens-label") as HTMLLabelElement;
+    // VISUALLY hidden, not deleted: the label must still be in the DOM and still be
+    // wired to the control, or the <select> has no accessible name at all.
     expect(lab).toBeTruthy();
     expect(lab.getAttribute("for")).toBe("lab-lens");
     expect((sr.querySelector(".lab-lens") as HTMLElement).id).toBe("lab-lens");
+    expect(lab.textContent).toBeTruthy();
     // it is a translatable node (this model ships no RU dict, so RU falls back to EN;
     // the host supplies «Область интереса»). Whatever it resolves to, «панель» is banned.
     expect(lab.textContent).toBe("Area of interest");
     expect(lab.getAttribute("data-ru")).not.toMatch(/панел/i);
+    // hidden by CLIPPING, not display:none — display:none would drop it from the
+    // accessibility tree and leave the control nameless. Read the shadow stylesheet.
+    const css = sr.querySelector("style")!.textContent!;
+    const rule = css.match(/\.lab-lens-label\s*\{[^}]*\}/)![0];
+    expect(rule).toMatch(/clip-path/);
+    expect(rule).not.toMatch(/display:\s*none/);
     el.remove();
   });
 
@@ -534,25 +544,43 @@ describe("marker cell — badge placement + price alignment", () => {
     expect(c.querySelector(".sym-loinc .info-badge")).toBeNull(); // not orphaned in a code line
   });
 
-  it("coded marker: ⓘ stays on the code line", () => {
+  it("coded marker: ⓘ rides the NAME line, never the code line (fixed 2026-07-14)", () => {
+    // The bug: badges were emitted into .sym-loinc whenever the row had a short name,
+    // so the ⚠/ⓘ sat next to the SYMBOL («⚠ Fe») while the name wrapped on the lines
+    // above. Alex: «значок должен быть в той же строке что и название».
     const c = cellFor({ key: "HGB", shortName: "HGB", displayName: "Hemoglobin", displayShortName: "HGB",
       unit: "g/dL", refText: "13.5–17.5", loincs: ["718-7"], provenance: prov, cells: [null] });
-    expect(c.querySelector(".sym-loinc .info-badge")).toBeTruthy();
+    expect(c.querySelector(".sym-loinc .info-badge")).toBeNull();  // NOT on the code line
+    expect(c.querySelector(".name-line .info-badge")).toBeTruthy(); // on the name line
+    // and it is in the SAME inline container as the name — that is the whole fix
+    expect(c.querySelector(".name-line .analyte-name")).toBeTruthy();
   });
 
-  it("multi-word name: ⓘ leads the name with no whitespace break (badge can't orphan above the wrap)", () => {
-    // RU "Мочевая кислота" / uric acid: a name-only marker whose ⓘ LEADS the name
-    // line ("ⓘ Uric Acid"). happy-dom has no layout, so we assert the STRUCTURAL
-    // guarantee: the badge is the cell's first child and no whitespace text node
-    // sits between it and the name (a space there would be a line-break opportunity
-    // that orphans the leading ⓘ above a wrapped name).
+  it("the ⚠ badge is anchored to the name too — same container, never the symbol", () => {
+    const c = cellFor({ key: "Fe", shortName: "Fe", displayName: "Железо (сыворотка)",
+      displayShortName: "Fe", unit: "µg/dL", refText: "60–170", loincs: ["2498-4"],
+      provenance: { ...prov, dataQuality: [{ code: "sex-mismatch", text: "male range", textRu: "мужской диапазон" }] },
+      planned: true, cells: [null] });
+    const nameLine = c.querySelector(".name-line")!;
+    expect(nameLine.querySelector(".warn-badge")).toBeTruthy();     // ⚠ on the name line
+    expect(c.querySelector(".sym-loinc .warn-badge")).toBeNull();   // NOT next to "Fe"
+    expect(nameLine.querySelector(".analyte-name")!.textContent).toBe("Железо (сыворотка)");
+    // the cell is tagged so the compact/mobile views keep the name visible beside it
+    expect(c.classList.contains("has-warn")).toBe(true);
+  });
+
+  it("multi-word name: the badge leads the name with no whitespace break (it can't orphan above the wrap)", () => {
+    // happy-dom has no layout, so we assert the STRUCTURAL guarantee: the badge and the
+    // name live in ONE .name-line box, and no whitespace text node sits between them (a
+    // space there is a line-break opportunity that orphans the badge above a wrapped name).
     const c = cellFor({ key: "UA", shortName: "Uric Acid", displayName: "Uric Acid",
       unit: "mg/dL", refText: "3.5–7.2", provenance: prov, cells: [null] });
-    expect(c.querySelector(".sym-loinc")).toBeNull();       // name-only → ⓘ on the name line
+    expect(c.querySelector(".sym-loinc")).toBeNull();       // name-only marker
+    const line = c.querySelector(".name-line")!;
     const name = c.querySelector(".analyte-name")!;
     const badge = c.querySelector(".info-badge")!;
-    const scroll = c.querySelector(".marker-scroll")!;      // per-cell horizontal scroller
-    expect(scroll.firstChild).toBe(badge);                  // ⓘ leads the cell content
+    expect(line.firstChild).toBe(badge);                    // ⓘ leads the name line
+    expect(name.parentElement).toBe(line);                  // same inline container
     // only the hidden .analyte-pop popup sits between badge and name — no whitespace
     expect(name.previousSibling).toBe(c.querySelector(".analyte-pop"));
   });

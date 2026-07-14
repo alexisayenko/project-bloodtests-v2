@@ -97,6 +97,8 @@ const DEFAULT_I18N: Record<string, string> = {
   "control.collapseAll": "Collapse all",
   "control.lens": "Area of interest",
   "control.units": "Units",
+  "control.unitsSwitchSI": "Switch to SI units",
+  "control.unitsSwitchUS": "Switch to US units",
   "note.common": "Common knowledge",
   "note.personal": "Your case",
   "note.sep": "What this means",
@@ -143,27 +145,20 @@ export const TOOLBAR_CSS = `
 .labs-toolbar .lm-toggle .tg:not(.active) { visibility: hidden; }
 .labs-toolbar .lm-sep { width: 1px; align-self: stretch; min-height: 1.2em; background: var(--_rule-soft); margin: 0 0.15rem; }
 
-/* SI / US — a segmented control. The old single button read «Единицы: СИ»: it named
-   the topic but not the choice, and the alternative was invisible until you pressed
-   it. Both systems are on screen now, and the ACTIVE one is filled — the same
-   "selected" treatment the rest of the site uses for a chosen option (accent fill,
-   background-coloured text), not a new invention. */
-.labs-toolbar .lm-seg { display: inline-flex; border: 1px solid var(--_rule); border-radius: 3px; overflow: hidden; }
-.labs-toolbar .lm-seg .lm-seg-btn { border: 0; border-radius: 0; margin: 0; min-height: 1.9rem; padding: 0.2rem 0.7rem; letter-spacing: 0.02em; }
-.labs-toolbar .lm-seg .lm-seg-btn + .lm-seg-btn { border-left: 1px solid var(--_rule); }
-.labs-toolbar .lm-seg .lm-seg-btn[aria-pressed="true"] { background: var(--_accent); color: var(--_bg); border-color: var(--_accent); font-weight: 600; }
-.labs-toolbar .lm-seg .lm-seg-btn[aria-pressed="false"]:hover { color: var(--_fg); }
+/* SI / US — ONE button showing the system currently on screen. Not a segmented pair
+   (that iteration was rejected): one button, one word. Sized to a 44px touch target and
+   given a fixed min-width so the label swapping SI<->US cannot reflow the toolbar. */
+.labs-toolbar .lm-units-btn { min-width: 44px; min-height: 44px; padding: 0.2rem 0.8rem; font-weight: 600; letter-spacing: 0.04em; }
 
 /* COLLAPSE-ALL — icon only (Alex's call; the narration video teaches it). It is still
    a real button: >=44px touch target, and aria-label/title are kept in the active
    language by applyCollapseToggleLabel(), so it is wordless on screen but never
-   wordless to assistive tech. The chevron rotates with the state — down when the
-   panels are open, right when they are all collapsed. */
+   wordless to assistive tech.
+   THE GLYPH IS STATIC. It does not rotate, swap or morph with the state — an action
+   button, not a state indicator. There is deliberately NO [aria-pressed] selector
+   touching the icon; aria-pressed carries the state to assistive tech only. */
 .labs-toolbar .lm-icon-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 0; }
-.labs-toolbar .lm-ico { display: block; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.labs-toolbar .lm-ico-chev { transform-origin: 5px 9px; transition: transform 160ms ease; }
-.labs-toolbar .lm-icon-btn[aria-pressed="false"] .lm-ico-chev { transform: rotate(-90deg); }
-@media (prefers-reduced-motion: reduce) { .labs-toolbar .lm-ico-chev { transition: none; } }
+.labs-toolbar .lm-ico { display: block; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 /* LENS SELECTOR — a native <select>, deliberately.
    This replaced a horizontal swipe-strip of uniform pills (removed 2026-07-14). The
    strip could only ever show ~1.7 lenses at a time on a 390px phone, because the
@@ -180,7 +175,15 @@ export const TOOLBAR_CSS = `
    The native dropdown arrow is left alone (no appearance:none) — it is the only
    affordance saying "this opens", and the platform draws it better than we would. */
 .lab-lens-wrap { margin: 0.5rem 0 0.5rem; display: flex; flex-direction: column; gap: 0.3rem; }
-.lab-lens-label { font-size: 0.85rem; color: var(--_muted); }
+/* The «Область интереса» label is VISUALLY HIDDEN (Alex, 2026-07-14: «надписи скрой»)
+   — the closed <select> already shows the current area, so the label only repeated it.
+   It stays in the DOM and stays the <select>'s accessible name: clip-path, not
+   display:none, because display:none would take it out of the accessibility tree too
+   and leave the control nameless for a screen reader. */
+.lab-lens-label {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
 select.lab-lens {
   box-sizing: border-box; width: 100%; max-width: 26rem;
   min-height: 2.75rem; padding: 0.5rem 0.75rem;
@@ -200,7 +203,7 @@ select.lab-lens:focus-visible { outline: 2px solid var(--_accent); outline-offse
   /* "Units" leads and stays put; "Collapse all" (shown only on the All tab) trails,
      so switching to a lens tab drops it from the END without shoving Units sideways.
      Drop the divider on mobile — with two controls it just adds noise. */
-  .labs-toolbar .lm-seg { order: -1; }
+  .labs-toolbar .lm-units-btn { order: -1; }
   .labs-toolbar .lm-sep { display: none; }
 }
 `;
@@ -354,24 +357,18 @@ export class LabMatrix extends HTMLElement {
     const panelsHtml = groups
       .map((g) => {
         const panelName = g.name ?? "";
-        // How many of this group's markers have never been taken. Panels are COLLAPSED
-        // by default, so without this the never-taken rows are invisible until you
-        // happen to open the right group — which is exactly how they got missed. The
-        // count rides on the closed header and says which groups are worth opening.
-        // Deliberately a sibling of `.panel-sticky`, not a child: applyLang rewrites
-        // that node's textContent wholesale and would eat the chip.
-        const nNotTaken = (g.rows ?? []).filter((r) => r.planned).length;
-        const notTaken = nNotTaken
-          ? `<span class="panel-notaken"${biAttr(
-              `${nNotTaken} ${t.text("panel.notTaken", false)}`,
-              `${nNotTaken} ${t.text("panel.notTaken", true)}`,
-            )}>${nNotTaken} ${esc(t.text("panel.notTaken", false))}</span>`
-          : "";
+        // NO "N never taken" COUNTER ON THE GROUP HEADER (removed 2026-07-14 —
+        // Alex: «не надо для групп писать что не сдавалось»). It used to ride on the
+        // closed header to say which groups were worth opening. Do not add it back
+        // without asking: the trade-off is known and was accepted — groups are
+        // collapsed by default, so the never-taken rows are now invisible until a
+        // group is opened. The PER-ROW «не сдавалось» marking is untouched and is
+        // still the feature; only the header counter is gone.
         const panelHead = g.name
           ? `<tr class="panel-row" data-panel="${esc(panelName)}"><th class="panel-head" colspan="${panelSpan}"><span class="panel-sticky"${biAttr(
               g.name,
               g.nameRu,
-            )}>${esc(g.name)}</span>${notTaken}</th></tr>`
+            )}>${esc(g.name)}</span></th></tr>`
           : "";
         const rows = (g.rows ?? [])
           .map((r) => {
@@ -457,39 +454,49 @@ export class LabMatrix extends HTMLElement {
     // COLLAPSE-ALL ICON. Icon-only is Alex's explicit call (2026-07-14); the narration
     // video is what teaches it. Wordless on screen is NOT wordless to a screen reader:
     // applyCollapseToggleLabel() keeps aria-label + title in sync with the state, in
-    // the active language. The glyph is the file-manager/IDE collapse-tree mark — three
-    // stacked rows with a branch chevron — and the chevron ROTATES with the state
-    // (down = panels open, right = panels collapsed), so it is a live indicator and not
-    // a dead stamp. Inline SVG on currentColor: no asset, no icon font, and it inherits
-    // the toolbar's own stroke colour.
+    // the active language.
+    //
+    // THE GLYPH IS STATIC — it must not morph with the state (Alex, 2026-07-14:
+    // «используй эту иконку, не меняющуюся»). It earlier rotated a chevron; that is
+    // reverted deliberately, so do not "fix" it back. This is an ACTION button (collapse
+    // all / expand all), not a state indicator: whether the groups are open or shut is
+    // already the most obvious thing on the page, so a morphing glyph would be redundant
+    // and would give a 78-year-old a second thing to decode. The state still reaches
+    // assistive tech through aria-pressed + aria-label — it is conveyed to the screen
+    // reader, just not to the glyph.
+    //
+    // The mark is the classic collapse-tree: a spine on the left, three branch stubs,
+    // each ending in an outlined rounded box. Inline SVG on currentColor — no asset, no
+    // icon font, and it inherits the toolbar's stroke colour.
     const collapseBtn =
       `<button type="button" class="lm-btn lm-icon-btn" data-act="collapse-toggle" aria-pressed="false">` +
-      `<svg class="lm-ico" viewBox="0 0 20 20" width="20" height="20" aria-hidden="true" focusable="false">` +
-      `<path class="lm-ico-rows" d="M8.5 4h9M8.5 10h9M8.5 16h9"/>` +
-      `<path class="lm-ico-chev" d="M2.5 7.75L5 10.25l2.5-2.5"/>` +
+      `<svg class="lm-ico" viewBox="0 0 20 20" width="22" height="22" aria-hidden="true" focusable="false">` +
+      `<path class="lm-ico-tree" d="M2.6 5.5v9M2.6 5.5h4M2.6 10h4M2.6 14.5h4"/>` +
+      `<rect class="lm-ico-box" x="6.6" y="3.5" width="11.4" height="4" rx="1.3"/>` +
+      `<rect class="lm-ico-box" x="6.6" y="8" width="11.4" height="4" rx="1.3"/>` +
+      `<rect class="lm-ico-box" x="6.6" y="12.5" width="11.4" height="4" rx="1.3"/>` +
       `</svg></button>`;
 
-    // UNITS. Was a single button reading «Единицы: СИ» — which names the topic but not
-    // the choice, and hides the alternative. Now a segmented control: BOTH systems are
-    // on screen and the active one is filled, so the current state is readable at a
-    // glance and the other option is visibly one tap away. "SI"/"US" need no
-    // translation; the group carries a localized aria-label.
-    const unitBtn = (act: string, label: string) =>
-      `<button type="button" class="lm-btn lm-seg-btn" data-act="${act}" aria-pressed="false">${label}</button>`;
-    // NB: no data-en/data-ru on the group — applyLang() sets textContent on every
-    // [data-en] node, which would wipe the two buttons out of it. Its aria-label is
-    // set from JS in applyUnits() instead.
-    const unitsSeg =
-      `<div class="lm-seg" role="group">` +
-      unitBtn("units-si", "SI") +
-      unitBtn("units-us", "US") +
-      `</div>`;
+    // UNITS — ONE button, ONE word (Alex, 2026-07-14: «SI / US - используй одну кнопку -
+    // либо Si показывай либо US»). It shows the system CURRENTLY ON SCREEN, like a
+    // language switcher that reads "RU" while you are reading Russian; press it and both
+    // the label and the table flip. The numbers in the table directly beneath it
+    // corroborate the label, so "current" vs "what you'll get" is never ambiguous.
+    // Deliberately NOT a segmented pair and NOT a greyed-out inactive twin — that was
+    // the previous iteration and it was rejected.
+    //
+    // "SI"/"US" alone is useless to a screen reader, so the button's accessible name is
+    // a full sentence set in applyUnits() («Единицы: СИ. Переключить на US»); the label
+    // node is aria-hidden so the two do not double up. aria-live announces the flip.
+    const unitsBtn =
+      `<button type="button" class="lm-btn lm-units-btn" data-act="units" aria-pressed="false">` +
+      `<span class="lm-units-lbl" aria-hidden="true"></span></button>`;
 
     const toolbar =
       `<div class="labs-toolbar" part="toolbar">` +
       collapseBtn +
       `<span class="lm-sep"></span>` +
-      unitsSeg +
+      unitsBtn +
       toggle("detail", "control.detailsFull", "control.detailsCompact") +
       toggle("lang", "control.langEN", "control.langRU") +
       `</div>`;
@@ -860,13 +867,23 @@ export class LabMatrix extends HTMLElement {
         a.setAttribute("href", `https://loinc.org/${code}/`);
       }
     }
-    // Segmented control: fill the active side, un-fill the other. aria-pressed is the
-    // state AND the selector the CSS fill hangs off, so the two can never disagree.
-    this.q('[data-act="units-si"]')?.setAttribute("aria-pressed", String(si));
-    this.q('[data-act="units-us"]')?.setAttribute("aria-pressed", String(!si));
-    // The group's accessible name (set here, not via data-en: applyLang() overwrites
-    // textContent on [data-en] nodes and would empty the group of its buttons).
-    this.q(".lm-seg")?.setAttribute("aria-label", this._i18n.text("control.units", this.ruOn));
+    // ONE button, ONE word: it shows the system now on screen (SI while you are reading
+    // SI). The visible label is aria-hidden and the button carries a real sentence as its
+    // accessible name — "SI" alone tells a screen-reader user nothing about what pressing
+    // it would do. aria-live announces the flip when she presses it.
+    const btn = this.q('[data-act="units"]');
+    if (btn) {
+      const lbl = btn.querySelector(".lm-units-lbl");
+      if (lbl) lbl.textContent = si ? "SI" : "US";
+      btn.setAttribute(
+        "aria-label",
+        this._i18n.text(si ? "control.unitsSI" : "control.unitsUS", this.ruOn) +
+          ". " +
+          this._i18n.text(si ? "control.unitsSwitchUS" : "control.unitsSwitchSI", this.ruOn),
+      );
+      btn.setAttribute("aria-pressed", String(si));
+      btn.setAttribute("aria-live", "polite");
+    }
   }
 
   /** full ⇄ compact — compact hides lab names + long analyte names (CSS). */
@@ -1012,15 +1029,7 @@ export class LabMatrix extends HTMLElement {
   }
 
   private onAct(act: string): void {
-    // The segmented control SELECTS a side (idempotent) rather than flipping, so
-    // pressing the already-active side is a no-op instead of a surprise toggle.
-    if (act === "units-si" || act === "units-us") {
-      const si = act === "units-si";
-      if (si === this.siOn) return;
-      this.siOn = si;
-      this.applyUnits(si);
-      lsSet(LS.units, si ? "si" : "us");
-    }
+    if (act === "units") { this.siOn = !this.siOn; this.applyUnits(this.siOn); lsSet(LS.units, this.siOn ? "si" : "us"); }
     else if (act === "detail") { this.minOn = !this.minOn; this.applyDetail(this.minOn); lsSet(LS.details, this.minOn ? "min" : "full"); }
     else if (act === "lang") { this.ruOn = !this.ruOn; this.applyLang(this.ruOn); lsSet(LS.lang, this.ruOn ? "ru" : "en"); }
     else if (act === "collapse-toggle") {
@@ -1310,8 +1319,13 @@ export class LabMatrix extends HTMLElement {
           name,
         )}"><svg class="info-ico" viewBox="0 0 16 16" width="1em" height="1em" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="4.4" r="1.05" fill="currentColor"/><rect x="7.05" y="6.6" width="1.9" height="5.3" rx="0.95" fill="currentColor"/></svg></button>`;
     const info = r.provenance ? `${infoBtn}${this.analytePopup(r.provenance, t, usRef, siRef)}` : "";
-    // single-name markers (no code line): ⓘ leads, then ⚠, then the name follows
-    const nameBadges = showSym ? "" : `${info}${warn}`;
+    // BADGES ALWAYS RIDE THE NAME LINE (fixed 2026-07-14 — Alex: «значок должен быть в
+    // той же строке что и название»). They used to be emitted into `.sym-loinc` whenever
+    // the row had a short name, which put the ⚠ next to the SYMBOL («⚠ Fe») while the
+    // name sat on its own lines above it. They are now emitted once, inside `.name-line`,
+    // which is the same inline box as the name — see the .name-line rule in styles.ts for
+    // the glue that stops the badge being orphaned when the name wraps.
+    const nameBadges = `${info}${warn}`;
 
     // ---- symbol + (hidden) LOINC-codes line — only when there's a code or LOINC to carry
     let symLoinc = "";
@@ -1329,9 +1343,9 @@ export class LabMatrix extends HTMLElement {
           .join(" / ");
         loincHtml = `<span class="loinc-codes">${showSym ? " · " : ""}${links}</span>`;
       }
-      // visible code → badges live here; otherwise the line carries only the (hidden) LOINC
-      // ⓘ leads the code line, then ⚠, then the abbreviation, then hidden LOINC codes
-      symLoinc = `<span class="sym-loinc muted">${showSym ? `${info}${warn}${symText}${loincHtml}` : loincHtml}</span>`;
+      // NO BADGES HERE any more — they belong to the name line (see above). This line
+      // carries only the abbreviation and its (hidden) LOINC codes.
+      symLoinc = `<span class="sym-loinc muted">${showSym ? `${symText}${loincHtml}` : loincHtml}</span>`;
     }
 
     // ---- reference-range meta (US/SI): range (+ "not measured yet") left, price right
@@ -1346,11 +1360,18 @@ export class LabMatrix extends HTMLElement {
       usRef,
     )}" data-si="${esc(siRef)}">${esc(usRef)}</span>${planned}</span>${price}</span>`;
 
+    // `has-warn` exists so the mobile/compact views can KEEP the name visible on a row
+    // that carries a badge. They otherwise hide the name on rows that have a short name,
+    // which would leave the ⚠ sitting next to nothing.
+    const hasWarn = r.unreliable || dq.length > 0;
     return (
-      `<td class="marker-col${showSym ? " has-sym" : ""}"${
+      `<td class="marker-col${showSym ? " has-sym" : ""}${hasWarn ? " has-warn" : ""}"${
         this.tapCell && r.provenance ? ` tabindex="0"` : ""
       }><div class="marker-scroll">` +
-      `${nameBadges}<span class="analyte-name"${biAttr(name, nameRu)}>${esc(name)}</span>` +
+      `<span class="name-line">${nameBadges}<span class="analyte-name"${biAttr(
+        name,
+        nameRu,
+      )}>${esc(name)}</span></span>` +
       symLoinc +
       meta +
       `</div></td>`

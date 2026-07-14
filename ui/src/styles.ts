@@ -253,6 +253,17 @@ export const STYLES = `
 .labs.matrix tfoot .cost-label.marker-col { min-width: 0; max-width: none; }
 .labs.matrix thead .marker-col { z-index: 3; box-shadow: inset -2px 0 0 0 var(--_muted), inset 0 -1px 0 var(--_rule); }
 .labs.matrix .marker-col .analyte-name { font-weight: 500; display: inline; }
+/* THE BADGE IS GLUED TO THE NAME. .name-line holds the info/warn badges and the name in
+   one inline-flex box, so a badge can never be pushed onto a line of its own — which is
+   exactly what used to happen: planned rows set overflow-wrap:anywhere on .marker-scroll
+   (see the mobile block below), and that creates a break opportunity between ANY two
+   atomic inlines — including between the button and the first letter of the name.
+   Ferritin ended up with a bare warn glyph on the line above its own name.
+   inline-flex (no wrap) pins the badges and the name into one flex line; min-width:0 lets
+   the NAME still wrap its own text inside its box, which is what we want: the name wraps,
+   the badge stays with it. */
+.labs.matrix .marker-col .name-line { display: inline-flex; align-items: baseline; max-width: 100%; }
+.labs.matrix .marker-col .name-line > .analyte-name { min-width: 0; }
 .labs.matrix .marker-col .sym-loinc { display: block; font-size: 0.85em; }
 /* index short name — hidden in the full view (long name shows); revealed only in
    the compact / mobile view (mirrors the analyte-name↔sym-loinc swap). */
@@ -326,6 +337,9 @@ export const STYLES = `
 /* compact (min-details) view: drop lab names + the long analyte name, narrowing columns */
 .labs.matrix.min-details thead .lab { display: none; }
 .labs.matrix.min-details .marker-col.has-sym .analyte-name { display: none; }
+/* ...unless the row carries a ⓘ/⚠ badge: the badge lives on the NAME line, so hiding the
+   name would strand it next to nothing. A caveated row shows its full name. */
+.labs.matrix.min-details .marker-col.has-sym.has-warn .analyte-name { display: inline; }
 /* index rows: compact view swaps the long name for the short nameCompact */
 .labs.matrix.min-details .marker-col.has-sym .idx-name-compact { display: inline; }
 /* compact: hide LOINC codes (they remain in the ⓘ provenance popup) */
@@ -558,6 +572,9 @@ export const STYLES = `
      and the long analyte name when an abbreviation already carries the row. */
   .labs.matrix thead .lab { display: none; }
   .labs.matrix .marker-col.has-sym .analyte-name { display: none; }
+  /* ...unless the row carries a ⓘ/⚠ badge — the badge rides the name line, and a badge
+     with no name beside it is the bug we just fixed. See .name-line above. */
+  .labs.matrix .marker-col.has-sym.has-warn .analyte-name { display: inline; }
   .labs.matrix .marker-col.has-sym .idx-name-compact { display: inline; }
   .labs.matrix .marker-col .meta-price,
   .labs.matrix .marker-col .meta-planned { display: none; }

@@ -179,11 +179,11 @@ const btn = (el: LabMatrix, act: string): HTMLElement =>
 /** The visible label of a toggle button = its currently-active stacked span. */
 const lbl = (el: LabMatrix, act: string): string =>
   btn(el, act).querySelector(".tg.active")?.textContent ?? "";
-/** Units is a SI/US segmented control (2026-07-14): pick a side by name. */
-const pickUnits = (el: LabMatrix, sys: "si" | "us"): boolean => click(btn(el, `units-${sys}`));
-/** Which side of the segmented control is filled — i.e. the units on screen. */
+/** Units is ONE button showing the system now on screen (2026-07-14): press to flip. */
+const flipUnits = (el: LabMatrix): boolean => click(btn(el, "units"));
+/** The single word on the units button = the system currently on screen. */
 const unitsActive = (el: LabMatrix): string =>
-  (sr(el).querySelector('.lm-seg .lm-seg-btn[aria-pressed="true"]') as HTMLElement)?.textContent ?? "";
+  (sr(el).querySelector(".lm-units-btn .lm-units-lbl") as HTMLElement)?.textContent ?? "";
 /** Collapse-all is icon-only (2026-07-14): its NAME lives in aria-label, not on screen. */
 const collapseName = (el: LabMatrix): string =>
   btn(el, "collapse-toggle").getAttribute("aria-label") ?? "";
@@ -261,41 +261,57 @@ describe("units-toggle (docs/product/features/units-toggle.md)", () => {
     expect(hgbRef.textContent).toBe("13.5–17.5 g/dL");
     expect(cholLoinc.getAttribute("href")).toBe("https://loinc.org/2093-3/");
 
-    // both systems are on screen; US is the filled one to start with
+    // ONE button, showing the system currently on screen
     expect(unitsActive(el)).toBe("US");
-    pickUnits(el, "si");
+    flipUnits(el);
 
     expect(hgbCell.textContent).toBe("148");
     expect(hgbRef.textContent).toBe("135–175 g/L");
     expect(cholLoinc.textContent).toBe("14647-2");
     expect(cholLoinc.getAttribute("href")).toBe("https://loinc.org/14647-2/");
-    // the fill moved to SI — and only one side is ever filled
+    // the button now reads SI, matching the values in the table below it
     expect(unitsActive(el)).toBe("SI");
-    expect(btn(el, "units-si").getAttribute("aria-pressed")).toBe("true");
-    expect(btn(el, "units-us").getAttribute("aria-pressed")).toBe("false");
+    expect(btn(el, "units").getAttribute("aria-pressed")).toBe("true");
   });
 
   it("user flips back to US and sees the conventional values again", () => {
     const el = mount();
-    pickUnits(el, "si");
-    pickUnits(el, "us");
+    flipUnits(el);
+    flipUnits(el);
     expect(row(el, "HGB").querySelector("td.num.low")!.textContent).toBe("14.8");
     expect(unitsActive(el)).toBe("US");
-    expect(btn(el, "units-us").getAttribute("aria-pressed")).toBe("true");
+    expect(btn(el, "units").getAttribute("aria-pressed")).toBe("false");
   });
 
-  it("pressing the side that is already active is a no-op, not a flip", () => {
+  it("exactly ONE label renders, and it names the system currently on screen", () => {
     const el = mount();
-    pickUnits(el, "si");
-    expect(unitsActive(el)).toBe("SI");
-    pickUnits(el, "si"); // press SI again — it must STAY on SI
+    // one button, one word — no segmented pair, no greyed-out twin
+    expect(sr(el).querySelectorAll(".lm-units-btn").length).toBe(1);
+    expect(sr(el).querySelectorAll(".lm-units-btn .lm-units-lbl").length).toBe(1);
+    expect(sr(el).querySelector(".lm-seg")).toBeNull();
+    // the label corroborates the table: US label <-> US values
+    expect(unitsActive(el)).toBe("US");
+    expect(row(el, "HGB").querySelector("td.num.low")!.textContent).toBe("14.8");
+    flipUnits(el);
     expect(unitsActive(el)).toBe("SI");
     expect(row(el, "HGB").querySelector("td.num.low")!.textContent).toBe("148");
   });
 
+  it("the units button is named for a screen reader — not just the bare 'SI'", () => {
+    const el = mount();
+    const b = btn(el, "units");
+    // the visible word is hidden from AT; the accessible name is a real sentence that
+    // says both where you are and what pressing it does
+    expect(sr(el).querySelector(".lm-units-lbl")!.getAttribute("aria-hidden")).toBe("true");
+    expect(b.getAttribute("aria-label")).toBe("Units: US. Switch to SI units");
+    flipUnits(el);
+    expect(b.getAttribute("aria-label")).toBe("Units: SI. Switch to US units");
+    expect(b.getAttribute("aria-live")).toBe("polite");
+  });
+
   it("the SI choice survives a reload (localStorage labsV2.units)", () => {
     let el = mount();
-    pickUnits(el, "si");
+    flipUnits(el);
     expect(localStorage.getItem("labsV2.units")).toBe("si");
     el = remount(el);
     expect(row(el, "HGB").querySelector("td.num.low")!.textContent).toBe("148");
@@ -401,15 +417,28 @@ describe("panels-collapse (docs/product/features/panels-collapse.md)", () => {
     expect(collapseName(el)).toBe("Развернуть все");
   });
 
-  it("the icon reflects state rather than being a dead stamp (aria-pressed drives the chevron)", () => {
+  it("the glyph is STATIC — only the accessible state changes, never the icon", () => {
     const el = mount();
     const tog = btn(el, "collapse-toggle");
-    // all collapsed on load → not "pressed" → CSS rotates the chevron to point right
+    const svg = () => tog.querySelector("svg.lm-ico")!.innerHTML;
+    const glyph = svg();
+    // it is the collapse-tree mark: a spine + three branch stubs + three outlined boxes
+    expect(tog.querySelectorAll("rect.lm-ico-box").length).toBe(3);
+    expect(tog.querySelector("path.lm-ico-tree")).toBeTruthy();
+
+    // all collapsed on load → the button offers "expand"; press it to open everything
     expect(tog.getAttribute("aria-pressed")).toBe("false");
-    click(tog); // expand everything
+    click(tog);
+    // the STATE moved (for assistive tech)...
     expect(tog.getAttribute("aria-pressed")).toBe("true");
-    click(tog); // collapse everything again
+    expect(collapseName(el)).toBe("Collapse all");
+    // ...but the GLYPH did not. This is an action button, not a state indicator.
+    expect(svg()).toBe(glyph);
+
+    click(tog);
     expect(tog.getAttribute("aria-pressed")).toBe("false");
+    expect(collapseName(el)).toBe("Expand all");
+    expect(svg()).toBe(glyph);
   });
 
   it("the toggle offers Collapse while any panel is open (mixed state)", () => {
@@ -625,10 +654,10 @@ describe("loinc-link (docs/product/features/loinc-link.md)", () => {
   it("the LOINC follows the unit system: flipping to SI swaps code and href, flipping back restores them", () => {
     const el = mount();
     const link = row(el, "CHOL").querySelector("a.loinc") as HTMLAnchorElement;
-    pickUnits(el, "si");
+    flipUnits(el);
     expect(link.textContent).toBe("14647-2");
     expect(link.getAttribute("href")).toBe("https://loinc.org/14647-2/");
-    pickUnits(el, "us");
+    flipUnits(el);
     expect(link.textContent).toBe("2093-3");
     expect(link.getAttribute("href")).toBe("https://loinc.org/2093-3/");
   });
@@ -779,22 +808,26 @@ describe("never-taken rows — a shopping list, not missing data", () => {
     expect(row(el, "CTX").querySelector("[data-warn]")).toBeNull();
   });
 
-  it("the closed group header counts them, so she knows which group to open", () => {
+  it("the group header does NOT count them — no chip on any header (removed 2026-07-14)", () => {
     const el = mountHonesty();
-    const head = sr(el).querySelector('tr.panel-row[data-panel="Bone turnover"] .panel-notaken')!;
-    expect(head).toBeTruthy();
-    expect(head.textContent).toBe("2 never taken");
-    // a group with nothing outstanding says nothing
-    expect(sr(el).querySelector('tr.panel-row[data-panel="Lipids"] .panel-notaken')).toBeNull();
+    // Alex: «не надо для групп писать что не сдавалось». The counter is gone from EVERY
+    // header, including the one that used to carry it. The trade-off is known and was
+    // accepted: groups are collapsed by default, so the never-taken rows are only
+    // visible once a group is opened.
+    expect(sr(el).querySelector(".panel-notaken")).toBeNull();
+    expect(sr(el).querySelector('tr.panel-row[data-panel="Bone turnover"] .panel-notaken')).toBeNull();
+    // the header still says what it always said — the GROUP NAME, untouched
+    expect(
+      sr(el).querySelector('tr.panel-row[data-panel="Bone turnover"] .panel-sticky')!.textContent,
+    ).toBe("Bone turnover");
   });
 
-  it("in Russian the chip and the count both read «не сдавалось» (Alex's word)", () => {
+  it("removing the header chip did NOT remove the per-row marking — that is the feature", () => {
     const el = mountHonesty();
     click(btn(el, "lang")); // → RU
+    // the ROW still says «не сдавалось». Only the group-header counter was removed.
     expect(row(el, "CTX").querySelector(".meta-planned")!.textContent).toContain("не сдавалось");
-    expect(
-      sr(el).querySelector('tr.panel-row[data-panel="Bone turnover"] .panel-notaken')!.textContent,
-    ).toBe("2 не сдавалось");
+    expect(sr(el).querySelector(".panel-notaken")).toBeNull();
   });
 });
 
