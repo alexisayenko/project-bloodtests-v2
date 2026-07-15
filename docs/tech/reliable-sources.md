@@ -42,6 +42,12 @@ UI renders `ADA, 2025`. Always attach the exact `url` and a verbatim `quote`.
 | American College of Gastroenterology | ferritin/iron (hemochromatosis) | ACG |
 | World Health Organization | ferritin deficiency thresholds, anemia | WHO |
 | NCEP ATP III | lipid cut-points | NCEP ATP III |
+| American Association of Clinical Endocrinology | broad endocrine cut-points; complements Endocrine Society + ATA (thyroid, glucose, testosterone, bone, lipids) | AACE |
+| American Association for the Study of Liver Diseases | liver — authoritative on "true-normal" ALT upper limits | AASLD |
+| American College of Cardiology (with AHA) | lipid guidelines | ACC/AHA |
+| International Society on Thrombosis and Haemostasis | coagulation — age-adjusted D-dimer cutoff, standardized coag reporting | ISTH |
+| IOF–IFCC Bone Marker Working Group | bone turnover — designated P1NP + CTx as reference markers | IOF–IFCC |
+| NICE (UK) | broad national guidance: lipids, HbA1c/diabetes, CKD, thyroid, vitamin D; good European cross-check | NICE |
 | Primary equation papers | index formulas (see below) | author, year |
 
 **Index formula primary sources** (cited on the derived indices): Vermeulen 1999
@@ -60,6 +66,16 @@ UI renders `ADA, 2025`. Always attach the exact `url` and a verbatim `quote`.
 
 Reference-lab ranges are **method/analyzer-specific** — note the analyzer when
 known (e.g. the CBC ranges are Sysmex XN). They beat tertiary restatements.
+
+### Measurement & reference-interval standards
+Not clinical values themselves, but the **standardization layer** beneath them —
+how ranges are established/verified and how assays are made comparable.
+| Source | What it standardizes | Cite as |
+|---|---|---|
+| **CLSI** (esp. EP28-A3c) | the standard defining how reference intervals are established/verified; underpins the whole provenance model | CLSI |
+| **IFCC** | reference measurement procedures (37°C enzyme methods, HbA1c IFCC units, WHO-IS traceability) | IFCC |
+| **ICSH** | hematology standardization incl. the ESR reference method (CBC, ESR, reticulocytes) | ICSH |
+| **NGSP** | HbA1c standardization / DCCT alignment behind ADA numbers | NGSP |
 
 ### `textbook` — standard references
 | Source | Notes |
@@ -87,6 +103,12 @@ orientation-only. Never attach a guideline citation to an unvalidated cutoff.
 |---|---|---|
 | **PubChem** (NIH/NLM) | authoritative molecular weights; `/compound/<CID>` or `/element/` | PubChem |
 | UniProt | MW for proteins with no small-molecule CID (e.g. transferrin) | UniProt |
+
+### Evidence-synthesis & screening bodies (not range origins)
+These are **not** origins of reference ranges — cite them for screening logic and
+evidence grading, never as the source of a displayed interval.
+- **Cochrane** — gold-standard systematic reviews / meta-analyses.
+- **USPSTF** — evidence-graded screening cut-points.
 
 ### Avoid / handle with care
 - **Wikipedia** — not a source for ranges or thresholds. The *one* place it
