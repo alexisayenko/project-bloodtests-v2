@@ -315,3 +315,15 @@ which is **shared by both sites**. So there is no way today to say "your value i
 fine for your age" on her card without saying it on Alex's too. That capability is
 the real fix, and it is adjacent to task 4 (sex-aware ranges) — both need the
 subject to reach the presentation layer.
+
+---
+
+## 9. ADR: store-only-original — us/si become derived, not stored
+
+**Status:** BACKLOG
+
+Make `us`/`si` optional in the Zod schema (`engine/src/schema.ts`: `LabItemObjectSchema`)
+and derive them at runtime in the engine from `original` + the conversion table, then
+migrate both sites' data files to store only `original`. Until then, data files carry
+denormalized `us`/`si` blocks on every item (identity copies of `original` for
+non-convertible analytes).
